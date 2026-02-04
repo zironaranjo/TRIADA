@@ -51,4 +51,8 @@ export class BookingsService {
             relations: ['property']
         });
     }
+
+    async updateStatus(id: string, status: string) {
+        return this.bookingsRepository.update(id, { status });
+    }
 }

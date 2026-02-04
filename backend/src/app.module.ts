@@ -8,6 +8,7 @@ import { PropertiesModule } from './properties/properties.module';
 import { BookingsModule } from './bookings/bookings.module';
 import { AccountingModule } from './accounting/accounting.module';
 import { CrmModule } from './crm/crm.module';
+import { PaymentsModule } from './payments/payments.module';
 
 @Module({
   imports: [
@@ -42,6 +43,7 @@ import { CrmModule } from './crm/crm.module';
     BookingsModule,
     AccountingModule,
     CrmModule,
+    PaymentsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

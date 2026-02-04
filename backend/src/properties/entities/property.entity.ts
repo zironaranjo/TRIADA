@@ -13,7 +13,25 @@ export class Property {
     @Column()
     address: string;
 
-    @ManyToOne(() => Owner, (owner) => owner.properties)
+    @Column({ nullable: true })
+    imageUrl: string;
+
+    @Column('decimal', { precision: 10, scale: 2, default: 0 })
+    pricePerNight: number;
+
+    @Column('int', { default: 1 })
+    bedrooms: number;
+
+    @Column('int', { default: 1 })
+    bathrooms: number;
+
+    @Column('int', { default: 2 })
+    maxGuests: number;
+
+    @Column({ type: 'text', nullable: true })
+    description: string;
+
+    @ManyToOne(() => Owner, (owner) => owner.properties, { nullable: true })
     owner: Owner;
 
     @OneToMany(() => Booking, (booking) => booking.property)

@@ -21,6 +21,9 @@ export class Booking {
     @Column({ default: 'CONFIRMED' })
     status: string;
 
+    @Column({ default: 'DIRECT' })
+    platform: 'DIRECT' | 'AIRBNB' | 'BOOKING_COM';
+
     @ManyToOne(() => Property, (property) => property.bookings, { nullable: true })
     property: Property;
 

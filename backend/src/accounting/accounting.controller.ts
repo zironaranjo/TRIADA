@@ -5,6 +5,11 @@ import { AccountingService } from './accounting.service';
 export class AccountingController {
     constructor(private readonly accountingService: AccountingService) { }
 
+    @Get('dashboard')
+    getDashboard() {
+        return this.accountingService.getDashboardStats();
+    }
+
     @Get('ledger')
     getLedger() {
         // TODO: Implement ledger query with filters
