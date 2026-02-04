@@ -5,9 +5,9 @@ import { motion } from "framer-motion";
 import {
     Calendar, Home, Users, DollarSign,
     CheckCircle, Globe, Smartphone, CreditCard,
-    Activity, ArrowUpRight, Zap, Settings
+    Activity, Zap, Settings
 } from "lucide-react";
-import { AreaChart, Area, XAxis, Tooltip, ResponsiveContainer } from 'recharts';
+import { AreaChart, Area, ResponsiveContainer } from 'recharts';
 
 interface Stats {
     totalBookings: number;

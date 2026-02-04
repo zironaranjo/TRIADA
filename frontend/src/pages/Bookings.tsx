@@ -1,15 +1,13 @@
 import { useEffect, useState } from 'react';
 import { bookingsApi, propertiesApi } from '@/api/client';
-import { GlassCard } from "@/components/GlassCard";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import {
-    ChevronLeft, ChevronRight, Plus, Calendar as CalendarIcon,
-    Filter, Search, RefreshCw
+    ChevronLeft, ChevronRight, Plus, RefreshCw
 } from "lucide-react";
 import {
     format, addMonths, subMonths, startOfMonth, endOfMonth,
-    eachDayOfInterval, isSameMonth, isWithinInterval,
-    differenceInDays, getDate, isSameDay
+    eachDayOfInterval, isWithinInterval,
+    differenceInDays, isSameDay
 } from 'date-fns';
 
 interface Property {

@@ -4,7 +4,7 @@ import { api } from "@/api/client";
 import { DollarSign, TrendingUp, Users, CreditCard, Calendar, Filter, Download } from "lucide-react";
 import { motion } from "framer-motion";
 import {
-    BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, ResponsiveContainer,
+    XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, ResponsiveContainer,
     PieChart, Pie, Cell, AreaChart, Area
 } from 'recharts';
 

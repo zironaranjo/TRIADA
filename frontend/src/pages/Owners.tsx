@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { GlassCard } from "@/components/GlassCard";
 import {
     Plus, Search, Mail, Phone, Building,
-    MoreHorizontal, User, Wallet, ArrowUpRight, X
+    MoreHorizontal, User, Wallet, X
 } from "lucide-react";
 
 interface Owner {
@@ -36,13 +36,7 @@ export default function Owners() {
         }
     };
 
-    const container = {
-        hidden: { opacity: 0 },
-        show: {
-            opacity: 1,
-            transition: { staggerChildren: 0.1 },
-        },
-    };
+
 
     return (
         <div className="min-h-screen bg-[#0f172a] text-slate-100 p-8">
