@@ -1,0 +1,15 @@
+{
+    email your-email@example.com
+}
+
+triadak.io {
+    reverse_proxy frontend:80
+}
+
+www.triadak.io {
+    redir https://triadak.io{uri}
+}
+
+api.triadak.io {
+    reverse_proxy backend:3000
+}
