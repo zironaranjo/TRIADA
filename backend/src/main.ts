@@ -6,6 +6,14 @@ async function bootstrap() {
     rawBody: true,
   });
   app.enableCors();
+  const dbUrl = process.env.DATABASE_URL;
+  console.log(`🔍 DIAGNOSTIC: DATABASE_URL is ${dbUrl ? 'Present' : 'MISSING'}`);
+  if (dbUrl) {
+    console.log(`🔍 DIAGNOSTIC: URL length: ${dbUrl.length}, Starts with: ${dbUrl.substring(0, 10)}`);
+  } else {
+    console.error('❌ CRITICAL: DATABASE_URL environment variable is not set!');
+  }
+
   await app.listen(process.env.PORT ?? 3000);
   console.log(`🚀 TRIADA Backend running on: http://localhost:${process.env.PORT ?? 3000}`);
 }
