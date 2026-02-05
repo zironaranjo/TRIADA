@@ -1,11 +1,10 @@
 
-import React, { useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { supabase } from '../lib/supabase';
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
-    const navigate = useNavigate();
+    // const navigate = useNavigate();
 
     const handleGoogleLogin = async () => {
         try {
