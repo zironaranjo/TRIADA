@@ -3,7 +3,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {
     Plus,
     Search,
-    Filter,
     MoreVertical,
     MapPin,
     BedDouble,
@@ -164,8 +163,8 @@ const Properties = () => {
                             key={status}
                             onClick={() => setStatusFilter(status)}
                             className={`px-4 py-2.5 rounded-xl text-sm font-medium border transition-all ${statusFilter === status
-                                    ? 'bg-blue-500/10 text-blue-400 border-blue-500/20'
-                                    : 'bg-slate-800/50 text-slate-400 border-slate-700 hover:bg-slate-800'
+                                ? 'bg-blue-500/10 text-blue-400 border-blue-500/20'
+                                : 'bg-slate-800/50 text-slate-400 border-slate-700 hover:bg-slate-800'
                                 }`}
                         >
                             {status.charAt(0).toUpperCase() + status.slice(1)}
