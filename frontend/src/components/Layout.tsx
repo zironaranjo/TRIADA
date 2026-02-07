@@ -32,8 +32,8 @@ const Layout = () => {
             {/* Sidebar */}
             <aside className="w-64 flex-shrink-0 border-r border-white/5 bg-[#0f172a]/50 backdrop-blur-xl flex flex-col">
                 {/* Logo Area */}
-                <div className="h-16 flex items-center px-6 border-b border-white/5">
-                    <img src="/logotriadak.png" alt="TRIADA" className="h-8 w-auto" />
+                <div className="h-20 flex items-center px-6 border-b border-white/5 bg-black/20">
+                    <img src="/logotriadak.png" alt="TRIADA" className="h-10 w-auto" />
                 </div>
 
                 {/* Navigation */}
