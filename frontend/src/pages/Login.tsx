@@ -80,9 +80,6 @@ const Login = () => {
                     className="bg-gray-800/50 backdrop-blur-xl p-8 rounded-3xl border border-gray-700/50 shadow-2xl"
                 >
                     <div className="mb-8">
-                        <div className="h-12 w-12 bg-blue-600 rounded-xl mb-6 flex items-center justify-center shadow-lg shadow-blue-500/20">
-                            <span className="text-2xl font-bold text-white">T</span>
-                        </div>
                         <h1 className="text-3xl font-bold text-white mb-2 tracking-tight">
                             {isSignUp ? 'Create your account' : 'Welcome back'}
                         </h1>
