@@ -8,15 +8,14 @@ import {
     PiggyBank,
     Settings,
     LogOut,
-    ChevronRight,
-    CircleDashed
+    ChevronRight
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useAuth } from '../contexts/AuthContext';
 
 const Layout = () => {
     const location = useLocation();
-    const { signOut } = useAuth();
+    const { signOut, profile } = useAuth();
 
     const isActive = (path: string) => location.pathname.startsWith(path);
 
@@ -81,24 +80,27 @@ const Layout = () => {
                     </div>
                 </nav>
 
-                {/* Status Footer */}
+                {/* User Profile Footer */}
                 <div className="p-4 border-t border-white/5 bg-black/20">
                     <div className="rounded-xl bg-white/5 p-3">
                         <div className="flex items-center gap-3 mb-3">
-                            <div className="relative">
-                                <div className="h-2 w-2 rounded-full bg-emerald-500"></div>
-                                <div className="absolute inset-0 h-2 w-2 rounded-full bg-emerald-500 animate-ping opacity-75"></div>
+                            <div className="h-8 w-8 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center">
+                                <span className="text-sm font-bold text-white">
+                                    {profile?.email?.charAt(0).toUpperCase() || 'U'}
+                                </span>
                             </div>
-                            <span className="text-xs font-medium text-emerald-400">All Systems Online</span>
-                        </div>
-                        <div className="space-y-2">
-                            <div className="flex items-center justify-between text-xs text-slate-500">
-                                <span className="flex items-center gap-1"><CircleDashed className="h-3 w-3" /> Airbnb</span>
-                                <span className="text-emerald-500">Sync</span>
-                            </div>
-                            <div className="flex items-center justify-between text-xs text-slate-500">
-                                <span className="flex items-center gap-1"><CircleDashed className="h-3 w-3" /> Booking</span>
-                                <span className="text-emerald-500">Sync</span>
+                            <div className="flex-1 min-w-0">
+                                <p className="text-sm font-medium text-white truncate">
+                                    {profile?.full_name || profile?.email?.split('@')[0] || 'User'}
+                                </p>
+                                <div className="flex items-center gap-2">
+                                    <span className={`text-[10px] font-semibold uppercase px-2 py-0.5 rounded-full ${profile?.role === 'admin'
+                                        ? 'bg-amber-500/20 text-amber-400'
+                                        : 'bg-blue-500/20 text-blue-400'
+                                        }`}>
+                                        {profile?.role || 'owner'}
+                                    </span>
+                                </div>
                             </div>
                         </div>
                     </div>
