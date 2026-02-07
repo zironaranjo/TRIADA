@@ -34,14 +34,9 @@ const Layout = () => {
             <aside className="w-64 flex-shrink-0 border-r border-white/5 bg-[#0f172a]/50 backdrop-blur-xl flex flex-col">
                 {/* Logo Area */}
                 <div className="h-16 flex items-center px-6 border-b border-white/5">
-                    <div className="flex items-center gap-2">
-                        <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-lg shadow-indigo-500/20">
-                            <span className="font-bold text-white">T</span>
-                        </div>
-                        <div>
-                            <h1 className="font-bold text-white text-lg tracking-tight">TRIADA</h1>
-                            <p className="text-[10px] text-slate-400 uppercase tracking-wider font-medium">Vacation ERP</p>
-                        </div>
+                    <div>
+                        <h1 className="font-bold text-white text-lg tracking-tight">TRIADA</h1>
+                        <p className="text-[10px] text-slate-400 uppercase tracking-wider font-medium">Vacation ERP</p>
                     </div>
                 </div>
 
