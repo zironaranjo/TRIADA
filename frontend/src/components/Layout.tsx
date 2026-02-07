@@ -12,10 +12,11 @@ import {
     CircleDashed
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-// import './Layout.css'; // Removed in favor of Tailwind
+import { useAuth } from '../contexts/AuthContext';
 
 const Layout = () => {
     const location = useLocation();
+    const { signOut } = useAuth();
 
     const isActive = (path: string) => location.pathname.startsWith(path);
 
@@ -107,7 +108,10 @@ const Layout = () => {
                         </div>
                     </div>
 
-                    <button className="mt-4 flex items-center gap-2 text-xs text-slate-500 hover:text-red-400 transition-colors w-full justify-center">
+                    <button
+                        onClick={signOut}
+                        className="mt-4 flex items-center gap-2 text-xs text-slate-500 hover:text-red-400 transition-colors w-full justify-center"
+                    >
                         <LogOut className="h-3 w-3" />
                         Sign Out
                     </button>
