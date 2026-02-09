@@ -146,9 +146,9 @@ const Properties = () => {
             setIsCreateModalOpen(false);
             setNewProperty({ name: '', address: '', city: '', price_per_night: '', rooms: 1, max_guests: 2, image_url: '' });
             fetchProperties(); // Refresh list
-        } catch (error) {
+        } catch (error: any) {
             console.error('Error creating property:', error);
-            alert('Error creating property');
+            alert(`Error: ${error.message || 'Unknown error'}`);
         } finally {
             setCreateLoading(false);
         }
