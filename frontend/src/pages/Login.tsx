@@ -80,7 +80,7 @@ const Login = () => {
                     className="bg-gray-800/50 backdrop-blur-xl p-8 rounded-3xl border border-gray-700/50 shadow-2xl"
                 >
                     <div className="mb-10 text-center">
-                        <img src="/logotriadak.png" alt="TRIADA Logo" className="h-32 w-auto mx-auto mb-6 transition-transform hover:scale-105 duration-500" />
+                        <img src="/logotriadak.png" alt="TRIADA Logo" className="h-64 w-auto mx-auto mb-6 transition-transform hover:scale-105 duration-500 object-contain drop-shadow-2xl" />
                         <h1 className="text-3xl font-bold text-white mb-2 tracking-tight">
                             {isSignUp ? 'Create your account' : 'Welcome back'}
                         </h1>
