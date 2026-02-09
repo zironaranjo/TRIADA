@@ -76,6 +76,8 @@ const Bookings = () => {
     const [createLoading, setCreateLoading] = useState(false);
     const [newBooking, setNewBooking] = useState({
         guest_name: '',
+        guest_email: '',
+        guest_phone: '',
         property_id: '',
         start_date: '',
         end_date: '',
@@ -136,6 +138,8 @@ const Bookings = () => {
                 .insert([{
                     owner_id: user.id,
                     guest_name: newBooking.guest_name,
+                    guest_email: newBooking.guest_email,
+                    guest_phone: newBooking.guest_phone,
                     property_id: newBooking.property_id,
                     start_date: newBooking.start_date,
                     end_date: newBooking.end_date,
@@ -148,6 +152,8 @@ const Bookings = () => {
             setIsCreateModalOpen(false);
             setNewBooking({
                 guest_name: '',
+                guest_email: '',
+                guest_phone: '',
                 property_id: '',
                 start_date: '',
                 end_date: '',
@@ -208,8 +214,8 @@ const Bookings = () => {
                             key={status}
                             onClick={() => setStatusFilter(status)}
                             className={`px-4 py-2.5 rounded-xl text-sm font-medium border transition-all whitespace-nowrap ${statusFilter === status
-                                    ? 'bg-blue-500/10 text-blue-400 border-blue-500/20'
-                                    : 'bg-slate-800/50 text-slate-400 border-slate-700 hover:bg-slate-800'
+                                ? 'bg-blue-500/10 text-blue-400 border-blue-500/20'
+                                : 'bg-slate-800/50 text-slate-400 border-slate-700 hover:bg-slate-800'
                                 }`}
                         >
                             {status.charAt(0).toUpperCase() + status.slice(1).replace('_', ' ')}
@@ -355,6 +361,30 @@ const Bookings = () => {
                                         className="w-full bg-slate-900/50 border border-slate-700 rounded-xl px-4 py-2.5 text-white focus:ring-2 focus:ring-blue-500/50"
                                         placeholder="John Doe"
                                     />
+                                </div>
+
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div className="space-y-2">
+                                        <label className="text-sm font-medium text-slate-300">Guest Email</label>
+                                        <input
+                                            type="email"
+                                            required
+                                            value={newBooking.guest_email}
+                                            onChange={(e) => setNewBooking({ ...newBooking, guest_email: e.target.value })}
+                                            className="w-full bg-slate-900/50 border border-slate-700 rounded-xl px-4 py-2.5 text-white focus:ring-2 focus:ring-blue-500/50"
+                                            placeholder="john@example.com"
+                                        />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <label className="text-sm font-medium text-slate-300">Phone</label>
+                                        <input
+                                            type="tel"
+                                            value={newBooking.guest_phone}
+                                            onChange={(e) => setNewBooking({ ...newBooking, guest_phone: e.target.value })}
+                                            className="w-full bg-slate-900/50 border border-slate-700 rounded-xl px-4 py-2.5 text-white focus:ring-2 focus:ring-blue-500/50"
+                                            placeholder="+1 234 567 8900"
+                                        />
+                                    </div>
                                 </div>
 
                                 <div className="grid grid-cols-2 gap-4">
