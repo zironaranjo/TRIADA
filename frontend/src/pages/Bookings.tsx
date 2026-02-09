@@ -145,9 +145,25 @@ const Bookings = () => {
                     end_date: newBooking.end_date,
                     total_price: parseFloat(newBooking.total_price) || 0,
                     status: newBooking.status
-                }]);
+                }]).select();
 
             if (error) throw error;
+
+            // --- Send Confirmation Email (Backend) ---
+            const newBookingData = data ? data[0] : null;
+            if (newBookingData) {
+                const bookingForEmail = {
+                    ...newBookingData,
+                    properties: properties.find(p => p.id === newBooking.property_id)
+                };
+
+                // Non-blocking email send
+                fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/emails/booking-confirmation`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ booking: bookingForEmail })
+                }).catch(err => console.error('Failed to send email:', err));
+            }
 
             setIsCreateModalOpen(false);
             setNewBooking({

@@ -9,6 +9,7 @@ import { BookingsModule } from './bookings/bookings.module';
 import { AccountingModule } from './accounting/accounting.module';
 import { CrmModule } from './crm/crm.module';
 import { PaymentsModule } from './payments/payments.module';
+import { EmailsModule } from './emails/emails.module';
 
 @Module({
   imports: [
@@ -44,6 +45,7 @@ import { PaymentsModule } from './payments/payments.module';
     AccountingModule,
     CrmModule,
     PaymentsModule,
+    EmailsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
