@@ -17,7 +17,7 @@ export class EmailsService {
 
         try {
             const { data, error } = await this.resend.emails.send({
-                from: 'Triada <onboarding@resend.dev>', // O tu dominio verificado: 'reservas@tudominio.com'
+                from: 'Triada Reservas <reservas@triadak.io>',
                 to: [to],
                 subject: `Booking Confirmed #${booking.id.slice(0, 6)} - Triada`,
                 html: `
