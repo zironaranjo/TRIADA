@@ -5,7 +5,11 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     rawBody: true,
   });
-  app.enableCors();
+  app.enableCors({
+    origin: true, // Allow all origins (or specify: ['https://triadak.io', 'https://www.triadak.io'])
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+    credentials: true,
+  });
   const dbUrl = process.env.DATABASE_URL;
   console.log(`🔍 DIAGNOSTIC: DATABASE_URL is ${dbUrl ? 'Present' : 'MISSING'}`);
   if (dbUrl) {
