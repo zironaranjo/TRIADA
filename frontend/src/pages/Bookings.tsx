@@ -133,7 +133,7 @@ const Bookings = () => {
 
             // Check if user is admin/owner logic here if needed
 
-            const { error } = await supabase
+            const { data, error } = await supabase
                 .from('bookings')
                 .insert([{
                     owner_id: user.id,
@@ -158,7 +158,7 @@ const Bookings = () => {
                 };
 
                 // Non-blocking email send
-                fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/emails/booking-confirmation`, {
+                fetch(`${import.meta.env.VITE_API_URL || 'https://api.triadak.io'}/emails/booking-confirmation`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ booking: bookingForEmail })
