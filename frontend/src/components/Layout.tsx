@@ -32,8 +32,11 @@ const Layout = () => {
             {/* Sidebar */}
             <aside className="w-64 flex-shrink-0 border-r border-white/5 bg-[#0f172a]/50 backdrop-blur-xl flex flex-col">
                 {/* Logo Area */}
-                <div className="h-40 flex items-center justify-center border-b border-white/5 bg-black/20 py-6">
-                    <img src="/logotriadak.png" alt="TRIADA" className="h-32 w-auto max-w-full px-4 object-contain" />
+                <div className="h-40 flex flex-col items-center justify-center py-6">
+                    <img src="/logotriadak.png" alt="TRIADA" className="h-28 w-auto max-w-full px-4 object-contain mb-2" />
+                    <span className="text-[10px] font-bold text-slate-500 tracking-[0.2em] uppercase">
+                        Vacational Renting
+                    </span>
                 </div>
 
                 {/* Navigation */}
