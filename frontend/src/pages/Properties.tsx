@@ -84,8 +84,41 @@ const Properties = () => {
         price_per_night: '',
         rooms: 1,
         max_guests: 2,
+        image_url: '',
     });
     const [createLoading, setCreateLoading] = useState(false);
+    const [uploadingImage, setUploadingImage] = useState(false);
+
+    const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        try {
+            setUploadingImage(true);
+            const file = e.target.files?.[0];
+            if (!file) return;
+
+            const fileExt = file.name.split('.').pop();
+            const fileName = `${Math.random()}.${fileExt}`;
+            const filePath = `${fileName}`;
+
+            const { error: uploadError } = await supabase.storage
+                .from('property-images')
+                .upload(filePath, file);
+
+            if (uploadError) {
+                throw uploadError;
+            }
+
+            const { data } = supabase.storage
+                .from('property-images')
+                .getPublicUrl(filePath);
+
+            setNewProperty({ ...newProperty, image_url: data.publicUrl });
+        } catch (error) {
+            console.error('Error uploading image:', error);
+            alert('Error uploading image');
+        } finally {
+            setUploadingImage(false);
+        }
+    };
 
     const handleCreateProperty = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -104,13 +137,14 @@ const Properties = () => {
                     rooms: newProperty.rooms,
                     max_guests: newProperty.max_guests,
                     status: 'active',
+                    image_url: newProperty.image_url || null,
                 },
             ]);
 
             if (error) throw error;
 
             setIsCreateModalOpen(false);
-            setNewProperty({ name: '', address: '', city: '', price_per_night: '', rooms: 1, max_guests: 2 });
+            setNewProperty({ name: '', address: '', city: '', price_per_night: '', rooms: 1, max_guests: 2, image_url: '' });
             fetchProperties(); // Refresh list
         } catch (error) {
             console.error('Error creating property:', error);
@@ -119,6 +153,7 @@ const Properties = () => {
             setCreateLoading(false);
         }
     };
+
 
     // --- Filtering ---
     const filteredProperties = properties.filter((property) => {
@@ -352,6 +387,31 @@ const Properties = () => {
                                             className="w-full bg-slate-900/50 border border-slate-700 rounded-xl px-4 py-2.5 text-white focus:ring-2 focus:ring-blue-500/50"
                                         />
                                     </div>
+                                </div>
+
+                                <div className="space-y-2">
+                                    <label className="text-sm font-medium text-slate-300">Property Image</label>
+                                    <div className="flex items-center gap-4">
+                                        <div className="relative w-full">
+                                            <input
+                                                type="file"
+                                                accept="image/*"
+                                                onChange={handleImageUpload}
+                                                className="w-full bg-slate-900/50 border border-slate-700 rounded-xl px-4 py-2.5 text-white file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-600 file:text-white hover:file:bg-blue-500 transition-all"
+                                                disabled={uploadingImage}
+                                            />
+                                            {uploadingImage && (
+                                                <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                                                    <Loader2 className="h-5 w-5 text-blue-500 animate-spin" />
+                                                </div>
+                                            )}
+                                        </div>
+                                    </div>
+                                    {newProperty.image_url && (
+                                        <div className="mt-2 relative h-32 w-full rounded-xl overflow-hidden border border-slate-700">
+                                            <img src={newProperty.image_url} alt="Preview" className="w-full h-full object-cover" />
+                                        </div>
+                                    )}
                                 </div>
 
                                 <div className="flex justify-end gap-3 mt-8">
