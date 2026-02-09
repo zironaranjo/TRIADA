@@ -133,7 +133,7 @@ const Bookings = () => {
 
             // Check if user is admin/owner logic here if needed
 
-            const { data, error } = await supabase
+            const { error } = await supabase
                 .from('bookings')
                 .insert([{
                     owner_id: user.id,
@@ -145,25 +145,28 @@ const Bookings = () => {
                     end_date: newBooking.end_date,
                     total_price: parseFloat(newBooking.total_price) || 0,
                     status: newBooking.status
-                }]).select();
+                }]);
 
             if (error) throw error;
 
             // --- Send Confirmation Email (Backend) ---
-            const newBookingData = data ? data[0] : null;
-            if (newBookingData) {
-                const bookingForEmail = {
-                    ...newBookingData,
-                    properties: properties.find(p => p.id === newBooking.property_id)
-                };
+            const selectedProperty = properties.find(p => p.id === newBooking.property_id);
+            const bookingForEmail = {
+                id: crypto.randomUUID().slice(0, 8),
+                guest_name: newBooking.guest_name,
+                guest_email: newBooking.guest_email,
+                start_date: newBooking.start_date,
+                end_date: newBooking.end_date,
+                total_price: newBooking.total_price,
+                properties: selectedProperty || { name: 'Property' }
+            };
 
-                // Non-blocking email send
-                fetch(`${import.meta.env.VITE_API_URL || 'https://api.triadak.io'}/emails/booking-confirmation`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ booking: bookingForEmail })
-                }).catch(err => console.error('Failed to send email:', err));
-            }
+            // Non-blocking: fire and forget
+            fetch(`${import.meta.env.VITE_API_URL || 'https://api.triadak.io'}/emails/booking-confirmation`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ booking: bookingForEmail })
+            }).catch(err => console.error('Failed to send email:', err));
 
             setIsCreateModalOpen(false);
             setNewBooking({
