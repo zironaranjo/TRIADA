@@ -34,7 +34,7 @@ import { EmailsModule } from './emails/emails.module';
           type: 'postgres',
           url: configService.get<string>('DATABASE_URL'),
           autoLoadEntities: true,
-          synchronize: true, // Re-enable once to create missing tables
+          synchronize: false, // Reverted to false to prevent startup crash
           ssl: { rejectUnauthorized: false },
           retryAttempts: 3,
           retryDelay: 3000,
