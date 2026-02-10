@@ -41,22 +41,7 @@ export class EmailsService {
                     <!-- Logo Header -->
                     <tr>
                         <td align="center" style="padding: 0 0 30px 0;">
-                            <table role="presentation" cellpadding="0" cellspacing="0">
-                                <tr>
-                                    <td style="background: linear-gradient(135deg, #3b82f6, #8b5cf6); -webkit-background-clip: text; padding: 0;">
-                                        <h1 style="margin: 0; font-size: 28px; font-weight: 800; color: #3b82f6; letter-spacing: -0.5px;">
-                                            TRIADAK
-                                        </h1>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td align="center">
-                                        <p style="margin: 4px 0 0 0; font-size: 11px; color: #64748b; letter-spacing: 3px; text-transform: uppercase;">
-                                            Vacational Renting
-                                        </p>
-                                    </td>
-                                </tr>
-                            </table>
+                            <img src="https://triadak.io/logotriadak.png" alt="Triadak" width="180" style="display: block; max-width: 180px; height: auto;" />
                         </td>
                     </tr>
 
