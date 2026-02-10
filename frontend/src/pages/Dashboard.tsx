@@ -7,7 +7,7 @@ import {
     CheckCircle, Globe, Smartphone, CreditCard,
     Activity, Zap, Settings
 } from "lucide-react";
-import { AreaChart, Area, ResponsiveContainer } from 'recharts';
+import { AreaChart, Area } from 'recharts';
 
 interface Stats {
     totalBookings: number;
@@ -270,11 +270,9 @@ function KpiCard({ title, value, icon, trend, color, borderColor }: any) {
 
             {/* Mini Chart Background Effect */}
             <div className="absolute -bottom-4 -right-4 w-24 h-16 opacity-30">
-                <ResponsiveContainer width="100%" height="100%">
-                    <AreaChart data={sparklineData}>
-                        <Area type="monotone" dataKey="value" stroke="#fff" fill="#fff" fillOpacity={0.2} />
-                    </AreaChart>
-                </ResponsiveContainer>
+                <AreaChart width={96} height={64} data={sparklineData}>
+                    <Area type="monotone" dataKey="value" stroke="#fff" fill="#fff" fillOpacity={0.2} isAnimationActive={false} />
+                </AreaChart>
             </div>
         </motion.div>
     )
