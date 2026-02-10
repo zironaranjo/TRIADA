@@ -24,6 +24,9 @@ export class Booking {
     @Column({ default: 'DIRECT' })
     platform: 'DIRECT' | 'AIRBNB' | 'BOOKING_COM';
 
+    @Column({ nullable: true })
+    icalUid: string; // To prevent duplicates from iCal sync
+
     @ManyToOne(() => Property, (property) => property.bookings, { nullable: true })
     property: Property;
 

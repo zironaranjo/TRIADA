@@ -85,6 +85,7 @@ const Properties = () => {
         rooms: 1,
         max_guests: 2,
         image_url: '',
+        ical_url: '' // Added for sync
     });
     const [createLoading, setCreateLoading] = useState(false);
     const [uploadingImage, setUploadingImage] = useState(false);
@@ -138,13 +139,14 @@ const Properties = () => {
                     max_guests: newProperty.max_guests,
                     status: 'active',
                     image_url: newProperty.image_url || null,
+                    ical_url: newProperty.ical_url || null, // Save to DB
                 },
             ]);
 
             if (error) throw error;
 
             setIsCreateModalOpen(false);
-            setNewProperty({ name: '', address: '', city: '', price_per_night: '', rooms: 1, max_guests: 2, image_url: '' });
+            setNewProperty({ name: '', address: '', city: '', price_per_night: '', rooms: 1, max_guests: 2, image_url: '', ical_url: '' });
             fetchProperties(); // Refresh list
         } catch (error: any) {
             console.error('Error creating property:', error);
@@ -248,7 +250,23 @@ const Properties = () => {
                                     </div>
                                 )}
                                 <div className="absolute top-3 right-3">
-                                    <StatusBadge status={property.status} />
+                                    <div className="flex items-center gap-2">
+                                        <button
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                // Trigger sync via backend API
+                                                fetch(`${import.meta.env.VITE_API_URL || 'https://api.triadak.io'}/bookings/sync/${property.id}`, { method: 'POST' })
+                                                    .then(res => res.json())
+                                                    .then(data => alert(`Sync Complete: ${data.message} (+${data.added})`))
+                                                    .catch(() => alert('Sync Failed'));
+                                            }}
+                                            className="p-1 rounded-full bg-slate-900/50 hover:bg-blue-500/20 text-slate-400 hover:text-blue-400 transition-colors"
+                                            title="Sync Calendar"
+                                        >
+                                            <Loader2 className="h-3 w-3" />
+                                        </button>
+                                        <StatusBadge status={property.status} />
+                                    </div>
                                 </div>
                             </div>
 
@@ -414,6 +432,17 @@ const Properties = () => {
                                             <img src={newProperty.image_url} alt="Preview" className="w-full h-full object-cover" />
                                         </div>
                                     )}
+                                </div>
+                                <div className="space-y-2">
+                                    <label className="text-sm font-medium text-slate-300">Airbnb/Booking iCal URL</label>
+                                    <input
+                                        type="text"
+                                        value={newProperty.ical_url}
+                                        onChange={(e) => setNewProperty({ ...newProperty, ical_url: e.target.value })}
+                                        className="w-full bg-slate-900/50 border border-slate-700 rounded-xl px-4 py-2.5 text-white focus:ring-2 focus:ring-blue-500/50 text-xs font-mono"
+                                        placeholder="https://www.airbnb.com/calendar/ical/..."
+                                    />
+                                    <p className="text-[10px] text-slate-500">Paste the iCal link from Airbnb or Booking.com to auto-sync reservations.</p>
                                 </div>
 
                                 <div className="flex justify-end gap-3 mt-8">

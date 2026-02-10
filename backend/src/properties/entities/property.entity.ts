@@ -31,6 +31,9 @@ export class Property {
     @Column({ type: 'text', nullable: true })
     description: string;
 
+    @Column({ type: 'text', nullable: true }) // Link to Airbnb/Booking iCal
+    icalUrl: string;
+
     @ManyToOne(() => Owner, (owner) => owner.properties, { nullable: true })
     owner: Owner;
 
