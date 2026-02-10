@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
     Calendar,
@@ -10,7 +10,14 @@ import {
     CheckCircle,
     Clock,
     XCircle,
-    Loader2
+    Loader2,
+    List,
+    ChevronLeft,
+    ChevronRight,
+    X,
+    Mail,
+    Phone,
+    DollarSign
 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
@@ -20,7 +27,8 @@ interface Booking {
     id: string;
     guest_name: string;
     guest_email: string;
-    start_date: string; // ISO date string YYYY-MM-DD
+    guest_phone?: string;
+    start_date: string;
     end_date: string;
     status: 'pending' | 'confirmed' | 'checked_in' | 'completed' | 'cancelled';
     total_price: number;
@@ -63,6 +71,264 @@ const StatusBadge = ({ status }: { status: Booking['status'] }) => {
     );
 };
 
+// --- Status Color Map for Calendar ---
+const statusColors: Record<string, { bg: string; border: string; text: string }> = {
+    confirmed: { bg: 'bg-emerald-500/20', border: 'border-emerald-500/40', text: 'text-emerald-300' },
+    checked_in: { bg: 'bg-blue-500/20', border: 'border-blue-500/40', text: 'text-blue-300' },
+    pending: { bg: 'bg-amber-500/20', border: 'border-amber-500/40', text: 'text-amber-300' },
+    completed: { bg: 'bg-slate-500/20', border: 'border-slate-500/40', text: 'text-slate-300' },
+    cancelled: { bg: 'bg-red-500/20', border: 'border-red-500/40', text: 'text-red-300' },
+};
+
+// --- Calendar Helpers ---
+const getDaysInMonth = (year: number, month: number) => new Date(year, month + 1, 0).getDate();
+const getFirstDayOfMonth = (year: number, month: number) => new Date(year, month, 1).getDay();
+
+const MONTH_NAMES = [
+    'January', 'February', 'March', 'April', 'May', 'June',
+    'July', 'August', 'September', 'October', 'November', 'December'
+];
+const DAY_NAMES = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+// --- Calendar Component ---
+const BookingCalendar = ({ bookings, onBookingClick }: { bookings: Booking[]; onBookingClick: (b: Booking) => void }) => {
+    const today = new Date();
+    const [currentMonth, setCurrentMonth] = useState(today.getMonth());
+    const [currentYear, setCurrentYear] = useState(today.getFullYear());
+
+    const navigateMonth = (direction: number) => {
+        let newMonth = currentMonth + direction;
+        let newYear = currentYear;
+        if (newMonth > 11) { newMonth = 0; newYear++; }
+        if (newMonth < 0) { newMonth = 11; newYear--; }
+        setCurrentMonth(newMonth);
+        setCurrentYear(newYear);
+    };
+
+    const goToToday = () => {
+        setCurrentMonth(today.getMonth());
+        setCurrentYear(today.getFullYear());
+    };
+
+    const daysInMonth = getDaysInMonth(currentYear, currentMonth);
+    const firstDay = getFirstDayOfMonth(currentYear, currentMonth);
+
+    // Get bookings that overlap with this month
+    const monthStart = new Date(currentYear, currentMonth, 1);
+    const monthEnd = new Date(currentYear, currentMonth, daysInMonth);
+
+    const monthBookings = useMemo(() => {
+        return bookings.filter(b => {
+            const start = new Date(b.start_date);
+            const end = new Date(b.end_date);
+            return start <= monthEnd && end >= monthStart;
+        });
+    }, [bookings, currentMonth, currentYear]);
+
+    // Map day -> bookings for that day
+    const dayBookingsMap = useMemo(() => {
+        const map: Record<number, Booking[]> = {};
+        for (let day = 1; day <= daysInMonth; day++) {
+            const date = new Date(currentYear, currentMonth, day);
+            const dateStr = date.toISOString().split('T')[0];
+            map[day] = monthBookings.filter(b => {
+                return b.start_date <= dateStr && b.end_date >= dateStr;
+            });
+        }
+        return map;
+    }, [monthBookings, daysInMonth, currentMonth, currentYear]);
+
+    const todayDate = today.getDate();
+    const isCurrentMonth = today.getMonth() === currentMonth && today.getFullYear() === currentYear;
+
+    return (
+        <div className="bg-slate-800/30 border border-slate-700/50 rounded-2xl overflow-hidden">
+            {/* Calendar Header */}
+            <div className="flex items-center justify-between p-4 border-b border-slate-700/50">
+                <div className="flex items-center gap-3">
+                    <h2 className="text-xl font-bold text-white">
+                        {MONTH_NAMES[currentMonth]} {currentYear}
+                    </h2>
+                    <button
+                        onClick={goToToday}
+                        className="text-xs px-2.5 py-1 bg-blue-500/10 text-blue-400 border border-blue-500/20 rounded-lg hover:bg-blue-500/20 transition-colors"
+                    >
+                        Today
+                    </button>
+                </div>
+                <div className="flex items-center gap-1">
+                    <button
+                        onClick={() => navigateMonth(-1)}
+                        className="p-2 hover:bg-slate-700/50 rounded-lg text-slate-400 hover:text-white transition-colors"
+                    >
+                        <ChevronLeft className="h-5 w-5" />
+                    </button>
+                    <button
+                        onClick={() => navigateMonth(1)}
+                        className="p-2 hover:bg-slate-700/50 rounded-lg text-slate-400 hover:text-white transition-colors"
+                    >
+                        <ChevronRight className="h-5 w-5" />
+                    </button>
+                </div>
+            </div>
+
+            {/* Day Names Header */}
+            <div className="grid grid-cols-7 border-b border-slate-700/50">
+                {DAY_NAMES.map(day => (
+                    <div key={day} className="text-center py-3 text-xs font-semibold text-slate-500 uppercase tracking-wider">
+                        {day}
+                    </div>
+                ))}
+            </div>
+
+            {/* Calendar Grid */}
+            <div className="grid grid-cols-7">
+                {/* Empty cells for offset */}
+                {Array.from({ length: firstDay }).map((_, i) => (
+                    <div key={`empty-${i}`} className="min-h-[100px] border-b border-r border-slate-700/20 bg-slate-900/20" />
+                ))}
+
+                {/* Day cells */}
+                {Array.from({ length: daysInMonth }).map((_, i) => {
+                    const day = i + 1;
+                    const dayBookings = dayBookingsMap[day] || [];
+                    const isToday = isCurrentMonth && day === todayDate;
+                    const isWeekend = (firstDay + i) % 7 === 0 || (firstDay + i) % 7 === 6;
+
+                    return (
+                        <div
+                            key={day}
+                            className={`min-h-[100px] border-b border-r border-slate-700/20 p-1.5 transition-colors ${
+                                isToday ? 'bg-blue-500/5' : isWeekend ? 'bg-slate-900/30' : 'bg-transparent'
+                            } hover:bg-slate-700/20`}
+                        >
+                            <div className={`text-xs font-medium mb-1 ${
+                                isToday
+                                    ? 'bg-blue-500 text-white w-6 h-6 rounded-full flex items-center justify-center'
+                                    : 'text-slate-500 pl-1'
+                            }`}>
+                                {day}
+                            </div>
+
+                            <div className="space-y-0.5">
+                                {dayBookings.slice(0, 3).map((booking) => {
+                                    const colors = statusColors[booking.status] || statusColors.pending;
+                                    const isStart = booking.start_date === new Date(currentYear, currentMonth, day).toISOString().split('T')[0];
+
+                                    return (
+                                        <button
+                                            key={booking.id}
+                                            onClick={() => onBookingClick(booking)}
+                                            className={`w-full text-left px-1.5 py-0.5 rounded text-[10px] font-medium truncate border transition-all hover:brightness-125 ${colors.bg} ${colors.border} ${colors.text}`}
+                                            title={`${booking.guest_name} - ${booking.properties?.name || 'Property'}`}
+                                        >
+                                            {isStart ? `→ ${booking.guest_name}` : booking.guest_name}
+                                        </button>
+                                    );
+                                })}
+                                {dayBookings.length > 3 && (
+                                    <p className="text-[10px] text-slate-500 pl-1">+{dayBookings.length - 3} more</p>
+                                )}
+                            </div>
+                        </div>
+                    );
+                })}
+            </div>
+
+            {/* Legend */}
+            <div className="flex flex-wrap items-center gap-4 p-3 border-t border-slate-700/50 bg-slate-900/20">
+                <span className="text-xs text-slate-500 font-medium">Status:</span>
+                {Object.entries(statusColors).map(([status, colors]) => (
+                    <div key={status} className="flex items-center gap-1.5">
+                        <div className={`w-3 h-3 rounded ${colors.bg} ${colors.border} border`} />
+                        <span className="text-xs text-slate-400 capitalize">{status.replace('_', ' ')}</span>
+                    </div>
+                ))}
+            </div>
+        </div>
+    );
+};
+
+// --- Booking Detail Modal ---
+const BookingDetailModal = ({ booking, onClose }: { booking: Booking; onClose: () => void }) => {
+    const nights = Math.ceil(
+        (new Date(booking.end_date).getTime() - new Date(booking.start_date).getTime()) / (1000 * 60 * 60 * 24)
+    );
+
+    return (
+        <>
+            <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                onClick={onClose}
+                className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50"
+            />
+            <motion.div
+                initial={{ opacity: 0, scale: 0.95, y: 20 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.95, y: 20 }}
+                className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-md bg-slate-800 border border-slate-700 rounded-2xl shadow-2xl z-50 overflow-hidden"
+            >
+                {/* Header */}
+                <div className="p-5 border-b border-slate-700/50 flex items-center justify-between">
+                    <div>
+                        <h2 className="text-lg font-bold text-white">{booking.guest_name}</h2>
+                        <p className="text-xs text-slate-400 font-mono">#{booking.id.slice(0, 8)}</p>
+                    </div>
+                    <button onClick={onClose} className="p-2 hover:bg-slate-700/50 rounded-lg text-slate-400 hover:text-white transition-colors">
+                        <X className="h-5 w-5" />
+                    </button>
+                </div>
+
+                {/* Body */}
+                <div className="p-5 space-y-4">
+                    <div className="flex items-center justify-between">
+                        <StatusBadge status={booking.status} />
+                        <span className="text-xl font-bold text-white">${booking.total_price}</span>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-3">
+                        <div className="bg-slate-900/50 rounded-xl p-3">
+                            <p className="text-[10px] text-slate-500 uppercase tracking-wider font-semibold">Check-in</p>
+                            <p className="text-sm text-white font-medium mt-1">{booking.start_date}</p>
+                        </div>
+                        <div className="bg-slate-900/50 rounded-xl p-3">
+                            <p className="text-[10px] text-slate-500 uppercase tracking-wider font-semibold">Check-out</p>
+                            <p className="text-sm text-white font-medium mt-1">{booking.end_date}</p>
+                        </div>
+                    </div>
+
+                    <div className="bg-slate-900/50 rounded-xl p-3 flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                            <MapPin className="h-4 w-4 text-slate-500" />
+                            <span className="text-sm text-slate-300">{booking.properties?.name || 'Unknown'}</span>
+                        </div>
+                        <span className="text-xs text-slate-500">{nights} night{nights !== 1 ? 's' : ''}</span>
+                    </div>
+
+                    {booking.guest_email && (
+                        <div className="flex items-center gap-2 text-sm text-slate-400">
+                            <Mail className="h-4 w-4 text-slate-500" />
+                            <span>{booking.guest_email}</span>
+                        </div>
+                    )}
+
+                    {booking.guest_phone && (
+                        <div className="flex items-center gap-2 text-sm text-slate-400">
+                            <Phone className="h-4 w-4 text-slate-500" />
+                            <span>{booking.guest_phone}</span>
+                        </div>
+                    )}
+                </div>
+            </motion.div>
+        </>
+    );
+};
+
+// ==============================
+// MAIN COMPONENT
+// ==============================
 const Bookings = () => {
     const { user } = useAuth();
     const [bookings, setBookings] = useState<Booking[]>([]);
@@ -70,6 +336,8 @@ const Bookings = () => {
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState('');
     const [statusFilter, setStatusFilter] = useState<string>('all');
+    const [viewMode, setViewMode] = useState<'list' | 'calendar'>('calendar');
+    const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null);
 
     // Create Config
     const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
@@ -89,7 +357,6 @@ const Bookings = () => {
     const fetchData = async () => {
         setLoading(true);
         try {
-            // Fetch Bookings with Property details
             const { data: bookingsData, error: bookingsError } = await supabase
                 .from('bookings')
                 .select(`
@@ -104,7 +371,6 @@ const Bookings = () => {
             if (bookingsError) throw bookingsError;
             setBookings(bookingsData as any);
 
-            // Fetch Properties for the dropdown
             const { data: propsData, error: propsError } = await supabase
                 .from('properties')
                 .select('id, name')
@@ -130,8 +396,6 @@ const Bookings = () => {
         setCreateLoading(true);
         try {
             if (!user) throw new Error('User not authenticated');
-
-            // Check if user is admin/owner logic here if needed
 
             const { error } = await supabase
                 .from('bookings')
@@ -161,7 +425,6 @@ const Bookings = () => {
                 properties: selectedProperty || { name: 'Property' }
             };
 
-            // Non-blocking: fire and forget
             fetch(`${import.meta.env.VITE_API_URL || 'https://api.triadak.io'}/emails/booking-confirmation`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -179,7 +442,7 @@ const Bookings = () => {
                 total_price: '',
                 status: 'pending'
             });
-            fetchData(); // Refresh list
+            fetchData();
 
         } catch (error: any) {
             console.error(error);
@@ -198,139 +461,220 @@ const Bookings = () => {
         return matchesSearch && matchesStatus;
     });
 
+    // --- Stats ---
+    const stats = useMemo(() => {
+        const now = new Date().toISOString().split('T')[0];
+        return {
+            total: bookings.length,
+            active: bookings.filter(b => b.status === 'confirmed' || b.status === 'checked_in').length,
+            upcoming: bookings.filter(b => b.start_date > now).length,
+            revenue: bookings.filter(b => b.status !== 'cancelled').reduce((sum, b) => sum + (b.total_price || 0), 0),
+        };
+    }, [bookings]);
+
     return (
-        <div className="p-6 max-w-7xl mx-auto space-y-8">
+        <div className="p-6 max-w-7xl mx-auto space-y-6">
             {/* Header */}
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
                     <h1 className="text-3xl font-bold text-white tracking-tight">Bookings</h1>
                     <p className="text-slate-400 mt-1">Manage reservations and calendar.</p>
                 </div>
-                <button
-                    onClick={() => setIsCreateModalOpen(true)}
-                    className="bg-blue-600 hover:bg-blue-500 text-white px-4 py-2.5 rounded-xl font-medium flex items-center gap-2 transition-all shadow-lg shadow-blue-500/20"
-                >
-                    <Plus className="h-5 w-5" />
-                    New Booking
-                </button>
-            </div>
-
-            {/* Filters */}
-            <div className="flex flex-col sm:flex-row gap-4">
-                <div className="relative flex-1">
-                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-500" />
-                    <input
-                        type="text"
-                        placeholder="Search guest, property..."
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                        className="w-full bg-slate-800/50 border border-slate-700 text-white pl-10 pr-4 py-2.5 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all"
-                    />
-                </div>
-                <div className="flex gap-2 overflow-x-auto pb-2 sm:pb-0">
-                    {['all', 'pending', 'confirmed', 'checked_in', 'cancelled'].map((status) => (
+                <div className="flex items-center gap-3">
+                    {/* View Toggle */}
+                    <div className="flex bg-slate-800/50 border border-slate-700 rounded-xl overflow-hidden">
                         <button
-                            key={status}
-                            onClick={() => setStatusFilter(status)}
-                            className={`px-4 py-2.5 rounded-xl text-sm font-medium border transition-all whitespace-nowrap ${statusFilter === status
-                                ? 'bg-blue-500/10 text-blue-400 border-blue-500/20'
-                                : 'bg-slate-800/50 text-slate-400 border-slate-700 hover:bg-slate-800'
-                                }`}
+                            onClick={() => setViewMode('list')}
+                            className={`px-3 py-2 flex items-center gap-1.5 text-sm font-medium transition-all ${
+                                viewMode === 'list'
+                                    ? 'bg-blue-500/10 text-blue-400'
+                                    : 'text-slate-400 hover:text-white'
+                            }`}
                         >
-                            {status.charAt(0).toUpperCase() + status.slice(1).replace('_', ' ')}
+                            <List className="h-4 w-4" />
+                            List
                         </button>
-                    ))}
+                        <button
+                            onClick={() => setViewMode('calendar')}
+                            className={`px-3 py-2 flex items-center gap-1.5 text-sm font-medium transition-all ${
+                                viewMode === 'calendar'
+                                    ? 'bg-blue-500/10 text-blue-400'
+                                    : 'text-slate-400 hover:text-white'
+                            }`}
+                        >
+                            <Calendar className="h-4 w-4" />
+                            Calendar
+                        </button>
+                    </div>
+
+                    <button
+                        onClick={() => setIsCreateModalOpen(true)}
+                        className="bg-blue-600 hover:bg-blue-500 text-white px-4 py-2.5 rounded-xl font-medium flex items-center gap-2 transition-all shadow-lg shadow-blue-500/20"
+                    >
+                        <Plus className="h-5 w-5" />
+                        New Booking
+                    </button>
                 </div>
             </div>
 
-            {/* Bookings List */}
+            {/* Quick Stats */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                {[
+                    { label: 'Total Bookings', value: stats.total, icon: Calendar, color: 'text-blue-400' },
+                    { label: 'Active', value: stats.active, icon: CheckCircle, color: 'text-emerald-400' },
+                    { label: 'Upcoming', value: stats.upcoming, icon: Clock, color: 'text-amber-400' },
+                    { label: 'Revenue', value: `$${stats.revenue.toLocaleString()}`, icon: DollarSign, color: 'text-violet-400' },
+                ].map((stat) => (
+                    <div key={stat.label} className="bg-slate-800/30 border border-slate-700/50 rounded-xl p-4 flex items-center gap-3">
+                        <div className={`h-10 w-10 rounded-lg bg-slate-800 flex items-center justify-center ${stat.color}`}>
+                            <stat.icon className="h-5 w-5" />
+                        </div>
+                        <div>
+                            <p className="text-xs text-slate-500">{stat.label}</p>
+                            <p className="text-lg font-bold text-white">{stat.value}</p>
+                        </div>
+                    </div>
+                ))}
+            </div>
+
+            {/* Filters (only for list view) */}
+            {viewMode === 'list' && (
+                <div className="flex flex-col sm:flex-row gap-4">
+                    <div className="relative flex-1">
+                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-500" />
+                        <input
+                            type="text"
+                            placeholder="Search guest, property..."
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                            className="w-full bg-slate-800/50 border border-slate-700 text-white pl-10 pr-4 py-2.5 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all"
+                        />
+                    </div>
+                    <div className="flex gap-2 overflow-x-auto pb-2 sm:pb-0">
+                        {['all', 'pending', 'confirmed', 'checked_in', 'cancelled'].map((status) => (
+                            <button
+                                key={status}
+                                onClick={() => setStatusFilter(status)}
+                                className={`px-4 py-2.5 rounded-xl text-sm font-medium border transition-all whitespace-nowrap ${statusFilter === status
+                                    ? 'bg-blue-500/10 text-blue-400 border-blue-500/20'
+                                    : 'bg-slate-800/50 text-slate-400 border-slate-700 hover:bg-slate-800'
+                                    }`}
+                            >
+                                {status.charAt(0).toUpperCase() + status.slice(1).replace('_', ' ')}
+                            </button>
+                        ))}
+                    </div>
+                </div>
+            )}
+
+            {/* Content */}
             {loading ? (
                 <div className="flex justify-center py-20">
                     <Loader2 className="h-10 w-10 text-blue-500 animate-spin" />
                 </div>
-            ) : filteredBookings.length === 0 ? (
-                <div className="text-center py-20 bg-slate-800/30 rounded-3xl border border-slate-700/50 border-dashed">
-                    <div className="h-16 w-16 bg-slate-800 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <Calendar className="h-8 w-8 text-slate-600" />
-                    </div>
-                    <h3 className="text-xl font-medium text-white mb-2">No bookings found</h3>
-                    <p className="text-slate-400 mb-6 max-w-sm mx-auto">
-                        Start by adding a new reservation manually.
-                    </p>
-                    <button
-                        onClick={() => setIsCreateModalOpen(true)}
-                        className="text-blue-400 hover:text-blue-300 font-medium"
-                    >
-                        Create new booking
-                    </button>
-                </div>
+            ) : viewMode === 'calendar' ? (
+                /* ========== CALENDAR VIEW ========== */
+                <BookingCalendar
+                    bookings={filteredBookings}
+                    onBookingClick={(b) => setSelectedBooking(b)}
+                />
             ) : (
-                <div className="space-y-4">
-                    {filteredBookings.map((booking) => (
-                        <motion.div
-                            key={booking.id}
-                            initial={{ opacity: 0, y: 10 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            className="bg-slate-800/50 border border-slate-700/50 rounded-2xl p-4 hover:border-slate-600 transition-all flex flex-col md:flex-row md:items-center gap-4 group"
+                /* ========== LIST VIEW ========== */
+                filteredBookings.length === 0 ? (
+                    <div className="text-center py-20 bg-slate-800/30 rounded-3xl border border-slate-700/50 border-dashed">
+                        <div className="h-16 w-16 bg-slate-800 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <Calendar className="h-8 w-8 text-slate-600" />
+                        </div>
+                        <h3 className="text-xl font-medium text-white mb-2">No bookings found</h3>
+                        <p className="text-slate-400 mb-6 max-w-sm mx-auto">
+                            Start by adding a new reservation manually.
+                        </p>
+                        <button
+                            onClick={() => setIsCreateModalOpen(true)}
+                            className="text-blue-400 hover:text-blue-300 font-medium"
                         >
-                            {/* Listing Info */}
-                            <div className="flex items-center gap-4 min-w-[200px]">
-                                <div className="h-12 w-12 rounded-xl bg-slate-700 overflow-hidden flex-shrink-0">
-                                    {booking.properties?.image_url ? (
-                                        <img src={booking.properties.image_url} alt="" className="h-full w-full object-cover" />
-                                    ) : (
-                                        <div className="h-full w-full flex items-center justify-center">
-                                            <MapPin className="h-5 w-5 text-slate-500" />
+                            Create new booking
+                        </button>
+                    </div>
+                ) : (
+                    <div className="space-y-4">
+                        {filteredBookings.map((booking) => (
+                            <motion.div
+                                key={booking.id}
+                                initial={{ opacity: 0, y: 10 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                onClick={() => setSelectedBooking(booking)}
+                                className="bg-slate-800/50 border border-slate-700/50 rounded-2xl p-4 hover:border-slate-600 transition-all flex flex-col md:flex-row md:items-center gap-4 group cursor-pointer"
+                            >
+                                {/* Listing Info */}
+                                <div className="flex items-center gap-4 min-w-[200px]">
+                                    <div className="h-12 w-12 rounded-xl bg-slate-700 overflow-hidden flex-shrink-0">
+                                        {booking.properties?.image_url ? (
+                                            <img src={booking.properties.image_url} alt="" className="h-full w-full object-cover" />
+                                        ) : (
+                                            <div className="h-full w-full flex items-center justify-center">
+                                                <MapPin className="h-5 w-5 text-slate-500" />
+                                            </div>
+                                        )}
+                                    </div>
+                                    <div>
+                                        <h3 className="text-white font-medium line-clamp-1">{booking.properties?.name || 'Unknown Property'}</h3>
+                                        <div className="text-xs text-slate-400 flex items-center gap-1">
+                                            Booking ID: <span className="font-mono text-slate-500">#{booking.id.slice(0, 6)}</span>
                                         </div>
-                                    )}
-                                </div>
-                                <div>
-                                    <h3 className="text-white font-medium line-clamp-1">{booking.properties?.name || 'Unknown Property'}</h3>
-                                    <div className="text-xs text-slate-400 flex items-center gap-1">
-                                        Booking ID: <span className="font-mono text-slate-500">#{booking.id.slice(0, 6)}</span>
                                     </div>
                                 </div>
-                            </div>
 
-                            {/* Guest Info */}
-                            <div className="flex items-center gap-3 min-w-[200px]">
-                                <div className="h-8 w-8 rounded-full bg-slate-700/50 flex items-center justify-center text-slate-400">
-                                    <User className="h-4 w-4" />
+                                {/* Guest Info */}
+                                <div className="flex items-center gap-3 min-w-[200px]">
+                                    <div className="h-8 w-8 rounded-full bg-slate-700/50 flex items-center justify-center text-slate-400">
+                                        <User className="h-4 w-4" />
+                                    </div>
+                                    <div>
+                                        <p className="text-slate-200 text-sm font-medium">{booking.guest_name}</p>
+                                        <p className="text-xs text-slate-500">{booking.guest_email || 'No email'}</p>
+                                    </div>
                                 </div>
-                                <div>
-                                    <p className="text-slate-200 text-sm font-medium">{booking.guest_name}</p>
-                                    <p className="text-xs text-slate-500">{booking.guest_email || 'No email'}</p>
-                                </div>
-                            </div>
 
-                            {/* Dates */}
-                            <div className="flex flex-col text-sm min-w-[150px]">
-                                <div className="flex items-center gap-2 text-slate-300">
-                                    <Calendar className="h-3.5 w-3.5 text-slate-500" />
-                                    {booking.start_date}
+                                {/* Dates */}
+                                <div className="flex flex-col text-sm min-w-[150px]">
+                                    <div className="flex items-center gap-2 text-slate-300">
+                                        <Calendar className="h-3.5 w-3.5 text-slate-500" />
+                                        {booking.start_date}
+                                    </div>
+                                    <div className="ml-5 text-slate-500 text-xs mt-0.5">
+                                        to {booking.end_date}
+                                    </div>
                                 </div>
-                                <div className="ml-5 text-slate-500 text-xs mt-0.5">
-                                    to {booking.end_date}
-                                </div>
-                            </div>
 
-                            {/* Status & Price */}
-                            <div className="flex items-center gap-6 ml-auto mt-2 md:mt-0 w-full md:w-auto justify-between md:justify-end">
-                                <StatusBadge status={booking.status} />
-                                <div className="text-right">
-                                    <p className="text-white font-bold">${booking.total_price}</p>
-                                    <p className="text-xs text-slate-500">Total</p>
+                                {/* Status & Price */}
+                                <div className="flex items-center gap-6 ml-auto mt-2 md:mt-0 w-full md:w-auto justify-between md:justify-end">
+                                    <StatusBadge status={booking.status} />
+                                    <div className="text-right">
+                                        <p className="text-white font-bold">${booking.total_price}</p>
+                                        <p className="text-xs text-slate-500">Total</p>
+                                    </div>
+                                    <button className="p-2 hover:bg-slate-700/50 rounded-lg text-slate-400 hover:text-white transition-colors">
+                                        <MoreVertical className="h-4 w-4" />
+                                    </button>
                                 </div>
-                                <button className="p-2 hover:bg-slate-700/50 rounded-lg text-slate-400 hover:text-white transition-colors">
-                                    <MoreVertical className="h-4 w-4" />
-                                </button>
-                            </div>
-                        </motion.div>
-                    ))}
-                </div>
+                            </motion.div>
+                        ))}
+                    </div>
+                )
             )}
 
-            {/* Create Modal - DRAGGABLE */}
+            {/* Booking Detail Modal */}
+            <AnimatePresence>
+                {selectedBooking && (
+                    <BookingDetailModal
+                        booking={selectedBooking}
+                        onClose={() => setSelectedBooking(null)}
+                    />
+                )}
+            </AnimatePresence>
+
+            {/* Create Modal */}
             <AnimatePresence>
                 {isCreateModalOpen && (
                     <>
