@@ -230,7 +230,7 @@ export class EmailsService {
             const propertyName = booking.properties?.name || 'Property';
 
             const { data, error } = await this.resend.emails.send({
-                from: 'Triada Reservas <reservas@triadak.io>',
+                from: 'Triadak Reservas <reservas@triadak.io>',
                 to: [to],
                 subject: `✅ Booking Confirmed #${bookingRef} · ${propertyName} - Triadak`,
                 html: this.generateBookingEmailHTML(booking),
