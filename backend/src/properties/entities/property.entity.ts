@@ -2,7 +2,7 @@ import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany } from 'ty
 import { Owner } from '../../owners/entities/owner.entity';
 import { Booking } from '../../bookings/entities/booking.entity';
 
-@Entity()
+@Entity('properties')
 export class Property {
     @PrimaryGeneratedColumn('uuid')
     id: string;

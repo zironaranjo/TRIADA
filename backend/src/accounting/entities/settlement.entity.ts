@@ -1,7 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, ManyToOne, JoinColumn } from 'typeorm';
 import { Booking } from '../../bookings/entities/booking.entity';
 
-@Entity()
+@Entity('settlements')
 export class Settlement {
     @PrimaryGeneratedColumn('uuid')
     id: string;
