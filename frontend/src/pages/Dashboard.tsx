@@ -33,21 +33,25 @@ export default function Dashboard() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const [bookings, properties, owners] = await Promise.all([
+                const results = await Promise.allSettled([
                     bookingsApi.getAll(),
                     propertiesApi.getAll(),
                     ownersApi.getAll(),
                 ]);
 
-                const totalRevenue = bookings.data.reduce(
+                const bookings = results[0].status === 'fulfilled' ? results[0].value.data : [];
+                const properties = results[1].status === 'fulfilled' ? results[1].value.data : [];
+                const owners = results[2].status === 'fulfilled' ? results[2].value.data : [];
+
+                const totalRevenue = bookings.reduce(
                     (sum: number, booking: any) => sum + Number(booking.totalPrice || 0),
                     0
                 );
 
                 setStats({
-                    totalBookings: bookings.data.length,
-                    totalProperties: properties.data.length,
-                    totalOwners: owners.data.length,
+                    totalBookings: bookings.length,
+                    totalProperties: properties.length,
+                    totalOwners: owners.length,
                     revenue: totalRevenue,
                 });
             } catch (error) {
