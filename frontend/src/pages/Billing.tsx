@@ -42,15 +42,20 @@ export default function Billing() {
 
     const fetchData = async () => {
         setLoading(true);
+        const timeout = setTimeout(() => setLoading(false), 5000);
         try {
-            // Fetch subscription
-            const { data: subData } = await supabase
-                .from('subscriptions')
-                .select('*')
-                .eq('user_id', user!.id)
-                .single();
+            // Fetch subscription (use maybeSingle to avoid error when no rows)
+            try {
+                const { data: subData } = await supabase
+                    .from('subscriptions')
+                    .select('*')
+                    .eq('user_id', user!.id)
+                    .maybeSingle();
 
-            if (subData) setSubscription(subData as Subscription);
+                if (subData) setSubscription(subData as Subscription);
+            } catch (subErr) {
+                console.warn('Subscriptions table may not exist yet:', subErr);
+            }
 
             // Fetch usage counts
             const [propsRes, bookingsRes, contactsRes] = await Promise.allSettled([
@@ -67,6 +72,7 @@ export default function Billing() {
         } catch (err) {
             console.error('Error fetching billing data:', err);
         } finally {
+            clearTimeout(timeout);
             setLoading(false);
         }
     };
