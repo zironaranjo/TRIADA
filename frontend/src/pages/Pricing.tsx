@@ -1,11 +1,41 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Check, X, Zap, Building, Crown, ArrowRight, Star } from 'lucide-react';
+import { Check, X, Zap, Building, Crown, ArrowRight, Star, Gift } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
 
 // ─── Plan Definitions ─────────────────────────────────
 export const PLANS = {
+    starter: {
+        id: 'starter',
+        name: 'Starter',
+        price: 0,
+        yearlyPrice: 0,
+        icon: Gift,
+        color: 'from-slate-400 to-slate-500',
+        borderColor: 'border-slate-500/30',
+        bgColor: 'bg-slate-500',
+        description: 'Try TRIADAK for free, forever',
+        isFree: true,
+        limits: {
+            properties: 1,
+            bookingsPerMonth: 10,
+            contacts: 20,
+            users: 1,
+        },
+        features: [
+            { name: '1 property', included: true },
+            { name: '10 bookings/month', included: true },
+            { name: 'Basic CRM (20 contacts)', included: true },
+            { name: 'Calendar view', included: true },
+            { name: 'Basic dashboard', included: true },
+            { name: 'Email notifications', included: false },
+            { name: 'Financial reports', included: false },
+            { name: 'Payment links', included: false },
+            { name: 'Owner portal', included: false },
+            { name: 'API access', included: false },
+        ],
+    },
     basic: {
         id: 'basic',
         name: 'Basic',
@@ -16,6 +46,7 @@ export const PLANS = {
         borderColor: 'border-blue-500/30',
         bgColor: 'bg-blue-500',
         description: 'Perfect for small property managers',
+        isFree: false,
         limits: {
             properties: 5,
             bookingsPerMonth: 50,
@@ -25,13 +56,13 @@ export const PLANS = {
         features: [
             { name: 'Up to 5 properties', included: true },
             { name: '50 bookings/month', included: true },
-            { name: 'Basic CRM (100 contacts)', included: true },
+            { name: 'Full CRM (100 contacts)', included: true },
             { name: 'Calendar sync (iCal)', included: true },
             { name: 'Financial dashboard', included: true },
             { name: 'Email notifications', included: true },
+            { name: 'Expense tracking', included: true },
             { name: 'Payment links', included: false },
             { name: 'Owner portal', included: false },
-            { name: 'API access', included: false },
             { name: 'Priority support', included: false },
         ],
     },
@@ -45,16 +76,17 @@ export const PLANS = {
         borderColor: 'border-indigo-500/30',
         bgColor: 'bg-indigo-500',
         description: 'For growing rental businesses',
+        isFree: false,
         limits: {
             properties: 20,
-            bookingsPerMonth: -1, // unlimited
+            bookingsPerMonth: -1,
             contacts: 1000,
             users: 5,
         },
         features: [
             { name: 'Up to 20 properties', included: true },
             { name: 'Unlimited bookings', included: true },
-            { name: 'Full CRM (1,000 contacts)', included: true },
+            { name: 'Advanced CRM (1,000 contacts)', included: true },
             { name: 'Calendar sync (iCal)', included: true },
             { name: 'Advanced financial reports', included: true },
             { name: 'Email notifications', included: true },
@@ -74,8 +106,9 @@ export const PLANS = {
         borderColor: 'border-amber-500/30',
         bgColor: 'bg-amber-500',
         description: 'For large-scale operations',
+        isFree: false,
         limits: {
-            properties: -1, // unlimited
+            properties: -1,
             bookingsPerMonth: -1,
             contacts: -1,
             users: -1,
@@ -105,12 +138,31 @@ export default function Pricing() {
 
     const handleSelectPlan = async (planId: PlanId) => {
         if (!user) {
-            alert('Please log in first');
+            alert('Inicia sesión primero');
             return;
         }
         setLoading(planId);
         try {
-            // Try to call backend for Stripe Checkout
+            const selectedPlan = PLANS[planId];
+
+            // Plan Starter (gratuito): activar directamente sin Stripe
+            if (selectedPlan.isFree) {
+                const { error } = await supabase.from('subscriptions').upsert({
+                    user_id: user.id,
+                    plan_id: planId,
+                    status: 'active',
+                    interval: 'monthly',
+                    current_period_start: new Date().toISOString(),
+                    current_period_end: null, // sin fecha de expiración
+                }, { onConflict: 'user_id' });
+
+                if (error) throw error;
+                alert('¡Plan Starter activado! Ya puedes usar TRIADAK gratis.');
+                window.location.href = '/billing';
+                return;
+            }
+
+            // Planes de pago: intentar Stripe Checkout
             const API_URL = import.meta.env.VITE_API_URL || 'https://api.triadak.io';
             const res = await fetch(`${API_URL}/subscriptions/create-checkout`, {
                 method: 'POST',
@@ -131,22 +183,22 @@ export default function Pricing() {
                 }
             }
 
-            // Fallback: save directly to Supabase (for testing)
+            // Fallback: guardar directamente en Supabase (modo test)
             const { error } = await supabase.from('subscriptions').upsert({
                 user_id: user.id,
                 plan_id: planId,
-                status: 'active',
+                status: 'trialing',
                 interval: billing,
                 current_period_start: new Date().toISOString(),
-                current_period_end: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
+                current_period_end: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString(), // 14 días de prueba
             }, { onConflict: 'user_id' });
 
             if (error) throw error;
-            alert(`Plan ${planId.toUpperCase()} activated! (Test mode)`);
+            alert(`¡Plan ${selectedPlan.name} activado con 14 días de prueba! (Modo test)`);
             window.location.href = '/billing';
         } catch (err: any) {
             console.error('Error selecting plan:', err);
-            alert(`Error: ${err?.message || 'Could not activate plan'}`);
+            alert(`Error: ${err?.message || 'No se pudo activar el plan'}`);
         } finally {
             setLoading('');
         }
@@ -188,10 +240,11 @@ export default function Pricing() {
                 </div>
 
                 {/* ─── Plan Cards ────────────────────── */}
-                <div className="grid md:grid-cols-3 gap-6 lg:gap-8">
+                <div className="grid md:grid-cols-2 xl:grid-cols-4 gap-6 lg:gap-8">
                     {Object.values(PLANS).map((plan, i) => {
                         const isPopular = plan.id === 'pro';
-                        const price = billing === 'monthly' ? plan.price : Math.round(plan.yearlyPrice / 12);
+                        const isFree = plan.isFree;
+                        const price = isFree ? 0 : (billing === 'monthly' ? plan.price : Math.round(plan.yearlyPrice / 12));
 
                         return (
                             <motion.div
@@ -199,18 +252,33 @@ export default function Pricing() {
                                 initial={{ opacity: 0, y: 30 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ delay: i * 0.1 }}
-                                className={`relative rounded-2xl border ${isPopular ? 'border-indigo-500/50 shadow-xl shadow-indigo-500/10' : 'border-white/10'} bg-[#1e293b] overflow-hidden flex flex-col`}
+                                className={`relative rounded-2xl border ${
+                                    isPopular 
+                                        ? 'border-indigo-500/50 shadow-xl shadow-indigo-500/10' 
+                                        : isFree 
+                                            ? 'border-emerald-500/30' 
+                                            : 'border-white/10'
+                                } bg-[#1e293b] overflow-hidden flex flex-col`}
                             >
                                 {/* Popular Badge */}
                                 {isPopular && (
                                     <div className="absolute top-0 right-0">
                                         <div className="bg-gradient-to-r from-indigo-500 to-purple-500 text-white text-xs font-bold px-4 py-1.5 rounded-bl-xl flex items-center gap-1">
-                                            <Star className="h-3 w-3" /> MOST POPULAR
+                                            <Star className="h-3 w-3" /> MÁS POPULAR
                                         </div>
                                     </div>
                                 )}
 
-                                <div className="p-8 flex-1">
+                                {/* Free Badge */}
+                                {isFree && (
+                                    <div className="absolute top-0 right-0">
+                                        <div className="bg-gradient-to-r from-emerald-500 to-green-500 text-white text-xs font-bold px-4 py-1.5 rounded-bl-xl flex items-center gap-1">
+                                            <Gift className="h-3 w-3" /> GRATIS
+                                        </div>
+                                    </div>
+                                )}
+
+                                <div className="p-6 flex-1">
                                     {/* Plan Header */}
                                     <div className={`inline-flex items-center justify-center p-3 rounded-xl bg-gradient-to-br ${plan.color} shadow-lg mb-4`}>
                                         <plan.icon className="h-6 w-6 text-white" />
@@ -220,14 +288,23 @@ export default function Pricing() {
 
                                     {/* Price */}
                                     <div className="mt-6 mb-8">
-                                        <div className="flex items-baseline gap-1">
-                                            <span className="text-4xl font-bold text-white">€{price}</span>
-                                            <span className="text-slate-400">/mo</span>
-                                        </div>
-                                        {billing === 'yearly' && (
-                                            <p className="text-xs text-slate-500 mt-1">
-                                                €{plan.yearlyPrice}/year (billed annually)
-                                            </p>
+                                        {isFree ? (
+                                            <div className="flex items-baseline gap-1">
+                                                <span className="text-4xl font-bold text-emerald-400">Gratis</span>
+                                                <span className="text-slate-400">para siempre</span>
+                                            </div>
+                                        ) : (
+                                            <>
+                                                <div className="flex items-baseline gap-1">
+                                                    <span className="text-4xl font-bold text-white">€{price}</span>
+                                                    <span className="text-slate-400">/mes</span>
+                                                </div>
+                                                {billing === 'yearly' && (
+                                                    <p className="text-xs text-slate-500 mt-1">
+                                                        €{plan.yearlyPrice}/año (facturación anual)
+                                                    </p>
+                                                )}
+                                            </>
                                         )}
                                     </div>
 
@@ -249,21 +326,23 @@ export default function Pricing() {
                                 </div>
 
                                 {/* CTA Button */}
-                                <div className="p-8 pt-0">
+                                <div className="p-6 pt-0">
                                     <button
                                         onClick={() => handleSelectPlan(plan.id as PlanId)}
                                         disabled={!!loading}
                                         className={`w-full py-3 px-6 rounded-xl font-semibold text-sm flex items-center justify-center gap-2 transition-all ${
-                                            isPopular
-                                                ? 'bg-gradient-to-r from-indigo-500 to-purple-500 text-white shadow-lg shadow-indigo-500/20 hover:shadow-indigo-500/40'
-                                                : 'bg-white/5 text-white border border-white/10 hover:bg-white/10'
+                                            isFree
+                                                ? 'bg-gradient-to-r from-emerald-500 to-green-500 text-white shadow-lg shadow-emerald-500/20 hover:shadow-emerald-500/40'
+                                                : isPopular
+                                                    ? 'bg-gradient-to-r from-indigo-500 to-purple-500 text-white shadow-lg shadow-indigo-500/20 hover:shadow-indigo-500/40'
+                                                    : 'bg-white/5 text-white border border-white/10 hover:bg-white/10'
                                         } disabled:opacity-50`}
                                     >
                                         {loading === plan.id ? (
                                             <div className="h-4 w-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
                                         ) : (
                                             <>
-                                                Get Started <ArrowRight className="h-4 w-4" />
+                                                {isFree ? 'Empezar Gratis' : 'Comenzar'} <ArrowRight className="h-4 w-4" />
                                             </>
                                         )}
                                     </button>
@@ -276,10 +355,11 @@ export default function Pricing() {
                 {/* ─── FAQ / Trust ───────────────────── */}
                 <div className="text-center py-8 space-y-3">
                     <p className="text-slate-400 text-sm">
-                        All plans include a <span className="text-white font-medium">14-day free trial</span>. No credit card required.
+                        Empieza gratis con el plan <span className="text-emerald-400 font-medium">Starter</span>. 
+                        Los planes de pago incluyen <span className="text-white font-medium">14 días de prueba gratuita</span>. Sin tarjeta de crédito.
                     </p>
                     <p className="text-slate-500 text-xs">
-                        Cancel anytime. Prices in EUR. VAT may apply.
+                        Cancela en cualquier momento. Precios en EUR. Puede aplicarse IVA.
                     </p>
                 </div>
             </div>
