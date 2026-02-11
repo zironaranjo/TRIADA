@@ -8,16 +8,13 @@ RUN npm install
 
 COPY . .
 
-# Vite injects VITE_* vars at build time, so we need them as build args
-ARG VITE_API_URL
-ARG VITE_SUPABASE_URL
-ARG VITE_SUPABASE_ANON_KEY
-ARG VITE_BYPASS_AUTH
-
-ENV VITE_API_URL=$VITE_API_URL
-ENV VITE_SUPABASE_URL=$VITE_SUPABASE_URL
-ENV VITE_SUPABASE_ANON_KEY=$VITE_SUPABASE_ANON_KEY
-ENV VITE_BYPASS_AUTH=$VITE_BYPASS_AUTH
+# Force Vite to pick up env vars by writing .env before build
+# This ensures vars are always available regardless of Docker cache
+RUN if [ ! -f .env.production ]; then \
+      echo "VITE_API_URL=https://api.triadak.io" > .env.production && \
+      echo "VITE_SUPABASE_URL=https://dknhrstvlajlktahxeqs.supabase.co" >> .env.production && \
+      echo "VITE_SUPABASE_ANON_KEY=sb_publishable_rV7bQaTazFEffBD0riQ1UQ_JggijzBR" >> .env.production; \
+    fi
 
 RUN npm run build
 
