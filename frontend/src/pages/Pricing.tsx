@@ -138,14 +138,14 @@ export default function Pricing() {
 
     const handleSelectPlan = async (planId: PlanId) => {
         if (!user) {
-            alert('Inicia sesión primero');
+            alert('Please log in first');
             return;
         }
         setLoading(planId);
         try {
             const selectedPlan = PLANS[planId];
 
-            // Plan Starter (gratuito): activar directamente sin Stripe
+            // Starter plan (free): activate directly without Stripe
             if (selectedPlan.isFree) {
                 const { error } = await supabase.from('subscriptions').upsert({
                     user_id: user.id,
@@ -153,16 +153,16 @@ export default function Pricing() {
                     status: 'active',
                     interval: 'monthly',
                     current_period_start: new Date().toISOString(),
-                    current_period_end: null, // sin fecha de expiración
+                    current_period_end: null, // no expiration
                 }, { onConflict: 'user_id' });
 
                 if (error) throw error;
-                alert('¡Plan Starter activado! Ya puedes usar TRIADAK gratis.');
+                alert('Starter plan activated! You can now use TRIADAK for free.');
                 window.location.href = '/billing';
                 return;
             }
 
-            // Planes de pago: intentar Stripe Checkout
+            // Paid plans: try Stripe Checkout
             const API_URL = import.meta.env.VITE_API_URL || 'https://api.triadak.io';
             const res = await fetch(`${API_URL}/subscriptions/create-checkout`, {
                 method: 'POST',
@@ -183,22 +183,22 @@ export default function Pricing() {
                 }
             }
 
-            // Fallback: guardar directamente en Supabase (modo test)
+            // Fallback: save directly to Supabase (test mode)
             const { error } = await supabase.from('subscriptions').upsert({
                 user_id: user.id,
                 plan_id: planId,
                 status: 'trialing',
                 interval: billing,
                 current_period_start: new Date().toISOString(),
-                current_period_end: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString(), // 14 días de prueba
+                current_period_end: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString(), // 14-day trial
             }, { onConflict: 'user_id' });
 
             if (error) throw error;
-            alert(`¡Plan ${selectedPlan.name} activado con 14 días de prueba! (Modo test)`);
+            alert(`${selectedPlan.name} plan activated with 14-day free trial! (Test mode)`);
             window.location.href = '/billing';
         } catch (err: any) {
             console.error('Error selecting plan:', err);
-            alert(`Error: ${err?.message || 'No se pudo activar el plan'}`);
+            alert(`Error: ${err?.message || 'Could not activate plan'}`);
         } finally {
             setLoading('');
         }
@@ -264,7 +264,7 @@ export default function Pricing() {
                                 {isPopular && (
                                     <div className="absolute top-0 right-0">
                                         <div className="bg-gradient-to-r from-indigo-500 to-purple-500 text-white text-xs font-bold px-4 py-1.5 rounded-bl-xl flex items-center gap-1">
-                                            <Star className="h-3 w-3" /> MÁS POPULAR
+                                            <Star className="h-3 w-3" /> MOST POPULAR
                                         </div>
                                     </div>
                                 )}
@@ -273,7 +273,7 @@ export default function Pricing() {
                                 {isFree && (
                                     <div className="absolute top-0 right-0">
                                         <div className="bg-gradient-to-r from-emerald-500 to-green-500 text-white text-xs font-bold px-4 py-1.5 rounded-bl-xl flex items-center gap-1">
-                                            <Gift className="h-3 w-3" /> GRATIS
+                                            <Gift className="h-3 w-3" /> FREE
                                         </div>
                                     </div>
                                 )}
@@ -290,18 +290,18 @@ export default function Pricing() {
                                     <div className="mt-6 mb-8">
                                         {isFree ? (
                                             <div className="flex items-baseline gap-1">
-                                                <span className="text-4xl font-bold text-emerald-400">Gratis</span>
-                                                <span className="text-slate-400">para siempre</span>
+                                                <span className="text-4xl font-bold text-emerald-400">Free</span>
+                                                <span className="text-slate-400">forever</span>
                                             </div>
                                         ) : (
                                             <>
                                                 <div className="flex items-baseline gap-1">
                                                     <span className="text-4xl font-bold text-white">€{price}</span>
-                                                    <span className="text-slate-400">/mes</span>
+                                                    <span className="text-slate-400">/mo</span>
                                                 </div>
                                                 {billing === 'yearly' && (
                                                     <p className="text-xs text-slate-500 mt-1">
-                                                        €{plan.yearlyPrice}/año (facturación anual)
+                                                        €{plan.yearlyPrice}/year (billed annually)
                                                     </p>
                                                 )}
                                             </>
@@ -342,7 +342,7 @@ export default function Pricing() {
                                             <div className="h-4 w-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
                                         ) : (
                                             <>
-                                                {isFree ? 'Empezar Gratis' : 'Comenzar'} <ArrowRight className="h-4 w-4" />
+                                                {isFree ? 'Start Free' : 'Get Started'} <ArrowRight className="h-4 w-4" />
                                             </>
                                         )}
                                     </button>
@@ -355,11 +355,11 @@ export default function Pricing() {
                 {/* ─── FAQ / Trust ───────────────────── */}
                 <div className="text-center py-8 space-y-3">
                     <p className="text-slate-400 text-sm">
-                        Empieza gratis con el plan <span className="text-emerald-400 font-medium">Starter</span>. 
-                        Los planes de pago incluyen <span className="text-white font-medium">14 días de prueba gratuita</span>. Sin tarjeta de crédito.
+                        Start free with the <span className="text-emerald-400 font-medium">Starter</span> plan. 
+                        Paid plans include a <span className="text-white font-medium">14-day free trial</span>. No credit card required.
                     </p>
                     <p className="text-slate-500 text-xs">
-                        Cancela en cualquier momento. Precios en EUR. Puede aplicarse IVA.
+                        Cancel anytime. Prices in EUR. VAT may apply.
                     </p>
                 </div>
             </div>

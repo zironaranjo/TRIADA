@@ -87,11 +87,11 @@ export default function Billing() {
     };
 
     const statusStyles: Record<string, { bg: string; text: string; label: string }> = {
-        active: { bg: 'bg-emerald-500/10', text: 'text-emerald-400', label: 'Activo' },
-        trialing: { bg: 'bg-blue-500/10', text: 'text-blue-400', label: 'Prueba' },
-        past_due: { bg: 'bg-amber-500/10', text: 'text-amber-400', label: 'Pago Pendiente' },
-        cancelled: { bg: 'bg-rose-500/10', text: 'text-rose-400', label: 'Cancelado' },
-        expired: { bg: 'bg-slate-500/10', text: 'text-slate-400', label: 'Expirado' },
+        active: { bg: 'bg-emerald-500/10', text: 'text-emerald-400', label: 'Active' },
+        trialing: { bg: 'bg-blue-500/10', text: 'text-blue-400', label: 'Trial' },
+        past_due: { bg: 'bg-amber-500/10', text: 'text-amber-400', label: 'Past Due' },
+        cancelled: { bg: 'bg-rose-500/10', text: 'text-rose-400', label: 'Cancelled' },
+        expired: { bg: 'bg-slate-500/10', text: 'text-slate-400', label: 'Expired' },
     };
 
     if (loading) return (
@@ -111,9 +111,9 @@ export default function Billing() {
                         animate={{ opacity: 1, x: 0 }}
                         className="text-3xl font-bold text-white mb-2"
                     >
-                        Facturación y Suscripción
+                        Billing & Subscription
                     </motion.h1>
-                    <p className="text-slate-400">Gestiona tu plan e información de facturación.</p>
+                    <p className="text-slate-400">Manage your plan and billing information.</p>
                 </div>
 
                 {/* ─── Current Plan ──────────────────── */}
@@ -121,7 +121,7 @@ export default function Billing() {
                     <div className="p-6 border-b border-white/5 bg-white/5 flex items-center justify-between">
                         <h3 className="font-semibold text-white text-lg flex items-center gap-2">
                             <Shield className="h-5 w-5 text-indigo-400" />
-                            Plan Actual
+                            Current Plan
                         </h3>
                         {subscription && (
                             <span className={`px-3 py-1 rounded-full text-xs font-semibold ${statusStyles[subscription.status]?.bg} ${statusStyles[subscription.status]?.text}`}>
@@ -145,16 +145,16 @@ export default function Billing() {
                                 <div className="text-right">
                                     {isFreePlan ? (
                                         <>
-                                            <p className="text-2xl font-bold text-emerald-400">Gratis</p>
-                                            <p className="text-xs text-slate-500">para siempre</p>
+                                            <p className="text-2xl font-bold text-emerald-400">Free</p>
+                                            <p className="text-xs text-slate-500">forever</p>
                                         </>
                                     ) : (
                                         <>
                                             <p className="text-2xl font-bold text-white">
                                                 €{subscription.interval === 'monthly' ? currentPlan.price : Math.round(currentPlan.yearlyPrice / 12)}
-                                                <span className="text-sm text-slate-400 font-normal">/mes</span>
+                                                <span className="text-sm text-slate-400 font-normal">/mo</span>
                                             </p>
-                                            <p className="text-xs text-slate-500">{subscription.interval === 'monthly' ? 'Mensual' : 'Anual'}</p>
+                                            <p className="text-xs text-slate-500">{subscription.interval === 'monthly' ? 'Monthly' : 'Yearly'}</p>
                                         </>
                                     )}
                                 </div>
@@ -165,14 +165,14 @@ export default function Billing() {
                                 <div className="bg-gradient-to-r from-indigo-500/10 to-purple-500/10 border border-indigo-500/20 rounded-xl p-4 flex items-center gap-4">
                                     <Zap className="h-8 w-8 text-indigo-400 flex-shrink-0" />
                                     <div className="flex-1">
-                                        <p className="text-sm font-medium text-white">¿Necesitas más capacidad?</p>
+                                        <p className="text-sm font-medium text-white">Need more capacity?</p>
                                         <p className="text-xs text-slate-400 mt-0.5">
-                                            Actualiza a un plan de pago para desbloquear más propiedades, reservas ilimitadas y funciones avanzadas.
+                                            Upgrade to a paid plan to unlock more properties, unlimited bookings, and advanced features.
                                         </p>
                                     </div>
                                     <Link to="/pricing"
                                         className="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg text-sm font-medium transition-all flex-shrink-0">
-                                        Ver Planes
+                                        View Plans
                                     </Link>
                                 </div>
                             )}
@@ -181,15 +181,15 @@ export default function Billing() {
                             {!isFreePlan && subscription.current_period_end && (
                                 <div className="grid grid-cols-2 gap-4">
                                     <div className="bg-white/5 rounded-xl p-4">
-                                        <p className="text-xs text-slate-500 uppercase font-semibold">Período Actual</p>
+                                        <p className="text-xs text-slate-500 uppercase font-semibold">Current Period</p>
                                         <p className="text-sm text-white mt-1">
-                                            {new Date(subscription.current_period_start).toLocaleDateString('es-ES')} — {new Date(subscription.current_period_end).toLocaleDateString('es-ES')}
+                                            {new Date(subscription.current_period_start).toLocaleDateString()} — {new Date(subscription.current_period_end).toLocaleDateString()}
                                         </p>
                                     </div>
                                     <div className="bg-white/5 rounded-xl p-4">
-                                        <p className="text-xs text-slate-500 uppercase font-semibold">Próximo Cobro</p>
+                                        <p className="text-xs text-slate-500 uppercase font-semibold">Next Billing</p>
                                         <p className="text-sm text-white mt-1">
-                                            {new Date(subscription.current_period_end).toLocaleDateString('es-ES')}
+                                            {new Date(subscription.current_period_end).toLocaleDateString()}
                                         </p>
                                     </div>
                                 </div>
@@ -199,11 +199,11 @@ export default function Billing() {
                             <div className="flex gap-3">
                                 <Link to="/pricing"
                                     className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-sm font-medium transition-all">
-                                    <ArrowUpRight className="h-4 w-4" /> {isFreePlan ? 'Mejorar Plan' : 'Cambiar Plan'}
+                                    <ArrowUpRight className="h-4 w-4" /> {isFreePlan ? 'Upgrade Plan' : 'Change Plan'}
                                 </Link>
                                 {!isFreePlan && (
                                     <button className="px-4 py-2.5 bg-white/5 hover:bg-white/10 text-slate-300 rounded-xl text-sm font-medium border border-white/10 transition-all">
-                                        Gestionar Método de Pago
+                                        Manage Payment Method
                                     </button>
                                 )}
                             </div>
@@ -213,13 +213,13 @@ export default function Billing() {
                             <div className="h-16 w-16 bg-slate-800 rounded-full flex items-center justify-center mx-auto">
                                 <CreditCard className="h-8 w-8 text-slate-500" />
                             </div>
-                            <h3 className="text-lg font-medium text-white">Sin Suscripción Activa</h3>
+                            <h3 className="text-lg font-medium text-white">No Active Subscription</h3>
                             <p className="text-slate-400 text-sm max-w-sm mx-auto">
-                                Elige un plan para desbloquear todas las funciones. ¡El plan Starter es gratis!
+                                Choose a plan to unlock all features. The Starter plan is free!
                             </p>
                             <Link to="/pricing"
                                 className="inline-flex items-center gap-2 px-6 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl font-semibold transition-all">
-                                <Zap className="h-4 w-4" /> Ver Planes
+                                <Zap className="h-4 w-4" /> View Plans
                             </Link>
                         </div>
                     )}
@@ -229,13 +229,13 @@ export default function Billing() {
                 <GlassCard>
                     <h3 className="font-semibold text-white text-lg mb-6 flex items-center gap-2">
                         <AlertCircle className="h-5 w-5 text-indigo-400" />
-                        Uso Actual
+                        Usage
                     </h3>
                     <div className="space-y-5">
                         {[
-                            { label: 'Propiedades', current: usage.properties, limit: planLimits.properties, icon: Building },
-                            { label: 'Reservas', current: usage.bookings, limit: planLimits.bookingsPerMonth, icon: Calendar },
-                            { label: 'Contactos CRM', current: usage.contacts, limit: planLimits.contacts, icon: CheckCircle },
+                            { label: 'Properties', current: usage.properties, limit: planLimits.properties, icon: Building },
+                            { label: 'Bookings', current: usage.bookings, limit: planLimits.bookingsPerMonth, icon: Calendar },
+                            { label: 'CRM Contacts', current: usage.contacts, limit: planLimits.contacts, icon: CheckCircle },
                         ].map((item) => {
                             const pct = getUsagePercent(item.current, item.limit);
                             const isUnlimited = item.limit === -1;
@@ -260,7 +260,7 @@ export default function Billing() {
                                     </div>
                                     {pct >= 90 && !isUnlimited && (
                                         <p className="text-xs text-rose-400 mt-1 flex items-center gap-1">
-                                            <AlertCircle className="h-3 w-3" /> Cerca del límite. Considera mejorar tu plan.
+                                            <AlertCircle className="h-3 w-3" /> Approaching limit. Consider upgrading.
                                         </p>
                                     )}
                                 </div>
@@ -272,11 +272,11 @@ export default function Billing() {
                 {/* ─── Billing History ───────────────── */}
                 <GlassCard className="p-0 overflow-hidden">
                     <div className="p-6 border-b border-white/5 bg-white/5">
-                        <h3 className="font-semibold text-white text-lg">Historial de Facturación</h3>
+                        <h3 className="font-semibold text-white text-lg">Billing History</h3>
                     </div>
                     <div className="p-8 text-center text-slate-500 text-sm">
                         <Calendar className="h-6 w-6 mx-auto mb-2 text-slate-600" />
-                        Aún no hay facturas. Aparecerán aquí después de tu primer pago.
+                        No invoices yet. They will appear here after your first payment.
                     </div>
                 </GlassCard>
             </div>
