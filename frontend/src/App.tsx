@@ -8,6 +8,8 @@ import Bookings from './pages/Bookings';
 import Owners from './pages/Owners';
 import CRM from './pages/CRM';
 import FinanceDashboard from './pages/FinanceDashboard';
+import Pricing from './pages/Pricing';
+import Billing from './pages/Billing';
 import Layout from './components/Layout';
 
 function App() {
@@ -34,6 +36,8 @@ function App() {
             <Route path="owners" element={<Owners />} />
             <Route path="crm" element={<CRM />} />
             <Route path="accounting" element={<FinanceDashboard />} />
+            <Route path="pricing" element={<Pricing />} />
+            <Route path="billing" element={<Billing />} />
           </Route>
         </Routes>
       </BrowserRouter>

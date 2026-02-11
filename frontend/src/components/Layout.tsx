@@ -75,10 +75,18 @@ const Layout = () => {
 
                     <div className="mt-8">
                         <p className="px-3 text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">System</p>
-                        <button className="w-full flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-slate-400 rounded-lg hover:text-white hover:bg-white/5 transition-all">
+                        <Link
+                            to="/billing"
+                            className={cn(
+                                "group flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-lg transition-all duration-200",
+                                isActive('/billing')
+                                    ? "text-white bg-white/5 shadow-inner"
+                                    : "text-slate-400 hover:text-white hover:bg-white/5"
+                            )}
+                        >
                             <Settings className="h-5 w-5 text-slate-500" />
-                            Settings
-                        </button>
+                            Billing
+                        </Link>
                     </div>
                 </nav>
 
