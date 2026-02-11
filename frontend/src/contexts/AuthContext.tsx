@@ -72,6 +72,11 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     };
 
     useEffect(() => {
+        // Safety timeout: if auth takes more than 3s, stop loading anyway
+        const timeout = setTimeout(() => {
+            setLoading(false);
+        }, 3000);
+
         // Get initial session
         supabase.auth.getSession().then(async ({ data: { session } }) => {
             try {
@@ -85,9 +90,11 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
             } catch (err) {
                 console.error('Error initializing auth session:', err);
             } finally {
+                clearTimeout(timeout);
                 setLoading(false);
             }
         }).catch(() => {
+            clearTimeout(timeout);
             setLoading(false);
         });
 
