@@ -5,10 +5,10 @@ import { supabase } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
 import {
     Plus, Search, Mail, Phone, Building, User, Users,
-    Tag, MessageSquare, Calendar, X, Edit3, Trash2,
+    Tag, Calendar, X, Edit3, Trash2,
     UserPlus, Filter, ChevronRight, Clock, Send,
-    Globe, Home, Briefcase, MoreVertical, Star,
-    FileText, PhoneCall, Video, StickyNote
+    Home, Briefcase, Star,
+    PhoneCall, Video, StickyNote
 } from 'lucide-react';
 
 // ─── Types ────────────────────────────────────────────
@@ -69,7 +69,6 @@ const NOTE_ICONS: Record<string, any> = {
 
 // ─── Main CRM Component ──────────────────────────────
 export default function CRM() {
-    const { user } = useAuth();
     const [contacts, setContacts] = useState<Contact[]>([]);
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState('');
@@ -387,7 +386,7 @@ export default function CRM() {
 }
 
 // ─── Stats Card ───────────────────────────────────────
-function StatsCard({ title, value, icon, color }: { title: string; value: string; icon: React.ReactNode; color: string }) {
+function StatsCard({ title, value, icon }: { title: string; value: string; icon: React.ReactNode; color?: string }) {
     return (
         <div className="p-5 rounded-xl bg-[#1e293b] border border-white/5 shadow-lg hover:border-white/10 transition-all">
             <div className="flex justify-between items-start mb-3">
@@ -401,7 +400,6 @@ function StatsCard({ title, value, icon, color }: { title: string; value: string
 
 // ─── Create Contact Modal ─────────────────────────────
 function CreateContactModal({ isOpen, onClose, onSuccess }: { isOpen: boolean; onClose: () => void; onSuccess: () => void }) {
-    const { user } = useAuth();
     const [loading, setLoading] = useState(false);
     const [form, setForm] = useState({
         first_name: '', last_name: '', email: '', phone: '',
