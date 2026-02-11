@@ -152,11 +152,14 @@ export default function Pricing() {
             if (selectedPlan.isFree) {
                 const { error } = await supabase.from('subscriptions').upsert({
                     user_id: user.id,
+                    email: user.email || '',
+                    full_name: user.user_metadata?.full_name || user.email?.split('@')[0] || '',
                     plan_id: planId,
                     status: 'active',
                     interval: 'monthly',
                     current_period_start: new Date().toISOString(),
                     current_period_end: null, // no expiration
+                    updated_at: new Date().toISOString(),
                 }, { onConflict: 'user_id' });
 
                 if (error) throw error;
@@ -190,11 +193,14 @@ export default function Pricing() {
             // Fallback: save directly to Supabase (test mode)
             const { error } = await supabase.from('subscriptions').upsert({
                 user_id: user.id,
+                email: user.email || '',
+                full_name: user.user_metadata?.full_name || user.email?.split('@')[0] || '',
                 plan_id: planId,
                 status: 'trialing',
                 interval: billing,
                 current_period_start: new Date().toISOString(),
                 current_period_end: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString(), // 14-day trial
+                updated_at: new Date().toISOString(),
             }, { onConflict: 'user_id' });
 
             if (error) throw error;
