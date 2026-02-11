@@ -57,6 +57,7 @@ const Properties = () => {
     // --- Fetch Properties ---
     const fetchProperties = async () => {
         setLoading(true);
+        const timeout = setTimeout(() => setLoading(false), 5000);
         try {
             const { data, error } = await supabase
                 .from('properties')
@@ -64,10 +65,11 @@ const Properties = () => {
                 .order('created_at', { ascending: false });
 
             if (error) throw error;
-            setProperties(data as Property[]);
+            setProperties((data || []) as Property[]);
         } catch (error) {
             console.error('Error fetching properties:', error);
         } finally {
+            clearTimeout(timeout);
             setLoading(false);
         }
     };

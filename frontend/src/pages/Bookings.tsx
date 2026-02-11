@@ -356,6 +356,7 @@ const Bookings = () => {
     // --- Fetch Data ---
     const fetchData = async () => {
         setLoading(true);
+        const timeout = setTimeout(() => setLoading(false), 5000);
         try {
             const { data: bookingsData, error: bookingsError } = await supabase
                 .from('bookings')
@@ -369,7 +370,7 @@ const Bookings = () => {
                 .order('start_date', { ascending: true });
 
             if (bookingsError) throw bookingsError;
-            setBookings(bookingsData as any);
+            setBookings((bookingsData || []) as any);
 
             const { data: propsData, error: propsError } = await supabase
                 .from('properties')
@@ -382,6 +383,7 @@ const Bookings = () => {
         } catch (error) {
             console.error('Error fetching data:', error);
         } finally {
+            clearTimeout(timeout);
             setLoading(false);
         }
     };
