@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, Like } from 'typeorm';
+import { Repository } from 'typeorm';
 import { Contact } from './entities/contact.entity';
 import { ContactNote } from './entities/contact-note.entity';
 
@@ -45,26 +45,25 @@ export class CrmService {
     return contact;
   }
 
-  async create(data: Partial<Contact>): Promise<Contact> {
-    // Check for duplicate email
+  async create(data: Partial<Contact>) {
     if (data.email) {
       const existing = await this.contactsRepository.findOne({
         where: { email: data.email },
       });
       if (existing) return existing;
     }
-    const contact = this.contactsRepository.create(data);
+    const contact = this.contactsRepository.create(data as Contact);
     return this.contactsRepository.save(contact);
   }
 
-  async update(id: string, data: Partial<Contact>): Promise<Contact> {
-    await this.findOne(id); // throws if not found
-    await this.contactsRepository.update(id, data);
+  async update(id: string, data: Partial<Contact>) {
+    await this.findOne(id);
+    await this.contactsRepository.update(id, data as any);
     return this.findOne(id);
   }
 
   async remove(id: string): Promise<void> {
-    await this.findOne(id); // throws if not found
+    await this.findOne(id);
     await this.notesRepository.delete({ contactId: id });
     await this.contactsRepository.delete(id);
   }
@@ -81,18 +80,19 @@ export class CrmService {
   async addNote(
     contactId: string,
     data: { type: string; content: string; createdBy?: string },
-  ): Promise<ContactNote> {
-    await this.findOne(contactId); // Verify contact exists
+  ) {
+    await this.findOne(contactId);
     const note = this.notesRepository.create({
       contactId,
-      ...data,
-    });
+      type: data.type,
+      content: data.content,
+      createdBy: data.createdBy,
+    } as ContactNote);
     const saved = await this.notesRepository.save(note);
 
-    // Update last contact date
     await this.contactsRepository.update(contactId, {
       lastContactDate: new Date(),
-    });
+    } as any);
 
     return saved;
   }
@@ -122,7 +122,7 @@ export class CrmService {
     guestPhone?: string;
     source?: string;
     totalPrice?: number;
-  }): Promise<Contact> {
+  }) {
     const names = data.guestName.split(' ');
     const firstName = names[0] || '';
     const lastName = names.slice(1).join(' ') || '';
@@ -132,7 +132,6 @@ export class CrmService {
     });
 
     if (existing) {
-      // Update stats
       existing.totalBookings = (existing.totalBookings || 0) + 1;
       existing.totalSpent =
         Number(existing.totalSpent || 0) + Number(data.totalPrice || 0);
@@ -149,7 +148,7 @@ export class CrmService {
       source: data.source || 'DIRECT',
       totalBookings: 1,
       totalSpent: data.totalPrice || 0,
-    });
+    } as Contact);
     return this.contactsRepository.save(contact);
   }
 }
