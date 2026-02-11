@@ -3,6 +3,7 @@ import {
   PrimaryGeneratedColumn,
   Column,
   ManyToOne,
+  JoinColumn,
   CreateDateColumn,
 } from 'typeorm';
 import { Property } from '../../properties/entities/property.entity';
@@ -12,32 +13,46 @@ export class Booking {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column()
+  @Column({ name: 'guest_name' })
   guestName: string;
 
-  @Column('date')
+  @Column({ name: 'guest_email', nullable: true })
+  guestEmail: string;
+
+  @Column({ name: 'guest_phone', nullable: true })
+  guestPhone: string;
+
+  @Column({ name: 'start_date', type: 'date' })
   startDate: Date;
 
-  @Column('date')
+  @Column({ name: 'end_date', type: 'date' })
   endDate: Date;
 
-  @Column('decimal', { precision: 10, scale: 2 })
+  @Column('decimal', { name: 'total_price', precision: 10, scale: 2 })
   totalPrice: number;
 
-  @Column({ default: 'CONFIRMED' })
+  @Column({ nullable: true })
+  currency: string;
+
+  @Column({ default: 'pending' })
   status: string;
 
   @Column({ default: 'DIRECT' })
-  platform: 'DIRECT' | 'AIRBNB' | 'BOOKING_COM';
+  platform: string;
 
-  @Column({ nullable: true })
-  icalUid: string; // To prevent duplicates from iCal sync
+  @Column({ name: 'ical_uid', nullable: true })
+  icalUid: string;
 
-  @ManyToOne(() => Property, (property) => property.bookings, {
-    nullable: true,
-  })
+  @Column({ name: 'property_id', nullable: true })
+  propertyId: string;
+
+  @ManyToOne(() => Property, (property) => property.bookings, { nullable: true })
+  @JoinColumn({ name: 'property_id' })
   property: Property;
 
-  @CreateDateColumn()
+  @Column({ name: 'owner_id', nullable: true })
+  ownerId: string;
+
+  @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
 }

@@ -4,6 +4,8 @@ import {
   Column,
   ManyToOne,
   OneToMany,
+  JoinColumn,
+  CreateDateColumn,
 } from 'typeorm';
 import { Owner } from '../../owners/entities/owner.entity';
 import { Booking } from '../../bookings/entities/booking.entity';
@@ -16,33 +18,49 @@ export class Property {
   @Column()
   name: string;
 
-  @Column()
+  @Column({ nullable: true })
   address: string;
 
   @Column({ nullable: true })
+  city: string;
+
+  @Column({ nullable: true })
+  country: string;
+
+  @Column({ name: 'image_url', nullable: true })
   imageUrl: string;
 
-  @Column('decimal', { precision: 10, scale: 2, default: 0 })
+  @Column('decimal', { name: 'price_per_night', precision: 10, scale: 2, default: 0 })
   pricePerNight: number;
 
-  @Column('int', { default: 1 })
-  bedrooms: number;
+  @Column({ nullable: true })
+  currency: string;
+
+  @Column({ default: 'active' })
+  status: string;
 
   @Column('int', { default: 1 })
-  bathrooms: number;
+  rooms: number;
 
-  @Column('int', { default: 2 })
+  @Column('int', { name: 'max_guests', default: 2 })
   maxGuests: number;
 
   @Column({ type: 'text', nullable: true })
   description: string;
 
-  @Column({ type: 'text', nullable: true }) // Link to Airbnb/Booking iCal
+  @Column({ name: 'ical_url', type: 'text', nullable: true })
   icalUrl: string;
 
+  @Column({ name: 'owner_id', nullable: true })
+  ownerId: string;
+
   @ManyToOne(() => Owner, (owner) => owner.properties, { nullable: true })
+  @JoinColumn({ name: 'owner_id' })
   owner: Owner;
 
   @OneToMany(() => Booking, (booking) => booking.property)
   bookings: Booking[];
+
+  @CreateDateColumn({ name: 'created_at' })
+  createdAt: Date;
 }
