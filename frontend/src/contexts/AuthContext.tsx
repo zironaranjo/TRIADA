@@ -74,14 +74,20 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     useEffect(() => {
         // Get initial session
         supabase.auth.getSession().then(async ({ data: { session } }) => {
-            setSession(session);
-            setUser(session?.user ?? null);
+            try {
+                setSession(session);
+                setUser(session?.user ?? null);
 
-            if (session?.user) {
-                const userProfile = await fetchProfile(session.user.id);
-                setProfile(userProfile);
+                if (session?.user) {
+                    const userProfile = await fetchProfile(session.user.id);
+                    setProfile(userProfile);
+                }
+            } catch (err) {
+                console.error('Error initializing auth session:', err);
+            } finally {
+                setLoading(false);
             }
-
+        }).catch(() => {
             setLoading(false);
         });
 
