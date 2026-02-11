@@ -11,6 +11,6 @@ import { Booking } from '../bookings/entities/booking.entity';
   imports: [TypeOrmModule.forFeature([LedgerEntry, Settlement, Booking])],
   controllers: [AccountingController],
   providers: [AccountingService],
-  exports: [AccountingService]
+  exports: [AccountingService],
 })
-export class AccountingModule { }
+export class AccountingModule {}

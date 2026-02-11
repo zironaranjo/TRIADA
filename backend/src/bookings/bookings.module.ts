@@ -13,10 +13,10 @@ import { Property } from '../properties/entities/property.entity';
   imports: [
     TypeOrmModule.forFeature([Booking, Property]),
     CrmModule,
-    AccountingModule
+    AccountingModule,
   ],
   controllers: [BookingsController],
   providers: [BookingsService, IcalService],
-  exports: [BookingsService]
+  exports: [BookingsService],
 })
-export class BookingsModule { }
+export class BookingsModule {}

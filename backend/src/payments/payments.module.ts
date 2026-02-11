@@ -7,9 +7,9 @@ import { BookingsModule } from '../bookings/bookings.module';
 import { AccountingModule } from '../accounting/accounting.module';
 
 @Module({
-    imports: [ConfigModule, BookingsModule, AccountingModule],
-    controllers: [PaymentsController],
-    providers: [PaymentsService],
-    exports: [PaymentsService],
+  imports: [ConfigModule, BookingsModule, AccountingModule],
+  controllers: [PaymentsController],
+  providers: [PaymentsService],
+  exports: [PaymentsService],
 })
-export class PaymentsModule { }
+export class PaymentsModule {}

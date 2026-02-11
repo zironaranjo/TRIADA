@@ -3,28 +3,36 @@ import { Resend } from 'resend';
 
 @Injectable()
 export class EmailsService {
-    private resend: Resend;
+  private resend: Resend;
 
-    constructor() {
-        this.resend = new Resend(process.env.RESEND_API_KEY || 're_123456789');
-    }
+  constructor() {
+    this.resend = new Resend(process.env.RESEND_API_KEY || 're_123456789');
+  }
 
-    // --- Generate Premium Email HTML ---
-    private generateBookingEmailHTML(booking: any): string {
-        const propertyName = booking.properties?.name || 'Luxury Property';
-        const checkIn = new Date(booking.start_date).toLocaleDateString('en-US', {
-            weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
-        });
-        const checkOut = new Date(booking.end_date).toLocaleDateString('en-US', {
-            weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
-        });
-        const nights = Math.ceil(
-            (new Date(booking.end_date).getTime() - new Date(booking.start_date).getTime()) / (1000 * 60 * 60 * 24)
-        );
-        const bookingRef = booking.id?.slice(0, 8)?.toUpperCase() || 'N/A';
-        const year = new Date().getFullYear();
+  // --- Generate Premium Email HTML ---
+  private generateBookingEmailHTML(booking: any): string {
+    const propertyName = booking.properties?.name || 'Luxury Property';
+    const checkIn = new Date(booking.start_date).toLocaleDateString('en-US', {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    });
+    const checkOut = new Date(booking.end_date).toLocaleDateString('en-US', {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    });
+    const nights = Math.ceil(
+      (new Date(booking.end_date).getTime() -
+        new Date(booking.start_date).getTime()) /
+        (1000 * 60 * 60 * 24),
+    );
+    const bookingRef = booking.id?.slice(0, 8)?.toUpperCase() || 'N/A';
+    const year = new Date().getFullYear();
 
-        return `
+    return `
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -201,36 +209,36 @@ export class EmailsService {
 </body>
 </html>
         `;
+  }
+
+  // --- Send Booking Confirmation Email ---
+  async sendBookingConfirmation(to: string, booking: any) {
+    if (!to) {
+      console.warn('No booking email provided');
+      return;
     }
 
-    // --- Send Booking Confirmation Email ---
-    async sendBookingConfirmation(to: string, booking: any) {
-        if (!to) {
-            console.warn('No booking email provided');
-            return;
-        }
+    try {
+      const bookingRef = booking.id?.slice(0, 8)?.toUpperCase() || 'N/A';
+      const propertyName = booking.properties?.name || 'Property';
 
-        try {
-            const bookingRef = booking.id?.slice(0, 8)?.toUpperCase() || 'N/A';
-            const propertyName = booking.properties?.name || 'Property';
+      const { data, error } = await this.resend.emails.send({
+        from: 'Triadak Reservas <reservas@triadak.io>',
+        to: [to],
+        subject: `✅ Booking Confirmed #${bookingRef} · ${propertyName} - Triadak`,
+        html: this.generateBookingEmailHTML(booking),
+      });
 
-            const { data, error } = await this.resend.emails.send({
-                from: 'Triadak Reservas <reservas@triadak.io>',
-                to: [to],
-                subject: `✅ Booking Confirmed #${bookingRef} · ${propertyName} - Triadak`,
-                html: this.generateBookingEmailHTML(booking),
-            });
+      if (error) {
+        console.error('Error sending email:', error);
+        return { success: false, error };
+      }
 
-            if (error) {
-                console.error('Error sending email:', error);
-                return { success: false, error };
-            }
-
-            console.log('Email sent successfully:', data);
-            return { success: true, data };
-        } catch (err) {
-            console.error('Unexpected error sending email:', err);
-            return { success: false, error: err };
-        }
+      console.log('Email sent successfully:', data);
+      return { success: true, data };
+    } catch (err) {
+      console.error('Unexpected error sending email:', err);
+      return { success: false, error: err };
     }
+  }
 }

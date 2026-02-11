@@ -30,12 +30,12 @@ http://localhost:5173
 
 **Acción:** Haz clic en cada opción del menú lateral
 
-**Resultado esperado:**
-- ✅ Dashboard → Muestra métricas y estadísticas
-- ✅ Propiedades → Mensaje "Módulo en construcción"
-- ✅ Reservas → Mensaje "Módulo en construcción"
-- ✅ Propietarios → Mensaje "Módulo en construcción"
-- ✅ Contabilidad → Muestra balance general
+**Resultado esperado (estado actual del frontend):**
+- ✅ Dashboard → Muestra métricas y estadísticas generales (conecta contra el backend NestJS)
+- ✅ Propiedades → Listado y creación de propiedades usando Supabase (datos de ejemplo)
+- ✅ Reservas → Calendario y listado de reservas usando Supabase (datos de ejemplo)
+- ✅ Propietarios → Listado de propietarios conectado al backend NestJS
+- ✅ Contabilidad → Vista `FinanceDashboard` con métricas financieras dummy
 
 ### 3. Verificar la API del Backend
 

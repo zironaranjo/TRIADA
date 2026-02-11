@@ -6,8 +6,14 @@ interface ProtectedRouteProps {
 }
 
 const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
+    const bypassAuth = import.meta.env.VITE_BYPASS_AUTH === 'true';
     const { user, loading } = useAuth();
     const location = useLocation();
+
+    // Allow bypassing auth in environments like staging
+    if (bypassAuth) {
+        return <>{children}</>;
+    }
 
     if (loading) {
         // Show loading spinner while checking auth

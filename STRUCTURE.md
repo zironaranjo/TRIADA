@@ -72,8 +72,8 @@ TRIADA/
 │   ├── package.json
 │   └── vite.config.ts
 │
-├── docker-compose.yml         # PostgreSQL container (optional)
-└── README.md                  # This file
+├── docker-compose.yml         # Orquesta backend, frontend y Caddy (sin DB propia)
+└── README.md                  # Documentación principal del proyecto
 ```
 
 ## Key Files

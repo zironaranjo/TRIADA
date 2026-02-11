@@ -251,17 +251,12 @@ const Properties = () => {
                                 )}
                                 <div className="absolute top-3 right-3">
                                     <div className="flex items-center gap-2">
+                                        {/* Calendar sync via backend is not yet wired to the Supabase properties table. */}
+                                        {/* Button left as visual placeholder but disabled to avoid broken calls. */}
                                         <button
-                                            onClick={(e) => {
-                                                e.stopPropagation();
-                                                // Trigger sync via backend API
-                                                fetch(`${import.meta.env.VITE_API_URL || 'https://api.triadak.io'}/bookings/sync/${property.id}`, { method: 'POST' })
-                                                    .then(res => res.json())
-                                                    .then(data => alert(`Sync Complete: ${data.message} (+${data.added})`))
-                                                    .catch(() => alert('Sync Failed'));
-                                            }}
-                                            className="p-1 rounded-full bg-slate-900/50 hover:bg-blue-500/20 text-slate-400 hover:text-blue-400 transition-colors"
-                                            title="Sync Calendar"
+                                            disabled
+                                            className="p-1 rounded-full bg-slate-900/50 text-slate-600 cursor-not-allowed"
+                                            title="Calendar sync coming soon"
                                         >
                                             <Loader2 className="h-3 w-3" />
                                         </button>

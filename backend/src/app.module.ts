@@ -24,7 +24,8 @@ import { EmailsModule } from './emails/emails.module';
         if (dbType === 'sqlite') {
           return {
             type: 'better-sqlite3',
-            database: configService.get<string>('DATABASE_PATH') || './triada.db',
+            database:
+              configService.get<string>('DATABASE_PATH') || './triada.db',
             autoLoadEntities: true,
             synchronize: true,
           };
@@ -53,4 +54,4 @@ import { EmailsModule } from './emails/emails.module';
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule { }
+export class AppModule {}
