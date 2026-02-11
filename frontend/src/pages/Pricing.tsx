@@ -164,8 +164,8 @@ export default function Pricing() {
 
                 if (error) throw error;
                 await refreshSubscription();
-                setSuccess({ plan: 'Starter', message: 'Your free plan is now active!' });
-                setTimeout(() => navigate('/billing'), 2000);
+                setSuccess({ plan: 'Starter', message: 'Your free plan is now active! Redirecting to dashboard...' });
+                setTimeout(() => navigate('/dashboard'), 1500);
                 return;
             }
 
@@ -205,8 +205,8 @@ export default function Pricing() {
 
             if (error) throw error;
             await refreshSubscription();
-            setSuccess({ plan: selectedPlan.name, message: '14-day free trial activated!' });
-            setTimeout(() => navigate('/billing'), 2000);
+            setSuccess({ plan: selectedPlan.name, message: '14-day free trial activated! Redirecting to dashboard...' });
+            setTimeout(() => navigate('/dashboard'), 1500);
         } catch (err: any) {
             console.error('Error selecting plan:', err);
             alert(`Error: ${err?.message || 'Could not activate plan'}`);
