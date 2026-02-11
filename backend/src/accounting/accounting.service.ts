@@ -48,7 +48,7 @@ export class AccountingService {
     const ownerPayout = amount - platformFee - managementFee - CLEANING_COST;
 
     const settlement = this.settlementRepository.create({
-      bookingId,
+      booking: { id: bookingId } as any,
       totalRevenue: amount,
       platformFee,
       managementFee,
