@@ -19,8 +19,10 @@ import {
     DollarSign,
     CreditCard
 } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
+import { usePlanLimits } from '../hooks/usePlanLimits';
 
 // --- Type Definitions ---
 interface Booking {
@@ -558,6 +560,8 @@ const BookingDetailModal = ({ booking, onClose, onUpdate }: { booking: Booking; 
 // ==============================
 const Bookings = () => {
     const { user } = useAuth();
+    const { canCreate } = usePlanLimits();
+    const [limitMessage, setLimitMessage] = useState('');
     const [bookings, setBookings] = useState<Booking[]>([]);
     const [properties, setProperties] = useState<PropertyOption[]>([]);
     const [loading, setLoading] = useState(true);
@@ -743,7 +747,15 @@ const Bookings = () => {
                     </div>
 
                     <button
-                        onClick={() => setIsCreateModalOpen(true)}
+                        onClick={() => {
+                            const check = canCreate('bookingsPerMonth', bookings.length);
+                            if (!check.allowed) {
+                                setLimitMessage(check.message || '');
+                                return;
+                            }
+                            setLimitMessage('');
+                            setIsCreateModalOpen(true);
+                        }}
                         className="bg-blue-600 hover:bg-blue-500 text-white px-4 py-2.5 rounded-xl font-medium flex items-center gap-2 transition-all shadow-lg shadow-blue-500/20"
                     >
                         <Plus className="h-5 w-5" />
@@ -751,6 +763,15 @@ const Bookings = () => {
                     </button>
                 </div>
             </div>
+
+            {limitMessage && (
+                <div className="bg-amber-500/10 border border-amber-500/30 rounded-xl p-4 flex items-center justify-between">
+                    <p className="text-sm text-amber-300">{limitMessage}</p>
+                    <Link to="/pricing" className="text-xs bg-amber-600 hover:bg-amber-500 text-white px-3 py-1.5 rounded-lg font-medium transition-all flex-shrink-0 ml-4">
+                        Upgrade
+                    </Link>
+                </div>
+            )}
 
             {/* Quick Stats */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
@@ -816,19 +837,25 @@ const Bookings = () => {
             ) : (
                 /* ========== LIST VIEW ========== */
                 filteredBookings.length === 0 ? (
-                    <div className="text-center py-20 bg-slate-800/30 rounded-3xl border border-slate-700/50 border-dashed">
-                        <div className="h-16 w-16 bg-slate-800 rounded-full flex items-center justify-center mx-auto mb-4">
-                            <Calendar className="h-8 w-8 text-slate-600" />
+                    <div className="col-span-full flex flex-col items-center justify-center py-20 text-center bg-slate-800/30 rounded-3xl border border-slate-700/50 border-dashed">
+                        <div className="h-20 w-20 bg-slate-800 rounded-full flex items-center justify-center mb-6">
+                            <Calendar className="h-10 w-10 text-slate-600" />
                         </div>
-                        <h3 className="text-xl font-medium text-white mb-2">No bookings found</h3>
-                        <p className="text-slate-400 mb-6 max-w-sm mx-auto">
-                            Start by adding a new reservation manually.
-                        </p>
+                        <h3 className="text-xl font-semibold text-white mb-2">No bookings yet</h3>
+                        <p className="text-slate-400 text-sm max-w-md mb-6">Create your first booking or connect your Airbnb/Booking.com calendar to sync reservations automatically.</p>
                         <button
-                            onClick={() => setIsCreateModalOpen(true)}
-                            className="text-blue-400 hover:text-blue-300 font-medium"
+                            onClick={() => {
+                                const check = canCreate('bookingsPerMonth', bookings.length);
+                                if (!check.allowed) {
+                                    setLimitMessage(check.message || '');
+                                    return;
+                                }
+                                setLimitMessage('');
+                                setIsCreateModalOpen(true);
+                            }}
+                            className="bg-blue-600 hover:bg-blue-500 text-white px-6 py-2.5 rounded-xl font-medium flex items-center gap-2 transition-all"
                         >
-                            Create new booking
+                            <Plus className="h-4 w-4" /> Add Your First Booking
                         </button>
                     </div>
                 ) : (

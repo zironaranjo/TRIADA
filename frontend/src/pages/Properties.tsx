@@ -14,6 +14,8 @@ import {
 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
+import { usePlanLimits } from '../hooks/usePlanLimits';
+import { Link } from 'react-router-dom';
 
 // --- Type Definitions ---
 interface Property {
@@ -48,9 +50,11 @@ const StatusBadge = ({ status }: { status: Property['status'] }) => {
 
 const Properties = () => {
     const { user } = useAuth();
+    const { canCreate } = usePlanLimits();
     const [properties, setProperties] = useState<Property[]>([]);
     const [loading, setLoading] = useState(true);
     const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+    const [limitMessage, setLimitMessage] = useState('');
     const [searchTerm, setSearchTerm] = useState('');
     const [statusFilter, setStatusFilter] = useState<string>('all');
 
@@ -193,13 +197,31 @@ const Properties = () => {
                     <p className="text-slate-400 mt-1">Manage your portfolio of villas and apartments.</p>
                 </div>
                 <button
-                    onClick={() => setIsCreateModalOpen(true)}
+                    onClick={() => {
+                        const check = canCreate('properties', properties.length);
+                        if (!check.allowed) {
+                            setLimitMessage(check.message || '');
+                            return;
+                        }
+                        setLimitMessage('');
+                        setIsCreateModalOpen(true);
+                    }}
                     className="bg-blue-600 hover:bg-blue-500 text-white px-4 py-2.5 rounded-xl font-medium flex items-center gap-2 transition-all shadow-lg shadow-blue-500/20"
                 >
                     <Plus className="h-5 w-5" />
                     Add Property
                 </button>
             </div>
+
+            {/* Plan Limit Warning */}
+            {limitMessage && (
+                <div className="bg-amber-500/10 border border-amber-500/30 rounded-xl p-4 flex items-center justify-between">
+                    <p className="text-sm text-amber-300">{limitMessage}</p>
+                    <Link to="/pricing" className="text-xs bg-amber-600 hover:bg-amber-500 text-white px-3 py-1.5 rounded-lg font-medium transition-all flex-shrink-0 ml-4">
+                        Upgrade
+                    </Link>
+                </div>
+            )}
 
             {/* Filters */}
             <div className="flex flex-col sm:flex-row gap-4">
@@ -235,19 +257,14 @@ const Properties = () => {
                     <Loader2 className="h-10 w-10 text-blue-500 animate-spin" />
                 </div>
             ) : filteredProperties.length === 0 ? (
-                <div className="text-center py-20 bg-slate-800/30 rounded-3xl border border-slate-700/50 border-dashed">
-                    <div className="h-16 w-16 bg-slate-800 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <Home className="h-8 w-8 text-slate-600" />
+                <div className="col-span-full flex flex-col items-center justify-center py-20 text-center bg-slate-800/30 rounded-3xl border border-slate-700/50 border-dashed">
+                    <div className="h-20 w-20 bg-slate-800 rounded-full flex items-center justify-center mb-6">
+                        <Home className="h-10 w-10 text-slate-600" />
                     </div>
-                    <h3 className="text-xl font-medium text-white mb-2">No properties found</h3>
-                    <p className="text-slate-400 mb-6 max-w-sm mx-auto">
-                        Get started by adding your first property to the portfolio.
-                    </p>
-                    <button
-                        onClick={() => setIsCreateModalOpen(true)}
-                        className="text-blue-400 hover:text-blue-300 font-medium"
-                    >
-                        Create new property
+                    <h3 className="text-xl font-semibold text-white mb-2">No properties yet</h3>
+                    <p className="text-slate-400 text-sm max-w-md mb-6">Start by adding your first vacation rental property. You can manage listings, set prices, and track performance.</p>
+                    <button onClick={() => setIsCreateModalOpen(true)} className="bg-blue-600 hover:bg-blue-500 text-white px-6 py-2.5 rounded-xl font-medium flex items-center gap-2 transition-all">
+                        <Plus className="h-4 w-4" /> Add Your First Property
                     </button>
                 </div>
             ) : (

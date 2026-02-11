@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { bookingsApi, propertiesApi, ownersApi } from '../api/client';
 import { GlassCard } from "@/components/GlassCard";
 import { motion } from "framer-motion";
@@ -103,6 +104,57 @@ export default function Dashboard() {
                         General overview of your vacation rental business
                     </motion.p>
                 </header>
+
+                {/* Onboarding - show only for new users */}
+                {stats.totalProperties === 0 && (
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className="bg-gradient-to-r from-indigo-500/10 via-purple-500/10 to-pink-500/10 border border-indigo-500/20 rounded-2xl p-8"
+                    >
+                        <div className="flex items-start gap-6">
+                            <div className="p-4 bg-indigo-500/20 rounded-2xl flex-shrink-0">
+                                <Zap className="h-8 w-8 text-indigo-400" />
+                            </div>
+                            <div className="flex-1">
+                                <h2 className="text-2xl font-bold text-white mb-2">Welcome to Triadak!</h2>
+                                <p className="text-slate-400 mb-6">Let's get your vacation rental business set up. Follow these steps to get started:</p>
+                                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                    <Link to="/properties" className="group p-4 bg-white/5 rounded-xl border border-white/10 hover:border-indigo-500/30 hover:bg-white/10 transition-all">
+                                        <div className="flex items-center gap-3 mb-2">
+                                            <div className="p-2 bg-emerald-500/20 rounded-lg">
+                                                <Home className="h-4 w-4 text-emerald-400" />
+                                            </div>
+                                            <span className="text-xs bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded-full font-semibold">Step 1</span>
+                                        </div>
+                                        <h3 className="font-semibold text-white group-hover:text-indigo-300 transition-colors">Add a Property</h3>
+                                        <p className="text-xs text-slate-500 mt-1">Add your first villa or apartment</p>
+                                    </Link>
+                                    <Link to="/bookings" className="group p-4 bg-white/5 rounded-xl border border-white/10 hover:border-indigo-500/30 hover:bg-white/10 transition-all">
+                                        <div className="flex items-center gap-3 mb-2">
+                                            <div className="p-2 bg-blue-500/20 rounded-lg">
+                                                <Calendar className="h-4 w-4 text-blue-400" />
+                                            </div>
+                                            <span className="text-xs bg-blue-500/20 text-blue-400 px-2 py-0.5 rounded-full font-semibold">Step 2</span>
+                                        </div>
+                                        <h3 className="font-semibold text-white group-hover:text-indigo-300 transition-colors">Create a Booking</h3>
+                                        <p className="text-xs text-slate-500 mt-1">Add your first reservation</p>
+                                    </Link>
+                                    <Link to="/crm" className="group p-4 bg-white/5 rounded-xl border border-white/10 hover:border-indigo-500/30 hover:bg-white/10 transition-all">
+                                        <div className="flex items-center gap-3 mb-2">
+                                            <div className="p-2 bg-purple-500/20 rounded-lg">
+                                                <Users className="h-4 w-4 text-purple-400" />
+                                            </div>
+                                            <span className="text-xs bg-purple-500/20 text-purple-400 px-2 py-0.5 rounded-full font-semibold">Step 3</span>
+                                        </div>
+                                        <h3 className="font-semibold text-white group-hover:text-indigo-300 transition-colors">Build Your CRM</h3>
+                                        <p className="text-xs text-slate-500 mt-1">Start managing guest contacts</p>
+                                    </Link>
+                                </div>
+                            </div>
+                        </div>
+                    </motion.div>
+                )}
 
                 {/* KPI Grid */}
                 <motion.div

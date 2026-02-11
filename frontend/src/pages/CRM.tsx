@@ -1,8 +1,10 @@
 import { useEffect, useState, useCallback } from 'react';
+import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { GlassCard } from '@/components/GlassCard';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
+import { usePlanLimits } from '../hooks/usePlanLimits';
 import {
     Plus, Search, Mail, Phone, Building, User, Users,
     Tag, Calendar, X, Edit3, Trash2,
@@ -69,6 +71,8 @@ const NOTE_ICONS: Record<string, any> = {
 
 // ─── Main CRM Component ──────────────────────────────
 export default function CRM() {
+    const { canCreate } = usePlanLimits();
+    const [limitMessage, setLimitMessage] = useState('');
     const [contacts, setContacts] = useState<Contact[]>([]);
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState('');
@@ -77,6 +81,16 @@ export default function CRM() {
     const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
     const [selectedContact, setSelectedContact] = useState<Contact | null>(null);
     const [isDetailOpen, setIsDetailOpen] = useState(false);
+
+    const handleOpenCreateModal = () => {
+        const check = canCreate('contacts', contacts.length);
+        if (!check.allowed) {
+            setLimitMessage(check.message || '');
+            return;
+        }
+        setLimitMessage('');
+        setIsCreateModalOpen(true);
+    };
 
     // ─── Fetch Contacts ───────────────────────────────
     const fetchContacts = useCallback(async () => {
@@ -183,7 +197,7 @@ export default function CRM() {
                             />
                         </div>
                         <button
-                            onClick={() => setIsCreateModalOpen(true)}
+                            onClick={handleOpenCreateModal}
                             className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-2 rounded-lg font-semibold shadow-lg shadow-indigo-500/20 transition-all active:scale-95"
                         >
                             <UserPlus className="h-5 w-5" />
@@ -191,6 +205,16 @@ export default function CRM() {
                         </button>
                     </div>
                 </div>
+
+                {/* ─── Limit Warning Banner ─────────── */}
+                {limitMessage && (
+                    <div className="bg-amber-500/10 border border-amber-500/30 rounded-xl p-4 flex items-center justify-between">
+                        <p className="text-sm text-amber-300">{limitMessage}</p>
+                        <Link to="/pricing" className="text-xs bg-amber-600 hover:bg-amber-500 text-white px-3 py-1.5 rounded-lg font-medium transition-all flex-shrink-0 ml-4">
+                            Upgrade
+                        </Link>
+                    </div>
+                )}
 
                 {/* ─── Stats Row ────────────────────── */}
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
@@ -348,19 +372,17 @@ export default function CRM() {
                             </AnimatePresence>
                         </div>
                     ) : (
-                        <div className="p-12 text-center flex flex-col items-center">
-                            <div className="h-16 w-16 bg-slate-800 rounded-full flex items-center justify-center mb-4">
-                                <Users className="h-8 w-8 text-slate-500" />
+                        <div className="col-span-full flex flex-col items-center justify-center py-20 text-center">
+                            <div className="h-20 w-20 bg-slate-800 rounded-full flex items-center justify-center mb-6">
+                                <Users className="h-10 w-10 text-slate-600" />
                             </div>
-                            <h3 className="text-lg font-medium text-white">No contacts found</h3>
-                            <p className="text-slate-400 mt-2 mb-6 max-w-sm">
-                                Start building your CRM by adding your first contact.
-                            </p>
+                            <h3 className="text-xl font-semibold text-white mb-2">No contacts yet</h3>
+                            <p className="text-slate-400 text-sm max-w-md mb-6">Add your first contact to start building your guest database. Contacts are also created automatically from bookings.</p>
                             <button
-                                onClick={() => setIsCreateModalOpen(true)}
-                                className="px-6 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg font-semibold"
+                                onClick={handleOpenCreateModal}
+                                className="bg-indigo-600 hover:bg-indigo-500 text-white px-6 py-2.5 rounded-xl font-medium flex items-center gap-2 transition-all"
                             >
-                                Add First Contact
+                                <Plus className="h-4 w-4" /> Add Your First Contact
                             </button>
                         </div>
                     )}

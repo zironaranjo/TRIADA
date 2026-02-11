@@ -16,7 +16,7 @@ export const PLANS = {
         color: 'from-slate-400 to-slate-500',
         borderColor: 'border-slate-500/30',
         bgColor: 'bg-slate-500',
-        description: 'Try TRIADAK for free, forever',
+        description: 'Try Triadak for free, forever',
         isFree: true,
         limits: {
             properties: 1,
