@@ -22,12 +22,14 @@ export class BookingsService {
     const savedBooking = Array.isArray(result) ? result[0] : result;
 
     // Sync to CRM
-    await this.crmService.createContact({
-      name: savedBooking.guestName,
+    await this.crmService.create({
+      firstName: savedBooking.guestName?.split(' ')[0] || 'Guest',
+      lastName: savedBooking.guestName?.split(' ').slice(1).join(' ') || '',
       source: 'BOOKING',
+      type: 'GUEST',
       email: createBookingDto.email || `guest_${savedBooking.id}@temp.com`,
       phone: createBookingDto.phone,
-    });
+    } as any).catch(() => {});
 
     // Sync to Accounting
     await this.accountingService.createEntry({
