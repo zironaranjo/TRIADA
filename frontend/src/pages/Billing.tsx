@@ -7,7 +7,7 @@ import { PLANS } from './Pricing';
 import type { PlanId } from './Pricing';
 import {
     CreditCard, Calendar, ArrowUpRight, Shield,
-    CheckCircle, AlertCircle, Zap, Building, Crown
+    CheckCircle, AlertCircle, Zap, Building
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
