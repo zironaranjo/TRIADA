@@ -133,7 +133,7 @@ export type PlanId = keyof typeof PLANS;
 
 // ─── Main Pricing Page ────────────────────────────────
 export default function Pricing() {
-    const { user } = useAuth();
+    const { user, refreshSubscription } = useAuth();
     const navigate = useNavigate();
     const [billing, setBilling] = useState<'monthly' | 'yearly'>('monthly');
     const [loading, setLoading] = useState('');
@@ -160,6 +160,7 @@ export default function Pricing() {
                 }, { onConflict: 'user_id' });
 
                 if (error) throw error;
+                await refreshSubscription();
                 setSuccess({ plan: 'Starter', message: 'Your free plan is now active!' });
                 setTimeout(() => navigate('/billing'), 2000);
                 return;
@@ -197,6 +198,7 @@ export default function Pricing() {
             }, { onConflict: 'user_id' });
 
             if (error) throw error;
+            await refreshSubscription();
             setSuccess({ plan: selectedPlan.name, message: '14-day free trial activated!' });
             setTimeout(() => navigate('/billing'), 2000);
         } catch (err: any) {

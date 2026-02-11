@@ -14,15 +14,28 @@ interface Profile {
     updated_at: string;
 }
 
+export interface UserSubscription {
+    id: string;
+    user_id: string;
+    plan_id: string;
+    status: string;
+    interval: string;
+    current_period_start: string;
+    current_period_end: string | null;
+}
+
 interface AuthContextType {
     user: User | null;
     session: Session | null;
     profile: Profile | null;
+    subscription: UserSubscription | null;
     loading: boolean;
     isAdmin: boolean;
     isOwner: boolean;
+    hasActivePlan: boolean;
     signOut: () => Promise<void>;
     refreshProfile: () => Promise<void>;
+    refreshSubscription: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -43,6 +56,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     const [user, setUser] = useState<User | null>(null);
     const [session, setSession] = useState<Session | null>(null);
     const [profile, setProfile] = useState<Profile | null>(null);
+    const [subscription, setSubscription] = useState<UserSubscription | null>(null);
     const [loading, setLoading] = useState(true);
 
     const fetchProfile = async (userId: string) => {
@@ -64,10 +78,32 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         }
     };
 
+    const fetchSubscription = async (userId: string) => {
+        try {
+            const { data } = await supabase
+                .from('subscriptions')
+                .select('*')
+                .eq('user_id', userId)
+                .maybeSingle();
+
+            return data as UserSubscription | null;
+        } catch (error) {
+            console.warn('Subscriptions table may not exist yet:', error);
+            return null;
+        }
+    };
+
     const refreshProfile = async () => {
         if (user) {
             const newProfile = await fetchProfile(user.id);
             setProfile(newProfile);
+        }
+    };
+
+    const refreshSubscription = async () => {
+        if (user) {
+            const newSub = await fetchSubscription(user.id);
+            setSubscription(newSub);
         }
     };
 
@@ -84,8 +120,12 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
                 setUser(session?.user ?? null);
 
                 if (session?.user) {
-                    const userProfile = await fetchProfile(session.user.id);
+                    const [userProfile, userSub] = await Promise.all([
+                        fetchProfile(session.user.id),
+                        fetchSubscription(session.user.id),
+                    ]);
                     setProfile(userProfile);
+                    setSubscription(userSub);
                 }
             } catch (err) {
                 console.error('Error initializing auth session:', err);
@@ -99,23 +139,28 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         });
 
         // Listen for auth changes
-        const { data: { subscription } } = supabase.auth.onAuthStateChange(
+        const { data: { subscription: authSub } } = supabase.auth.onAuthStateChange(
             async (_event, session) => {
                 setSession(session);
                 setUser(session?.user ?? null);
 
                 if (session?.user) {
-                    const userProfile = await fetchProfile(session.user.id);
+                    const [userProfile, userSub] = await Promise.all([
+                        fetchProfile(session.user.id),
+                        fetchSubscription(session.user.id),
+                    ]);
                     setProfile(userProfile);
+                    setSubscription(userSub);
                 } else {
                     setProfile(null);
+                    setSubscription(null);
                 }
 
                 setLoading(false);
             }
         );
 
-        return () => subscription.unsubscribe();
+        return () => authSub.unsubscribe();
     }, []);
 
     const signOut = async () => {
@@ -126,16 +171,20 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
     const isAdmin = profile?.role === 'admin';
     const isOwner = profile?.role === 'owner';
+    const hasActivePlan = subscription !== null && ['active', 'trialing'].includes(subscription.status);
 
     const value = {
         user,
         session,
         profile,
+        subscription,
         loading,
         isAdmin,
         isOwner,
+        hasActivePlan,
         signOut,
         refreshProfile,
+        refreshSubscription,
     };
 
     return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
