@@ -149,7 +149,7 @@ const Properties = () => {
 
             const { error } = await supabase.from('properties').insert([
                 {
-                    owner_id: user.id, // For now, assign to current user (Admin/Owner)
+                    owner_id: user.id,
                     name: newProperty.name,
                     address: newProperty.address,
                     city: newProperty.city,
@@ -158,7 +158,7 @@ const Properties = () => {
                     max_guests: newProperty.max_guests,
                     status: 'active',
                     image_url: newProperty.image_url || null,
-                    ical_url: newProperty.ical_url || null, // Save to DB
+                    ical_url: newProperty.ical_url || null,
                 },
             ]);
 
