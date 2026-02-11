@@ -1,6 +1,7 @@
 import { useState } from 'react';
-import { motion } from 'framer-motion';
-import { Check, X, Zap, Building, Crown, ArrowRight, Star, Gift } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Check, X, Zap, Building, Crown, ArrowRight, Star, Gift, CheckCircle } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
 
@@ -133,8 +134,10 @@ export type PlanId = keyof typeof PLANS;
 // ─── Main Pricing Page ────────────────────────────────
 export default function Pricing() {
     const { user } = useAuth();
+    const navigate = useNavigate();
     const [billing, setBilling] = useState<'monthly' | 'yearly'>('monthly');
     const [loading, setLoading] = useState('');
+    const [success, setSuccess] = useState<{ plan: string; message: string } | null>(null);
 
     const handleSelectPlan = async (planId: PlanId) => {
         if (!user) {
@@ -157,8 +160,8 @@ export default function Pricing() {
                 }, { onConflict: 'user_id' });
 
                 if (error) throw error;
-                alert('Starter plan activated! You can now use TRIADAK for free.');
-                window.location.href = '/billing';
+                setSuccess({ plan: 'Starter', message: 'Your free plan is now active!' });
+                setTimeout(() => navigate('/billing'), 2000);
                 return;
             }
 
@@ -194,8 +197,8 @@ export default function Pricing() {
             }, { onConflict: 'user_id' });
 
             if (error) throw error;
-            alert(`${selectedPlan.name} plan activated with 14-day free trial! (Test mode)`);
-            window.location.href = '/billing';
+            setSuccess({ plan: selectedPlan.name, message: '14-day free trial activated!' });
+            setTimeout(() => navigate('/billing'), 2000);
         } catch (err: any) {
             console.error('Error selecting plan:', err);
             alert(`Error: ${err?.message || 'Could not activate plan'}`);
@@ -206,6 +209,24 @@ export default function Pricing() {
 
     return (
         <div className="min-h-screen bg-[#0f172a] text-slate-100 p-6">
+            {/* ─── Success Toast ───────────────────── */}
+            <AnimatePresence>
+                {success && (
+                    <motion.div
+                        initial={{ opacity: 0, y: -40, scale: 0.95 }}
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        exit={{ opacity: 0, y: -20 }}
+                        className="fixed top-6 left-1/2 -translate-x-1/2 z-50 bg-emerald-600 text-white px-6 py-4 rounded-2xl shadow-2xl shadow-emerald-500/30 flex items-center gap-3 min-w-[320px]"
+                    >
+                        <CheckCircle className="h-6 w-6 flex-shrink-0" />
+                        <div>
+                            <p className="font-semibold">{success.plan} Plan Activated!</p>
+                            <p className="text-sm text-emerald-100">{success.message} Redirecting...</p>
+                        </div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+
             <div className="mx-auto max-w-6xl space-y-10">
 
                 {/* ─── Header ───────────────────────── */}
