@@ -5,6 +5,7 @@ import {
     Building2,
     CalendarDays,
     Users,
+    ContactIcon,
     PiggyBank,
     Settings,
     LogOut,
@@ -24,6 +25,7 @@ const Layout = () => {
         { path: '/properties', label: 'Properties', icon: Building2 },
         { path: '/bookings', label: 'Bookings', icon: CalendarDays },
         { path: '/owners', label: 'Owners', icon: Users },
+        { path: '/crm', label: 'CRM', icon: ContactIcon },
         { path: '/accounting', label: 'Finance Engine', icon: PiggyBank },
     ];
 

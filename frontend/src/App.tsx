@@ -6,6 +6,7 @@ import Login from './pages/Login';
 import Properties from './pages/Properties';
 import Bookings from './pages/Bookings';
 import Owners from './pages/Owners';
+import CRM from './pages/CRM';
 import FinanceDashboard from './pages/FinanceDashboard';
 import Layout from './components/Layout';
 
@@ -31,6 +32,7 @@ function App() {
             <Route path="properties" element={<Properties />} />
             <Route path="bookings" element={<Bookings />} />
             <Route path="owners" element={<Owners />} />
+            <Route path="crm" element={<CRM />} />
             <Route path="accounting" element={<FinanceDashboard />} />
           </Route>
         </Routes>
