@@ -4,7 +4,6 @@ import {
     Calendar,
     Plus,
     Search,
-    MoreVertical,
     User,
     MapPin,
     CheckCircle,
@@ -17,7 +16,8 @@ import {
     X,
     Mail,
     Phone,
-    DollarSign
+    DollarSign,
+    CreditCard
 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
@@ -33,6 +33,9 @@ interface Booking {
     status: 'pending' | 'confirmed' | 'checked_in' | 'completed' | 'cancelled';
     total_price: number;
     currency: string;
+    platform: string;
+    payment_status: 'unpaid' | 'paid' | 'partial' | 'refunded';
+    payment_url: string | null;
     property_id: string;
     properties: {
         name: string;
@@ -249,11 +252,142 @@ const BookingCalendar = ({ bookings, onBookingClick }: { bookings: Booking[]; on
     );
 };
 
+// --- Payment Status Badge ---
+const PaymentBadge = ({ status }: { status: string }) => {
+    const styles: Record<string, string> = {
+        paid: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20',
+        unpaid: 'bg-rose-500/10 text-rose-400 border-rose-500/20',
+        partial: 'bg-amber-500/10 text-amber-400 border-amber-500/20',
+        refunded: 'bg-slate-500/10 text-slate-400 border-slate-500/20',
+    };
+    return (
+        <span className={`px-2.5 py-0.5 rounded-full text-xs font-medium border flex items-center gap-1.5 w-fit ${styles[status] || styles.unpaid}`}>
+            {status === 'paid' ? <CheckCircle className="h-3 w-3" /> : <DollarSign className="h-3 w-3" />}
+            {(status || 'unpaid').toUpperCase()}
+        </span>
+    );
+};
+
+// --- Platform Badge ---
+const PlatformBadge = ({ platform }: { platform: string }) => {
+    const colors: Record<string, string> = {
+        AIRBNB: 'bg-rose-500/10 text-rose-400',
+        BOOKING_COM: 'bg-blue-600/10 text-blue-300',
+        DIRECT: 'bg-emerald-500/10 text-emerald-400',
+        VRBO: 'bg-indigo-500/10 text-indigo-400',
+    };
+    return (
+        <span className={`px-2 py-0.5 rounded-full text-[10px] font-semibold ${colors[platform?.toUpperCase()] || colors.DIRECT}`}>
+            {(platform || 'DIRECT').replace('_', '.')}
+        </span>
+    );
+};
+
 // --- Booking Detail Modal ---
-const BookingDetailModal = ({ booking, onClose }: { booking: Booking; onClose: () => void }) => {
+const BookingDetailModal = ({ booking, onClose, onUpdate }: { booking: Booking; onClose: () => void; onUpdate: () => void }) => {
+    const [actionLoading, setActionLoading] = useState('');
+    const [copied, setCopied] = useState(false);
+
     const nights = Math.ceil(
         (new Date(booking.end_date).getTime() - new Date(booking.start_date).getTime()) / (1000 * 60 * 60 * 24)
     );
+
+    const markAsPaid = async () => {
+        setActionLoading('paid');
+        try {
+            const { error } = await supabase.from('bookings').update({
+                payment_status: 'paid',
+                status: 'confirmed',
+            }).eq('id', booking.id);
+            if (error) throw error;
+            onUpdate();
+            onClose();
+        } catch (err: any) {
+            alert(`Error: ${err?.message || 'Could not update'}`);
+        } finally {
+            setActionLoading('');
+        }
+    };
+
+    const markAsUnpaid = async () => {
+        setActionLoading('unpaid');
+        try {
+            const { error } = await supabase.from('bookings').update({
+                payment_status: 'unpaid',
+            }).eq('id', booking.id);
+            if (error) throw error;
+            onUpdate();
+            onClose();
+        } catch (err: any) {
+            alert(`Error: ${err?.message || 'Could not update'}`);
+        } finally {
+            setActionLoading('');
+        }
+    };
+
+    const generatePaymentLink = async () => {
+        setActionLoading('link');
+        try {
+            const API_URL = import.meta.env.VITE_API_URL || 'https://api.triadak.io';
+            const res = await fetch(`${API_URL}/payments/create-checkout`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    bookingId: booking.id,
+                    amount: booking.total_price,
+                    guestEmail: booking.guest_email,
+                    guestName: booking.guest_name,
+                    propertyName: booking.properties?.name || 'Property',
+                }),
+            });
+
+            if (!res.ok) {
+                const errData = await res.json().catch(() => ({}));
+                throw new Error(errData.message || 'Failed to generate payment link');
+            }
+
+            const data = await res.json();
+            if (data.url) {
+                // Save the payment URL to the booking
+                await supabase.from('bookings').update({
+                    payment_url: data.url,
+                }).eq('id', booking.id);
+
+                // Copy to clipboard
+                await navigator.clipboard.writeText(data.url);
+                setCopied(true);
+                setTimeout(() => setCopied(false), 3000);
+                alert('Payment link generated and copied to clipboard!');
+                onUpdate();
+            }
+        } catch (err: any) {
+            console.error('Error generating payment link:', err);
+            alert(`Could not generate link: ${err?.message || 'Backend not available. Deploy backend from pruebas-web branch.'}`);
+        } finally {
+            setActionLoading('');
+        }
+    };
+
+    const copyPaymentLink = async () => {
+        if (booking.payment_url) {
+            await navigator.clipboard.writeText(booking.payment_url);
+            setCopied(true);
+            setTimeout(() => setCopied(false), 2000);
+        }
+    };
+
+    const updateStatus = async (newStatus: string) => {
+        try {
+            const { error } = await supabase.from('bookings').update({
+                status: newStatus,
+            }).eq('id', booking.id);
+            if (error) throw error;
+            onUpdate();
+            onClose();
+        } catch (err: any) {
+            alert(`Error: ${err?.message}`);
+        }
+    };
 
     return (
         <>
@@ -268,13 +402,16 @@ const BookingDetailModal = ({ booking, onClose }: { booking: Booking; onClose: (
                 initial={{ opacity: 0, scale: 0.95, y: 20 }}
                 animate={{ opacity: 1, scale: 1, y: 0 }}
                 exit={{ opacity: 0, scale: 0.95, y: 20 }}
-                className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-md bg-slate-800 border border-slate-700 rounded-2xl shadow-2xl z-50 overflow-hidden"
+                className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-md bg-slate-800 border border-slate-700 rounded-2xl shadow-2xl z-50 overflow-hidden max-h-[90vh] overflow-y-auto"
             >
                 {/* Header */}
-                <div className="p-5 border-b border-slate-700/50 flex items-center justify-between">
+                <div className="p-5 border-b border-slate-700/50 flex items-center justify-between sticky top-0 bg-slate-800 z-10">
                     <div>
                         <h2 className="text-lg font-bold text-white">{booking.guest_name}</h2>
-                        <p className="text-xs text-slate-400 font-mono">#{booking.id.slice(0, 8)}</p>
+                        <div className="flex items-center gap-2 mt-1">
+                            <p className="text-xs text-slate-400 font-mono">#{booking.id.slice(0, 8)}</p>
+                            <PlatformBadge platform={booking.platform} />
+                        </div>
                     </div>
                     <button onClick={onClose} className="p-2 hover:bg-slate-700/50 rounded-lg text-slate-400 hover:text-white transition-colors">
                         <X className="h-5 w-5" />
@@ -283,11 +420,16 @@ const BookingDetailModal = ({ booking, onClose }: { booking: Booking; onClose: (
 
                 {/* Body */}
                 <div className="p-5 space-y-4">
+                    {/* Status + Price Row */}
                     <div className="flex items-center justify-between">
-                        <StatusBadge status={booking.status} />
-                        <span className="text-xl font-bold text-white">${booking.total_price}</span>
+                        <div className="flex items-center gap-2">
+                            <StatusBadge status={booking.status} />
+                            <PaymentBadge status={booking.payment_status || 'unpaid'} />
+                        </div>
+                        <span className="text-xl font-bold text-white">€{booking.total_price}</span>
                     </div>
 
+                    {/* Dates */}
                     <div className="grid grid-cols-2 gap-3">
                         <div className="bg-slate-900/50 rounded-xl p-3">
                             <p className="text-[10px] text-slate-500 uppercase tracking-wider font-semibold">Check-in</p>
@@ -299,6 +441,7 @@ const BookingDetailModal = ({ booking, onClose }: { booking: Booking; onClose: (
                         </div>
                     </div>
 
+                    {/* Property */}
                     <div className="bg-slate-900/50 rounded-xl p-3 flex items-center justify-between">
                         <div className="flex items-center gap-2">
                             <MapPin className="h-4 w-4 text-slate-500" />
@@ -307,19 +450,101 @@ const BookingDetailModal = ({ booking, onClose }: { booking: Booking; onClose: (
                         <span className="text-xs text-slate-500">{nights} night{nights !== 1 ? 's' : ''}</span>
                     </div>
 
+                    {/* Guest Contact */}
                     {booking.guest_email && (
                         <div className="flex items-center gap-2 text-sm text-slate-400">
                             <Mail className="h-4 w-4 text-slate-500" />
                             <span>{booking.guest_email}</span>
                         </div>
                     )}
-
                     {booking.guest_phone && (
                         <div className="flex items-center gap-2 text-sm text-slate-400">
                             <Phone className="h-4 w-4 text-slate-500" />
                             <span>{booking.guest_phone}</span>
                         </div>
                     )}
+
+                    {/* ─── Payment Section ──────────── */}
+                    <div className="border-t border-slate-700/50 pt-4 space-y-3">
+                        <h3 className="text-sm font-semibold text-white flex items-center gap-2">
+                            <CreditCard className="h-4 w-4 text-indigo-400" />
+                            Payment
+                        </h3>
+
+                        {/* Payment Link (if exists) */}
+                        {booking.payment_url && (
+                            <div className="bg-indigo-500/10 border border-indigo-500/20 rounded-xl p-3">
+                                <p className="text-xs text-indigo-300 font-medium mb-2">Payment Link</p>
+                                <div className="flex items-center gap-2">
+                                    <input
+                                        readOnly
+                                        value={booking.payment_url}
+                                        className="flex-1 bg-slate-900/50 text-xs text-slate-300 rounded-lg px-2 py-1.5 truncate border border-slate-700"
+                                    />
+                                    <button
+                                        onClick={copyPaymentLink}
+                                        className="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-500 text-white text-xs rounded-lg font-medium transition-all"
+                                    >
+                                        {copied ? 'Copied!' : 'Copy'}
+                                    </button>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Payment Actions */}
+                        <div className="flex flex-wrap gap-2">
+                            {(booking.payment_status !== 'paid') && (
+                                <button
+                                    onClick={markAsPaid}
+                                    disabled={!!actionLoading}
+                                    className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-sm font-medium transition-all disabled:opacity-50"
+                                >
+                                    {actionLoading === 'paid' ? <Loader2 className="h-4 w-4 animate-spin" /> : <CheckCircle className="h-4 w-4" />}
+                                    Mark as Paid
+                                </button>
+                            )}
+                            {booking.payment_status === 'paid' && (
+                                <button
+                                    onClick={markAsUnpaid}
+                                    disabled={!!actionLoading}
+                                    className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 bg-slate-700 hover:bg-slate-600 text-white rounded-xl text-sm font-medium transition-all disabled:opacity-50"
+                                >
+                                    Revert to Unpaid
+                                </button>
+                            )}
+                            {!booking.payment_url && (booking.platform === 'DIRECT' || !booking.platform) && (
+                                <button
+                                    onClick={generatePaymentLink}
+                                    disabled={!!actionLoading}
+                                    className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-sm font-medium transition-all disabled:opacity-50"
+                                >
+                                    {actionLoading === 'link' ? <Loader2 className="h-4 w-4 animate-spin" /> : <CreditCard className="h-4 w-4" />}
+                                    Generate Payment Link
+                                </button>
+                            )}
+                        </div>
+                    </div>
+
+                    {/* ─── Status Actions ───────────── */}
+                    <div className="border-t border-slate-700/50 pt-4 space-y-3">
+                        <h3 className="text-sm font-semibold text-white">Change Status</h3>
+                        <div className="flex flex-wrap gap-2">
+                            {['pending', 'confirmed', 'checked_in', 'completed', 'cancelled'].map((s) => (
+                                <button
+                                    key={s}
+                                    onClick={() => updateStatus(s)}
+                                    disabled={booking.status === s}
+                                    className={`px-3 py-1.5 rounded-lg text-xs font-medium border transition-all ${
+                                        booking.status === s
+                                            ? 'bg-blue-500/10 text-blue-400 border-blue-500/20'
+                                            : 'bg-slate-900/50 text-slate-400 border-slate-700 hover:bg-slate-700 hover:text-white'
+                                    } disabled:opacity-50`}
+                                >
+                                    {s.charAt(0).toUpperCase() + s.slice(1).replace('_', ' ')}
+                                </button>
+                            ))}
+                        </div>
+                    </div>
                 </div>
             </motion.div>
         </>
@@ -350,7 +575,9 @@ const Bookings = () => {
         start_date: '',
         end_date: '',
         total_price: '',
-        status: 'pending' as Booking['status']
+        status: 'pending' as Booking['status'],
+        platform: 'DIRECT',
+        payment_status: 'unpaid' as Booking['payment_status'],
     });
 
     // --- Fetch Data ---
@@ -410,7 +637,9 @@ const Bookings = () => {
                     start_date: newBooking.start_date,
                     end_date: newBooking.end_date,
                     total_price: parseFloat(newBooking.total_price) || 0,
-                    status: newBooking.status
+                    status: newBooking.status,
+                    platform: newBooking.platform,
+                    payment_status: newBooking.payment_status,
                 }]);
 
             if (error) throw error;
@@ -442,7 +671,9 @@ const Bookings = () => {
                 start_date: '',
                 end_date: '',
                 total_price: '',
-                status: 'pending'
+                status: 'pending' as Booking['status'],
+                platform: 'DIRECT',
+                payment_status: 'unpaid' as Booking['payment_status'],
             });
             fetchData();
 
@@ -650,15 +881,14 @@ const Bookings = () => {
                                 </div>
 
                                 {/* Status & Price */}
-                                <div className="flex items-center gap-6 ml-auto mt-2 md:mt-0 w-full md:w-auto justify-between md:justify-end">
+                                <div className="flex items-center gap-4 ml-auto mt-2 md:mt-0 w-full md:w-auto justify-between md:justify-end">
+                                    <PlatformBadge platform={booking.platform} />
                                     <StatusBadge status={booking.status} />
+                                    <PaymentBadge status={booking.payment_status || 'unpaid'} />
                                     <div className="text-right">
-                                        <p className="text-white font-bold">${booking.total_price}</p>
+                                        <p className="text-white font-bold">€{booking.total_price}</p>
                                         <p className="text-xs text-slate-500">Total</p>
                                     </div>
-                                    <button className="p-2 hover:bg-slate-700/50 rounded-lg text-slate-400 hover:text-white transition-colors">
-                                        <MoreVertical className="h-4 w-4" />
-                                    </button>
                                 </div>
                             </motion.div>
                         ))}
@@ -672,6 +902,7 @@ const Bookings = () => {
                     <BookingDetailModal
                         booking={selectedBooking}
                         onClose={() => setSelectedBooking(null)}
+                        onUpdate={fetchData}
                     />
                 )}
             </AnimatePresence>
@@ -777,7 +1008,36 @@ const Bookings = () => {
 
                                 <div className="grid grid-cols-2 gap-4">
                                     <div className="space-y-2">
-                                        <label className="text-sm font-medium text-slate-300">Total Price ($)</label>
+                                        <label className="text-sm font-medium text-slate-300">Platform</label>
+                                        <select
+                                            value={newBooking.platform}
+                                            onChange={(e) => setNewBooking({ ...newBooking, platform: e.target.value })}
+                                            className="w-full bg-slate-900/50 border border-slate-700 rounded-xl px-4 py-2.5 text-white focus:ring-2 focus:ring-blue-500/50"
+                                        >
+                                            <option value="DIRECT">Direct</option>
+                                            <option value="AIRBNB">Airbnb</option>
+                                            <option value="BOOKING_COM">Booking.com</option>
+                                            <option value="VRBO">VRBO</option>
+                                            <option value="OTHER">Other</option>
+                                        </select>
+                                    </div>
+                                    <div className="space-y-2">
+                                        <label className="text-sm font-medium text-slate-300">Payment</label>
+                                        <select
+                                            value={newBooking.payment_status}
+                                            onChange={(e) => setNewBooking({ ...newBooking, payment_status: e.target.value as any })}
+                                            className="w-full bg-slate-900/50 border border-slate-700 rounded-xl px-4 py-2.5 text-white focus:ring-2 focus:ring-blue-500/50"
+                                        >
+                                            <option value="unpaid">Unpaid</option>
+                                            <option value="paid">Paid</option>
+                                            <option value="partial">Partial</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div className="space-y-2">
+                                        <label className="text-sm font-medium text-slate-300">Total Price (€)</label>
                                         <input
                                             type="number"
                                             required

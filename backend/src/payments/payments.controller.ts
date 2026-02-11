@@ -1,6 +1,7 @@
 import {
   Controller,
   Post,
+  Body,
   Headers,
   Req,
   BadRequestException,
@@ -12,11 +13,30 @@ interface RequestWithRawBody extends Request {
   rawBody: Buffer;
 }
 
-@Controller('webhooks') // Prefix webhooks
+@Controller()
 export class PaymentsController {
   constructor(private readonly paymentsService: PaymentsService) {}
 
-  @Post('stripe')
+  // ─── Create Stripe Checkout Session ─────────────────
+  @Post('payments/create-checkout')
+  async createCheckout(
+    @Body()
+    body: {
+      bookingId: string;
+      amount: number;
+      guestEmail: string;
+      guestName: string;
+      propertyName: string;
+    },
+  ) {
+    if (!body.bookingId || !body.amount) {
+      throw new BadRequestException('bookingId and amount are required');
+    }
+    return this.paymentsService.createCheckoutSession(body);
+  }
+
+  // ─── Stripe Webhook ─────────────────────────────────
+  @Post('webhooks/stripe')
   async handleStripeWebhook(
     @Headers('stripe-signature') signature: string,
     @Req() request: RequestWithRawBody,

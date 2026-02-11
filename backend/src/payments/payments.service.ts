@@ -26,6 +26,50 @@ export class PaymentsService {
     });
   }
 
+  // ─── Create Checkout Session ─────────────────────────
+  async createCheckoutSession(data: {
+    bookingId: string;
+    amount: number;
+    guestEmail: string;
+    guestName: string;
+    propertyName: string;
+  }) {
+    try {
+      const session = await this.stripe.checkout.sessions.create({
+        payment_method_types: ['card'],
+        mode: 'payment',
+        customer_email: data.guestEmail,
+        metadata: {
+          bookingId: data.bookingId,
+        },
+        line_items: [
+          {
+            price_data: {
+              currency: 'eur',
+              product_data: {
+                name: `Booking - ${data.propertyName}`,
+                description: `Reservation for ${data.guestName}`,
+              },
+              unit_amount: Math.round(data.amount * 100), // Stripe uses cents
+            },
+            quantity: 1,
+          },
+        ],
+        success_url: `${this.configService.get('FRONTEND_URL') || 'https://staging.triadak.io'}/bookings?payment=success`,
+        cancel_url: `${this.configService.get('FRONTEND_URL') || 'https://staging.triadak.io'}/bookings?payment=cancelled`,
+      });
+
+      this.logger.log(
+        `Checkout session created: ${session.id} for booking ${data.bookingId}`,
+      );
+
+      return { url: session.url, sessionId: session.id };
+    } catch (err) {
+      this.logger.error(`Failed to create checkout: ${err.message}`);
+      throw err;
+    }
+  }
+
   constructEvent(payload: Buffer, signature: string): Stripe.Event {
     const webhookSecret = this.configService.get<string>(
       'STRIPE_WEBHOOK_SECRET',
