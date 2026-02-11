@@ -5,6 +5,7 @@ import { BookingsService } from './bookings.service';
 import { Booking } from './entities/booking.entity';
 import { CrmModule } from '../crm/crm.module';
 import { AccountingModule } from '../accounting/accounting.module';
+import { EmailsModule } from '../emails/emails.module';
 
 import { IcalService } from './ical.service';
 import { Property } from '../properties/entities/property.entity';
@@ -14,6 +15,7 @@ import { Property } from '../properties/entities/property.entity';
     TypeOrmModule.forFeature([Booking, Property]),
     CrmModule,
     AccountingModule,
+    EmailsModule,
   ],
   controllers: [BookingsController],
   providers: [BookingsService, IcalService],

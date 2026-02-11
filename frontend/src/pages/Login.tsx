@@ -17,6 +17,7 @@ const Login = () => {
             const { error } = await supabase.auth.signInWithOAuth({
                 provider: 'google',
                 options: {
+                    // ProtectedRoute will redirect to /pricing if no plan
                     redirectTo: `${window.location.origin}/dashboard`,
                 },
             });
@@ -34,16 +35,16 @@ const Login = () => {
 
         try {
             if (isSignUp) {
-                // Sign Up
+                // Sign Up - sends verification email
                 const { error } = await supabase.auth.signUp({
                     email,
                     password,
                     options: {
-                        emailRedirectTo: `${window.location.origin}/dashboard`,
+                        emailRedirectTo: `${window.location.origin}/pricing`,
                     },
                 });
                 if (error) throw error;
-                setMessage('Check your email for the confirmation link!');
+                setMessage('We sent you a verification email. Please check your inbox and click the confirmation link to get started.');
             } else {
                 // Sign In
                 const { error } = await supabase.auth.signInWithPassword({
@@ -51,6 +52,7 @@ const Login = () => {
                     password,
                 });
                 if (error) throw error;
+                // ProtectedRoute will redirect to /pricing if no plan
                 window.location.href = '/dashboard';
             }
         } catch (err: any) {

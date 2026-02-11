@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 import { Booking } from './entities/booking.entity';
 import { CrmService } from '../crm/crm.service';
 import { AccountingService } from '../accounting/accounting.service';
+import { EmailsService } from '../emails/emails.service';
 
 @Injectable()
 export class BookingsService {
@@ -12,6 +13,7 @@ export class BookingsService {
     private readonly bookingsRepository: Repository<Booking>,
     private readonly crmService: CrmService,
     private readonly accountingService: AccountingService,
+    private readonly emailsService: EmailsService,
   ) {}
 
   async create(createBookingDto: any) {
@@ -39,6 +41,20 @@ export class BookingsService {
       type: 'CREDIT',
       account: 'OWNER_BALANCE',
     });
+
+    // Send booking confirmation email
+    const guestEmail = createBookingDto.guest_email || createBookingDto.email;
+    if (guestEmail) {
+      await this.emailsService.sendBookingConfirmation(guestEmail, {
+        ...savedBooking,
+        guest_name: savedBooking.guestName,
+        guest_email: guestEmail,
+        start_date: savedBooking.startDate,
+        end_date: savedBooking.endDate,
+        total_price: savedBooking.totalPrice,
+        properties: { name: createBookingDto.propertyName || 'Property' },
+      }).catch((err) => console.error('Failed to send booking email:', err));
+    }
 
     return savedBooking;
   }
