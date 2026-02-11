@@ -43,15 +43,20 @@ interface Property {
 
 // ─── Constants ────────────────────────────────────────
 const EXPENSE_CATEGORIES = [
-    { value: 'CLEANING', label: 'Cleaning', icon: '🧹' },
-    { value: 'MAINTENANCE', label: 'Maintenance', icon: '🔧' },
-    { value: 'UTILITIES', label: 'Utilities', icon: '💡' },
-    { value: 'SUPPLIES', label: 'Supplies', icon: '📦' },
-    { value: 'INSURANCE', label: 'Insurance', icon: '🛡️' },
-    { value: 'TAXES', label: 'Taxes', icon: '📋' },
-    { value: 'MARKETING', label: 'Marketing', icon: '📣' },
-    { value: 'COMMISSION', label: 'Commission', icon: '💼' },
-    { value: 'OTHER', label: 'Other', icon: '📝' },
+    { value: 'CLEANING', label: 'Cleaning / Limpieza', icon: '🧹', color: '#3b82f6' },
+    { value: 'LAUNDRY', label: 'Laundry / Lavandería', icon: '👕', color: '#8b5cf6' },
+    { value: 'SUPPLIES', label: 'Supplies / Insumos', icon: '📦', color: '#f59e0b' },
+    { value: 'MATERIALS', label: 'Materials / Materiales', icon: '🧱', color: '#ef4444' },
+    { value: 'FUEL', label: 'Fuel & Transport / Gasolina', icon: '⛽', color: '#f97316' },
+    { value: 'MAINTENANCE', label: 'Maintenance / Mantenimiento', icon: '🔧', color: '#10b981' },
+    { value: 'UTILITIES', label: 'Utilities / Suministros', icon: '💡', color: '#06b6d4' },
+    { value: 'INSURANCE', label: 'Insurance / Seguros', icon: '🛡️', color: '#6366f1' },
+    { value: 'TAXES', label: 'Taxes / Impuestos', icon: '📋', color: '#ec4899' },
+    { value: 'MARKETING', label: 'Marketing / Publicidad', icon: '📣', color: '#14b8a6' },
+    { value: 'COMMISSION', label: 'Commission / Comisiones', icon: '💼', color: '#a855f7' },
+    { value: 'AMENITIES', label: 'Amenities / Amenidades', icon: '🎁', color: '#22d3ee' },
+    { value: 'DECORATION', label: 'Decoration / Decoración', icon: '🛋️', color: '#d946ef' },
+    { value: 'OTHER', label: 'Other / Otros', icon: '📝', color: '#94a3b8' },
 ];
 
 const PLATFORM_COLORS: Record<string, string> = {
@@ -184,6 +189,24 @@ export default function FinanceDashboard() {
         value: Math.round(value),
         color: PLATFORM_COLORS[name] || PLATFORM_COLORS.OTHER,
     }));
+
+    // ─── Expenses by Category ─────────────────────────
+    const categoryMap = new Map<string, number>();
+    filteredExpenses.forEach(e => {
+        const cat = e.category || 'OTHER';
+        categoryMap.set(cat, (categoryMap.get(cat) || 0) + Number(e.amount || 0));
+    });
+    const expenseByCategoryData = Array.from(categoryMap.entries())
+        .map(([key, value]) => {
+            const catDef = EXPENSE_CATEGORIES.find(c => c.value === key);
+            return {
+                name: catDef?.label?.split(' / ')[0] || key,
+                value: Math.round(value * 100) / 100,
+                color: catDef?.color || '#94a3b8',
+                icon: catDef?.icon || '📝',
+            };
+        })
+        .sort((a, b) => b.value - a.value);
 
     // ─── Delete Expense ───────────────────────────────
     const deleteExpense = async (id: string) => {
@@ -366,6 +389,46 @@ export default function FinanceDashboard() {
                         </ResponsiveContainer>
                     </div>
                 </GlassCard>
+
+                {/* ─── Expenses by Category ──────── */}
+                {expenseByCategoryData.length > 0 && (
+                    <GlassCard className="p-0 overflow-hidden">
+                        <div className="p-4 border-b border-white/5 bg-white/5 flex items-center justify-between">
+                            <h3 className="font-semibold text-white text-lg">Expenses by Category</h3>
+                            <span className="text-xs text-slate-500">{fmt(totalExpenses)} total</span>
+                        </div>
+                        <div className="p-6">
+                            <div className="space-y-3">
+                                {expenseByCategoryData.map((cat) => {
+                                    const pct = totalExpenses > 0 ? (cat.value / totalExpenses) * 100 : 0;
+                                    return (
+                                        <div key={cat.name} className="group">
+                                            <div className="flex items-center justify-between mb-1.5">
+                                                <div className="flex items-center gap-2">
+                                                    <span className="text-base">{cat.icon}</span>
+                                                    <span className="text-sm font-medium text-white">{cat.name}</span>
+                                                </div>
+                                                <div className="flex items-center gap-3">
+                                                    <span className="text-sm font-bold text-white">{fmt(cat.value)}</span>
+                                                    <span className="text-xs text-slate-500 w-12 text-right">{pct.toFixed(1)}%</span>
+                                                </div>
+                                            </div>
+                                            <div className="h-2.5 bg-slate-800 rounded-full overflow-hidden">
+                                                <motion.div
+                                                    initial={{ width: 0 }}
+                                                    animate={{ width: `${pct}%` }}
+                                                    transition={{ duration: 0.8, ease: 'easeOut' }}
+                                                    className="h-full rounded-full"
+                                                    style={{ backgroundColor: cat.color }}
+                                                />
+                                            </div>
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        </div>
+                    </GlassCard>
+                )}
 
                 {/* ─── Two Column: Recent Bookings + Expenses ─── */}
                 <div className="grid gap-6 md:grid-cols-2">
