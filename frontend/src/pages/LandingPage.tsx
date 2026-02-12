@@ -62,14 +62,27 @@ function Navbar() {
     return (
         <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? 'bg-[#0f172a]/95 backdrop-blur-xl shadow-lg shadow-black/10' : 'bg-[#0f172a]/70 backdrop-blur-md'} border-b border-white/5`}>
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="flex items-center justify-between h-28 sm:h-36">
-                    {/* Logo */}
+                {/* Mobile navbar — compact */}
+                <div className="flex md:hidden items-center justify-between py-2">
+                    <Link to="/" className="flex items-center flex-shrink-0">
+                        <img src="/logotriadak.png" alt="Triadak" className="h-12 w-auto object-contain" />
+                    </Link>
+                    <button
+                        onClick={() => setOpen(!open)}
+                        className="p-2 -mr-2 text-slate-400 hover:text-white transition-colors"
+                        aria-label="Toggle menu"
+                    >
+                        {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+                    </button>
+                </div>
+
+                {/* Desktop navbar — full size logo */}
+                <div className="hidden md:flex items-center justify-between h-36">
                     <Link to="/" className="flex items-center gap-2 flex-shrink-0">
-                        <img src="/logotriadak.png" alt="Triadak" className="h-40 sm:h-48 w-auto object-contain" />
+                        <img src="/logotriadak.png" alt="Triadak" className="h-48 w-auto object-contain" />
                     </Link>
 
-                    {/* Desktop Nav */}
-                    <div className="hidden md:flex items-center gap-8">
+                    <div className="flex items-center gap-8">
                         {links.map((l) => (
                             <a
                                 key={l.href}
@@ -81,8 +94,7 @@ function Navbar() {
                         ))}
                     </div>
 
-                    {/* Desktop CTA */}
-                    <div className="hidden md:flex items-center gap-3">
+                    <div className="flex items-center gap-3">
                         <Link
                             to="/login"
                             className="text-sm text-slate-300 hover:text-white transition-colors px-4 py-2"
@@ -96,15 +108,6 @@ function Navbar() {
                             Start Free
                         </Link>
                     </div>
-
-                    {/* Mobile menu button */}
-                    <button
-                        onClick={() => setOpen(!open)}
-                        className="md:hidden p-2 -mr-2 text-slate-400 hover:text-white transition-colors"
-                        aria-label="Toggle menu"
-                    >
-                        {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-                    </button>
                 </div>
             </div>
 
