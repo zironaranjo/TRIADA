@@ -69,7 +69,7 @@ function Navbar() {
                     </Link>
                     <button
                         onClick={() => setOpen(!open)}
-                        className="p-3 -mr-2 text-slate-300 hover:text-white transition-colors bg-white/5 rounded-xl border border-white/10"
+                        className="p-3 -mr-2 text-slate-300 hover:text-white transition-colors"
                         aria-label="Toggle menu"
                     >
                         {open ? <X className="h-8 w-8" /> : <Menu className="h-8 w-8" />}
