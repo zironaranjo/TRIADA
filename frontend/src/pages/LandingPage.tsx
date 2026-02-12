@@ -64,8 +64,11 @@ function Navbar() {
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 {/* Mobile navbar */}
                 <div className="flex md:hidden items-center justify-between">
-                    <Link to="/" className="flex items-center flex-shrink-0 overflow-hidden h-16">
-                        <img src="/logotriadak.png" alt="Triadak" className="h-40 w-auto object-contain -my-12" />
+                    <Link to="/" className="flex items-center gap-1.5 flex-shrink-0">
+                        <div className="overflow-hidden h-16">
+                            <img src="/logotriadak.png" alt="Triadak" className="h-40 w-auto object-contain -my-12" />
+                        </div>
+                        <span className="text-[10px] font-bold text-slate-500 tracking-[0.2em] uppercase">Vacational Renting</span>
                     </Link>
                     <button
                         onClick={() => setOpen(!open)}
@@ -80,6 +83,7 @@ function Navbar() {
                 <div className="hidden md:flex items-center justify-between h-36">
                     <Link to="/" className="flex items-center gap-2 flex-shrink-0">
                         <img src="/logotriadak.png" alt="Triadak" className="h-48 w-auto object-contain" />
+                        <span className="text-xs font-bold text-slate-500 tracking-[0.25em] uppercase">Vacational Renting</span>
                     </Link>
 
                     <div className="flex items-center gap-8">
