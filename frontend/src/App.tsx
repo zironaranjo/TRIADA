@@ -10,6 +10,7 @@ import CRM from './pages/CRM';
 import FinanceDashboard from './pages/FinanceDashboard';
 import Pricing from './pages/Pricing';
 import Billing from './pages/Billing';
+import Calendar from './pages/Calendar';
 import Layout from './components/Layout';
 import LandingPage from './pages/LandingPage';
 
@@ -33,6 +34,7 @@ function App() {
             <Route path="dashboard" element={<Dashboard />} />
             <Route path="properties" element={<Properties />} />
             <Route path="bookings" element={<Bookings />} />
+            <Route path="calendar" element={<Calendar />} />
             <Route path="owners" element={<Owners />} />
             <Route path="crm" element={<CRM />} />
             <Route path="accounting" element={<FinanceDashboard />} />
