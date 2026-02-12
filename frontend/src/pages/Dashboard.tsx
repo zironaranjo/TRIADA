@@ -91,11 +91,6 @@ export default function Dashboard() {
     }, []);
 
     // ─── Computed Stats ───────────────────────────────
-    const activeBookings = useMemo(() =>
-        bookings.filter(b => b.status === 'confirmed' || b.status === 'checked_in'),
-        [bookings]
-    );
-
     const totalRevenue = useMemo(() =>
         bookings.filter(b => b.status !== 'cancelled').reduce((s, b) => s + (b.total_price || 0), 0),
         [bookings]
