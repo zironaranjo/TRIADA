@@ -164,11 +164,11 @@ export default function NotificationCenter() {
             <AnimatePresence>
                 {open && (
                     <motion.div
-                        initial={{ opacity: 0, y: -10, scale: 0.95 }}
+                        initial={{ opacity: 0, y: 10, scale: 0.95 }}
                         animate={{ opacity: 1, y: 0, scale: 1 }}
-                        exit={{ opacity: 0, y: -10, scale: 0.95 }}
+                        exit={{ opacity: 0, y: 10, scale: 0.95 }}
                         transition={{ duration: 0.15 }}
-                        className="absolute right-0 top-full mt-2 w-[340px] sm:w-[380px] max-h-[70vh] bg-[#0f172a] border border-white/10 rounded-2xl shadow-2xl shadow-black/40 overflow-hidden z-50 flex flex-col"
+                        className="absolute left-0 bottom-full mb-2 w-[340px] sm:w-[380px] max-h-[70vh] bg-[#0f172a] border border-white/10 rounded-2xl shadow-2xl shadow-black/40 overflow-hidden z-[100] flex flex-col"
                     >
                         {/* Header */}
                         <div className="flex items-center justify-between px-4 py-3 border-b border-white/5">
