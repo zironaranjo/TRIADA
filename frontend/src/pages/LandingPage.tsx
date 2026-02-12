@@ -64,11 +64,11 @@ function Navbar() {
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 {/* Mobile navbar */}
                 <div className="flex md:hidden items-center justify-between">
-                    <Link to="/" className="flex items-center gap-1.5 flex-shrink-0">
+                    <Link to="/" className="flex flex-col items-start flex-shrink-0">
                         <div className="overflow-hidden h-16">
                             <img src="/logotriadak.png" alt="Triadak" className="h-40 w-auto object-contain -my-12" />
                         </div>
-                        <span className="text-[10px] font-bold text-slate-500 tracking-[0.2em] uppercase">Vacational Renting</span>
+                        <span className="text-[10px] font-bold text-slate-500 tracking-[0.2em] uppercase -mt-1">Vacational Renting</span>
                     </Link>
                     <button
                         onClick={() => setOpen(!open)}
