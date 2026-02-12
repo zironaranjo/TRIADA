@@ -95,7 +95,18 @@ const MONTH_NAMES = [
 ];
 const DAY_NAMES = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
-// --- Calendar Component ---
+// --- Status dot colors for calendar ---
+const STATUS_DOTS: Record<string, string> = {
+    confirmed: 'bg-emerald-400',
+    checked_in: 'bg-blue-400',
+    pending: 'bg-amber-400',
+    completed: 'bg-slate-400',
+    cancelled: 'bg-red-400',
+};
+
+const DAY_NAMES_SHORT = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
+
+// --- Calendar Component (Mobile-optimized) ---
 const BookingCalendar = ({ bookings, onBookingClick }: { bookings: Booking[]; onBookingClick: (b: Booking) => void }) => {
     const today = new Date();
     const [currentMonth, setCurrentMonth] = useState(today.getMonth());
@@ -143,112 +154,163 @@ const BookingCalendar = ({ bookings, onBookingClick }: { bookings: Booking[]; on
         return map;
     }, [monthBookings, daysInMonth, currentMonth, currentYear]);
 
+    // Month stats
+    const monthStats = useMemo(() => {
+        const revenue = monthBookings.reduce((sum, b) => sum + (b.total_price || 0), 0);
+        const nights = monthBookings.reduce((sum, b) => {
+            const start = new Date(b.start_date);
+            const end = new Date(b.end_date);
+            const effStart = start < monthStart ? monthStart : start;
+            const effEnd = end > monthEnd ? monthEnd : end;
+            return sum + Math.max(0, Math.ceil((effEnd.getTime() - effStart.getTime()) / (1000 * 60 * 60 * 24)) + 1);
+        }, 0);
+        const occupancy = daysInMonth > 0 ? Math.min(Math.round((nights / daysInMonth) * 100), 100) : 0;
+        return { total: monthBookings.length, revenue, occupancy };
+    }, [monthBookings, daysInMonth, monthStart, monthEnd]);
+
     const todayDate = today.getDate();
     const isCurrentMonth = today.getMonth() === currentMonth && today.getFullYear() === currentYear;
 
     return (
-        <div className="bg-slate-800/30 border border-slate-700/50 rounded-2xl overflow-hidden">
-            {/* Calendar Header */}
-            <div className="flex items-center justify-between p-4 border-b border-slate-700/50">
-                <div className="flex items-center gap-3">
-                    <h2 className="text-xl font-bold text-white">
-                        {MONTH_NAMES[currentMonth]} {currentYear}
-                    </h2>
-                    <button
-                        onClick={goToToday}
-                        className="text-xs px-2.5 py-1 bg-blue-500/10 text-blue-400 border border-blue-500/20 rounded-lg hover:bg-blue-500/20 transition-colors"
-                    >
-                        Today
-                    </button>
+        <div className="space-y-4">
+            {/* Month Stats */}
+            <div className="grid grid-cols-3 gap-2 sm:gap-3">
+                <div className="bg-slate-800/30 border border-slate-700/50 rounded-xl p-3 sm:p-4">
+                    <p className="text-[10px] sm:text-xs text-slate-500 uppercase tracking-wider">Bookings</p>
+                    <p className="text-lg sm:text-2xl font-bold text-white mt-0.5">{monthStats.total}</p>
                 </div>
-                <div className="flex items-center gap-1">
-                    <button
-                        onClick={() => navigateMonth(-1)}
-                        className="p-2 hover:bg-slate-700/50 rounded-lg text-slate-400 hover:text-white transition-colors"
-                    >
-                        <ChevronLeft className="h-5 w-5" />
-                    </button>
-                    <button
-                        onClick={() => navigateMonth(1)}
-                        className="p-2 hover:bg-slate-700/50 rounded-lg text-slate-400 hover:text-white transition-colors"
-                    >
-                        <ChevronRight className="h-5 w-5" />
-                    </button>
+                <div className="bg-slate-800/30 border border-slate-700/50 rounded-xl p-3 sm:p-4">
+                    <p className="text-[10px] sm:text-xs text-slate-500 uppercase tracking-wider">Revenue</p>
+                    <p className="text-lg sm:text-2xl font-bold text-emerald-400 mt-0.5">€{monthStats.revenue.toLocaleString()}</p>
+                </div>
+                <div className="bg-slate-800/30 border border-slate-700/50 rounded-xl p-3 sm:p-4">
+                    <p className="text-[10px] sm:text-xs text-slate-500 uppercase tracking-wider">Occupancy</p>
+                    <p className="text-lg sm:text-2xl font-bold text-indigo-400 mt-0.5">{monthStats.occupancy}%</p>
                 </div>
             </div>
 
-            {/* Day Names Header */}
-            <div className="grid grid-cols-7 border-b border-slate-700/50">
-                {DAY_NAMES.map(day => (
-                    <div key={day} className="text-center py-3 text-xs font-semibold text-slate-500 uppercase tracking-wider">
-                        {day}
-                    </div>
-                ))}
-            </div>
-
-            {/* Calendar Grid */}
-            <div className="grid grid-cols-7">
-                {/* Empty cells for offset */}
-                {Array.from({ length: firstDay }).map((_, i) => (
-                    <div key={`empty-${i}`} className="min-h-[100px] border-b border-r border-slate-700/20 bg-slate-900/20" />
-                ))}
-
-                {/* Day cells */}
-                {Array.from({ length: daysInMonth }).map((_, i) => {
-                    const day = i + 1;
-                    const dayBookings = dayBookingsMap[day] || [];
-                    const isToday = isCurrentMonth && day === todayDate;
-                    const isWeekend = (firstDay + i) % 7 === 0 || (firstDay + i) % 7 === 6;
-
-                    return (
-                        <div
-                            key={day}
-                            className={`min-h-[100px] border-b border-r border-slate-700/20 p-1.5 transition-colors ${
-                                isToday ? 'bg-blue-500/5' : isWeekend ? 'bg-slate-900/30' : 'bg-transparent'
-                            } hover:bg-slate-700/20`}
+            <div className="bg-slate-800/30 border border-slate-700/50 rounded-2xl overflow-hidden">
+                {/* Calendar Header */}
+                <div className="flex items-center justify-between p-3 sm:p-4 border-b border-slate-700/50">
+                    <div className="flex items-center gap-2 sm:gap-3">
+                        <h2 className="text-base sm:text-xl font-bold text-white">
+                            {MONTH_NAMES[currentMonth]} {currentYear}
+                        </h2>
+                        <button
+                            onClick={goToToday}
+                            className="text-[10px] sm:text-xs px-2 sm:px-2.5 py-1 bg-blue-500/10 text-blue-400 border border-blue-500/20 rounded-lg hover:bg-blue-500/20 transition-colors"
                         >
-                            <div className={`text-xs font-medium mb-1 ${
-                                isToday
-                                    ? 'bg-blue-500 text-white w-6 h-6 rounded-full flex items-center justify-center'
-                                    : 'text-slate-500 pl-1'
-                            }`}>
-                                {day}
-                            </div>
-
-                            <div className="space-y-0.5">
-                                {dayBookings.slice(0, 3).map((booking) => {
-                                    const colors = statusColors[booking.status] || statusColors.pending;
-                                    const isStart = booking.start_date === new Date(currentYear, currentMonth, day).toISOString().split('T')[0];
-
-                                    return (
-                                        <button
-                                            key={booking.id}
-                                            onClick={() => onBookingClick(booking)}
-                                            className={`w-full text-left px-1.5 py-0.5 rounded text-[10px] font-medium truncate border transition-all hover:brightness-125 ${colors.bg} ${colors.border} ${colors.text}`}
-                                            title={`${booking.guest_name} - ${booking.properties?.name || 'Property'}`}
-                                        >
-                                            {isStart ? `→ ${booking.guest_name}` : booking.guest_name}
-                                        </button>
-                                    );
-                                })}
-                                {dayBookings.length > 3 && (
-                                    <p className="text-[10px] text-slate-500 pl-1">+{dayBookings.length - 3} more</p>
-                                )}
-                            </div>
-                        </div>
-                    );
-                })}
-            </div>
-
-            {/* Legend */}
-            <div className="flex flex-wrap items-center gap-4 p-3 border-t border-slate-700/50 bg-slate-900/20">
-                <span className="text-xs text-slate-500 font-medium">Status:</span>
-                {Object.entries(statusColors).map(([status, colors]) => (
-                    <div key={status} className="flex items-center gap-1.5">
-                        <div className={`w-3 h-3 rounded ${colors.bg} ${colors.border} border`} />
-                        <span className="text-xs text-slate-400 capitalize">{status.replace('_', ' ')}</span>
+                            Today
+                        </button>
                     </div>
-                ))}
+                    <div className="flex items-center gap-1">
+                        <button
+                            onClick={() => navigateMonth(-1)}
+                            className="p-1.5 sm:p-2 hover:bg-slate-700/50 rounded-lg text-slate-400 hover:text-white transition-colors"
+                        >
+                            <ChevronLeft className="h-4 w-4 sm:h-5 sm:w-5" />
+                        </button>
+                        <button
+                            onClick={() => navigateMonth(1)}
+                            className="p-1.5 sm:p-2 hover:bg-slate-700/50 rounded-lg text-slate-400 hover:text-white transition-colors"
+                        >
+                            <ChevronRight className="h-4 w-4 sm:h-5 sm:w-5" />
+                        </button>
+                    </div>
+                </div>
+
+                {/* Day Names Header */}
+                <div className="grid grid-cols-7 border-b border-slate-700/50">
+                    {DAY_NAMES.map((day, i) => (
+                        <div key={day} className="text-center py-2 sm:py-3">
+                            <span className="hidden sm:inline text-xs font-semibold text-slate-500 uppercase tracking-wider">{day}</span>
+                            <span className="sm:hidden text-[10px] font-semibold text-slate-500">{DAY_NAMES_SHORT[i]}</span>
+                        </div>
+                    ))}
+                </div>
+
+                {/* Calendar Grid */}
+                <div className="grid grid-cols-7">
+                    {/* Empty cells for offset */}
+                    {Array.from({ length: firstDay }).map((_, i) => (
+                        <div key={`empty-${i}`} className="min-h-[48px] sm:min-h-[100px] border-b border-r border-slate-700/20 bg-slate-900/20" />
+                    ))}
+
+                    {/* Day cells */}
+                    {Array.from({ length: daysInMonth }).map((_, i) => {
+                        const day = i + 1;
+                        const dayBookings = dayBookingsMap[day] || [];
+                        const isToday = isCurrentMonth && day === todayDate;
+                        const isWeekend = (firstDay + i) % 7 === 0 || (firstDay + i) % 7 === 6;
+
+                        return (
+                            <div
+                                key={day}
+                                className={`min-h-[48px] sm:min-h-[100px] border-b border-r border-slate-700/20 p-0.5 sm:p-1.5 transition-colors ${
+                                    isToday ? 'bg-blue-500/5' : isWeekend ? 'bg-slate-900/30' : 'bg-transparent'
+                                } hover:bg-slate-700/20`}
+                            >
+                                {/* Day number */}
+                                <div className="flex items-center justify-center sm:justify-start sm:pl-1">
+                                    <span className={`text-[10px] sm:text-xs font-medium inline-flex items-center justify-center w-5 h-5 sm:w-6 sm:h-6 rounded-full ${
+                                        isToday
+                                            ? 'bg-blue-500 text-white font-bold'
+                                            : 'text-slate-500'
+                                    }`}>
+                                        {day}
+                                    </span>
+                                </div>
+
+                                {/* Mobile: dots */}
+                                <div className="sm:hidden flex justify-center gap-0.5 mt-0.5 flex-wrap">
+                                    {dayBookings.slice(0, 3).map((b) => (
+                                        <button
+                                            key={b.id}
+                                            onClick={() => onBookingClick(b)}
+                                            className={`w-1.5 h-1.5 rounded-full ${STATUS_DOTS[b.status] || 'bg-slate-400'}`}
+                                        />
+                                    ))}
+                                    {dayBookings.length > 3 && (
+                                        <span className="text-[7px] text-slate-500">+{dayBookings.length - 3}</span>
+                                    )}
+                                </div>
+
+                                {/* Desktop: booking bars */}
+                                <div className="hidden sm:block space-y-0.5 mt-1">
+                                    {dayBookings.slice(0, 3).map((booking) => {
+                                        const colors = statusColors[booking.status] || statusColors.pending;
+                                        const isStart = booking.start_date === new Date(currentYear, currentMonth, day).toISOString().split('T')[0];
+
+                                        return (
+                                            <button
+                                                key={booking.id}
+                                                onClick={() => onBookingClick(booking)}
+                                                className={`w-full text-left px-1.5 py-0.5 rounded text-[10px] font-medium truncate border transition-all hover:brightness-125 ${colors.bg} ${colors.border} ${colors.text}`}
+                                                title={`${booking.guest_name} - ${booking.properties?.name || 'Property'}`}
+                                            >
+                                                {isStart ? `→ ${booking.guest_name}` : booking.guest_name}
+                                            </button>
+                                        );
+                                    })}
+                                    {dayBookings.length > 3 && (
+                                        <p className="text-[10px] text-slate-500 pl-1">+{dayBookings.length - 3} more</p>
+                                    )}
+                                </div>
+                            </div>
+                        );
+                    })}
+                </div>
+
+                {/* Legend */}
+                <div className="flex flex-wrap items-center gap-3 sm:gap-4 p-2.5 sm:p-3 border-t border-slate-700/50 bg-slate-900/20">
+                    <span className="text-[10px] sm:text-xs text-slate-500 font-medium">Status:</span>
+                    {Object.entries(statusColors).map(([status, colors]) => (
+                        <div key={status} className="flex items-center gap-1 sm:gap-1.5">
+                            <div className={`w-2 h-2 sm:w-3 sm:h-3 rounded ${colors.bg} ${colors.border} border`} />
+                            <span className="text-[10px] sm:text-xs text-slate-400 capitalize">{status.replace('_', ' ')}</span>
+                        </div>
+                    ))}
+                </div>
             </div>
         </div>
     );
