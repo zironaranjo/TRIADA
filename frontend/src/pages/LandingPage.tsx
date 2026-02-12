@@ -62,17 +62,17 @@ function Navbar() {
     return (
         <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? 'bg-[#0f172a]/95 backdrop-blur-xl shadow-lg shadow-black/10' : 'bg-[#0f172a]/70 backdrop-blur-md'} border-b border-white/5`}>
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                {/* Mobile navbar — compact */}
-                <div className="flex md:hidden items-center justify-between py-2">
+                {/* Mobile navbar */}
+                <div className="flex md:hidden items-center justify-between py-3">
                     <Link to="/" className="flex items-center flex-shrink-0">
                         <img src="/logotriadak.png" alt="Triadak" className="h-40 w-auto object-contain" />
                     </Link>
                     <button
                         onClick={() => setOpen(!open)}
-                        className="p-2 -mr-2 text-slate-400 hover:text-white transition-colors"
+                        className="p-3 -mr-2 text-slate-300 hover:text-white transition-colors bg-white/5 rounded-xl border border-white/10"
                         aria-label="Toggle menu"
                     >
-                        {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+                        {open ? <X className="h-8 w-8" /> : <Menu className="h-8 w-8" />}
                     </button>
                 </div>
 
@@ -159,7 +159,7 @@ function Navbar() {
 // ─── Hero Section ─────────────────────────────────────
 function Hero() {
     return (
-        <section className="relative pt-24 pb-12 sm:pt-32 sm:pb-20 lg:pt-40 lg:pb-32 overflow-hidden">
+        <section className="relative pt-48 pb-12 sm:pt-32 sm:pb-20 lg:pt-40 lg:pb-32 overflow-hidden">
             {/* Background effects — smaller on mobile for perf */}
             <div className="absolute inset-0 pointer-events-none">
                 <div className="absolute top-20 left-1/4 w-[300px] sm:w-[600px] h-[300px] sm:h-[600px] bg-indigo-500/15 rounded-full blur-[100px] sm:blur-[150px]" />
