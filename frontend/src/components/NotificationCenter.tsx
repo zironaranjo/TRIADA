@@ -1,8 +1,8 @@
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
-    Bell, X, Check, CheckCheck, Trash2,
-    Calendar, DollarSign, AlertCircle, Info,
+    Bell, X, CheckCheck, Trash2,
+    Calendar, DollarSign, Info,
     LogIn, LogOut as LogOutIcon,
 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
