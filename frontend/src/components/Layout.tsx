@@ -16,6 +16,7 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useAuth } from '../contexts/AuthContext';
+import NotificationCenter from './NotificationCenter';
 
 const Layout = () => {
     const location = useLocation();
@@ -131,6 +132,9 @@ const Layout = () => {
                                 {profile?.role || 'owner'}
                             </span>
                         </div>
+                        <div className="hidden lg:block">
+                            <NotificationCenter />
+                        </div>
                     </div>
                 </div>
 
@@ -156,10 +160,13 @@ const Layout = () => {
                     <Menu className="h-6 w-6" />
                 </button>
                 <img src="/logotriadak.png" alt="TRIADAK" className="h-10 object-contain" />
-                <div className="h-8 w-8 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center">
-                    <span className="text-xs font-bold text-white">
-                        {profile?.email?.charAt(0).toUpperCase() || 'U'}
-                    </span>
+                <div className="flex items-center gap-2">
+                    <NotificationCenter />
+                    <div className="h-8 w-8 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center">
+                        <span className="text-xs font-bold text-white">
+                            {profile?.email?.charAt(0).toUpperCase() || 'U'}
+                        </span>
+                    </div>
                 </div>
             </div>
 

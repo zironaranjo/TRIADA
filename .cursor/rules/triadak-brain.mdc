@@ -45,10 +45,12 @@ SaaS platform for **vacation rental management** (triadak.io). Combines features
 12. **Email Confirmation** - Booking confirmation emails via Resend
 13. **Multi-tenancy/RLS** - Row Level Security in Supabase
 14. **Settings Page** - Profile (avatar, name, phone, company), Preferences (language, currency, timezone, theme), Notifications (toggles for email, bookings, payments, reminders), Danger Zone (password reset, delete account)
+15. **Notification Center** - Bell icon in header/sidebar, realtime dropdown panel with read/unread, mark all read, clear all, auto-notifications via DB trigger on booking insert
 
 ## Pending / Roadmap
 - [ ] Stripe payment integration (deferred)
-- [ ] Automated notifications (booking reminders, check-in/out alerts)
+- [x] In-app notification center (bell icon, realtime, DB trigger)
+- [ ] Scheduled email notifications (cron for check-in/out reminders - needs backend)
 - [x] Settings page (user profile, preferences, notification config)
 - [ ] Finance dashboard (FinanceDashboard.tsx exists but needs review)
 - [ ] Airbnb API integration
