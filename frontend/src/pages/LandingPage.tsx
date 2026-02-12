@@ -65,7 +65,7 @@ function Navbar() {
                 {/* Mobile navbar — compact */}
                 <div className="flex md:hidden items-center justify-between py-2">
                     <Link to="/" className="flex items-center flex-shrink-0">
-                        <img src="/logotriadak.png" alt="Triadak" className="h-12 w-auto object-contain" />
+                        <img src="/logotriadak.png" alt="Triadak" className="h-40 w-auto object-contain" />
                     </Link>
                     <button
                         onClick={() => setOpen(!open)}
