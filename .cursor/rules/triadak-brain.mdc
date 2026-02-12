@@ -21,7 +21,9 @@ SaaS platform for **vacation rental management** (triadak.io). Combines features
 - Frontend connects **directly to Supabase** for most CRUD (properties, bookings, contacts, etc.)
 - Backend NestJS used for email sending, webhooks, sync endpoints
 - Row Level Security (RLS) enabled for multi-tenancy
-- Supabase Storage for property images
+- Supabase Storage bucket `property-images` for property images AND avatars (avatars/{userId}/)
+- Notifications use `createPortal` to render outside sidebar (avoids overflow clipping)
+- Supabase Realtime for live notification updates
 
 ## Database Tables
 - `properties` - Vacation rental properties (name, status, images, etc.)
@@ -29,6 +31,9 @@ SaaS platform for **vacation rental management** (triadak.io). Combines features
 - `contacts` - CRM contacts
 - `owners` - Property owners
 - `ledger_entries` - Accounting entries
+- `notifications` - In-app notifications (user_id, type, title, message, read, metadata, created_at) + RLS + DB trigger on booking insert
+- `profiles` - User profiles (user_id, email, full_name, role)
+- `subscriptions` - User subscription plans
 
 ## Completed Features
 1. **Auth** - Supabase Auth with email verification, forgot password
@@ -38,35 +43,36 @@ SaaS platform for **vacation rental management** (triadak.io). Combines features
 5. **CRM/Contacts** - Contact management
 6. **Owners** - Owner management
 7. **Accounting/Ledger** - Basic ledger entries
-8. **Dashboard Analytics** - Real data from Supabase: monthly revenue chart, platform distribution pie, revenue by property bars, occupancy progress bars, upcoming bookings
+8. **Dashboard Analytics** - Real data from Supabase: monthly revenue chart (AreaChart), platform distribution (PieChart), revenue by property (BarChart horizontal), occupancy progress bars, upcoming bookings list
 9. **Landing Page** - Professional public page at / with hero, features, pricing, testimonials, FAQ
 10. **Mobile Responsive** - Full responsive layout with hamburger menu sidebar
 11. **Onboarding** - Empty state guides for new users
 12. **Email Confirmation** - Booking confirmation emails via Resend
 13. **Multi-tenancy/RLS** - Row Level Security in Supabase
-14. **Settings Page** - Profile (avatar, name, phone, company), Preferences (language, currency, timezone, theme), Notifications (toggles for email, bookings, payments, reminders), Danger Zone (password reset, delete account)
-15. **Notification Center** - Bell icon in header/sidebar, realtime dropdown panel with read/unread, mark all read, clear all, auto-notifications via DB trigger on booking insert
+14. **Settings Page** - Profile (avatar upload, name, phone, company), Preferences (language, currency, timezone, theme selector), Notifications (toggle switches for email/bookings/payments/reminders), Danger Zone (password reset, delete account). Saves to Supabase (profile) + localStorage (preferences)
+15. **Notification Center** - Bell icon in mobile header + desktop sidebar, portal-based dropdown panel with realtime updates, read/unread indicators, mark all read, clear all, delete individual, auto-notifications via DB trigger on booking insert
 
-## Pending / Roadmap
-- [ ] Stripe payment integration (deferred)
-- [x] In-app notification center (bell icon, realtime, DB trigger)
-- [ ] Scheduled email notifications (cron for check-in/out reminders - needs backend)
-- [x] Settings page (user profile, preferences, notification config)
-- [ ] Finance dashboard (FinanceDashboard.tsx exists but needs review)
+## Pending / Roadmap (next priorities in order)
+- [ ] Multi-language support (i18n with react-i18next) - ready to implement, structure defined
+- [ ] Scheduled email notifications (cron for check-in/out reminders - needs backend/edge function)
+- [ ] Stripe payment integration (deferred by user)
+- [ ] Finance dashboard (FinanceDashboard.tsx exists but needs review/improvement)
 - [ ] Airbnb API integration
 - [ ] Booking.com API integration
 - [ ] Lodgify integration (channel manager sync)
 - [ ] Advanced reports (exportable PDF/CSV)
-- [ ] Multi-language support (i18n)
 - [ ] Owner portal (owners can view their property performance)
 
 ## Key Files
-- `frontend/src/App.tsx` - Main routing
-- `frontend/src/components/Layout.tsx` - App shell with sidebar + mobile menu
-- `frontend/src/pages/Dashboard.tsx` - Analytics dashboard with real charts
-- `frontend/src/pages/Bookings.tsx` - Bookings list + calendar tab
+- `frontend/src/App.tsx` - Main routing (public: /, /login; protected: /dashboard, /properties, /bookings, /owners, /crm, /accounting, /pricing, /billing, /settings)
+- `frontend/src/components/Layout.tsx` - App shell with sidebar + mobile menu + NotificationCenter
+- `frontend/src/components/NotificationCenter.tsx` - Bell icon + portal dropdown with realtime notifications
+- `frontend/src/pages/Dashboard.tsx` - Analytics dashboard with real Recharts graphs
+- `frontend/src/pages/Bookings.tsx` - Bookings list + calendar tab view
 - `frontend/src/pages/Properties.tsx` - Property CRUD + image upload
+- `frontend/src/pages/Settings.tsx` - User settings (profile, preferences, notifications, danger zone)
 - `frontend/src/pages/LandingPage.tsx` - Public landing page
+- `frontend/src/contexts/AuthContext.tsx` - Auth provider with profile, subscription, role management
 - `frontend/src/lib/supabase.ts` - Supabase client config
 
 ## Conventions
@@ -76,3 +82,11 @@ SaaS platform for **vacation rental management** (triadak.io). Combines features
 - GlassCard component for card UI
 - Mobile-first responsive: use `sm:`, `md:`, `lg:` breakpoints
 - PowerShell terminal: do NOT chain commands with `&&`, run them separately
+- Production build is strict TypeScript: remove ALL unused imports/variables (TS6133 errors break Docker build)
+- Supabase Storage: use `property-images` bucket for all uploads (property images + avatars)
+
+## Known Issues / Notes
+- Docker build uses strict `tsc -b` which fails on unused imports (always clean up)
+- Avatar upload uses `property-images` bucket with path `avatars/{userId}/avatar.{ext}`
+- Notification panel uses `createPortal(... , document.body)` to avoid sidebar overflow clipping
+- Settings preferences (language, currency, etc.) saved to localStorage until i18n is fully implemented
