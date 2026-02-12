@@ -106,8 +106,7 @@ export default function Settings() {
     }, [profile, user]);
 
     const loadAvatar = async (userId: string) => {
-        const { data } = supabase.storage.from('avatars').getPublicUrl(`${userId}/avatar.png`);
-        // Check if the avatar exists by trying to fetch it
+        const { data } = supabase.storage.from('property-images').getPublicUrl(`avatars/${userId}/avatar`);
         try {
             const res = await fetch(data.publicUrl, { method: 'HEAD' });
             if (res.ok) setAvatarUrl(data.publicUrl + '?t=' + Date.now());
@@ -118,18 +117,32 @@ export default function Settings() {
         const file = e.target.files?.[0];
         if (!file || !user) return;
 
+        // Validate file
+        if (file.size > 2 * 1024 * 1024) {
+            alert('The image must be less than 2MB');
+            return;
+        }
+        if (!file.type.startsWith('image/')) {
+            alert('Please select a valid image file');
+            return;
+        }
+
         setUploadingAvatar(true);
         try {
+            const ext = file.name.split('.').pop() || 'png';
+            const path = `avatars/${user.id}/avatar.${ext}`;
+
             const { error } = await supabase.storage
-                .from('avatars')
-                .upload(`${user.id}/avatar.png`, file, { upsert: true });
+                .from('property-images')
+                .upload(path, file, { upsert: true, contentType: file.type });
 
             if (error) throw error;
 
-            const { data } = supabase.storage.from('avatars').getPublicUrl(`${user.id}/avatar.png`);
+            const { data } = supabase.storage.from('property-images').getPublicUrl(path);
             setAvatarUrl(data.publicUrl + '?t=' + Date.now());
-        } catch (err) {
+        } catch (err: any) {
             console.error('Error uploading avatar:', err);
+            alert('Error uploading avatar: ' + (err.message || 'Unknown error'));
         } finally {
             setUploadingAvatar(false);
         }
