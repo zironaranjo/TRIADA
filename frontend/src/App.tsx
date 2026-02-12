@@ -11,25 +11,25 @@ import FinanceDashboard from './pages/FinanceDashboard';
 import Pricing from './pages/Pricing';
 import Billing from './pages/Billing';
 import Layout from './components/Layout';
+import LandingPage from './pages/LandingPage';
 
 function App() {
   return (
     <AuthProvider>
       <BrowserRouter>
         <Routes>
-          {/* Public route */}
+          {/* Public routes */}
+          <Route path="/" element={<LandingPage />} />
           <Route path="/login" element={<Login />} />
 
           {/* Protected routes */}
           <Route
-            path="/"
             element={
               <ProtectedRoute>
                 <Layout />
               </ProtectedRoute>
             }
           >
-            <Route index element={<Navigate to="/dashboard" replace />} />
             <Route path="dashboard" element={<Dashboard />} />
             <Route path="properties" element={<Properties />} />
             <Route path="bookings" element={<Bookings />} />
@@ -39,6 +39,9 @@ function App() {
             <Route path="pricing" element={<Pricing />} />
             <Route path="billing" element={<Billing />} />
           </Route>
+
+          {/* Catch-all */}
+          <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </BrowserRouter>
     </AuthProvider>
