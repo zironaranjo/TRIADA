@@ -10,6 +10,7 @@ import CRM from './pages/CRM';
 import FinanceDashboard from './pages/FinanceDashboard';
 import Pricing from './pages/Pricing';
 import Billing from './pages/Billing';
+import Settings from './pages/Settings';
 import Layout from './components/Layout';
 import LandingPage from './pages/LandingPage';
 
@@ -38,6 +39,7 @@ function App() {
             <Route path="accounting" element={<FinanceDashboard />} />
             <Route path="pricing" element={<Pricing />} />
             <Route path="billing" element={<Billing />} />
+            <Route path="settings" element={<Settings />} />
           </Route>
 
           {/* Catch-all */}

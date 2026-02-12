@@ -1,0 +1,76 @@
+---
+description: TRIADAK project brain - architecture, progress, and roadmap
+alwaysApply: true
+---
+
+# TRIADAK - Project Brain
+
+## What is Triadak?
+SaaS platform for **vacation rental management** (triadak.io). Combines features inspired by **Bexio** (accounting), **VRPlatform** (trust accounting), and **Lodgify** (channel manager/PMS) into one unified platform.
+
+## Tech Stack
+- **Frontend**: React + Vite + TypeScript + Tailwind CSS + Framer Motion
+- **Backend**: NestJS (currently minimal, most logic direct to Supabase)
+- **Database/Auth/Storage**: Supabase (PostgreSQL + Auth + Storage + RLS)
+- **Charts**: Recharts
+- **Email**: Resend (via NestJS endpoint)
+- **Deployment**: Docker + CI/CD (GitHub push triggers build)
+- **Language**: Always respond in Spanish to the user
+
+## Architecture
+- Frontend connects **directly to Supabase** for most CRUD (properties, bookings, contacts, etc.)
+- Backend NestJS used for email sending, webhooks, sync endpoints
+- Row Level Security (RLS) enabled for multi-tenancy
+- Supabase Storage for property images
+
+## Database Tables
+- `properties` - Vacation rental properties (name, status, images, etc.)
+- `bookings` - Reservations (guest_name, start_date, end_date, total_price, platform, status, property_id)
+- `contacts` - CRM contacts
+- `owners` - Property owners
+- `ledger_entries` - Accounting entries
+
+## Completed Features
+1. **Auth** - Supabase Auth with email verification, forgot password
+2. **Properties CRUD** - Create, edit, delete properties with image upload to Supabase Storage
+3. **Bookings CRUD** - Full booking management with list and calendar tab views
+4. **Visual Calendar** - Integrated into Bookings page as tab (monthly view, mobile dots, stats)
+5. **CRM/Contacts** - Contact management
+6. **Owners** - Owner management
+7. **Accounting/Ledger** - Basic ledger entries
+8. **Dashboard Analytics** - Real data from Supabase: monthly revenue chart, platform distribution pie, revenue by property bars, occupancy progress bars, upcoming bookings
+9. **Landing Page** - Professional public page at / with hero, features, pricing, testimonials, FAQ
+10. **Mobile Responsive** - Full responsive layout with hamburger menu sidebar
+11. **Onboarding** - Empty state guides for new users
+12. **Email Confirmation** - Booking confirmation emails via Resend
+13. **Multi-tenancy/RLS** - Row Level Security in Supabase
+14. **Settings Page** - Profile (avatar, name, phone, company), Preferences (language, currency, timezone, theme), Notifications (toggles for email, bookings, payments, reminders), Danger Zone (password reset, delete account)
+
+## Pending / Roadmap
+- [ ] Stripe payment integration (deferred)
+- [ ] Automated notifications (booking reminders, check-in/out alerts)
+- [x] Settings page (user profile, preferences, notification config)
+- [ ] Finance dashboard (FinanceDashboard.tsx exists but needs review)
+- [ ] Airbnb API integration
+- [ ] Booking.com API integration
+- [ ] Lodgify integration (channel manager sync)
+- [ ] Advanced reports (exportable PDF/CSV)
+- [ ] Multi-language support (i18n)
+- [ ] Owner portal (owners can view their property performance)
+
+## Key Files
+- `frontend/src/App.tsx` - Main routing
+- `frontend/src/components/Layout.tsx` - App shell with sidebar + mobile menu
+- `frontend/src/pages/Dashboard.tsx` - Analytics dashboard with real charts
+- `frontend/src/pages/Bookings.tsx` - Bookings list + calendar tab
+- `frontend/src/pages/Properties.tsx` - Property CRUD + image upload
+- `frontend/src/pages/LandingPage.tsx` - Public landing page
+- `frontend/src/lib/supabase.ts` - Supabase client config
+
+## Conventions
+- Use Supabase direct queries (not backend API) for frontend CRUD
+- Tailwind for all styling, dark theme (bg-[#0f172a] base)
+- Framer Motion for animations
+- GlassCard component for card UI
+- Mobile-first responsive: use `sm:`, `md:`, `lg:` breakpoints
+- PowerShell terminal: do NOT chain commands with `&&`, run them separately
