@@ -51,16 +51,19 @@ SaaS platform for **vacation rental management** (triadak.io). Combines features
 13. **Multi-tenancy/RLS** - Row Level Security in Supabase
 14. **Settings Page** - Profile (avatar upload, name, phone, company), Preferences (language, currency, timezone, theme selector), Notifications (toggle switches for email/bookings/payments/reminders), Danger Zone (password reset, delete account). Saves to Supabase (profile) + localStorage (preferences)
 15. **Notification Center** - Bell icon in mobile header + desktop sidebar, portal-based dropdown panel with realtime updates, read/unread indicators, mark all read, clear all, delete individual, auto-notifications via DB trigger on booking insert
+16. **Owner Statements** - Monthly settlement reports per owner: gross revenue, platform fees, agency commission, expenses, net payout. Expandable detail with bookings and expenses breakdown
+17. **PDF/CSV Export** - Professional PDF reports (jspdf + jspdf-autotable) and CSV export for Owner Statements and Finance Dashboard. Branded with TRIADAK header, summary section, and paginated tables
 
 ## Pending / Roadmap (next priorities in order)
 - [ ] Multi-language support (i18n with react-i18next) - ready to implement, structure defined
 - [ ] Scheduled email notifications (cron for check-in/out reminders - needs backend/edge function)
 - [ ] Stripe payment integration (deferred by user)
-- [ ] Finance dashboard (FinanceDashboard.tsx exists but needs review/improvement)
+- [x] Finance dashboard (improved with responsive layout, filters, export buttons)
+- [x] Owner Statements (monthly settlement reports with PDF/CSV export)
 - [ ] Airbnb API integration
 - [ ] Booking.com API integration
 - [ ] Lodgify integration (channel manager sync)
-- [ ] Advanced reports (exportable PDF/CSV)
+- [x] Advanced reports (exportable PDF/CSV with jspdf)
 - [ ] Owner portal (owners can view their property performance)
 
 ## Key Files
@@ -73,7 +76,9 @@ SaaS platform for **vacation rental management** (triadak.io). Combines features
 - `frontend/src/pages/Settings.tsx` - User settings (profile, preferences, notifications, danger zone)
 - `frontend/src/pages/LandingPage.tsx` - Public landing page
 - `frontend/src/contexts/AuthContext.tsx` - Auth provider with profile, subscription, role management
+- `frontend/src/pages/OwnerStatements.tsx` - Monthly owner settlement reports
 - `frontend/src/lib/supabase.ts` - Supabase client config
+- `frontend/src/lib/exportUtils.ts` - PDF/CSV export utilities (jspdf + jspdf-autotable)
 
 ## Conventions
 - Use Supabase direct queries (not backend API) for frontend CRUD
