@@ -437,7 +437,7 @@
       "themeLight": "Light",
       "themeDark": "Dark",
       "themeSystem": "System",
-      "themeNote": "* Theme switching will be fully implemented soon. Currently using dark mode."
+      "themeNote": "* Light mode is a preview. Some pages may still show dark elements."
     },
     "notifications": {
       "title": "Notification Preferences",

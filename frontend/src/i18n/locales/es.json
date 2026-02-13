@@ -437,7 +437,7 @@
       "themeLight": "Claro",
       "themeDark": "Oscuro",
       "themeSystem": "Sistema",
-      "themeNote": "* El cambio de tema se implementará completamente pronto. Actualmente en modo oscuro."
+      "themeNote": "* El modo claro es una vista previa. Algunas páginas pueden mostrar elementos oscuros."
     },
     "notifications": {
       "title": "Preferencias de Notificación",

@@ -14,8 +14,10 @@ import Settings from './pages/Settings';
 import OwnerStatements from './pages/OwnerStatements';
 import Layout from './components/Layout';
 import LandingPage from './pages/LandingPage';
+import { useTheme } from './hooks/useTheme';
 
 function App() {
+  useTheme();
   return (
     <AuthProvider>
       <BrowserRouter>

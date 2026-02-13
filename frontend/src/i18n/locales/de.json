@@ -437,7 +437,7 @@
       "themeLight": "Hell",
       "themeDark": "Dunkel",
       "themeSystem": "System",
-      "themeNote": "* Themenwechsel wird in Kürze vollständig implementiert. Derzeit im dunklen Modus."
+      "themeNote": "* Der Hellmodus ist eine Vorschau. Einige Seiten können noch dunkle Elemente anzeigen."
     },
     "notifications": {
       "title": "Benachrichtigungseinstellungen",

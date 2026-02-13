@@ -79,7 +79,7 @@ const Layout = () => {
     const SidebarContent = () => (
         <>
             {/* Logo Area */}
-            <div className="flex flex-col items-center justify-center py-6 lg:py-8 border-b border-white/5">
+            <div className="flex flex-col items-center justify-center py-6 lg:py-8" style={{ borderBottom: '1px solid var(--sidebar-border)' }}>
                 <img src="/logotriadak.png" alt="TRIADAK" className="h-32 lg:h-52 w-auto max-w-full px-2 object-contain mb-0 drop-shadow-xl" />
                 <span className="text-xs font-bold text-slate-500 tracking-[0.3em] uppercase opacity-80 -mt-1 lg:-mt-2">
                     {t('layout.tagline')}
@@ -151,8 +151,8 @@ const Layout = () => {
             </nav>
 
             {/* User Profile Footer */}
-            <div className="p-4 border-t border-white/5 bg-black/20">
-                <div className="rounded-xl bg-white/5 p-3">
+            <div className="p-4" style={{ borderTop: '1px solid var(--sidebar-border)', background: 'var(--glass-bg)' }}>
+                <div className="rounded-xl p-3" style={{ background: 'var(--glass-bg)', border: '1px solid var(--glass-border)' }}>
                     <div className="flex items-center gap-3">
                         <div className="h-8 w-8 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center flex-shrink-0 overflow-hidden">
                             {avatarUrl ? (
@@ -164,7 +164,7 @@ const Layout = () => {
                             )}
                         </div>
                         <div className="flex-1 min-w-0">
-                            <p className="text-sm font-medium text-white truncate">
+                            <p className="text-sm font-medium truncate" style={{ color: 'var(--text-primary)' }}>
                                 {profile?.full_name || profile?.email?.split('@')[0] || 'User'}
                             </p>
                             <span className={`text-[10px] font-semibold uppercase px-2 py-0.5 rounded-full ${profile?.role === 'admin'
@@ -192,9 +192,9 @@ const Layout = () => {
     );
 
     return (
-        <div className="flex h-screen w-full overflow-hidden bg-[#0f172a]">
+        <div className="flex h-screen w-full overflow-hidden" style={{ background: 'var(--app-bg)' }}>
             {/* Mobile Header */}
-            <div className="lg:hidden fixed top-0 left-0 right-0 z-50 bg-[#0f172a]/95 backdrop-blur-xl border-b border-white/5 px-4 py-3 flex items-center justify-between">
+            <div className="lg:hidden fixed top-0 left-0 right-0 z-50 backdrop-blur-xl px-4 py-3 flex items-center justify-between" style={{ background: 'var(--sidebar-bg)', borderBottom: '1px solid var(--sidebar-border)' }}>
                 <button
                     onClick={() => setSidebarOpen(true)}
                     className="p-2 text-slate-400 hover:text-white transition-colors"
@@ -232,7 +232,8 @@ const Layout = () => {
                             animate={{ x: 0 }}
                             exit={{ x: -280 }}
                             transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-                            className="lg:hidden fixed left-0 top-0 bottom-0 w-[280px] z-50 bg-[#0f172a] border-r border-white/5 flex flex-col"
+                            className="lg:hidden fixed left-0 top-0 bottom-0 w-[280px] z-50 flex flex-col"
+                            style={{ background: 'var(--app-bg)', borderRight: '1px solid var(--sidebar-border)' }}
                         >
                             {/* Close button */}
                             <button
@@ -248,12 +249,12 @@ const Layout = () => {
             </AnimatePresence>
 
             {/* Desktop Sidebar */}
-            <aside className="hidden lg:flex w-64 flex-shrink-0 border-r border-white/5 bg-[#0f172a]/50 backdrop-blur-xl flex-col">
+            <aside className="hidden lg:flex w-64 flex-shrink-0 backdrop-blur-xl flex-col" style={{ background: 'var(--sidebar-bg)', borderRight: '1px solid var(--sidebar-border)' }}>
                 <SidebarContent />
             </aside>
 
             {/* Main Content Area */}
-            <main className="flex-1 overflow-y-auto bg-gradient-to-br from-[#0f172a] to-[#1e1b4b] relative pt-14 lg:pt-0">
+            <main className="flex-1 overflow-y-auto relative pt-14 lg:pt-0" style={{ background: `linear-gradient(to bottom right, var(--app-bg), var(--app-bg-secondary))` }}>
                 {/* Background decorative elements */}
                 <div className="fixed top-0 left-0 w-full h-full overflow-hidden pointer-events-none z-0">
                     <div className="absolute top-[-10%] right-[-5%] w-[500px] h-[500px] bg-purple-500/10 rounded-full blur-[120px]" />

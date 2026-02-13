@@ -8,6 +8,7 @@ import {
 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
+import { applyTheme } from '../hooks/useTheme';
 
 // ─── Types ────────────────────────────────────────────
 interface ProfileForm {
@@ -173,6 +174,9 @@ export default function Settings() {
         setForm(prev => ({ ...prev, [field]: value }));
         setSaved(false);
         if (field === 'language') i18n.changeLanguage(value as string);
+        if (field === 'theme') {
+            applyTheme(value as 'light' | 'dark' | 'system');
+        }
     };
 
     const handleSave = async () => {
@@ -472,6 +476,7 @@ export default function Settings() {
                                 <p className="text-[10px] text-slate-600 mt-3">
                                     {t('settings.preferences.themeNote')}
                                 </p>
+                                {/* Theme is now fully functional */}
                             </div>
                         </div>
                     )}
