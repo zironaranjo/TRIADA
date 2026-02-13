@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import {
     FileText, DollarSign, TrendingDown,
-    ChevronDown, ChevronUp, Building2, Calendar,
+    ChevronDown, ChevronUp, Calendar,
     Download,
 } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
@@ -172,19 +172,20 @@ export default function OwnerMyStatements() {
                 { label: t('ownerStatements.propertyExpenses'), value: fmt(propertyExpenses) },
                 { label: t('ownerStatements.netPayout'), value: fmt(netPayout), bold: true },
             ],
+            filename: `statement_${owner.firstName}_${months[selectedMonth]}_${selectedYear}`,
         });
     };
 
     const handleExportCSV = () => {
         if (!owner) return;
-        exportToCSV({
-            headers: ['Property', 'Guest', 'Platform', 'Start', 'End', 'Amount'],
-            rows: bookings.map(b => {
+        exportToCSV(
+            `statement_${owner.firstName}_${months[selectedMonth]}_${selectedYear}`,
+            ['Property', 'Guest', 'Platform', 'Start', 'End', 'Amount'],
+            bookings.map(b => {
                 const prop = properties.find(p => p.id === b.property_id);
                 return [prop?.name || '-', b.guest_name, b.platform, b.start_date, b.end_date, b.total_price];
             }),
-            filename: `statement_${owner.firstName}_${months[selectedMonth]}_${selectedYear}`,
-        });
+        );
     };
 
     if (loading) {
