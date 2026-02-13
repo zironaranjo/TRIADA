@@ -854,7 +854,7 @@ function Footer() {
                 <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-8">
                     {/* Brand */}
                     <div className="col-span-2 lg:col-span-1">
-                        <img src="/logotriadak.png" alt="Triadak" className="h-12 sm:h-14 w-auto object-contain mb-3 sm:mb-4" />
+                        <img src="/logotriadak.png" alt="Triadak" className="h-24 sm:h-28 w-auto object-contain mb-3 sm:mb-4" />
                         <p className="text-sm text-slate-500 max-w-xs">
                             The modern platform for vacation rental management. Built for property managers who demand efficiency.
                         </p>

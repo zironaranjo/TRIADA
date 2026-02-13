@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Outlet, Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
@@ -17,14 +17,48 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useAuth } from '../contexts/AuthContext';
+import { supabase } from '../lib/supabase';
 import NotificationCenter from './NotificationCenter';
 
 const Layout = () => {
     const location = useLocation();
     const { signOut, profile } = useAuth();
     const [sidebarOpen, setSidebarOpen] = useState(false);
+    const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
 
     const isActive = (path: string) => location.pathname.startsWith(path);
+
+    // Load user avatar from localStorage / Supabase Storage
+    useEffect(() => {
+        const loadAvatar = async () => {
+            const { data: { user } } = await supabase.auth.getUser();
+            if (!user) return;
+
+            const savedPath = localStorage.getItem(`triadak_avatar_${user.id}`);
+            if (savedPath) {
+                const { data } = supabase.storage.from('property-images').getPublicUrl(savedPath);
+                try {
+                    const res = await fetch(data.publicUrl, { method: 'HEAD' });
+                    if (res.ok) {
+                        setAvatarUrl(data.publicUrl + '?t=' + Date.now());
+                        return;
+                    }
+                } catch { /* fallback below */ }
+            }
+
+            // Fallback: list files in avatar folder
+            try {
+                const { data: files } = await supabase.storage.from('property-images').list(`avatars/${user.id}`);
+                if (files && files.length > 0) {
+                    const filePath = `avatars/${user.id}/${files[0].name}`;
+                    localStorage.setItem(`triadak_avatar_${user.id}`, filePath);
+                    const { data } = supabase.storage.from('property-images').getPublicUrl(filePath);
+                    setAvatarUrl(data.publicUrl + '?t=' + Date.now());
+                }
+            } catch { /* no avatar */ }
+        };
+        loadAvatar();
+    }, []);
 
     const navItems = [
         { path: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
@@ -118,10 +152,14 @@ const Layout = () => {
             <div className="p-4 border-t border-white/5 bg-black/20">
                 <div className="rounded-xl bg-white/5 p-3">
                     <div className="flex items-center gap-3">
-                        <div className="h-8 w-8 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center flex-shrink-0">
-                            <span className="text-sm font-bold text-white">
-                                {profile?.email?.charAt(0).toUpperCase() || 'U'}
-                            </span>
+                        <div className="h-8 w-8 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center flex-shrink-0 overflow-hidden">
+                            {avatarUrl ? (
+                                <img src={avatarUrl} alt="Avatar" className="h-full w-full object-cover" />
+                            ) : (
+                                <span className="text-sm font-bold text-white">
+                                    {profile?.email?.charAt(0).toUpperCase() || 'U'}
+                                </span>
+                            )}
                         </div>
                         <div className="flex-1 min-w-0">
                             <p className="text-sm font-medium text-white truncate">
@@ -164,10 +202,14 @@ const Layout = () => {
                 <img src="/logotriadak.png" alt="TRIADAK" className="h-10 object-contain" />
                 <div className="flex items-center gap-2">
                     <NotificationCenter />
-                    <div className="h-8 w-8 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center">
-                        <span className="text-xs font-bold text-white">
-                            {profile?.email?.charAt(0).toUpperCase() || 'U'}
-                        </span>
+                    <div className="h-8 w-8 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center overflow-hidden">
+                        {avatarUrl ? (
+                            <img src={avatarUrl} alt="Avatar" className="h-full w-full object-cover" />
+                        ) : (
+                            <span className="text-xs font-bold text-white">
+                                {profile?.email?.charAt(0).toUpperCase() || 'U'}
+                            </span>
+                        )}
                     </div>
                 </div>
             </div>
