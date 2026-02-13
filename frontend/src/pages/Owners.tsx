@@ -6,6 +6,7 @@ import {
     Plus, Search, Mail, Phone, Building,
     MoreHorizontal, User, Wallet, X
 } from "lucide-react";
+import { useUserAvatar } from "@/hooks/useUserAvatar";
 
 interface Owner {
     id: string;
@@ -20,6 +21,7 @@ export default function Owners() {
     const [owners, setOwners] = useState<Owner[]>([]);
     const [loading, setLoading] = useState(true);
     const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+    const userAvatar = useUserAvatar();
 
     useEffect(() => {
         loadOwners();
@@ -101,8 +103,12 @@ export default function Owners() {
                                     className="p-4 hover:bg-white/5 transition-colors flex items-center justify-between group"
                                 >
                                     <div className="flex items-center gap-4">
-                                        <div className="h-10 w-10 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white font-bold shadow-lg">
-                                            {owner.firstName[0]}{owner.lastName[0]}
+                                        <div className="h-10 w-10 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white font-bold shadow-lg overflow-hidden">
+                                            {userAvatar ? (
+                                                <img src={userAvatar} alt="Avatar" className="h-full w-full object-cover" />
+                                            ) : (
+                                                <>{owner.firstName[0]}{owner.lastName[0]}</>
+                                            )}
                                         </div>
                                         <div>
                                             <h4 className="font-medium text-white group-hover:text-primary transition-colors">

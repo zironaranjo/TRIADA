@@ -7,6 +7,7 @@ import {
 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { exportToPDF, exportToCSV } from '../lib/exportUtils';
+import { useUserAvatar } from '../hooks/useUserAvatar';
 
 // ─── Types ────────────────────────────────────────────
 interface Property {
@@ -82,10 +83,12 @@ export default function OwnerStatements() {
     const [selectedMonth, setSelectedMonth] = useState(now.getMonth());
     const [selectedYear, setSelectedYear] = useState(now.getFullYear());
     const [expandedOwner, setExpandedOwner] = useState<string | null>(null);
+    const userAvatar = useUserAvatar();
 
     useEffect(() => {
         fetchData();
     }, [selectedMonth, selectedYear]);
+
 
     const fetchData = async () => {
         setLoading(true);
@@ -283,10 +286,14 @@ export default function OwnerStatements() {
                                         className="w-full flex items-center justify-between p-4 sm:p-5 hover:bg-white/[0.02] transition-colors"
                                     >
                                         <div className="flex items-center gap-3 sm:gap-4">
-                                            <div className="h-10 w-10 sm:h-12 sm:w-12 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center flex-shrink-0">
-                                                <span className="text-sm sm:text-lg font-bold text-white">
-                                                    {st.owner.firstName?.charAt(0)}{st.owner.lastName?.charAt(0)}
-                                                </span>
+                                            <div className="h-10 w-10 sm:h-12 sm:w-12 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center flex-shrink-0 overflow-hidden">
+                                                {userAvatar ? (
+                                                    <img src={userAvatar} alt="Avatar" className="h-full w-full object-cover" />
+                                                ) : (
+                                                    <span className="text-sm sm:text-lg font-bold text-white">
+                                                        {st.owner.firstName?.charAt(0)}{st.owner.lastName?.charAt(0)}
+                                                    </span>
+                                                )}
                                             </div>
                                             <div className="text-left">
                                                 <p className="text-sm sm:text-base font-semibold text-white">
