@@ -97,22 +97,16 @@ const Properties = () => {
     const [uploadingImage, setUploadingImage] = useState(false);
 
     const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-        const timeout = setTimeout(() => {
-            setUploadingImage(false);
-            alert('Image upload timed out. Please check that the "property-images" bucket exists in Supabase Storage.');
-        }, 10000);
         try {
             setUploadingImage(true);
             const file = e.target.files?.[0];
             if (!file) {
-                clearTimeout(timeout);
                 setUploadingImage(false);
                 return;
             }
 
             // Validate file size (max 5MB)
             if (file.size > 5 * 1024 * 1024) {
-                clearTimeout(timeout);
                 setUploadingImage(false);
                 alert('Image too large. Max 5MB allowed.');
                 return;
@@ -120,11 +114,11 @@ const Properties = () => {
 
             const fileExt = file.name.split('.').pop();
             const fileName = `${Date.now()}-${Math.random().toString(36).substr(2, 9)}.${fileExt}`;
-            const filePath = `${fileName}`;
+            const filePath = `properties/${fileName}`;
 
             const { error: uploadError } = await supabase.storage
                 .from('property-images')
-                .upload(filePath, file);
+                .upload(filePath, file, { upsert: true });
 
             if (uploadError) {
                 throw uploadError;
@@ -139,7 +133,6 @@ const Properties = () => {
             console.error('Error uploading image:', error);
             alert(`Error uploading image: ${error?.message || 'Unknown error'}`);
         } finally {
-            clearTimeout(timeout);
             setUploadingImage(false);
         }
     };
