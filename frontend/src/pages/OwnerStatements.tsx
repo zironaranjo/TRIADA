@@ -96,7 +96,7 @@ export default function OwnerStatements() {
             const endDate = `${selectedYear}-${monthStr}-${String(daysInMonth).padStart(2, '0')}`;
 
             const [ownersRes, propsRes, bookingsRes, expensesRes] = await Promise.allSettled([
-                supabase.from('owners').select('*'),
+                supabase.from('owner').select('*'),
                 supabase.from('properties').select('id, name, owner_id'),
                 supabase.from('bookings').select('*').gte('start_date', startDate).lte('start_date', endDate).neq('status', 'cancelled'),
                 supabase.from('expenses').select('*').gte('date', startDate).lte('date', endDate),
