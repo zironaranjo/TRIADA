@@ -97,10 +97,23 @@ SaaS platform for **vacation rental management** (triadak.io). Combines features
   - Supabase pg_cron integration (hourly reminders + daily digest at 08:00 UTC)
 
 ### Fase 3 - Integraciones externas
-- [ ] Airbnb API integration
-- [ ] Booking.com API integration
-- [ ] Lodgify integration (channel manager sync)
+- [ ] Airbnb API integration (iCal sync first, then API if available)
+- [ ] Booking.com API integration (iCal sync + XML API for availability)
+- [ ] Lodgify integration (channel manager sync — centralized calendar)
 - [ ] Stripe payment integration (deferred by user)
+
+### Sugerencias adicionales (post Fase 3)
+- [ ] **iCal Sync universal** — Importar/exportar calendarios iCal (.ics) por propiedad. Es la forma más rápida de sincronizar con Airbnb/Booking sin depender de APIs complejas. Bloquea fechas automáticamente entre plataformas
+- [ ] **Dashboard de ocupación visual** — Calendario tipo Gantt por propiedad mostrando reservas, huecos libres y tasas de ocupación. Muy visual para presentaciones a clientes
+- [ ] **Gestión de tareas/limpieza** — Sistema de tareas automáticas post-checkout (limpieza, lavandería, inspección). Asignar a miembros del staff con checklist y foto de verificación
+- [ ] **Contratos y documentos** — Generación automática de contratos de alquiler en PDF con datos de la reserva. Firma digital integrada
+- [ ] **Revenue Management / Dynamic Pricing** — Sugerencias de precios basadas en temporada, ocupación y demanda. Reglas de precios mínimos/máximos por propiedad
+- [ ] **Guest App / Portal de huéspedes** — Portal público donde el huésped ve su reserva, instrucciones de check-in, WiFi, reglas de la casa, contacto de emergencia. Acceso por link único (sin registro)
+- [ ] **Multi-currency support** — Soporte para propiedades en distintos países con conversión automática de divisas
+- [ ] **Auditoría y logs** — Registro de todas las acciones (quién cambió qué, cuándo). Importante para empresas con varios empleados
+- [ ] **Backup/Export de datos** — Exportar toda la data (propiedades, reservas, contactos, finanzas) en formato ZIP para cumplimiento legal y tranquilidad del cliente
+- [ ] **WhatsApp/SMS integration** — Mensajes automáticos a huéspedes (confirmación, instrucciones check-in, agradecimiento post-checkout) via Twilio o WhatsApp Business API
+- [ ] **KPI Benchmarking** — Comparar rendimiento entre propiedades: RevPAR, ADR, tasa de ocupación, tiempo medio de reserva. Ideal para presentar valor al propietario
 
 ### Completed
 - [x] Finance dashboard (improved with responsive layout, filters, export buttons)
