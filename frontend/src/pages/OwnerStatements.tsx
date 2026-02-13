@@ -3,8 +3,10 @@ import { motion } from 'framer-motion';
 import {
     FileText, Users, DollarSign, TrendingDown,
     ChevronDown, ChevronUp, Building2, Calendar,
+    Download,
 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
+import { exportToPDF, exportToCSV } from '../lib/exportUtils';
 
 // ─── Types ────────────────────────────────────────────
 interface Property {
@@ -146,6 +148,50 @@ export default function OwnerStatements() {
     const totalPayout = statements.reduce((s, st) => s + st.netPayout, 0);
     const totalRevenue = statements.reduce((s, st) => s + st.grossRevenue, 0);
 
+    // ─── Export Functions ─────────────────────────────
+    const exportStatementsPDF = () => {
+        const period = `${MONTHS[selectedMonth]} ${selectedYear}`;
+        exportToPDF({
+            title: 'Owner Statements',
+            subtitle: period,
+            headers: ['Owner', 'Properties', 'Bookings', 'Gross Revenue', 'Platform Fees', 'Agency (20%)', 'Expenses', 'Net Payout'],
+            rows: statements.map(st => [
+                `${st.owner.firstName} ${st.owner.lastName}`,
+                st.properties.map(p => p.name).join(', '),
+                st.bookings.length,
+                fmt(st.grossRevenue),
+                fmt(st.platformFees),
+                fmt(st.agencyCommission),
+                fmt(st.propertyExpenses),
+                fmt(st.netPayout),
+            ]),
+            summaryRows: [
+                { label: 'Period', value: period },
+                { label: 'Total Revenue', value: fmt(totalRevenue) },
+                { label: 'Total Owner Payouts', value: fmt(totalPayout), bold: true },
+                { label: 'Owners', value: String(statements.length) },
+            ],
+            filename: `owner-statements-${selectedYear}-${String(selectedMonth + 1).padStart(2, '0')}`,
+        });
+    };
+
+    const exportStatementsCSV = () => {
+        exportToCSV(
+            `owner-statements-${selectedYear}-${String(selectedMonth + 1).padStart(2, '0')}`,
+            ['Owner', 'Properties', 'Bookings', 'Gross Revenue', 'Platform Fees', 'Agency Commission', 'Expenses', 'Net Payout'],
+            statements.map(st => [
+                `${st.owner.firstName} ${st.owner.lastName}`,
+                st.properties.map(p => p.name).join(' | '),
+                st.bookings.length,
+                st.grossRevenue.toFixed(2),
+                st.platformFees.toFixed(2),
+                st.agencyCommission.toFixed(2),
+                st.propertyExpenses.toFixed(2),
+                st.netPayout.toFixed(2),
+            ])
+        );
+    };
+
     if (loading) return (
         <div className="flex h-screen items-center justify-center">
             <div className="flex flex-col items-center gap-4">
@@ -171,7 +217,7 @@ export default function OwnerStatements() {
                         </motion.h1>
                         <p className="text-slate-400 text-sm sm:text-base">Monthly settlement reports for property owners</p>
                     </div>
-                    <div className="flex items-center gap-2">
+                    <div className="flex flex-wrap items-center gap-2">
                         <select
                             value={selectedMonth}
                             onChange={e => setSelectedMonth(Number(e.target.value))}
@@ -190,6 +236,24 @@ export default function OwnerStatements() {
                                 <option key={y} value={y} className="bg-slate-800">{y}</option>
                             ))}
                         </select>
+                        {statements.length > 0 && (
+                            <div className="flex items-center gap-1.5">
+                                <button
+                                    onClick={exportStatementsPDF}
+                                    className="flex items-center gap-1.5 px-3 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg text-sm font-medium transition-colors"
+                                >
+                                    <Download className="h-3.5 w-3.5" />
+                                    <span className="hidden sm:inline">PDF</span>
+                                </button>
+                                <button
+                                    onClick={exportStatementsCSV}
+                                    className="flex items-center gap-1.5 px-3 py-2 bg-white/5 border border-white/10 hover:bg-white/10 text-white rounded-lg text-sm font-medium transition-colors"
+                                >
+                                    <Download className="h-3.5 w-3.5" />
+                                    <span className="hidden sm:inline">CSV</span>
+                                </button>
+                            </div>
+                        )}
                     </div>
                 </header>
 
