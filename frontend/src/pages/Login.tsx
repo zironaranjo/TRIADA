@@ -94,22 +94,22 @@ const Login = () => {
                     alt="Background"
                     className="w-full h-full object-cover opacity-40"
                 />
-                <div className="absolute inset-0 bg-gradient-to-r from-gray-900 via-gray-900/90 to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-b sm:bg-gradient-to-r from-gray-900 via-gray-900/95 to-gray-900/70 sm:to-transparent" />
             </div>
 
             {/* Login Content */}
-            <div className="relative z-10 w-full max-w-md p-8 flex flex-col justify-center min-h-screen lg:w-1/2 lg:max-w-xl">
+            <div className="relative z-10 w-full px-4 py-6 sm:p-8 flex flex-col justify-start sm:justify-center min-h-screen overflow-y-auto lg:w-1/2 lg:max-w-xl mx-auto sm:mx-0 sm:max-w-md">
                 <motion.div
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
-                    className="bg-gray-800/50 backdrop-blur-xl p-8 rounded-3xl border border-gray-700/50 shadow-2xl"
+                    className="bg-gray-800/50 backdrop-blur-xl p-5 sm:p-8 rounded-2xl sm:rounded-3xl border border-gray-700/50 shadow-2xl"
                 >
-                    <div className="mb-10 text-center">
-                        <img src="/logotriadak.png" alt="TRIADAK Logo" className="h-64 w-auto mx-auto mb-6 transition-transform hover:scale-105 duration-500 object-contain drop-shadow-2xl" />
-                        <h1 className="text-2xl sm:text-3xl font-bold text-white mb-2 tracking-tight">
+                    <div className="mb-6 sm:mb-10 text-center">
+                        <img src="/logotriadak.png" alt="TRIADAK Logo" className="h-28 sm:h-48 lg:h-64 w-auto mx-auto mb-4 sm:mb-6 transition-transform hover:scale-105 duration-500 object-contain drop-shadow-2xl" />
+                        <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-white mb-1 sm:mb-2 tracking-tight">
                             {view === 'signup' ? 'Create your account' : view === 'forgot' ? 'Reset your password' : 'Welcome back'}
                         </h1>
-                        <p className="text-gray-400">
+                        <p className="text-gray-400 text-sm sm:text-base">
                             {view === 'signup'
                                 ? 'Start managing your properties today'
                                 : view === 'forgot'
@@ -118,15 +118,15 @@ const Login = () => {
                         </p>
                     </div>
 
-                    <div className="space-y-5">
+                    <div className="space-y-4 sm:space-y-5">
                         {/* Forgot Password Form */}
                         {view === 'forgot' ? (
                             <>
                                 <form onSubmit={handleForgotPassword} className="space-y-4">
                                     <div>
-                                        <label htmlFor="email" className="block text-sm font-medium text-gray-300 mb-2">Email</label>
+                                        <label htmlFor="email" className="block text-sm font-medium text-gray-300 mb-1.5 sm:mb-2">Email</label>
                                         <div className="relative">
-                                            <Mail className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-500" />
+                                            <Mail className="absolute left-3.5 sm:left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-500" />
                                             <input
                                                 id="email"
                                                 type="email"
@@ -134,22 +134,22 @@ const Login = () => {
                                                 onChange={(e) => setEmail(e.target.value)}
                                                 placeholder="you@example.com"
                                                 required
-                                                className="w-full bg-gray-900/50 border border-gray-700 text-white placeholder-gray-500 rounded-xl py-3.5 pl-12 pr-4 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                                                className="w-full bg-gray-900/50 border border-gray-700 text-white placeholder-gray-500 rounded-xl py-3 sm:py-3.5 pl-11 sm:pl-12 pr-4 text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
                                             />
                                         </div>
                                     </div>
 
                                     {error && (
-                                        <div className="bg-red-500/10 border border-red-500/50 text-red-400 px-4 py-3 rounded-xl text-sm">{error}</div>
+                                        <div className="bg-red-500/10 border border-red-500/50 text-red-400 px-3 sm:px-4 py-2.5 sm:py-3 rounded-xl text-sm">{error}</div>
                                     )}
                                     {message && (
-                                        <div className="bg-green-500/10 border border-green-500/50 text-green-400 px-4 py-3 rounded-xl text-sm">{message}</div>
+                                        <div className="bg-green-500/10 border border-green-500/50 text-green-400 px-3 sm:px-4 py-2.5 sm:py-3 rounded-xl text-sm">{message}</div>
                                     )}
 
                                     <button
                                         type="submit"
                                         disabled={loading}
-                                        className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3.5 px-6 rounded-xl transition-all duration-200 shadow-lg shadow-blue-500/25 hover:shadow-xl hover:shadow-blue-500/30 transform hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                                        className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 sm:py-3.5 px-4 sm:px-6 rounded-xl text-sm sm:text-base transition-all duration-200 shadow-lg shadow-blue-500/25 hover:shadow-xl hover:shadow-blue-500/30 transform hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
                                     >
                                         {loading ? 'Sending...' : 'Send Reset Link'}
                                     </button>
@@ -167,7 +167,7 @@ const Login = () => {
                                 {/* Google Button */}
                                 <button
                                     onClick={handleGoogleLogin}
-                                    className="group w-full bg-white text-gray-900 hover:bg-gray-50 font-semibold py-3.5 px-6 rounded-xl flex items-center justify-center gap-3 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
+                                    className="group w-full bg-white text-gray-900 hover:bg-gray-50 font-semibold py-3 sm:py-3.5 px-4 sm:px-6 rounded-xl flex items-center justify-center gap-3 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 text-sm sm:text-base"
                                 >
                                     <img
                                         src="https://www.svgrepo.com/show/475656/google-color.svg"
@@ -185,11 +185,11 @@ const Login = () => {
                                 </div>
 
                                 {/* Email/Password Form */}
-                                <form onSubmit={handleEmailAuth} className="space-y-4">
+                                <form onSubmit={handleEmailAuth} className="space-y-3 sm:space-y-4">
                                     <div>
-                                        <label htmlFor="email" className="block text-sm font-medium text-gray-300 mb-2">Email</label>
+                                        <label htmlFor="email" className="block text-sm font-medium text-gray-300 mb-1.5 sm:mb-2">Email</label>
                                         <div className="relative">
-                                            <Mail className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-500" />
+                                            <Mail className="absolute left-3.5 sm:left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-500" />
                                             <input
                                                 id="email"
                                                 type="email"
@@ -197,13 +197,13 @@ const Login = () => {
                                                 onChange={(e) => setEmail(e.target.value)}
                                                 placeholder="you@example.com"
                                                 required
-                                                className="w-full bg-gray-900/50 border border-gray-700 text-white placeholder-gray-500 rounded-xl py-3.5 pl-12 pr-4 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                                                className="w-full bg-gray-900/50 border border-gray-700 text-white placeholder-gray-500 rounded-xl py-3 sm:py-3.5 pl-11 sm:pl-12 pr-4 text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
                                             />
                                         </div>
                                     </div>
 
                                     <div>
-                                        <div className="flex items-center justify-between mb-2">
+                                        <div className="flex items-center justify-between mb-1.5 sm:mb-2">
                                             <label htmlFor="password" className="block text-sm font-medium text-gray-300">Password</label>
                                             {view === 'signin' && (
                                                 <button
@@ -216,7 +216,7 @@ const Login = () => {
                                             )}
                                         </div>
                                         <div className="relative">
-                                            <Lock className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-500" />
+                                            <Lock className="absolute left-3.5 sm:left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-500" />
                                             <input
                                                 id="password"
                                                 type={showPassword ? 'text' : 'password'}
@@ -225,7 +225,7 @@ const Login = () => {
                                                 placeholder="••••••••"
                                                 required
                                                 minLength={6}
-                                                className="w-full bg-gray-900/50 border border-gray-700 text-white placeholder-gray-500 rounded-xl py-3.5 pl-12 pr-12 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                                                className="w-full bg-gray-900/50 border border-gray-700 text-white placeholder-gray-500 rounded-xl py-3 sm:py-3.5 pl-11 sm:pl-12 pr-12 text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
                                             />
                                             <button
                                                 type="button"
@@ -247,14 +247,14 @@ const Login = () => {
                                     <button
                                         type="submit"
                                         disabled={loading}
-                                        className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3.5 px-6 rounded-xl transition-all duration-200 shadow-lg shadow-blue-500/25 hover:shadow-xl hover:shadow-blue-500/30 transform hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                                        className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 sm:py-3.5 px-4 sm:px-6 rounded-xl text-sm sm:text-base transition-all duration-200 shadow-lg shadow-blue-500/25 hover:shadow-xl hover:shadow-blue-500/30 transform hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
                                     >
                                         {loading ? 'Loading...' : view === 'signup' ? 'Sign up' : 'Sign in'}
                                     </button>
                                 </form>
 
                                 {/* Toggle Sign Up / Sign In */}
-                                <p className="text-center text-gray-400 text-sm mt-6">
+                                <p className="text-center text-gray-400 text-sm mt-4 sm:mt-6">
                                     {view === 'signup' ? 'Already have an account?' : "Don't have an account?"}{' '}
                                     <button
                                         onClick={() => switchView(view === 'signup' ? 'signin' : 'signup')}
@@ -268,9 +268,17 @@ const Login = () => {
                     </div>
                 </motion.div>
 
-                <p className="mt-8 text-center text-gray-500 text-sm">
-                    &copy; 2026 TRIADAK. All rights reserved.
-                </p>
+                <div className="mt-4 sm:mt-8 text-center pb-4 sm:pb-0 space-y-1">
+                    <p className="text-gray-500 text-xs sm:text-sm">
+                        &copy; {new Date().getFullYear()} TRIADAK. All rights reserved.
+                    </p>
+                    <p className="text-gray-600 text-[10px] sm:text-xs">
+                        Developed by{' '}
+                        <a href="https://zirox.io" target="_blank" rel="noopener noreferrer" className="text-blue-500/70 hover:text-blue-400 transition-colors">
+                            zirox.io
+                        </a>
+                    </p>
+                </div>
             </div>
 
             {/* Right side slogan (visible on desktop) */}

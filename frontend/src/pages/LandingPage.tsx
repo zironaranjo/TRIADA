@@ -931,12 +931,20 @@ function Footer() {
                     </div>
                 </div>
 
-                <div className="mt-8 sm:mt-12 pt-6 sm:pt-8 border-t border-white/5 flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4">
-                    <p className="text-xs text-slate-600">{t('landing.footer.copyright', { year: new Date().getFullYear() })}</p>
-                    <div className="flex items-center gap-6">
-                        <span className="text-xs text-slate-600 hover:text-slate-400 cursor-pointer transition-colors">{t('landing.footer.privacy')}</span>
-                        <span className="text-xs text-slate-600 hover:text-slate-400 cursor-pointer transition-colors">{t('landing.footer.terms')}</span>
+                <div className="mt-8 sm:mt-12 pt-6 sm:pt-8 border-t border-white/5 flex flex-col items-center gap-3 sm:gap-4">
+                    <div className="w-full flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4">
+                        <p className="text-xs text-slate-600">{t('landing.footer.copyright', { year: new Date().getFullYear() })}</p>
+                        <div className="flex items-center gap-6">
+                            <span className="text-xs text-slate-600 hover:text-slate-400 cursor-pointer transition-colors">{t('landing.footer.privacy')}</span>
+                            <span className="text-xs text-slate-600 hover:text-slate-400 cursor-pointer transition-colors">{t('landing.footer.terms')}</span>
+                        </div>
                     </div>
+                    <p className="text-[10px] text-slate-700">
+                        Developed by{' '}
+                        <a href="https://zirox.io" target="_blank" rel="noopener noreferrer" className="text-indigo-500/60 hover:text-indigo-400 transition-colors">
+                            zirox.io
+                        </a>
+                    </p>
                 </div>
             </div>
         </footer>
