@@ -4,7 +4,8 @@ import { GlassCard } from "@/components/GlassCard";
 import { supabase } from "../lib/supabase";
 import {
     DollarSign, TrendingUp, TrendingDown, Users, CreditCard,
-    Plus, X, Receipt, ArrowUpRight, ArrowDownRight, Trash2, Filter, Download
+    Plus, X, Receipt, ArrowUpRight, ArrowDownRight, Trash2, Filter, Download,
+    CheckCircle2, Circle,
 } from "lucide-react";
 import { exportToPDF, exportToCSV } from '../lib/exportUtils';
 import { motion, AnimatePresence } from "framer-motion";
@@ -89,7 +90,14 @@ export default function FinanceDashboard() {
     const [isExpenseModalOpen, setIsExpenseModalOpen] = useState(false);
     const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
     const [propertyFilter, setPropertyFilter] = useState<string>('ALL');
+    const [categoryFilter, setCategoryFilter] = useState<string>('ALL');
     const [showFilters, setShowFilters] = useState(false);
+    const [reconciledIds, setReconciledIds] = useState<Set<string>>(() => {
+        try {
+            const saved = localStorage.getItem('triadak_reconciled');
+            return saved ? new Set(JSON.parse(saved)) : new Set();
+        } catch { return new Set(); }
+    });
 
     useEffect(() => {
         fetchData();
@@ -143,9 +151,26 @@ export default function FinanceDashboard() {
         ? bookings
         : bookings.filter(b => b.property_id === propertyFilter);
 
-    const filteredExpenses = propertyFilter === 'ALL'
-        ? expenses
-        : expenses.filter(e => e.property_id === propertyFilter);
+    const filteredExpenses = expenses.filter(e => {
+        if (propertyFilter !== 'ALL' && e.property_id !== propertyFilter) return false;
+        if (categoryFilter !== 'ALL' && e.category !== categoryFilter) return false;
+        return true;
+    });
+
+    const toggleReconciled = (id: string) => {
+        setReconciledIds(prev => {
+            const next = new Set(prev);
+            if (next.has(id)) next.delete(id);
+            else next.add(id);
+            localStorage.setItem('triadak_reconciled', JSON.stringify([...next]));
+            return next;
+        });
+    };
+
+    const reconciledExpenses = filteredExpenses.filter(e => reconciledIds.has(e.id));
+    const unreconciledExpenses = filteredExpenses.filter(e => !reconciledIds.has(e.id));
+    const reconciledTotal = reconciledExpenses.reduce((s, e) => s + Number(e.amount || 0), 0);
+    const unreconciledTotal = unreconciledExpenses.reduce((s, e) => s + Number(e.amount || 0), 0);
 
     // ─── Calculate Stats ──────────────────────────────
     const totalRevenue = filteredBookings.reduce((sum, b) => sum + Number(b.total_price || 0), 0);
@@ -297,6 +322,16 @@ export default function FinanceDashboard() {
                                     <option value="ALL" className="bg-slate-800">{t('finance.filterAllProperties')}</option>
                                     {properties.map(p => (
                                         <option key={p.id} value={p.id} className="bg-slate-800">{p.name}</option>
+                                    ))}
+                                </select>
+                                <select
+                                    value={categoryFilter}
+                                    onChange={(e) => setCategoryFilter(e.target.value)}
+                                    className="bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-indigo-500"
+                                >
+                                    <option value="ALL" className="bg-slate-800">{t('finance.filterAllCategories')}</option>
+                                    {EXPENSE_CATEGORIES.map(c => (
+                                        <option key={c.value} value={c.value} className="bg-slate-800">{c.icon} {t(`finance.categories.${c.value.toLowerCase()}`)}</option>
                                     ))}
                                 </select>
                                 <select
@@ -520,31 +555,66 @@ export default function FinanceDashboard() {
                         </div>
                     </GlassCard>
 
-                    {/* Expenses */}
+                    {/* Expenses with Reconciliation */}
                     <GlassCard className="p-0 overflow-hidden">
-                        <div className="p-3 sm:p-4 border-b border-white/5 bg-white/5 flex items-center justify-between">
-                            <h3 className="font-semibold text-white text-sm sm:text-base flex items-center gap-2">
-                                <ArrowDownRight className="h-4 w-4 text-rose-400" />
-                                {t('finance.expenses')}
-                            </h3>
-                            <button
-                                onClick={() => setIsExpenseModalOpen(true)}
-                                className="text-xs text-indigo-400 hover:text-indigo-300 font-medium flex items-center gap-1"
-                            >
-                                <Plus className="h-3 w-3" /> {t('common.add')}
-                            </button>
+                        <div className="p-3 sm:p-4 border-b border-white/5 bg-white/5">
+                            <div className="flex items-center justify-between mb-2">
+                                <h3 className="font-semibold text-white text-sm sm:text-base flex items-center gap-2">
+                                    <ArrowDownRight className="h-4 w-4 text-rose-400" />
+                                    {t('finance.expenses')}
+                                </h3>
+                                <button
+                                    onClick={() => setIsExpenseModalOpen(true)}
+                                    className="text-xs text-indigo-400 hover:text-indigo-300 font-medium flex items-center gap-1"
+                                >
+                                    <Plus className="h-3 w-3" /> {t('common.add')}
+                                </button>
+                            </div>
+                            {/* Reconciliation progress bar */}
+                            {filteredExpenses.length > 0 && (
+                                <div className="mt-2">
+                                    <div className="flex items-center justify-between text-[10px] text-slate-500 mb-1">
+                                        <span className="flex items-center gap-1">
+                                            <CheckCircle2 className="h-3 w-3 text-emerald-400" />
+                                            {t('finance.reconciled')}: {fmt(reconciledTotal)} ({reconciledExpenses.length})
+                                        </span>
+                                        <span className="flex items-center gap-1">
+                                            <Circle className="h-3 w-3 text-amber-400" />
+                                            {t('finance.pending')}: {fmt(unreconciledTotal)} ({unreconciledExpenses.length})
+                                        </span>
+                                    </div>
+                                    <div className="h-1.5 bg-white/5 rounded-full overflow-hidden">
+                                        <div
+                                            className="h-full bg-gradient-to-r from-emerald-500 to-teal-500 rounded-full transition-all duration-500"
+                                            style={{ width: `${filteredExpenses.length > 0 ? (reconciledExpenses.length / filteredExpenses.length) * 100 : 0}%` }}
+                                        />
+                                    </div>
+                                </div>
+                            )}
                         </div>
                         <div className="divide-y divide-white/5 max-h-[350px] sm:max-h-[400px] overflow-y-auto">
-                            {filteredExpenses.slice(0, 15).map((e) => {
+                            {filteredExpenses.slice(0, 20).map((e) => {
                                 const cat = EXPENSE_CATEGORIES.find(c => c.value === e.category);
+                                const isReconciled = reconciledIds.has(e.id);
                                 return (
-                                    <div key={e.id} className="p-3 sm:p-4 hover:bg-white/5 transition-colors flex items-center justify-between group">
+                                    <div key={e.id} className={`p-3 sm:p-4 hover:bg-white/5 transition-colors flex items-center justify-between group ${isReconciled ? 'opacity-60' : ''}`}>
                                         <div className="flex items-center gap-2 sm:gap-3 min-w-0">
+                                            <button
+                                                onClick={() => toggleReconciled(e.id)}
+                                                className="flex-shrink-0 transition-colors"
+                                                title={isReconciled ? t('finance.markPending') : t('finance.markReconciled')}
+                                            >
+                                                {isReconciled ? (
+                                                    <CheckCircle2 className="h-5 w-5 text-emerald-400" />
+                                                ) : (
+                                                    <Circle className="h-5 w-5 text-slate-600 hover:text-amber-400" />
+                                                )}
+                                            </button>
                                             <div className="p-1.5 sm:p-2 rounded-lg bg-rose-500/10 text-sm flex-shrink-0">
                                                 {cat?.icon || '📝'}
                                             </div>
                                             <div className="min-w-0">
-                                                <p className="text-xs sm:text-sm font-medium text-white truncate">{e.description || (cat ? t(`finance.categories.${cat.value.toLowerCase()}`) : e.category)}</p>
+                                                <p className={`text-xs sm:text-sm font-medium truncate ${isReconciled ? 'text-slate-400 line-through' : 'text-white'}`}>{e.description || (cat ? t(`finance.categories.${cat.value.toLowerCase()}`) : e.category)}</p>
                                                 <p className="text-[10px] sm:text-xs text-slate-500 truncate">
                                                     {e.properties?.name || t('finance.general')} · {new Date(e.date).toLocaleDateString()}
                                                 </p>
@@ -624,6 +694,110 @@ export default function FinanceDashboard() {
                                 </tr>
                             </tbody>
                         </table>
+                    </div>
+                </GlassCard>
+
+                {/* ─── Profit & Loss Statement ───────────── */}
+                <GlassCard className="p-0 overflow-hidden">
+                    <div className="p-3 sm:p-4 border-b border-white/5 bg-gradient-to-r from-indigo-500/10 to-purple-500/10 flex items-center justify-between">
+                        <h3 className="font-semibold text-white text-base sm:text-lg flex items-center gap-2">
+                            <Receipt className="h-5 w-5 text-indigo-400" />
+                            {t('finance.profitAndLoss')}
+                        </h3>
+                        <span className="text-[10px] sm:text-xs text-slate-500">{selectedYear}</span>
+                    </div>
+                    <div className="p-4 sm:p-6 space-y-4">
+                        {/* Revenue Breakdown */}
+                        <div>
+                            <h4 className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3">{t('finance.plRevenue')}</h4>
+                            <div className="space-y-2">
+                                {platformData.map(p => (
+                                    <div key={p.name} className="flex items-center justify-between">
+                                        <div className="flex items-center gap-2">
+                                            <div className="w-2 h-2 rounded-full" style={{ backgroundColor: p.color }} />
+                                            <span className="text-sm text-slate-300">{p.name}</span>
+                                        </div>
+                                        <span className="text-sm text-emerald-400 font-medium">{fmt(p.value)}</span>
+                                    </div>
+                                ))}
+                                <div className="flex items-center justify-between pt-2 border-t border-white/10">
+                                    <span className="text-sm font-bold text-white">{t('finance.plTotalRevenue')}</span>
+                                    <span className="text-sm font-bold text-emerald-400">{fmt(totalRevenue)}</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Expense Breakdown by Category */}
+                        <div>
+                            <h4 className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3">{t('finance.plExpenses')}</h4>
+                            <div className="space-y-2">
+                                {expenseByCategoryData.map(cat => (
+                                    <div key={cat.name} className="flex items-center justify-between">
+                                        <div className="flex items-center gap-2">
+                                            <span className="text-sm">{cat.icon}</span>
+                                            <span className="text-sm text-slate-300">{cat.name}</span>
+                                        </div>
+                                        <span className="text-sm text-rose-400 font-medium">-{fmt(cat.value)}</span>
+                                    </div>
+                                ))}
+                                <div className="flex items-center justify-between pt-2 border-t border-white/10">
+                                    <span className="text-sm font-bold text-white">{t('finance.plTotalExpenses')}</span>
+                                    <span className="text-sm font-bold text-rose-400">-{fmt(totalExpenses)}</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Fees */}
+                        <div>
+                            <h4 className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3">{t('finance.plFees')}</h4>
+                            <div className="space-y-2">
+                                <div className="flex items-center justify-between">
+                                    <span className="text-sm text-slate-300">{t('finance.platformFees')}</span>
+                                    <span className="text-sm text-rose-400 font-medium">-{fmt(platformFees)}</span>
+                                </div>
+                                <div className="flex items-center justify-between">
+                                    <span className="text-sm text-slate-300">{t('finance.agencyCommission')} (20%)</span>
+                                    <span className="text-sm text-amber-400 font-medium">-{fmt(agencyCommission)}</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Bottom Line */}
+                        <div className="bg-white/5 rounded-xl p-4 border border-white/10 space-y-3">
+                            <div className="flex items-center justify-between">
+                                <span className="text-sm text-emerald-300 font-semibold">{t('finance.ownerPayout')}</span>
+                                <span className="text-lg font-bold text-emerald-400">{fmt(ownerPayouts)}</span>
+                            </div>
+                            <div className="flex items-center justify-between pt-2 border-t border-white/10">
+                                <span className="text-sm text-indigo-300 font-semibold">{t('finance.agencyNetProfit')}</span>
+                                <span className={`text-lg font-bold ${netProfit >= 0 ? 'text-indigo-400' : 'text-rose-400'}`}>{fmt(netProfit)}</span>
+                            </div>
+                            <div className="flex items-center justify-between pt-2 border-t border-white/10">
+                                <span className="text-xs text-slate-500">{t('finance.plMargin')}</span>
+                                <span className={`text-xs font-medium ${netProfit >= 0 ? 'text-indigo-400' : 'text-rose-400'}`}>
+                                    {totalRevenue > 0 ? ((netProfit / totalRevenue) * 100).toFixed(1) : '0.0'}%
+                                </span>
+                            </div>
+                        </div>
+
+                        {/* Reconciliation Status */}
+                        <div className="bg-white/5 rounded-xl p-4 border border-white/10">
+                            <h4 className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3">{t('finance.reconciliationStatus')}</h4>
+                            <div className="grid grid-cols-3 gap-4 text-center">
+                                <div>
+                                    <p className="text-lg font-bold text-white">{filteredExpenses.length}</p>
+                                    <p className="text-[10px] text-slate-500">{t('finance.plTotalEntries')}</p>
+                                </div>
+                                <div>
+                                    <p className="text-lg font-bold text-emerald-400">{reconciledExpenses.length}</p>
+                                    <p className="text-[10px] text-slate-500">{t('finance.reconciled')}</p>
+                                </div>
+                                <div>
+                                    <p className="text-lg font-bold text-amber-400">{unreconciledExpenses.length}</p>
+                                    <p className="text-[10px] text-slate-500">{t('finance.pending')}</p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </GlassCard>
             </div>

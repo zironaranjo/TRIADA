@@ -74,15 +74,27 @@ SaaS platform for **vacation rental management** (triadak.io). Combines features
     - Login redirects owners to `/portal/dashboard`, admin/staff to `/dashboard`
     - Team management panel in Settings (admin only): view members, change roles, remove members
     - Owner portal at `/portal/*` uses separate OwnerLayout; admin accesses owner pages via `/owner/*` within main Layout
+23. **Advanced Finance Engine** - Profit & Loss statement, expense reconciliation system (localStorage persisted), category filtering, reconciliation progress bar + status panel
+24. **Scheduled Notifications System** - Supabase Edge Functions for automated check-in/check-out reminders (hourly cron) and daily digest (08:00 UTC cron). Configurable timing (6/12/24/48h) in Settings. SQL migration with notifications table schema
 
 ## Pending / Roadmap (Fase 2 & 3)
 
-### Fase 2 - Funcionalidades clave
+### Fase 2 - Funcionalidades clave ✅ COMPLETED
 - [x] Multi-language support (i18n with react-i18next) — EN, DE, ES, FR implemented across all pages
 - [x] Theme system removed — dark-only theme (light mode looked bad, reverted)
 - [x] Owner portal (separate view at /owner/* with dashboard, properties, statements)
-- [ ] Accounting/Ledger improvements (expense categorization, reconciliation, balance sheet — Bexio inspired)
-- [ ] Scheduled email notifications (cron for check-in/out reminders — needs Edge Function)
+- [x] Accounting/Ledger improvements:
+  - Category filter in Finance Dashboard header
+  - Reconciliation system (mark expenses as reconciled/pending via checkbox, persisted in localStorage)
+  - Progress bar showing reconciliation status
+  - Full Profit & Loss statement (revenue by platform, expenses by category, fees, margins)
+  - Reconciliation summary panel
+- [x] Scheduled email notifications:
+  - Edge Function `send-reminders` — scans bookings, generates check-in/check-out notifications for staff/admins
+  - Edge Function `daily-digest` — morning summary of today's arrivals, departures, and tomorrow preview
+  - Notification settings UI in Settings: configurable reminder timing (6h/12h/24h/48h), daily digest toggle
+  - SQL migration for notifications table + cron job setup instructions
+  - Supabase pg_cron integration (hourly reminders + daily digest at 08:00 UTC)
 
 ### Fase 3 - Integraciones externas
 - [ ] Airbnb API integration
@@ -119,6 +131,9 @@ SaaS platform for **vacation rental management** (triadak.io). Combines features
 - `frontend/src/api/client.ts` - Axios client for NestJS backend API (owners, properties, bookings)
 - `frontend/src/lib/supabase.ts` - Supabase client config
 - `frontend/src/lib/exportUtils.ts` - PDF/CSV export utilities (jspdf + jspdf-autotable)
+- `supabase/functions/send-reminders/index.ts` - Edge Function: hourly check-in/check-out reminder generator
+- `supabase/functions/daily-digest/index.ts` - Edge Function: daily morning digest notification
+- `supabase/migrations/001_notifications_table.sql` - SQL setup for notifications table, RLS, and cron jobs
 
 ## Conventions
 - Use Supabase direct queries (not backend API) for frontend CRUD — except Owners which still uses NestJS API

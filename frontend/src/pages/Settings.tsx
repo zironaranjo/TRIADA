@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import {
     User, Mail, Shield, Bell, Globe,
     Save, Camera, Check, AlertTriangle, Trash2,
-    Users, Crown, UserCog, Eye, Send, Plus, X,
+    Users, Crown, UserCog, Eye, Send, Plus, X, Clock,
 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
@@ -24,6 +24,9 @@ interface ProfileForm {
     notifications_bookings: boolean;
     notifications_payments: boolean;
     notifications_reminders: boolean;
+    reminder_checkin_hours: number;
+    reminder_checkout_hours: number;
+    reminder_daily_digest: boolean;
 }
 
 type TabId = 'profile' | 'preferences' | 'notifications' | 'team' | 'danger';
@@ -105,6 +108,9 @@ export default function Settings() {
         notifications_bookings: true,
         notifications_payments: true,
         notifications_reminders: true,
+        reminder_checkin_hours: 24,
+        reminder_checkout_hours: 12,
+        reminder_daily_digest: false,
     });
 
     // ─── Team Functions ──────────────────────────────────
@@ -328,6 +334,9 @@ export default function Settings() {
                 notifications_bookings: form.notifications_bookings,
                 notifications_payments: form.notifications_payments,
                 notifications_reminders: form.notifications_reminders,
+                reminder_checkin_hours: form.reminder_checkin_hours,
+                reminder_checkout_hours: form.reminder_checkout_hours,
+                reminder_daily_digest: form.reminder_daily_digest,
             };
             localStorage.setItem('triadak_settings', JSON.stringify(settingsToSave));
 
@@ -565,42 +574,129 @@ export default function Settings() {
                     )}
 
                     {activeTab === 'notifications' && (
-                        <div className="bg-white/5 border border-white/5 rounded-2xl p-6">
-                            <h3 className="text-lg font-semibold text-white mb-2 flex items-center gap-2">
-                                <Bell className="h-5 w-5 text-indigo-400" />
-                                {t('settings.notifications.title')}
-                            </h3>
-                            <p className="text-xs text-slate-500 mb-6">{t('settings.notifications.subtitle')}</p>
+                        <div className="space-y-6">
+                            {/* Notification Toggles */}
+                            <div className="bg-white/5 border border-white/5 rounded-2xl p-6">
+                                <h3 className="text-lg font-semibold text-white mb-2 flex items-center gap-2">
+                                    <Bell className="h-5 w-5 text-indigo-400" />
+                                    {t('settings.notifications.title')}
+                                </h3>
+                                <p className="text-xs text-slate-500 mb-6">{t('settings.notifications.subtitle')}</p>
 
-                            <div className="space-y-4">
-                                {[
-                                    { key: 'notifications_email' as const, titleKey: 'settings.notifications.email', descKey: 'settings.notifications.emailDesc' },
-                                    { key: 'notifications_bookings' as const, titleKey: 'settings.notifications.bookings', descKey: 'settings.notifications.bookingsDesc' },
-                                    { key: 'notifications_payments' as const, titleKey: 'settings.notifications.payments', descKey: 'settings.notifications.paymentsDesc' },
-                                    { key: 'notifications_reminders' as const, titleKey: 'settings.notifications.reminders', descKey: 'settings.notifications.remindersDesc' },
-                                ].map(notif => (
-                                    <div
-                                        key={notif.key}
-                                        className="flex items-center justify-between p-4 rounded-xl bg-white/[0.02] border border-white/5 hover:bg-white/[0.04] transition-colors"
-                                    >
-                                        <div>
-                                            <p className="text-sm font-medium text-white">{t(notif.titleKey)}</p>
-                                            <p className="text-xs text-slate-500 mt-0.5">{t(notif.descKey)}</p>
-                                        </div>
-                                        <button
-                                            onClick={() => updateField(notif.key, !form[notif.key])}
-                                            className={`relative w-11 h-6 rounded-full transition-colors duration-200 ${
-                                                form[notif.key] ? 'bg-indigo-500' : 'bg-white/10'
-                                            }`}
+                                <div className="space-y-4">
+                                    {[
+                                        { key: 'notifications_email' as const, titleKey: 'settings.notifications.email', descKey: 'settings.notifications.emailDesc' },
+                                        { key: 'notifications_bookings' as const, titleKey: 'settings.notifications.bookings', descKey: 'settings.notifications.bookingsDesc' },
+                                        { key: 'notifications_payments' as const, titleKey: 'settings.notifications.payments', descKey: 'settings.notifications.paymentsDesc' },
+                                        { key: 'notifications_reminders' as const, titleKey: 'settings.notifications.reminders', descKey: 'settings.notifications.remindersDesc' },
+                                        { key: 'reminder_daily_digest' as const, titleKey: 'settings.notifications.dailyDigest', descKey: 'settings.notifications.dailyDigestDesc' },
+                                    ].map(notif => (
+                                        <div
+                                            key={notif.key}
+                                            className="flex items-center justify-between p-4 rounded-xl bg-white/[0.02] border border-white/5 hover:bg-white/[0.04] transition-colors"
                                         >
-                                            <motion.div
-                                                animate={{ x: form[notif.key] ? 20 : 2 }}
-                                                transition={{ type: 'spring', stiffness: 500, damping: 30 }}
-                                                className="absolute top-1 w-4 h-4 rounded-full bg-white shadow-sm"
-                                            />
-                                        </button>
+                                            <div>
+                                                <p className="text-sm font-medium text-white">{t(notif.titleKey)}</p>
+                                                <p className="text-xs text-slate-500 mt-0.5">{t(notif.descKey)}</p>
+                                            </div>
+                                            <button
+                                                onClick={() => updateField(notif.key, !form[notif.key])}
+                                                className={`relative w-11 h-6 rounded-full transition-colors duration-200 ${
+                                                    form[notif.key] ? 'bg-indigo-500' : 'bg-white/10'
+                                                }`}
+                                            >
+                                                <motion.div
+                                                    animate={{ x: form[notif.key] ? 20 : 2 }}
+                                                    transition={{ type: 'spring', stiffness: 500, damping: 30 }}
+                                                    className="absolute top-1 w-4 h-4 rounded-full bg-white shadow-sm"
+                                                />
+                                            </button>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+
+                            {/* Reminder Timing Configuration */}
+                            <div className="bg-white/5 border border-white/5 rounded-2xl p-6">
+                                <h3 className="text-lg font-semibold text-white mb-2 flex items-center gap-2">
+                                    <Clock className="h-5 w-5 text-amber-400" />
+                                    {t('settings.notifications.reminderTiming')}
+                                </h3>
+                                <p className="text-xs text-slate-500 mb-6">{t('settings.notifications.reminderTimingDesc')}</p>
+
+                                <div className="space-y-4">
+                                    {/* Check-in reminder hours */}
+                                    <div className="p-4 rounded-xl bg-white/[0.02] border border-white/5">
+                                        <div className="flex items-center justify-between mb-3">
+                                            <div>
+                                                <p className="text-sm font-medium text-white">{t('settings.notifications.checkinReminder')}</p>
+                                                <p className="text-xs text-slate-500 mt-0.5">{t('settings.notifications.checkinReminderDesc')}</p>
+                                            </div>
+                                        </div>
+                                        <div className="flex items-center gap-3">
+                                            {[6, 12, 24, 48].map(hours => (
+                                                <button
+                                                    key={hours}
+                                                    onClick={() => updateField('reminder_checkin_hours', hours)}
+                                                    className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all ${
+                                                        form.reminder_checkin_hours === hours
+                                                            ? 'bg-indigo-500 text-white shadow-lg shadow-indigo-500/30'
+                                                            : 'bg-white/5 text-slate-400 hover:bg-white/10 hover:text-white'
+                                                    }`}
+                                                >
+                                                    {hours}h
+                                                </button>
+                                            ))}
+                                        </div>
                                     </div>
-                                ))}
+
+                                    {/* Check-out reminder hours */}
+                                    <div className="p-4 rounded-xl bg-white/[0.02] border border-white/5">
+                                        <div className="flex items-center justify-between mb-3">
+                                            <div>
+                                                <p className="text-sm font-medium text-white">{t('settings.notifications.checkoutReminder')}</p>
+                                                <p className="text-xs text-slate-500 mt-0.5">{t('settings.notifications.checkoutReminderDesc')}</p>
+                                            </div>
+                                        </div>
+                                        <div className="flex items-center gap-3">
+                                            {[6, 12, 24, 48].map(hours => (
+                                                <button
+                                                    key={hours}
+                                                    onClick={() => updateField('reminder_checkout_hours', hours)}
+                                                    className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all ${
+                                                        form.reminder_checkout_hours === hours
+                                                            ? 'bg-purple-500 text-white shadow-lg shadow-purple-500/30'
+                                                            : 'bg-white/5 text-slate-400 hover:bg-white/10 hover:text-white'
+                                                    }`}
+                                                >
+                                                    {hours}h
+                                                </button>
+                                            ))}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Cron / Edge Function Info */}
+                            <div className="bg-gradient-to-r from-indigo-500/5 to-purple-500/5 border border-indigo-500/10 rounded-2xl p-6">
+                                <h3 className="text-sm font-semibold text-indigo-400 mb-2">{t('settings.notifications.automationTitle')}</h3>
+                                <p className="text-xs text-slate-400 leading-relaxed">
+                                    {t('settings.notifications.automationDesc')}
+                                </p>
+                                <div className="mt-4 grid grid-cols-1 sm:grid-cols-3 gap-3">
+                                    <div className="bg-white/5 rounded-xl p-3 text-center">
+                                        <p className="text-lg font-bold text-indigo-400">24h</p>
+                                        <p className="text-[10px] text-slate-500">{t('settings.notifications.beforeCheckin')}</p>
+                                    </div>
+                                    <div className="bg-white/5 rounded-xl p-3 text-center">
+                                        <p className="text-lg font-bold text-purple-400">12h</p>
+                                        <p className="text-[10px] text-slate-500">{t('settings.notifications.beforeCheckout')}</p>
+                                    </div>
+                                    <div className="bg-white/5 rounded-xl p-3 text-center">
+                                        <p className="text-lg font-bold text-emerald-400">08:00</p>
+                                        <p className="text-[10px] text-slate-500">{t('settings.notifications.dailyDigestTime')}</p>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     )}
