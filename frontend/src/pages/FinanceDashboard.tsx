@@ -373,7 +373,7 @@ export default function FinanceDashboard() {
                                     <RechartsTooltip
                                         contentStyle={{ backgroundColor: '#1e293b', border: '1px solid #334155', borderRadius: '8px', fontSize: '12px' }}
                                         itemStyle={{ color: '#e2e8f0' }}
-                                        formatter={(value: number) => `€${Number(value).toLocaleString()}`}
+                                        formatter={(value: any) => `€${Number(value).toLocaleString()}`}
                                     />
                                     <Area type="monotone" dataKey="revenue" stroke="#6366f1" strokeWidth={2} fillOpacity={1} fill="url(#colorRevenue)" name="Revenue" />
                                     <Area type="monotone" dataKey="expenses" stroke="#ef4444" strokeWidth={2} fillOpacity={1} fill="url(#colorExpenses)" name="Expenses" />
@@ -397,7 +397,7 @@ export default function FinanceDashboard() {
                                             </Pie>
                                             <RechartsTooltip
                                                 contentStyle={{ backgroundColor: '#1e293b', border: '1px solid #334155', borderRadius: '8px', fontSize: '12px' }}
-                                                formatter={(value: number) => `€${Number(value).toLocaleString()}`}
+                                                formatter={(value: any) => `€${Number(value).toLocaleString()}`}
                                             />
                                         </PieChart>
                                     </ResponsiveContainer>
@@ -431,7 +431,7 @@ export default function FinanceDashboard() {
                                     tickFormatter={(v) => v >= 1000 ? `€${v / 1000}k` : `€${v}`} />
                                 <RechartsTooltip
                                     contentStyle={{ backgroundColor: '#1e293b', border: '1px solid #334155', borderRadius: '8px', fontSize: '12px' }}
-                                    formatter={(value: number) => `€${Number(value).toLocaleString()}`}
+                                    formatter={(value: any) => `€${Number(value).toLocaleString()}`}
                                 />
                                 <Bar dataKey="profit" name="Profit" radius={[4, 4, 0, 0]}>
                                     {monthlyData.map((entry, index) => (
