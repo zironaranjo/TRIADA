@@ -14,6 +14,13 @@ import Settings from './pages/Settings';
 import OwnerStatements from './pages/OwnerStatements';
 import Layout from './components/Layout';
 import LandingPage from './pages/LandingPage';
+
+// Owner Portal
+import OwnerLayout from './components/OwnerLayout';
+import OwnerDashboard from './pages/owner/OwnerDashboard';
+import OwnerProperties from './pages/owner/OwnerProperties';
+import OwnerMyStatements from './pages/owner/OwnerMyStatements';
+
 function App() {
   return (
     <AuthProvider>
@@ -23,7 +30,7 @@ function App() {
           <Route path="/" element={<LandingPage />} />
           <Route path="/login" element={<Login />} />
 
-          {/* Protected routes */}
+          {/* Admin/Staff protected routes */}
           <Route
             element={
               <ProtectedRoute>
@@ -41,6 +48,19 @@ function App() {
             <Route path="billing" element={<Billing />} />
             <Route path="settings" element={<Settings />} />
             <Route path="statements" element={<OwnerStatements />} />
+          </Route>
+
+          {/* Owner Portal routes */}
+          <Route
+            element={
+              <ProtectedRoute>
+                <OwnerLayout />
+              </ProtectedRoute>
+            }
+          >
+            <Route path="owner/dashboard" element={<OwnerDashboard />} />
+            <Route path="owner/properties" element={<OwnerProperties />} />
+            <Route path="owner/statements" element={<OwnerMyStatements />} />
           </Route>
 
           {/* Catch-all */}

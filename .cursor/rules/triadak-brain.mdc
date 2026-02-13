@@ -64,13 +64,16 @@ SaaS platform for **vacation rental management** (triadak.io). Combines features
 16. **Owner Statements** - Monthly settlement reports per owner: gross revenue, platform fees, agency commission, expenses, net payout. Expandable detail with bookings and expenses breakdown
 17. **PDF/CSV Export** - Professional PDF reports (jspdf + jspdf-autotable) and CSV export for Owner Statements and Finance Dashboard
 18. **User Avatar System** - Reusable `useUserAvatar` hook, avatar displayed in sidebar, mobile header, Owners page, and Owner Statements. Persists via localStorage + Supabase Storage fallback
+19. **Owner Portal** - Separate `/owner/*` routes with dedicated layout (emerald theme), dashboard (revenue charts, occupancy, upcoming bookings), read-only properties view, and personal statements with PDF/CSV export. Owners with role `owner` are auto-redirected. Admins can access via sidebar link. Links owner record to user via email match (profiles.email = owner.email)
+20. **Responsive Login** - Mobile-optimized login page with adaptive logo sizes, compact padding, and scroll support
+21. **Developer Credit** - "Developed by zirox.io" in Login and Landing Page footers
 
 ## Pending / Roadmap (Fase 2 & 3)
 
 ### Fase 2 - Funcionalidades clave
 - [x] Multi-language support (i18n with react-i18next) — EN, DE, ES, FR implemented across all pages
 - [x] Theme system removed — dark-only theme (light mode looked bad, reverted)
-- [ ] Owner portal (separate view for owners to see their property performance)
+- [x] Owner portal (separate view at /owner/* with dashboard, properties, statements)
 - [ ] Accounting/Ledger improvements (expense categorization, reconciliation, balance sheet — Bexio inspired)
 - [ ] Scheduled email notifications (cron for check-in/out reminders — needs Edge Function)
 
@@ -101,6 +104,10 @@ SaaS platform for **vacation rental management** (triadak.io). Combines features
 - `frontend/src/pages/LandingPage.tsx` - Public landing page with real dashboard screenshot
 - `frontend/src/pages/Owners.tsx` - Owner management (uses NestJS API via ownersApi)
 - `frontend/src/pages/OwnerStatements.tsx` - Monthly owner settlement reports (queries Supabase directly, table: `owner`)
+- `frontend/src/components/OwnerLayout.tsx` - Owner portal shell with emerald-themed sidebar, avatar, back-to-admin link
+- `frontend/src/pages/owner/OwnerDashboard.tsx` - Owner dashboard with revenue charts, occupancy, upcoming bookings
+- `frontend/src/pages/owner/OwnerProperties.tsx` - Read-only property cards for owners
+- `frontend/src/pages/owner/OwnerMyStatements.tsx` - Owner's personal monthly statements with PDF/CSV export
 - `frontend/src/contexts/AuthContext.tsx` - Auth provider with profile, subscription, role management
 - `frontend/src/api/client.ts` - Axios client for NestJS backend API (owners, properties, bookings)
 - `frontend/src/lib/supabase.ts` - Supabase client config

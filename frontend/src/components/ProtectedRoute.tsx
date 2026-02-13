@@ -8,12 +8,14 @@ interface ProtectedRouteProps {
 // Pages accessible without an active subscription
 const PLAN_FREE_ROUTES = ['/pricing', '/billing'];
 
+// Owner portal routes
+const OWNER_ROUTES_PREFIX = '/owner';
+
 const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
-    const { user, loading, hasActivePlan } = useAuth();
+    const { user, loading, hasActivePlan, isOwner, isAdmin } = useAuth();
     const location = useLocation();
 
     if (loading) {
-        // Show loading spinner while checking auth
         return (
             <div className="min-h-screen bg-gray-900 flex items-center justify-center">
                 <div className="flex flex-col items-center gap-4">
@@ -25,12 +27,17 @@ const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
     }
 
     if (!user) {
-        // Redirect to login if not authenticated
         return <Navigate to="/login" state={{ from: location }} replace />;
     }
 
-    // If user has no active plan and is not on a plan-free route, redirect to pricing
-    if (!hasActivePlan && !PLAN_FREE_ROUTES.includes(location.pathname)) {
+    // If user is an owner (not admin) and trying to access admin routes, redirect to owner portal
+    const isOwnerRoute = location.pathname.startsWith(OWNER_ROUTES_PREFIX);
+    if (isOwner && !isAdmin && !isOwnerRoute && !PLAN_FREE_ROUTES.includes(location.pathname)) {
+        return <Navigate to="/owner/dashboard" replace />;
+    }
+
+    // If user has no active plan and is not on a plan-free or owner route, redirect to pricing
+    if (!hasActivePlan && !PLAN_FREE_ROUTES.includes(location.pathname) && !isOwnerRoute) {
         return <Navigate to="/pricing" replace />;
     }
 

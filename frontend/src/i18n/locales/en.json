@@ -73,9 +73,67 @@
       "financeEngine": "Finance Engine",
       "ownerStatements": "Owner Statements",
       "settings": "Settings",
-      "billing": "Billing"
+      "billing": "Billing",
+      "ownerPortal": "Owner Portal"
     },
     "signOut": "Sign Out"
+  },
+
+  "ownerPortal": {
+    "title": "Owner Portal",
+    "role": "Owner",
+    "loading": "Loading...",
+    "nav": {
+      "menu": "My Portal",
+      "dashboard": "Dashboard",
+      "properties": "My Properties",
+      "statements": "My Statements",
+      "admin": "Administration",
+      "backToAdmin": "Back to Admin"
+    },
+    "dashboard": {
+      "welcome": "Welcome",
+      "subtitle": "Overview of your properties and performance",
+      "properties": "Properties",
+      "active": "active",
+      "totalRevenue": "Total Revenue",
+      "thisMonth": "this month",
+      "netIncome": "Net Income",
+      "expenses": "in expenses",
+      "bookings": "Bookings",
+      "upcoming": "upcoming",
+      "revenueOverview": "Revenue Overview",
+      "platforms": "Platforms",
+      "noData": "No data yet",
+      "occupancy": "Occupancy Rate",
+      "occupancyDesc": "Current month occupancy across your properties",
+      "good": "Good performance",
+      "low": "Low occupancy",
+      "upcomingBookings": "Upcoming Bookings",
+      "noUpcoming": "No upcoming bookings"
+    },
+    "properties": {
+      "title": "My Properties",
+      "subtitle": "View your property portfolio and performance",
+      "total": "Total Properties",
+      "activeCount": "Active",
+      "totalBookings": "Total Bookings",
+      "totalRevenue": "Total Revenue",
+      "night": "night",
+      "bookings": "Bookings",
+      "revenue": "Revenue",
+      "empty": "No Properties",
+      "emptyDesc": "You don't have any properties assigned yet"
+    },
+    "statements": {
+      "title": "My Statements",
+      "subtitle": "Monthly settlement reports for your properties",
+      "propertiesCount": "properties",
+      "bookingsCount": "bookings",
+      "expensesCount": "expenses",
+      "noBookings": "No bookings this period",
+      "noExpenses": "No expenses this period"
+    }
   },
 
   "dashboard": {

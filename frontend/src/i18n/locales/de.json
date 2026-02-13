@@ -73,9 +73,67 @@
       "financeEngine": "Finanzen",
       "ownerStatements": "Abrechnungen",
       "settings": "Einstellungen",
-      "billing": "Abrechnung"
+      "billing": "Abrechnung",
+      "ownerPortal": "Eigentümerportal"
     },
     "signOut": "Abmelden"
+  },
+
+  "ownerPortal": {
+    "title": "Eigentümerportal",
+    "role": "Eigentümer",
+    "loading": "Laden...",
+    "nav": {
+      "menu": "Mein Portal",
+      "dashboard": "Übersicht",
+      "properties": "Meine Objekte",
+      "statements": "Meine Abrechnungen",
+      "admin": "Administration",
+      "backToAdmin": "Zurück zum Admin"
+    },
+    "dashboard": {
+      "welcome": "Willkommen",
+      "subtitle": "Überblick über Ihre Objekte und Leistung",
+      "properties": "Objekte",
+      "active": "aktiv",
+      "totalRevenue": "Gesamteinnahmen",
+      "thisMonth": "diesen Monat",
+      "netIncome": "Nettoeinkommen",
+      "expenses": "an Ausgaben",
+      "bookings": "Buchungen",
+      "upcoming": "bevorstehend",
+      "revenueOverview": "Einnahmenübersicht",
+      "platforms": "Plattformen",
+      "noData": "Noch keine Daten",
+      "occupancy": "Auslastungsrate",
+      "occupancyDesc": "Aktuelle Monatsauslastung Ihrer Objekte",
+      "good": "Gute Leistung",
+      "low": "Niedrige Auslastung",
+      "upcomingBookings": "Kommende Buchungen",
+      "noUpcoming": "Keine bevorstehenden Buchungen"
+    },
+    "properties": {
+      "title": "Meine Objekte",
+      "subtitle": "Überblick über Ihr Objektportfolio und dessen Leistung",
+      "total": "Objekte gesamt",
+      "activeCount": "Aktiv",
+      "totalBookings": "Buchungen gesamt",
+      "totalRevenue": "Gesamteinnahmen",
+      "night": "Nacht",
+      "bookings": "Buchungen",
+      "revenue": "Einnahmen",
+      "empty": "Keine Objekte",
+      "emptyDesc": "Ihnen sind noch keine Objekte zugewiesen"
+    },
+    "statements": {
+      "title": "Meine Abrechnungen",
+      "subtitle": "Monatliche Abrechnungsberichte für Ihre Objekte",
+      "propertiesCount": "Objekte",
+      "bookingsCount": "Buchungen",
+      "expensesCount": "Ausgaben",
+      "noBookings": "Keine Buchungen in diesem Zeitraum",
+      "noExpenses": "Keine Ausgaben in diesem Zeitraum"
+    }
   },
 
   "dashboard": {

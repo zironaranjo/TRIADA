@@ -73,9 +73,67 @@
       "financeEngine": "Motor Financiero",
       "ownerStatements": "Liquidaciones",
       "settings": "Configuración",
-      "billing": "Facturación"
+      "billing": "Facturación",
+      "ownerPortal": "Portal Propietario"
     },
     "signOut": "Cerrar sesión"
+  },
+
+  "ownerPortal": {
+    "title": "Portal del Propietario",
+    "role": "Propietario",
+    "loading": "Cargando...",
+    "nav": {
+      "menu": "Mi Portal",
+      "dashboard": "Panel",
+      "properties": "Mis Propiedades",
+      "statements": "Mis Liquidaciones",
+      "admin": "Administración",
+      "backToAdmin": "Volver al Admin"
+    },
+    "dashboard": {
+      "welcome": "Bienvenido",
+      "subtitle": "Resumen de tus propiedades y rendimiento",
+      "properties": "Propiedades",
+      "active": "activas",
+      "totalRevenue": "Ingresos Totales",
+      "thisMonth": "este mes",
+      "netIncome": "Ingreso Neto",
+      "expenses": "en gastos",
+      "bookings": "Reservas",
+      "upcoming": "próximas",
+      "revenueOverview": "Resumen de Ingresos",
+      "platforms": "Plataformas",
+      "noData": "Sin datos aún",
+      "occupancy": "Tasa de Ocupación",
+      "occupancyDesc": "Ocupación del mes actual en tus propiedades",
+      "good": "Buen rendimiento",
+      "low": "Ocupación baja",
+      "upcomingBookings": "Próximas Reservas",
+      "noUpcoming": "Sin reservas próximas"
+    },
+    "properties": {
+      "title": "Mis Propiedades",
+      "subtitle": "Visualiza tu portafolio de propiedades y rendimiento",
+      "total": "Total Propiedades",
+      "activeCount": "Activas",
+      "totalBookings": "Total Reservas",
+      "totalRevenue": "Ingresos Totales",
+      "night": "noche",
+      "bookings": "Reservas",
+      "revenue": "Ingresos",
+      "empty": "Sin Propiedades",
+      "emptyDesc": "Aún no tienes propiedades asignadas"
+    },
+    "statements": {
+      "title": "Mis Liquidaciones",
+      "subtitle": "Reportes mensuales de liquidación de tus propiedades",
+      "propertiesCount": "propiedades",
+      "bookingsCount": "reservas",
+      "expensesCount": "gastos",
+      "noBookings": "Sin reservas en este periodo",
+      "noExpenses": "Sin gastos en este periodo"
+    }
   },
 
   "dashboard": {
