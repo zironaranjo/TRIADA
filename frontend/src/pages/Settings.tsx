@@ -105,11 +105,34 @@ export default function Settings() {
         }
     }, [profile, user]);
 
+    const AVATAR_PATH = (userId: string) => `avatars/${userId}/avatar`;
+
     const loadAvatar = async (userId: string) => {
-        const { data } = supabase.storage.from('property-images').getPublicUrl(`avatars/${userId}/avatar`);
+        // First check localStorage for saved avatar path
+        const savedPath = localStorage.getItem(`triadak_avatar_${userId}`);
+        if (savedPath) {
+            const { data } = supabase.storage.from('property-images').getPublicUrl(savedPath);
+            try {
+                const res = await fetch(data.publicUrl, { method: 'HEAD' });
+                if (res.ok) {
+                    setAvatarUrl(data.publicUrl + '?t=' + Date.now());
+                    return;
+                }
+            } catch { /* try fallback */ }
+        }
+
+        // Fallback: try listing files in the avatar folder
         try {
-            const res = await fetch(data.publicUrl, { method: 'HEAD' });
-            if (res.ok) setAvatarUrl(data.publicUrl + '?t=' + Date.now());
+            const { data: files } = await supabase.storage
+                .from('property-images')
+                .list(`avatars/${userId}`, { limit: 1 });
+
+            if (files && files.length > 0) {
+                const filePath = `avatars/${userId}/${files[0].name}`;
+                localStorage.setItem(`triadak_avatar_${userId}`, filePath);
+                const { data } = supabase.storage.from('property-images').getPublicUrl(filePath);
+                setAvatarUrl(data.publicUrl + '?t=' + Date.now());
+            }
         } catch { /* no avatar */ }
     };
 
@@ -117,7 +140,6 @@ export default function Settings() {
         const file = e.target.files?.[0];
         if (!file || !user) return;
 
-        // Validate file
         if (file.size > 2 * 1024 * 1024) {
             alert('The image must be less than 2MB');
             return;
@@ -137,6 +159,9 @@ export default function Settings() {
                 .upload(path, file, { upsert: true, contentType: file.type });
 
             if (error) throw error;
+
+            // Save path for future loads
+            localStorage.setItem(`triadak_avatar_${user.id}`, path);
 
             const { data } = supabase.storage.from('property-images').getPublicUrl(path);
             setAvatarUrl(data.publicUrl + '?t=' + Date.now());
