@@ -39,7 +39,7 @@ export default function Owners() {
 
 
     return (
-        <div className="min-h-screen bg-[#0f172a] text-slate-100 p-8">
+        <div className="text-slate-100 p-4 sm:p-6 lg:p-8">
             <div className="mx-auto max-w-7xl space-y-8">
 
                 {/* Header */}
@@ -48,7 +48,7 @@ export default function Owners() {
                         <motion.h1
                             initial={{ opacity: 0, x: -20 }}
                             animate={{ opacity: 1, x: 0 }}
-                            className="text-4xl font-bold text-white mb-2"
+                            className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-1"
                         >
                             Owners
                         </motion.h1>

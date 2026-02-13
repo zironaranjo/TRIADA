@@ -25,15 +25,21 @@ SaaS platform for **vacation rental management** (triadak.io). Combines features
 - Notifications use `createPortal` to render outside sidebar (avoids overflow clipping)
 - Supabase Realtime for live notification updates
 
-## Database Tables
-- `properties` - Vacation rental properties (name, status, images, etc.)
+## Database Tables (Supabase - schema public)
 - `bookings` - Reservations (guest_name, start_date, end_date, total_price, platform, status, property_id)
+- `contact_notes` - Notes linked to contacts
 - `contacts` - CRM contacts
-- `owners` - Property owners
-- `ledger_entries` - Accounting entries
-- `notifications` - In-app notifications (user_id, type, title, message, read, metadata, created_at) + RLS + DB trigger on booking insert
+- `expenses` - Operational expenses (category, amount, description, property_id, date)
+- `ledger_entry` - Accounting entries (UNRESTRICTED RLS - needs review)
+- `notifications` - In-app notifications (user_id, type, title, message, read, metadata) + DB trigger on booking insert
+- `owner` - Property owners (UNRESTRICTED RLS - needs review)
 - `profiles` - User profiles (user_id, email, full_name, role)
+- `properties` - Vacation rental properties (name, status, images, owner_id, etc.)
+- `settlements` - Owner settlement records (UNRESTRICTED RLS - needs review)
 - `subscriptions` - User subscription plans
+- `vendors` - Vendor/supplier records (UNRESTRICTED RLS - needs review)
+
+**Note**: Tables marked UNRESTRICTED need RLS policies added for production security.
 
 ## Completed Features
 1. **Auth** - Supabase Auth with email verification, forgot password

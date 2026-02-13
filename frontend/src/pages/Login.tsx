@@ -86,7 +86,7 @@ const Login = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gray-900 flex relative overflow-hidden">
+        <div className="min-h-screen bg-[#0f172a] flex relative overflow-hidden">
             {/* Background Image with Overlay */}
             <div className="absolute inset-0 z-0">
                 <img
@@ -106,7 +106,7 @@ const Login = () => {
                 >
                     <div className="mb-10 text-center">
                         <img src="/logotriadak.png" alt="TRIADAK Logo" className="h-64 w-auto mx-auto mb-6 transition-transform hover:scale-105 duration-500 object-contain drop-shadow-2xl" />
-                        <h1 className="text-3xl font-bold text-white mb-2 tracking-tight">
+                        <h1 className="text-2xl sm:text-3xl font-bold text-white mb-2 tracking-tight">
                             {view === 'signup' ? 'Create your account' : view === 'forgot' ? 'Reset your password' : 'Welcome back'}
                         </h1>
                         <p className="text-gray-400">

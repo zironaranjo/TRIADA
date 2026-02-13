@@ -101,13 +101,16 @@ export default function Billing() {
     };
 
     if (loading) return (
-        <div className="flex h-screen items-center justify-center bg-[#0f172a]">
-            <div className="h-10 w-10 animate-spin rounded-full border-4 border-indigo-500 border-t-transparent"></div>
+        <div className="flex h-screen items-center justify-center">
+            <div className="flex flex-col items-center gap-4">
+                <div className="h-10 w-10 animate-spin rounded-full border-4 border-indigo-500 border-t-transparent" />
+                <p className="animate-pulse text-sm text-slate-400">Loading Billing...</p>
+            </div>
         </div>
     );
 
     return (
-        <div className="min-h-screen bg-[#0f172a] text-slate-100 p-8">
+        <div className="text-slate-100 p-4 sm:p-6 lg:p-8">
             <div className="mx-auto max-w-4xl space-y-8">
 
                 {/* ─── Header ───────────────────────── */}
@@ -115,7 +118,7 @@ export default function Billing() {
                     <motion.h1
                         initial={{ opacity: 0, x: -20 }}
                         animate={{ opacity: 1, x: 0 }}
-                        className="text-3xl font-bold text-white mb-2"
+                        className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-1"
                     >
                         Billing & Subscription
                     </motion.h1>

@@ -216,7 +216,7 @@ export default function Pricing() {
     };
 
     return (
-        <div className="min-h-screen bg-[#0f172a] text-slate-100 p-6">
+        <div className="text-slate-100 p-4 sm:p-6 lg:p-8">
             {/* ─── Success Toast ───────────────────── */}
             <AnimatePresence>
                 {success && (
@@ -242,7 +242,7 @@ export default function Pricing() {
                     <motion.h1
                         initial={{ opacity: 0, y: -20 }}
                         animate={{ opacity: 1, y: 0 }}
-                        className="text-4xl md:text-5xl font-bold text-white"
+                        className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white"
                     >
                         Choose Your Plan
                     </motion.h1>
