@@ -300,7 +300,7 @@ export default function Settings() {
         }
     };
 
-    const updateField = (field: keyof ProfileForm, value: string | boolean) => {
+    const updateField = (field: keyof ProfileForm, value: string | boolean | number) => {
         setForm(prev => ({ ...prev, [field]: value }));
         setSaved(false);
         if (field === 'language') i18n.changeLanguage(value as string);
