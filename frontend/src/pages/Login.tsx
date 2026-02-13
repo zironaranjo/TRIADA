@@ -73,13 +73,19 @@ const Login = () => {
 
                 // Check user role to redirect accordingly
                 if (data.user) {
+                    // Small delay to ensure profile trigger has fired
+                    await new Promise(resolve => setTimeout(resolve, 500));
+
                     const { data: profileData } = await supabase
                         .from('profiles')
                         .select('role')
                         .eq('user_id', data.user.id)
                         .single();
 
-                    if (profileData?.role === 'owner') {
+                    // Only redirect to portal if role is explicitly 'owner'
+                    // AND role was already assigned (not a fresh account)
+                    const roleAssigned = localStorage.getItem(`triadak_role_assigned_${data.user.id}`);
+                    if (profileData?.role === 'owner' && roleAssigned) {
                         window.location.href = '/portal/dashboard';
                     } else {
                         window.location.href = '/dashboard';

@@ -61,19 +61,29 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     const [loading, setLoading] = useState(true);
 
     /**
-     * Determine the correct role for a user based on:
-     * 1. First user ever → admin
+     * Determine the correct role for a NEW user based on:
+     * 1. No admin exists in system → admin (first user)
      * 2. Email matches owner table → owner
      * 3. Otherwise → staff
+     *
+     * Only runs ONCE per user (on first login, tracked via localStorage).
      */
-    const determineRole = async (email: string): Promise<UserRole> => {
-        try {
-            // Check if this is the very first user (no other profiles exist)
-            const { count } = await supabase
-                .from('profiles')
-                .select('id', { count: 'exact', head: true });
+    const determineRoleForNewUser = async (userId: string, email: string): Promise<UserRole | null> => {
+        // Check if we already assigned a role for this user
+        const roleKey = `triadak_role_assigned_${userId}`;
+        if (localStorage.getItem(roleKey)) {
+            return null; // Already assigned, don't change
+        }
 
-            if (count !== null && count <= 1) {
+        try {
+            // Check if there's any admin in the system
+            const { count: adminCount } = await supabase
+                .from('profiles')
+                .select('id', { count: 'exact', head: true })
+                .eq('role', 'admin');
+
+            if (adminCount === 0) {
+                localStorage.setItem(roleKey, 'true');
                 return 'admin';
             }
 
@@ -85,13 +95,15 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
                 .maybeSingle();
 
             if (ownerMatch) {
+                localStorage.setItem(roleKey, 'true');
                 return 'owner';
             }
 
-            // Default role
+            // Default: staff (mark as assigned so we don't re-check)
+            localStorage.setItem(roleKey, 'true');
             return 'staff';
         } catch {
-            return 'staff';
+            return null;
         }
     };
 
@@ -110,15 +122,15 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
             const profileData = data as Profile;
 
-            // Auto-assign role if not set or still default
-            if (userEmail && (!profileData.role || profileData.role === 'staff')) {
-                const correctRole = await determineRole(userEmail);
-                if (correctRole !== profileData.role) {
+            // Auto-assign role only on first login (never re-assigned after that)
+            if (userEmail) {
+                const newRole = await determineRoleForNewUser(userId, userEmail);
+                if (newRole && newRole !== profileData.role) {
                     await supabase
                         .from('profiles')
-                        .update({ role: correctRole })
+                        .update({ role: newRole })
                         .eq('user_id', userId);
-                    profileData.role = correctRole;
+                    profileData.role = newRole;
                 }
             }
 
@@ -215,6 +227,10 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     }, []);
 
     const signOut = async () => {
+        // Clean up role assignment flag on sign out
+        if (user) {
+            localStorage.removeItem(`triadak_role_assigned_${user.id}`);
+        }
         await supabase.auth.signOut();
         setProfile(null);
         window.location.href = '/login';
