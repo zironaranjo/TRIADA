@@ -32,6 +32,7 @@ interface AuthContextType {
     loading: boolean;
     isAdmin: boolean;
     isOwner: boolean;
+    isStaff: boolean;
     hasActivePlan: boolean;
     signOut: () => Promise<void>;
     refreshProfile: () => Promise<void>;
@@ -59,7 +60,42 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     const [subscription, setSubscription] = useState<UserSubscription | null>(null);
     const [loading, setLoading] = useState(true);
 
-    const fetchProfile = async (userId: string) => {
+    /**
+     * Determine the correct role for a user based on:
+     * 1. First user ever → admin
+     * 2. Email matches owner table → owner
+     * 3. Otherwise → staff
+     */
+    const determineRole = async (email: string): Promise<UserRole> => {
+        try {
+            // Check if this is the very first user (no other profiles exist)
+            const { count } = await supabase
+                .from('profiles')
+                .select('id', { count: 'exact', head: true });
+
+            if (count !== null && count <= 1) {
+                return 'admin';
+            }
+
+            // Check if email matches an owner record
+            const { data: ownerMatch } = await supabase
+                .from('owner')
+                .select('id')
+                .eq('email', email)
+                .maybeSingle();
+
+            if (ownerMatch) {
+                return 'owner';
+            }
+
+            // Default role
+            return 'staff';
+        } catch {
+            return 'staff';
+        }
+    };
+
+    const fetchProfile = async (userId: string, userEmail?: string) => {
         try {
             const { data, error } = await supabase
                 .from('profiles')
@@ -71,7 +107,22 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
                 console.error('Error fetching profile:', error);
                 return null;
             }
-            return data as Profile;
+
+            const profileData = data as Profile;
+
+            // Auto-assign role if not set or still default
+            if (userEmail && (!profileData.role || profileData.role === 'staff')) {
+                const correctRole = await determineRole(userEmail);
+                if (correctRole !== profileData.role) {
+                    await supabase
+                        .from('profiles')
+                        .update({ role: correctRole })
+                        .eq('user_id', userId);
+                    profileData.role = correctRole;
+                }
+            }
+
+            return profileData;
         } catch (error) {
             console.error('Error fetching profile:', error);
             return null;
@@ -121,7 +172,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
                 if (session?.user) {
                     const [userProfile, userSub] = await Promise.all([
-                        fetchProfile(session.user.id),
+                        fetchProfile(session.user.id, session.user.email),
                         fetchSubscription(session.user.id),
                     ]);
                     setProfile(userProfile);
@@ -146,7 +197,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
                 if (session?.user) {
                     const [userProfile, userSub] = await Promise.all([
-                        fetchProfile(session.user.id),
+                        fetchProfile(session.user.id, session.user.email),
                         fetchSubscription(session.user.id),
                     ]);
                     setProfile(userProfile);
@@ -171,6 +222,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
     const isAdmin = profile?.role === 'admin';
     const isOwner = profile?.role === 'owner';
+    const isStaff = profile?.role === 'staff';
     const hasActivePlan = subscription !== null && ['active', 'trialing'].includes(subscription.status);
 
     const value = {
@@ -181,6 +233,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         loading,
         isAdmin,
         isOwner,
+        isStaff,
         hasActivePlan,
         signOut,
         refreshProfile,

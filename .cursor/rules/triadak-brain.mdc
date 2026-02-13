@@ -67,6 +67,13 @@ SaaS platform for **vacation rental management** (triadak.io). Combines features
 19. **Owner Portal** - Separate `/owner/*` routes with dedicated layout (emerald theme), dashboard (revenue charts, occupancy, upcoming bookings), read-only properties view, and personal statements with PDF/CSV export. Owners with role `owner` are auto-redirected. Admins can access via sidebar link. Links owner record to user via email match (profiles.email = owner.email)
 20. **Responsive Login** - Mobile-optimized login page with adaptive logo sizes, compact padding, and scroll support
 21. **Developer Credit** - "Developed by zirox.io" in Login and Landing Page footers
+22. **Role-Based Access System** - Three roles (admin/staff/owner) with auto-assignment:
+    - First user = admin automatically
+    - Email matching owner table = owner role
+    - Default = staff
+    - Login redirects owners to `/portal/dashboard`, admin/staff to `/dashboard`
+    - Team management panel in Settings (admin only): view members, change roles, remove members
+    - Owner portal at `/portal/*` uses separate OwnerLayout; admin accesses owner pages via `/owner/*` within main Layout
 
 ## Pending / Roadmap (Fase 2 & 3)
 

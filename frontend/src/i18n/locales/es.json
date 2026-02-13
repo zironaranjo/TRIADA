@@ -468,7 +468,30 @@
       "profile": "Perfil",
       "preferences": "Preferencias",
       "notifications": "Notificaciones",
+      "team": "Equipo",
       "dangerZone": "Zona de Peligro"
+    },
+    "team": {
+      "rolesTitle": "Roles y Permisos",
+      "membersTitle": "Miembros del Equipo",
+      "you": "Tú",
+      "joined": "Registrado",
+      "remove": "Eliminar miembro",
+      "confirmRemove": "¿Estás seguro de que quieres eliminar a este miembro del equipo?",
+      "role": {
+        "admin": "Administrador",
+        "staff": "Empleado",
+        "owner": "Propietario"
+      },
+      "roleDesc": {
+        "admin": "Acceso completo a todas las funciones y configuración",
+        "staff": "Puede gestionar propiedades, reservas y contactos",
+        "owner": "Acceso de solo lectura a sus propiedades y liquidaciones"
+      },
+      "howItWorks": "Cómo funciona la asignación de roles",
+      "howAdmin": "El primer usuario en registrarse se convierte en Administrador automáticamente",
+      "howStaff": "Los nuevos usuarios que se registran reciben el rol de Empleado por defecto",
+      "howOwner": "Los usuarios cuyo email coincide con un registro de Propietario reciben el rol Owner automáticamente"
     },
     "profile": {
       "photoTitle": "Foto de Perfil",

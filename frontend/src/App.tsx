@@ -30,7 +30,7 @@ function App() {
           <Route path="/" element={<LandingPage />} />
           <Route path="/login" element={<Login />} />
 
-          {/* Admin/Staff protected routes */}
+          {/* Admin/Staff protected routes (includes owner portal pages) */}
           <Route
             element={
               <ProtectedRoute>
@@ -48,9 +48,13 @@ function App() {
             <Route path="billing" element={<Billing />} />
             <Route path="settings" element={<Settings />} />
             <Route path="statements" element={<OwnerStatements />} />
+            {/* Owner Portal pages accessible within main layout */}
+            <Route path="owner/dashboard" element={<OwnerDashboard />} />
+            <Route path="owner/properties" element={<OwnerProperties />} />
+            <Route path="owner/statements" element={<OwnerMyStatements />} />
           </Route>
 
-          {/* Owner Portal routes */}
+          {/* Owner-only portal (separate layout for users with role=owner) */}
           <Route
             element={
               <ProtectedRoute>
@@ -58,9 +62,9 @@ function App() {
               </ProtectedRoute>
             }
           >
-            <Route path="owner/dashboard" element={<OwnerDashboard />} />
-            <Route path="owner/properties" element={<OwnerProperties />} />
-            <Route path="owner/statements" element={<OwnerMyStatements />} />
+            <Route path="portal/dashboard" element={<OwnerDashboard />} />
+            <Route path="portal/properties" element={<OwnerProperties />} />
+            <Route path="portal/statements" element={<OwnerMyStatements />} />
           </Route>
 
           {/* Catch-all */}

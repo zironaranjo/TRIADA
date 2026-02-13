@@ -65,12 +65,28 @@ const Login = () => {
                 if (error) throw error;
                 setMessage('We sent you a verification email. Please check your inbox and click the confirmation link to get started.');
             } else {
-                const { error } = await supabase.auth.signInWithPassword({
+                const { error, data } = await supabase.auth.signInWithPassword({
                     email,
                     password,
                 });
                 if (error) throw error;
-                window.location.href = '/dashboard';
+
+                // Check user role to redirect accordingly
+                if (data.user) {
+                    const { data: profileData } = await supabase
+                        .from('profiles')
+                        .select('role')
+                        .eq('user_id', data.user.id)
+                        .single();
+
+                    if (profileData?.role === 'owner') {
+                        window.location.href = '/portal/dashboard';
+                    } else {
+                        window.location.href = '/dashboard';
+                    }
+                } else {
+                    window.location.href = '/dashboard';
+                }
             }
         } catch (err: any) {
             setError(err.message || 'An error occurred');

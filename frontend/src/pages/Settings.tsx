@@ -4,9 +4,11 @@ import { motion } from 'framer-motion';
 import {
     User, Mail, Shield, Bell, Globe,
     Save, Camera, Check, AlertTriangle, Trash2,
+    Users, Crown, UserCog, Eye,
 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
+import type { UserRole } from '../contexts/AuthContext';
 
 // ─── Types ────────────────────────────────────────────
 interface ProfileForm {
@@ -24,10 +26,9 @@ interface ProfileForm {
     notifications_reminders: boolean;
 }
 
-type TabId = 'profile' | 'preferences' | 'notifications' | 'danger';
+type TabId = 'profile' | 'preferences' | 'notifications' | 'team' | 'danger';
 
-const TAB_IDS: TabId[] = ['profile', 'preferences', 'notifications', 'danger'];
-const TAB_ICONS: Record<TabId, React.ElementType> = { profile: User, preferences: Globe, notifications: Bell, danger: AlertTriangle };
+const TAB_ICONS: Record<TabId, React.ElementType> = { profile: User, preferences: Globe, notifications: Bell, team: Users, danger: AlertTriangle };
 
 const TIMEZONES = [
     'Europe/Madrid', 'Europe/London', 'Europe/Berlin', 'Europe/Paris',
@@ -52,14 +53,39 @@ const CURRENCIES = [
 ];
 
 // ─── Main Settings Component ─────────────────────────
+// ─── Role config ──────────────────────────────────────
+const ROLE_CONFIG: Record<UserRole, { icon: React.ElementType; color: string; bg: string }> = {
+    admin: { icon: Crown, color: 'text-amber-400', bg: 'bg-amber-500/20' },
+    staff: { icon: UserCog, color: 'text-blue-400', bg: 'bg-blue-500/20' },
+    owner: { icon: Eye, color: 'text-emerald-400', bg: 'bg-emerald-500/20' },
+};
+
+interface TeamMember {
+    id: string;
+    user_id: string;
+    email: string;
+    full_name: string | null;
+    role: UserRole;
+    created_at: string;
+}
+
 export default function Settings() {
     const { t, i18n } = useTranslation();
-    const { user, profile, refreshProfile, signOut } = useAuth();
+    const { user, profile, refreshProfile, signOut, isAdmin } = useAuth();
     const [activeTab, setActiveTab] = useState<TabId>('profile');
     const [saving, setSaving] = useState(false);
     const [saved, setSaved] = useState(false);
     const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
     const [uploadingAvatar, setUploadingAvatar] = useState(false);
+
+    // Team state
+    const [teamMembers, setTeamMembers] = useState<TeamMember[]>([]);
+    const [loadingTeam, setLoadingTeam] = useState(false);
+
+    // Only show team tab for admins
+    const TAB_IDS: TabId[] = isAdmin
+        ? ['profile', 'preferences', 'notifications', 'team', 'danger']
+        : ['profile', 'preferences', 'notifications', 'danger'];
 
     const [form, setForm] = useState<ProfileForm>({
         full_name: '',
@@ -75,6 +101,54 @@ export default function Settings() {
         notifications_payments: true,
         notifications_reminders: true,
     });
+
+    // ─── Team Functions ──────────────────────────────────
+    const fetchTeam = async () => {
+        setLoadingTeam(true);
+        try {
+            const { data } = await supabase
+                .from('profiles')
+                .select('id, user_id, email, full_name, role, created_at')
+                .order('created_at', { ascending: true });
+            setTeamMembers((data as TeamMember[]) || []);
+        } catch (err) {
+            console.error('Error fetching team:', err);
+        } finally {
+            setLoadingTeam(false);
+        }
+    };
+
+    const changeRole = async (memberId: string, newRole: UserRole) => {
+        try {
+            await supabase
+                .from('profiles')
+                .update({ role: newRole })
+                .eq('id', memberId);
+            setTeamMembers(prev =>
+                prev.map(m => m.id === memberId ? { ...m, role: newRole } : m)
+            );
+        } catch (err) {
+            console.error('Error changing role:', err);
+        }
+    };
+
+    const removeMember = async (memberId: string, memberUserId: string) => {
+        if (memberUserId === user?.id) return; // Can't remove yourself
+        if (!confirm(t('settings.team.confirmRemove'))) return;
+        try {
+            await supabase.from('profiles').delete().eq('id', memberId);
+            setTeamMembers(prev => prev.filter(m => m.id !== memberId));
+        } catch (err) {
+            console.error('Error removing member:', err);
+        }
+    };
+
+    // Load team when tab is active
+    useEffect(() => {
+        if (activeTab === 'team' && isAdmin && teamMembers.length === 0) {
+            fetchTeam();
+        }
+    }, [activeTab]);
 
     // Load profile data
     useEffect(() => {
@@ -479,6 +553,127 @@ export default function Settings() {
                         </div>
                     )}
 
+                    {activeTab === 'team' && isAdmin && (
+                        <div className="space-y-6">
+                            {/* Role Legend */}
+                            <div className="bg-white/5 border border-white/5 rounded-2xl p-6">
+                                <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+                                    <Shield className="h-5 w-5 text-indigo-400" />
+                                    {t('settings.team.rolesTitle')}
+                                </h3>
+                                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                                    {(['admin', 'staff', 'owner'] as UserRole[]).map(role => {
+                                        const cfg = ROLE_CONFIG[role];
+                                        const RoleIcon = cfg.icon;
+                                        return (
+                                            <div key={role} className={`flex items-center gap-3 p-3 rounded-xl ${cfg.bg} border border-white/5`}>
+                                                <RoleIcon className={`h-5 w-5 ${cfg.color}`} />
+                                                <div>
+                                                    <p className={`text-sm font-semibold ${cfg.color}`}>{t(`settings.team.role.${role}`)}</p>
+                                                    <p className="text-[10px] text-slate-400">{t(`settings.team.roleDesc.${role}`)}</p>
+                                                </div>
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+                            </div>
+
+                            {/* Team Members List */}
+                            <div className="bg-white/5 border border-white/5 rounded-2xl p-6">
+                                <div className="flex items-center justify-between mb-4">
+                                    <h3 className="text-lg font-semibold text-white flex items-center gap-2">
+                                        <Users className="h-5 w-5 text-indigo-400" />
+                                        {t('settings.team.membersTitle')}
+                                        <span className="text-sm text-slate-500 font-normal">({teamMembers.length})</span>
+                                    </h3>
+                                </div>
+
+                                {loadingTeam ? (
+                                    <div className="flex justify-center py-8">
+                                        <div className="w-8 h-8 border-3 border-indigo-500 border-t-transparent rounded-full animate-spin" />
+                                    </div>
+                                ) : (
+                                    <div className="space-y-3">
+                                        {teamMembers.map(member => {
+                                            const cfg = ROLE_CONFIG[member.role] || ROLE_CONFIG.staff;
+                                            const RoleIcon = cfg.icon;
+                                            const isMe = member.user_id === user?.id;
+
+                                            return (
+                                                <div key={member.id} className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 rounded-xl bg-white/5 border border-white/5">
+                                                    <div className="flex items-center gap-3">
+                                                        <div className={`h-10 w-10 rounded-xl ${cfg.bg} flex items-center justify-center flex-shrink-0`}>
+                                                            <RoleIcon className={`h-5 w-5 ${cfg.color}`} />
+                                                        </div>
+                                                        <div>
+                                                            <div className="flex items-center gap-2">
+                                                                <p className="text-sm font-medium text-white">
+                                                                    {member.full_name || member.email.split('@')[0]}
+                                                                </p>
+                                                                {isMe && (
+                                                                    <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-indigo-500/20 text-indigo-400">{t('settings.team.you')}</span>
+                                                                )}
+                                                            </div>
+                                                            <p className="text-xs text-slate-500">{member.email}</p>
+                                                            <p className="text-[10px] text-slate-600">
+                                                                {t('settings.team.joined')}: {new Date(member.created_at).toLocaleDateString()}
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                    <div className="flex items-center gap-2">
+                                                        {!isMe ? (
+                                                            <>
+                                                                <select
+                                                                    value={member.role}
+                                                                    onChange={e => changeRole(member.id, e.target.value as UserRole)}
+                                                                    className="bg-white/5 border border-white/10 rounded-lg px-3 py-1.5 text-xs text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/50 appearance-none cursor-pointer"
+                                                                >
+                                                                    <option value="admin" className="bg-slate-900">Admin</option>
+                                                                    <option value="staff" className="bg-slate-900">Staff</option>
+                                                                    <option value="owner" className="bg-slate-900">Owner</option>
+                                                                </select>
+                                                                <button
+                                                                    onClick={() => removeMember(member.id, member.user_id)}
+                                                                    className="p-1.5 text-slate-500 hover:text-red-400 transition-colors"
+                                                                    title={t('settings.team.remove')}
+                                                                >
+                                                                    <Trash2 className="h-4 w-4" />
+                                                                </button>
+                                                            </>
+                                                        ) : (
+                                                            <span className={`text-xs font-semibold uppercase px-2.5 py-1 rounded-full ${cfg.bg} ${cfg.color}`}>
+                                                                {t(`settings.team.role.${member.role}`)}
+                                                            </span>
+                                                        )}
+                                                    </div>
+                                                </div>
+                                            );
+                                        })}
+                                    </div>
+                                )}
+                            </div>
+
+                            {/* How it works */}
+                            <div className="bg-indigo-500/5 border border-indigo-500/20 rounded-2xl p-6">
+                                <h3 className="text-sm font-semibold text-indigo-400 mb-3">{t('settings.team.howItWorks')}</h3>
+                                <ul className="space-y-2 text-xs text-slate-400">
+                                    <li className="flex items-start gap-2">
+                                        <Crown className="h-3.5 w-3.5 text-amber-400 mt-0.5 flex-shrink-0" />
+                                        {t('settings.team.howAdmin')}
+                                    </li>
+                                    <li className="flex items-start gap-2">
+                                        <UserCog className="h-3.5 w-3.5 text-blue-400 mt-0.5 flex-shrink-0" />
+                                        {t('settings.team.howStaff')}
+                                    </li>
+                                    <li className="flex items-start gap-2">
+                                        <Eye className="h-3.5 w-3.5 text-emerald-400 mt-0.5 flex-shrink-0" />
+                                        {t('settings.team.howOwner')}
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    )}
+
                     {activeTab === 'danger' && (
                         <div className="space-y-6">
                             <div className="bg-red-500/5 border border-red-500/20 rounded-2xl p-6">
@@ -531,7 +726,7 @@ export default function Settings() {
                 </motion.div>
 
                 {/* Save Button - Sticky Bottom */}
-                {activeTab !== 'danger' && (
+                {activeTab !== 'danger' && activeTab !== 'team' && (
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}

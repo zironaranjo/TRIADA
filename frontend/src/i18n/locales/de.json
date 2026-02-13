@@ -468,7 +468,30 @@
       "profile": "Profil",
       "preferences": "Einstellungen",
       "notifications": "Benachrichtigungen",
+      "team": "Team",
       "dangerZone": "Gefahrenzone"
+    },
+    "team": {
+      "rolesTitle": "Rollen & Berechtigungen",
+      "membersTitle": "Teammitglieder",
+      "you": "Du",
+      "joined": "Beigetreten",
+      "remove": "Mitglied entfernen",
+      "confirmRemove": "Möchten Sie dieses Teammitglied wirklich entfernen?",
+      "role": {
+        "admin": "Admin",
+        "staff": "Mitarbeiter",
+        "owner": "Eigentümer"
+      },
+      "roleDesc": {
+        "admin": "Vollzugriff auf alle Funktionen und Einstellungen",
+        "staff": "Kann Objekte, Buchungen und Kontakte verwalten",
+        "owner": "Nur-Lese-Zugriff auf eigene Objekte und Abrechnungen"
+      },
+      "howItWorks": "So funktioniert die Rollenzuweisung",
+      "howAdmin": "Der erste registrierte Benutzer wird automatisch zum Admin",
+      "howStaff": "Neue Benutzer erhalten standardmäßig die Mitarbeiter-Rolle",
+      "howOwner": "Benutzer, deren E-Mail mit einem Eigentümer-Datensatz übereinstimmt, erhalten automatisch die Eigentümer-Rolle"
     },
     "profile": {
       "photoTitle": "Profilbild",

@@ -61,9 +61,9 @@ const OwnerLayout = () => {
     }, []);
 
     const navItems = [
-        { path: '/owner/dashboard', labelKey: 'ownerPortal.nav.dashboard', icon: LayoutDashboard },
-        { path: '/owner/properties', labelKey: 'ownerPortal.nav.properties', icon: Building2 },
-        { path: '/owner/statements', labelKey: 'ownerPortal.nav.statements', icon: FileText },
+        { path: '/portal/dashboard', labelKey: 'ownerPortal.nav.dashboard', icon: LayoutDashboard },
+        { path: '/portal/properties', labelKey: 'ownerPortal.nav.properties', icon: Building2 },
+        { path: '/portal/statements', labelKey: 'ownerPortal.nav.statements', icon: FileText },
     ];
 
     const handleNavClick = () => {

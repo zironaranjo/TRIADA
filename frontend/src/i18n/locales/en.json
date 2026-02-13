@@ -468,7 +468,30 @@
       "profile": "Profile",
       "preferences": "Preferences",
       "notifications": "Notifications",
+      "team": "Team",
       "dangerZone": "Danger Zone"
+    },
+    "team": {
+      "rolesTitle": "Roles & Permissions",
+      "membersTitle": "Team Members",
+      "you": "You",
+      "joined": "Joined",
+      "remove": "Remove member",
+      "confirmRemove": "Are you sure you want to remove this team member?",
+      "role": {
+        "admin": "Admin",
+        "staff": "Staff",
+        "owner": "Owner"
+      },
+      "roleDesc": {
+        "admin": "Full access to all features and settings",
+        "staff": "Can manage properties, bookings, and contacts",
+        "owner": "Read-only access to their own properties and statements"
+      },
+      "howItWorks": "How role assignment works",
+      "howAdmin": "The first user to register becomes Admin automatically",
+      "howStaff": "New users who register are assigned Staff role by default",
+      "howOwner": "Users whose email matches an Owner record are assigned Owner role automatically"
     },
     "profile": {
       "photoTitle": "Profile Photo",
