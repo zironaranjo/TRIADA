@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
     Calendar,
@@ -51,7 +52,16 @@ interface PropertyOption {
 }
 
 // --- Status Badge Component ---
+const statusLabelKeys: Record<Booking['status'], string> = {
+    pending: 'common.status.pending',
+    confirmed: 'common.status.confirmed',
+    checked_in: 'common.status.checkedIn',
+    completed: 'common.status.completed',
+    cancelled: 'common.status.cancelled',
+};
+
 const StatusBadge = ({ status }: { status: Booking['status'] }) => {
+    const { t } = useTranslation();
     const styles = {
         confirmed: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20',
         checked_in: 'bg-blue-500/10 text-blue-400 border-blue-500/20',
@@ -71,7 +81,7 @@ const StatusBadge = ({ status }: { status: Booking['status'] }) => {
     return (
         <span className={`px-2.5 py-0.5 rounded-full text-xs font-medium border flex items-center gap-1.5 w-fit ${styles[status]}`}>
             {icons[status]}
-            {status.charAt(0).toUpperCase() + status.slice(1).replace('_', ' ')}
+            {t(statusLabelKeys[status])}
         </span>
     );
 };
@@ -89,11 +99,8 @@ const statusColors: Record<string, { bg: string; border: string; text: string }>
 const getDaysInMonth = (year: number, month: number) => new Date(year, month + 1, 0).getDate();
 const getFirstDayOfMonth = (year: number, month: number) => new Date(year, month, 1).getDay();
 
-const MONTH_NAMES = [
-    'January', 'February', 'March', 'April', 'May', 'June',
-    'July', 'August', 'September', 'October', 'November', 'December'
-];
-const DAY_NAMES = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+const MONTH_KEYS = ['january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december'];
+const DAY_KEYS = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
 
 // --- Status dot colors for calendar ---
 const STATUS_DOTS: Record<string, string> = {
@@ -104,10 +111,12 @@ const STATUS_DOTS: Record<string, string> = {
     cancelled: 'bg-red-400',
 };
 
-const DAY_NAMES_SHORT = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
-
 // --- Calendar Component (Mobile-optimized) ---
 const BookingCalendar = ({ bookings, onBookingClick }: { bookings: Booking[]; onBookingClick: (b: Booking) => void }) => {
+    const { t } = useTranslation();
+    const MONTH_NAMES = MONTH_KEYS.map(k => t(`common.months.${k}`));
+    const DAY_NAMES = DAY_KEYS.map(k => t(`common.days.${k}`));
+    const DAY_NAMES_SHORT = DAY_KEYS.map(k => t(`common.daysShort.${k}`));
     const today = new Date();
     const [currentMonth, setCurrentMonth] = useState(today.getMonth());
     const [currentYear, setCurrentYear] = useState(today.getFullYear());
@@ -176,15 +185,15 @@ const BookingCalendar = ({ bookings, onBookingClick }: { bookings: Booking[]; on
             {/* Month Stats */}
             <div className="grid grid-cols-3 gap-2 sm:gap-3">
                 <div className="bg-slate-800/30 border border-slate-700/50 rounded-xl p-3 sm:p-4">
-                    <p className="text-[10px] sm:text-xs text-slate-500 uppercase tracking-wider">Bookings</p>
+                    <p className="text-[10px] sm:text-xs text-slate-500 uppercase tracking-wider">{t('bookings.calendarBookings')}</p>
                     <p className="text-lg sm:text-2xl font-bold text-white mt-0.5">{monthStats.total}</p>
                 </div>
                 <div className="bg-slate-800/30 border border-slate-700/50 rounded-xl p-3 sm:p-4">
-                    <p className="text-[10px] sm:text-xs text-slate-500 uppercase tracking-wider">Revenue</p>
+                    <p className="text-[10px] sm:text-xs text-slate-500 uppercase tracking-wider">{t('bookings.calendarRevenue')}</p>
                     <p className="text-lg sm:text-2xl font-bold text-emerald-400 mt-0.5">€{monthStats.revenue.toLocaleString()}</p>
                 </div>
                 <div className="bg-slate-800/30 border border-slate-700/50 rounded-xl p-3 sm:p-4">
-                    <p className="text-[10px] sm:text-xs text-slate-500 uppercase tracking-wider">Occupancy</p>
+                    <p className="text-[10px] sm:text-xs text-slate-500 uppercase tracking-wider">{t('bookings.calendarOccupancy')}</p>
                     <p className="text-lg sm:text-2xl font-bold text-indigo-400 mt-0.5">{monthStats.occupancy}%</p>
                 </div>
             </div>
@@ -200,7 +209,7 @@ const BookingCalendar = ({ bookings, onBookingClick }: { bookings: Booking[]; on
                             onClick={goToToday}
                             className="text-[10px] sm:text-xs px-2 sm:px-2.5 py-1 bg-blue-500/10 text-blue-400 border border-blue-500/20 rounded-lg hover:bg-blue-500/20 transition-colors"
                         >
-                            Today
+                            {t('bookings.today')}
                         </button>
                     </div>
                     <div className="flex items-center gap-1">
@@ -286,14 +295,14 @@ const BookingCalendar = ({ bookings, onBookingClick }: { bookings: Booking[]; on
                                                 key={booking.id}
                                                 onClick={() => onBookingClick(booking)}
                                                 className={`w-full text-left px-1.5 py-0.5 rounded text-[10px] font-medium truncate border transition-all hover:brightness-125 ${colors.bg} ${colors.border} ${colors.text}`}
-                                                title={`${booking.guest_name} - ${booking.properties?.name || 'Property'}`}
+                                                title={`${booking.guest_name} - ${booking.properties?.name || t('bookings.unknownProperty')}`}
                                             >
                                                 {isStart ? `→ ${booking.guest_name}` : booking.guest_name}
                                             </button>
                                         );
                                     })}
                                     {dayBookings.length > 3 && (
-                                        <p className="text-[10px] text-slate-500 pl-1">+{dayBookings.length - 3} more</p>
+                                        <p className="text-[10px] text-slate-500 pl-1">{t('bookings.more', { count: dayBookings.length - 3 })}</p>
                                     )}
                                 </div>
                             </div>
@@ -303,11 +312,11 @@ const BookingCalendar = ({ bookings, onBookingClick }: { bookings: Booking[]; on
 
                 {/* Legend */}
                 <div className="flex flex-wrap items-center gap-3 sm:gap-4 p-2.5 sm:p-3 border-t border-slate-700/50 bg-slate-900/20">
-                    <span className="text-[10px] sm:text-xs text-slate-500 font-medium">Status:</span>
+                    <span className="text-[10px] sm:text-xs text-slate-500 font-medium">{t('bookings.statusLabel')}</span>
                     {Object.entries(statusColors).map(([status, colors]) => (
                         <div key={status} className="flex items-center gap-1 sm:gap-1.5">
                             <div className={`w-2 h-2 sm:w-3 sm:h-3 rounded ${colors.bg} ${colors.border} border`} />
-                            <span className="text-[10px] sm:text-xs text-slate-400 capitalize">{status.replace('_', ' ')}</span>
+                            <span className="text-[10px] sm:text-xs text-slate-400 capitalize">{t(statusLabelKeys[status as Booking['status']] || status)}</span>
                         </div>
                     ))}
                 </div>
@@ -317,38 +326,58 @@ const BookingCalendar = ({ bookings, onBookingClick }: { bookings: Booking[]; on
 };
 
 // --- Payment Status Badge ---
+const paymentLabelKeys: Record<string, string> = {
+    paid: 'common.status.paid',
+    unpaid: 'common.status.unpaid',
+    partial: 'common.status.partial',
+    refunded: 'common.status.refunded',
+};
+
 const PaymentBadge = ({ status }: { status: string }) => {
+    const { t } = useTranslation();
     const styles: Record<string, string> = {
         paid: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20',
         unpaid: 'bg-rose-500/10 text-rose-400 border-rose-500/20',
         partial: 'bg-amber-500/10 text-amber-400 border-amber-500/20',
         refunded: 'bg-slate-500/10 text-slate-400 border-slate-500/20',
     };
+    const s = status || 'unpaid';
     return (
-        <span className={`px-2.5 py-0.5 rounded-full text-xs font-medium border flex items-center gap-1.5 w-fit ${styles[status] || styles.unpaid}`}>
-            {status === 'paid' ? <CheckCircle className="h-3 w-3" /> : <DollarSign className="h-3 w-3" />}
-            {(status || 'unpaid').toUpperCase()}
+        <span className={`px-2.5 py-0.5 rounded-full text-xs font-medium border flex items-center gap-1.5 w-fit ${styles[s] || styles.unpaid}`}>
+            {s === 'paid' ? <CheckCircle className="h-3 w-3" /> : <DollarSign className="h-3 w-3" />}
+            {t(paymentLabelKeys[s] || paymentLabelKeys.unpaid)}
         </span>
     );
 };
 
 // --- Platform Badge ---
+const platformLabelKeys: Record<string, string> = {
+    DIRECT: 'bookings.optionDirect',
+    AIRBNB: 'bookings.optionAirbnb',
+    BOOKING_COM: 'bookings.optionBookingCom',
+    VRBO: 'bookings.optionVrbo',
+    OTHER: 'bookings.optionOther',
+};
+
 const PlatformBadge = ({ platform }: { platform: string }) => {
+    const { t } = useTranslation();
     const colors: Record<string, string> = {
         AIRBNB: 'bg-rose-500/10 text-rose-400',
         BOOKING_COM: 'bg-blue-600/10 text-blue-300',
         DIRECT: 'bg-emerald-500/10 text-emerald-400',
         VRBO: 'bg-indigo-500/10 text-indigo-400',
     };
+    const p = (platform || 'DIRECT').toUpperCase();
     return (
-        <span className={`px-2 py-0.5 rounded-full text-[10px] font-semibold ${colors[platform?.toUpperCase()] || colors.DIRECT}`}>
-            {(platform || 'DIRECT').replace('_', '.')}
+        <span className={`px-2 py-0.5 rounded-full text-[10px] font-semibold ${colors[p] || colors.DIRECT}`}>
+            {t(platformLabelKeys[p] || platformLabelKeys.DIRECT)}
         </span>
     );
 };
 
 // --- Booking Detail Modal ---
 const BookingDetailModal = ({ booking, onClose, onUpdate }: { booking: Booking; onClose: () => void; onUpdate: () => void }) => {
+    const { t } = useTranslation();
     const [actionLoading, setActionLoading] = useState('');
     const [copied, setCopied] = useState(false);
 
@@ -401,7 +430,7 @@ const BookingDetailModal = ({ booking, onClose, onUpdate }: { booking: Booking; 
                     amount: booking.total_price,
                     guestEmail: booking.guest_email,
                     guestName: booking.guest_name,
-                    propertyName: booking.properties?.name || 'Property',
+                    propertyName: booking.properties?.name || t('bookings.unknownProperty'),
                 }),
             });
 
@@ -498,11 +527,11 @@ const BookingDetailModal = ({ booking, onClose, onUpdate }: { booking: Booking; 
                     {/* Dates */}
                     <div className="grid grid-cols-2 gap-3">
                         <div className="bg-slate-900/50 rounded-xl p-3">
-                            <p className="text-[10px] text-slate-500 uppercase tracking-wider font-semibold">Check-in</p>
+                            <p className="text-[10px] text-slate-500 uppercase tracking-wider font-semibold">{t('bookings.checkIn')}</p>
                             <p className="text-sm text-white font-medium mt-1">{booking.start_date}</p>
                         </div>
                         <div className="bg-slate-900/50 rounded-xl p-3">
-                            <p className="text-[10px] text-slate-500 uppercase tracking-wider font-semibold">Check-out</p>
+                            <p className="text-[10px] text-slate-500 uppercase tracking-wider font-semibold">{t('bookings.checkOut')}</p>
                             <p className="text-sm text-white font-medium mt-1">{booking.end_date}</p>
                         </div>
                     </div>
@@ -511,9 +540,9 @@ const BookingDetailModal = ({ booking, onClose, onUpdate }: { booking: Booking; 
                     <div className="bg-slate-900/50 rounded-xl p-3 flex items-center justify-between">
                         <div className="flex items-center gap-2">
                             <MapPin className="h-4 w-4 text-slate-500" />
-                            <span className="text-sm text-slate-300">{booking.properties?.name || 'Unknown'}</span>
+                            <span className="text-sm text-slate-300">{booking.properties?.name || t('bookings.unknownProperty')}</span>
                         </div>
-                        <span className="text-xs text-slate-500">{nights} night{nights !== 1 ? 's' : ''}</span>
+                        <span className="text-xs text-slate-500">{nights} {nights !== 1 ? t('bookings.nights') : t('bookings.night')}</span>
                     </div>
 
                     {/* Guest Contact */}
@@ -534,13 +563,13 @@ const BookingDetailModal = ({ booking, onClose, onUpdate }: { booking: Booking; 
                     <div className="border-t border-slate-700/50 pt-4 space-y-3">
                         <h3 className="text-sm font-semibold text-white flex items-center gap-2">
                             <CreditCard className="h-4 w-4 text-indigo-400" />
-                            Payment
+                            {t('bookings.payment')}
                         </h3>
 
                         {/* Payment Link (if exists) */}
                         {booking.payment_url && (
                             <div className="bg-indigo-500/10 border border-indigo-500/20 rounded-xl p-3">
-                                <p className="text-xs text-indigo-300 font-medium mb-2">Payment Link</p>
+                                <p className="text-xs text-indigo-300 font-medium mb-2">{t('bookings.paymentLink')}</p>
                                 <div className="flex items-center gap-2">
                                     <input
                                         readOnly
@@ -551,7 +580,7 @@ const BookingDetailModal = ({ booking, onClose, onUpdate }: { booking: Booking; 
                                         onClick={copyPaymentLink}
                                         className="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-500 text-white text-xs rounded-lg font-medium transition-all"
                                     >
-                                        {copied ? 'Copied!' : 'Copy'}
+                                        {copied ? t('bookings.copied') : t('bookings.copy')}
                                     </button>
                                 </div>
                             </div>
@@ -566,7 +595,7 @@ const BookingDetailModal = ({ booking, onClose, onUpdate }: { booking: Booking; 
                                     className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-sm font-medium transition-all disabled:opacity-50"
                                 >
                                     {actionLoading === 'paid' ? <Loader2 className="h-4 w-4 animate-spin" /> : <CheckCircle className="h-4 w-4" />}
-                                    Mark as Paid
+                                    {t('bookings.markAsPaid')}
                                 </button>
                             )}
                             {booking.payment_status === 'paid' && (
@@ -575,7 +604,7 @@ const BookingDetailModal = ({ booking, onClose, onUpdate }: { booking: Booking; 
                                     disabled={!!actionLoading}
                                     className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 bg-slate-700 hover:bg-slate-600 text-white rounded-xl text-sm font-medium transition-all disabled:opacity-50"
                                 >
-                                    Revert to Unpaid
+                                    {t('bookings.revertToUnpaid')}
                                 </button>
                             )}
                             {!booking.payment_url && (booking.platform === 'DIRECT' || !booking.platform) && (
@@ -585,7 +614,7 @@ const BookingDetailModal = ({ booking, onClose, onUpdate }: { booking: Booking; 
                                     className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-sm font-medium transition-all disabled:opacity-50"
                                 >
                                     {actionLoading === 'link' ? <Loader2 className="h-4 w-4 animate-spin" /> : <CreditCard className="h-4 w-4" />}
-                                    Generate Payment Link
+                                    {t('bookings.generatePaymentLink')}
                                 </button>
                             )}
                         </div>
@@ -593,7 +622,7 @@ const BookingDetailModal = ({ booking, onClose, onUpdate }: { booking: Booking; 
 
                     {/* ─── Status Actions ───────────── */}
                     <div className="border-t border-slate-700/50 pt-4 space-y-3">
-                        <h3 className="text-sm font-semibold text-white">Change Status</h3>
+                        <h3 className="text-sm font-semibold text-white">{t('bookings.changeStatus')}</h3>
                         <div className="flex flex-wrap gap-2">
                             {['pending', 'confirmed', 'checked_in', 'completed', 'cancelled'].map((s) => (
                                 <button
@@ -606,7 +635,7 @@ const BookingDetailModal = ({ booking, onClose, onUpdate }: { booking: Booking; 
                                             : 'bg-slate-900/50 text-slate-400 border-slate-700 hover:bg-slate-700 hover:text-white'
                                     } disabled:opacity-50`}
                                 >
-                                    {s.charAt(0).toUpperCase() + s.slice(1).replace('_', ' ')}
+                                    {t(statusLabelKeys[s as Booking['status']] || s)}
                                 </button>
                             ))}
                         </div>
@@ -621,6 +650,7 @@ const BookingDetailModal = ({ booking, onClose, onUpdate }: { booking: Booking; 
 // MAIN COMPONENT
 // ==============================
 const Bookings = () => {
+    const { t } = useTranslation();
     const { user } = useAuth();
     const { canCreate } = usePlanLimits();
     const [limitMessage, setLimitMessage] = useState('');
@@ -721,7 +751,7 @@ const Bookings = () => {
                 start_date: newBooking.start_date,
                 end_date: newBooking.end_date,
                 total_price: newBooking.total_price,
-                properties: selectedProperty || { name: 'Property' }
+                properties: selectedProperty || { name: t('bookings.unknownProperty') }
             };
 
             fetch(`${import.meta.env.VITE_API_URL || 'https://api.triadak.io'}/emails/booking-confirmation`, {
@@ -778,8 +808,8 @@ const Bookings = () => {
             {/* Header */}
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
-                    <h1 className="text-3xl font-bold text-white tracking-tight">Bookings</h1>
-                    <p className="text-slate-400 mt-1">Manage reservations and calendar.</p>
+                    <h1 className="text-3xl font-bold text-white tracking-tight">{t('bookings.title')}</h1>
+                    <p className="text-slate-400 mt-1">{t('bookings.subtitle')}</p>
                 </div>
                 <div className="flex items-center gap-3">
                     {/* View Toggle */}
@@ -793,7 +823,7 @@ const Bookings = () => {
                             }`}
                         >
                             <List className="h-4 w-4" />
-                            List
+                            {t('bookings.viewList')}
                         </button>
                         <button
                             onClick={() => setViewMode('calendar')}
@@ -804,7 +834,7 @@ const Bookings = () => {
                             }`}
                         >
                             <Calendar className="h-4 w-4" />
-                            Calendar
+                            {t('bookings.viewCalendar')}
                         </button>
                     </div>
 
@@ -821,7 +851,7 @@ const Bookings = () => {
                         className="bg-blue-600 hover:bg-blue-500 text-white px-4 py-2.5 rounded-xl font-medium flex items-center gap-2 transition-all shadow-lg shadow-blue-500/20"
                     >
                         <Plus className="h-5 w-5" />
-                        New Booking
+                        {t('bookings.newBooking')}
                     </button>
                 </div>
             </div>
@@ -830,7 +860,7 @@ const Bookings = () => {
                 <div className="bg-amber-500/10 border border-amber-500/30 rounded-xl p-4 flex items-center justify-between">
                     <p className="text-sm text-amber-300">{limitMessage}</p>
                     <Link to="/pricing" className="text-xs bg-amber-600 hover:bg-amber-500 text-white px-3 py-1.5 rounded-lg font-medium transition-all flex-shrink-0 ml-4">
-                        Upgrade
+                        {t('common.upgrade')}
                     </Link>
                 </div>
             )}
@@ -838,10 +868,10 @@ const Bookings = () => {
             {/* Quick Stats */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                 {[
-                    { label: 'Total Bookings', value: stats.total, icon: Calendar, color: 'text-blue-400' },
-                    { label: 'Active', value: stats.active, icon: CheckCircle, color: 'text-emerald-400' },
-                    { label: 'Upcoming', value: stats.upcoming, icon: Clock, color: 'text-amber-400' },
-                    { label: 'Revenue', value: `$${stats.revenue.toLocaleString()}`, icon: DollarSign, color: 'text-violet-400' },
+                    { label: t('bookings.statTotal'), value: stats.total, icon: Calendar, color: 'text-blue-400' },
+                    { label: t('bookings.statActive'), value: stats.active, icon: CheckCircle, color: 'text-emerald-400' },
+                    { label: t('bookings.statUpcoming'), value: stats.upcoming, icon: Clock, color: 'text-amber-400' },
+                    { label: t('bookings.statRevenue'), value: `$${stats.revenue.toLocaleString()}`, icon: DollarSign, color: 'text-violet-400' },
                 ].map((stat) => (
                     <div key={stat.label} className="bg-slate-800/30 border border-slate-700/50 rounded-xl p-4 flex items-center gap-3">
                         <div className={`h-10 w-10 rounded-lg bg-slate-800 flex items-center justify-center ${stat.color}`}>
@@ -862,7 +892,7 @@ const Bookings = () => {
                         <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-500" />
                         <input
                             type="text"
-                            placeholder="Search guest, property..."
+                            placeholder={t('bookings.searchPlaceholder')}
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
                             className="w-full bg-slate-800/50 border border-slate-700 text-white pl-10 pr-4 py-2.5 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all"
@@ -878,7 +908,7 @@ const Bookings = () => {
                                     : 'bg-slate-800/50 text-slate-400 border-slate-700 hover:bg-slate-800'
                                     }`}
                             >
-                                {status.charAt(0).toUpperCase() + status.slice(1).replace('_', ' ')}
+                                {status === 'all' ? t('bookings.filterAll') : t(statusLabelKeys[status as Booking['status']] || status)}
                             </button>
                         ))}
                     </div>
@@ -903,8 +933,8 @@ const Bookings = () => {
                         <div className="h-20 w-20 bg-slate-800 rounded-full flex items-center justify-center mb-6">
                             <Calendar className="h-10 w-10 text-slate-600" />
                         </div>
-                        <h3 className="text-xl font-semibold text-white mb-2">No bookings yet</h3>
-                        <p className="text-slate-400 text-sm max-w-md mb-6">Create your first booking or connect your Airbnb/Booking.com calendar to sync reservations automatically.</p>
+                        <h3 className="text-xl font-semibold text-white mb-2">{t('bookings.emptyTitle')}</h3>
+                        <p className="text-slate-400 text-sm max-w-md mb-6">{t('bookings.emptyDescription')}</p>
                         <button
                             onClick={() => {
                                 const check = canCreate('bookingsPerMonth', bookings.length);
@@ -917,7 +947,7 @@ const Bookings = () => {
                             }}
                             className="bg-blue-600 hover:bg-blue-500 text-white px-6 py-2.5 rounded-xl font-medium flex items-center gap-2 transition-all"
                         >
-                            <Plus className="h-4 w-4" /> Add Your First Booking
+                            <Plus className="h-4 w-4" /> {t('bookings.addFirstBooking')}
                         </button>
                     </div>
                 ) : (
@@ -942,9 +972,9 @@ const Bookings = () => {
                                         )}
                                     </div>
                                     <div>
-                                        <h3 className="text-white font-medium line-clamp-1">{booking.properties?.name || 'Unknown Property'}</h3>
+                                        <h3 className="text-white font-medium line-clamp-1">{booking.properties?.name || t('bookings.unknownProperty')}</h3>
                                         <div className="text-xs text-slate-400 flex items-center gap-1">
-                                            Booking ID: <span className="font-mono text-slate-500">#{booking.id.slice(0, 6)}</span>
+                                            {t('bookings.bookingId')} <span className="font-mono text-slate-500">#{booking.id.slice(0, 6)}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -956,7 +986,7 @@ const Bookings = () => {
                                     </div>
                                     <div>
                                         <p className="text-slate-200 text-sm font-medium">{booking.guest_name}</p>
-                                        <p className="text-xs text-slate-500">{booking.guest_email || 'No email'}</p>
+                                        <p className="text-xs text-slate-500">{booking.guest_email || t('bookings.noEmail')}</p>
                                     </div>
                                 </div>
 
@@ -967,7 +997,7 @@ const Bookings = () => {
                                         {booking.start_date}
                                     </div>
                                     <div className="ml-5 text-slate-500 text-xs mt-0.5">
-                                        to {booking.end_date}
+                                        {t('common.to')} {booking.end_date}
                                     </div>
                                 </div>
 
@@ -978,7 +1008,7 @@ const Bookings = () => {
                                     <PaymentBadge status={booking.payment_status || 'unpaid'} />
                                     <div className="text-right">
                                         <p className="text-white font-bold">€{booking.total_price}</p>
-                                        <p className="text-xs text-slate-500">Total</p>
+                                        <p className="text-xs text-slate-500">{t('common.total')}</p>
                                     </div>
                                 </div>
                             </motion.div>
@@ -1019,19 +1049,19 @@ const Bookings = () => {
                         >
                             <h2 className="text-xl font-bold text-white mb-6 flex items-center gap-2">
                                 <Plus className="h-6 w-6 text-blue-500" />
-                                New Reservation
+                                {t('bookings.createModalTitle')}
                             </h2>
 
                             <form onSubmit={handleCreateBooking} className="space-y-4">
                                 <div className="space-y-2">
-                                    <label className="text-sm font-medium text-slate-300">Select Property</label>
+                                    <label className="text-sm font-medium text-slate-300">{t('bookings.labelSelectProperty')}</label>
                                     <select
                                         required
                                         value={newBooking.property_id}
                                         onChange={(e) => setNewBooking({ ...newBooking, property_id: e.target.value })}
                                         className="w-full bg-slate-900/50 border border-slate-700 rounded-xl px-4 py-2.5 text-white focus:ring-2 focus:ring-blue-500/50 outline-none"
                                     >
-                                        <option value="">Select a property...</option>
+                                        <option value="">{t('bookings.placeholderSelectProperty')}</option>
                                         {properties.map(p => (
                                             <option key={p.id} value={p.id}>{p.name}</option>
                                         ))}
@@ -1039,44 +1069,44 @@ const Bookings = () => {
                                 </div>
 
                                 <div className="space-y-2">
-                                    <label className="text-sm font-medium text-slate-300">Guest Name</label>
+                                    <label className="text-sm font-medium text-slate-300">{t('bookings.labelGuestName')}</label>
                                     <input
                                         type="text"
                                         required
                                         value={newBooking.guest_name}
                                         onChange={(e) => setNewBooking({ ...newBooking, guest_name: e.target.value })}
                                         className="w-full bg-slate-900/50 border border-slate-700 rounded-xl px-4 py-2.5 text-white focus:ring-2 focus:ring-blue-500/50"
-                                        placeholder="John Doe"
+                                        placeholder={t('bookings.placeholderGuestName')}
                                     />
                                 </div>
 
                                 <div className="grid grid-cols-2 gap-4">
                                     <div className="space-y-2">
-                                        <label className="text-sm font-medium text-slate-300">Guest Email</label>
+                                        <label className="text-sm font-medium text-slate-300">{t('bookings.labelGuestEmail')}</label>
                                         <input
                                             type="email"
                                             required
                                             value={newBooking.guest_email}
                                             onChange={(e) => setNewBooking({ ...newBooking, guest_email: e.target.value })}
                                             className="w-full bg-slate-900/50 border border-slate-700 rounded-xl px-4 py-2.5 text-white focus:ring-2 focus:ring-blue-500/50"
-                                            placeholder="john@example.com"
+                                            placeholder={t('bookings.placeholderEmail')}
                                         />
                                     </div>
                                     <div className="space-y-2">
-                                        <label className="text-sm font-medium text-slate-300">Phone</label>
+                                        <label className="text-sm font-medium text-slate-300">{t('bookings.labelPhone')}</label>
                                         <input
                                             type="tel"
                                             value={newBooking.guest_phone}
                                             onChange={(e) => setNewBooking({ ...newBooking, guest_phone: e.target.value })}
                                             className="w-full bg-slate-900/50 border border-slate-700 rounded-xl px-4 py-2.5 text-white focus:ring-2 focus:ring-blue-500/50"
-                                            placeholder="+1 234 567 8900"
+                                            placeholder={t('bookings.placeholderPhone')}
                                         />
                                     </div>
                                 </div>
 
                                 <div className="grid grid-cols-2 gap-4">
                                     <div className="space-y-2">
-                                        <label className="text-sm font-medium text-slate-300">Check-in</label>
+                                        <label className="text-sm font-medium text-slate-300">{t('bookings.labelCheckIn')}</label>
                                         <input
                                             type="date"
                                             required
@@ -1086,7 +1116,7 @@ const Bookings = () => {
                                         />
                                     </div>
                                     <div className="space-y-2">
-                                        <label className="text-sm font-medium text-slate-300">Check-out</label>
+                                        <label className="text-sm font-medium text-slate-300">{t('bookings.labelCheckOut')}</label>
                                         <input
                                             type="date"
                                             required
@@ -1099,36 +1129,36 @@ const Bookings = () => {
 
                                 <div className="grid grid-cols-2 gap-4">
                                     <div className="space-y-2">
-                                        <label className="text-sm font-medium text-slate-300">Platform</label>
+                                        <label className="text-sm font-medium text-slate-300">{t('bookings.labelPlatform')}</label>
                                         <select
                                             value={newBooking.platform}
                                             onChange={(e) => setNewBooking({ ...newBooking, platform: e.target.value })}
                                             className="w-full bg-slate-900/50 border border-slate-700 rounded-xl px-4 py-2.5 text-white focus:ring-2 focus:ring-blue-500/50"
                                         >
-                                            <option value="DIRECT">Direct</option>
-                                            <option value="AIRBNB">Airbnb</option>
-                                            <option value="BOOKING_COM">Booking.com</option>
-                                            <option value="VRBO">VRBO</option>
-                                            <option value="OTHER">Other</option>
+                                            <option value="DIRECT">{t('bookings.optionDirect')}</option>
+                                            <option value="AIRBNB">{t('bookings.optionAirbnb')}</option>
+                                            <option value="BOOKING_COM">{t('bookings.optionBookingCom')}</option>
+                                            <option value="VRBO">{t('bookings.optionVrbo')}</option>
+                                            <option value="OTHER">{t('bookings.optionOther')}</option>
                                         </select>
                                     </div>
                                     <div className="space-y-2">
-                                        <label className="text-sm font-medium text-slate-300">Payment</label>
+                                        <label className="text-sm font-medium text-slate-300">{t('bookings.labelPayment')}</label>
                                         <select
                                             value={newBooking.payment_status}
                                             onChange={(e) => setNewBooking({ ...newBooking, payment_status: e.target.value as any })}
                                             className="w-full bg-slate-900/50 border border-slate-700 rounded-xl px-4 py-2.5 text-white focus:ring-2 focus:ring-blue-500/50"
                                         >
-                                            <option value="unpaid">Unpaid</option>
-                                            <option value="paid">Paid</option>
-                                            <option value="partial">Partial</option>
+                                            <option value="unpaid">{t('common.status.unpaid')}</option>
+                                            <option value="paid">{t('common.status.paid')}</option>
+                                            <option value="partial">{t('common.status.partial')}</option>
                                         </select>
                                     </div>
                                 </div>
 
                                 <div className="grid grid-cols-2 gap-4">
                                     <div className="space-y-2">
-                                        <label className="text-sm font-medium text-slate-300">Total Price (€)</label>
+                                        <label className="text-sm font-medium text-slate-300">{t('bookings.labelTotalPrice')}</label>
                                         <input
                                             type="number"
                                             required
@@ -1137,19 +1167,19 @@ const Bookings = () => {
                                             value={newBooking.total_price}
                                             onChange={(e) => setNewBooking({ ...newBooking, total_price: e.target.value })}
                                             className="w-full bg-slate-900/50 border border-slate-700 rounded-xl px-4 py-2.5 text-white focus:ring-2 focus:ring-blue-500/50"
-                                            placeholder="0.00"
+                                            placeholder={t('bookings.placeholderPrice')}
                                         />
                                     </div>
                                     <div className="space-y-2">
-                                        <label className="text-sm font-medium text-slate-300">Status</label>
+                                        <label className="text-sm font-medium text-slate-300">{t('bookings.labelStatus')}</label>
                                         <select
                                             value={newBooking.status}
                                             onChange={(e) => setNewBooking({ ...newBooking, status: e.target.value as any })}
                                             className="w-full bg-slate-900/50 border border-slate-700 rounded-xl px-4 py-2.5 text-white focus:ring-2 focus:ring-blue-500/50"
                                         >
-                                            <option value="pending">Pending</option>
-                                            <option value="confirmed">Confirmed</option>
-                                            <option value="checked_in">Checked In</option>
+                                            <option value="pending">{t('common.status.pending')}</option>
+                                            <option value="confirmed">{t('common.status.confirmed')}</option>
+                                            <option value="checked_in">{t('common.status.checkedIn')}</option>
                                         </select>
                                     </div>
                                 </div>
@@ -1160,7 +1190,7 @@ const Bookings = () => {
                                         onClick={() => setIsCreateModalOpen(false)}
                                         className="px-4 py-2.5 text-slate-300 hover:text-white hover:bg-slate-700/50 rounded-xl transition-colors font-medium"
                                     >
-                                        Cancel
+                                        {t('common.cancel')}
                                     </button>
                                     <button
                                         type="submit"
@@ -1168,7 +1198,7 @@ const Bookings = () => {
                                         className="bg-blue-600 hover:bg-blue-500 text-white px-6 py-2.5 rounded-xl font-medium shadow-lg shadow-blue-500/20 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
                                     >
                                         {createLoading && <Loader2 className="h-4 w-4 animate-spin" />}
-                                        Create Reservation
+                                        {t('bookings.createReservation')}
                                     </button>
                                 </div>
                             </form>

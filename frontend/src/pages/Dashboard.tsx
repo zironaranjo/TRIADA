@@ -1,4 +1,5 @@
 import { useEffect, useState, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import {
@@ -45,7 +46,6 @@ const PLATFORM_COLORS: Record<string, string> = {
     OTHER: '#64748b',
 };
 
-const MONTH_SHORT = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
 // ─── Custom Tooltip ───────────────────────────────────
 const ChartTooltip = ({ active, payload, label }: any) => {
@@ -64,6 +64,13 @@ const ChartTooltip = ({ active, payload, label }: any) => {
 
 // ─── Main Dashboard ───────────────────────────────────
 export default function Dashboard() {
+    const { t, i18n } = useTranslation();
+    const MONTH_SHORT = [
+        t('common.monthsShort.jan'), t('common.monthsShort.feb'), t('common.monthsShort.mar'),
+        t('common.monthsShort.apr'), t('common.monthsShort.may'), t('common.monthsShort.jun'),
+        t('common.monthsShort.jul'), t('common.monthsShort.aug'), t('common.monthsShort.sep'),
+        t('common.monthsShort.oct'), t('common.monthsShort.nov'), t('common.monthsShort.dec'),
+    ];
     const [bookings, setBookings] = useState<Booking[]>([]);
     const [properties, setProperties] = useState<Property[]>([]);
     const [contacts, setContacts] = useState<Contact[]>([]);
@@ -119,19 +126,19 @@ export default function Dashboard() {
             });
         }
         return months;
-    }, [bookings]);
+    }, [bookings, i18n.language]);
 
     // ─── Revenue by Property ──────────────────────────
     const revenueByProperty = useMemo(() => {
         const map: Record<string, { name: string; revenue: number; bookings: number }> = {};
         bookings.filter(b => b.status !== 'cancelled').forEach(b => {
-            const name = b.properties?.name || 'Unknown';
+            const name = b.properties?.name || t('dashboard.unknown');
             if (!map[name]) map[name] = { name, revenue: 0, bookings: 0 };
             map[name].revenue += b.total_price || 0;
             map[name].bookings += 1;
         });
         return Object.values(map).sort((a, b) => b.revenue - a.revenue).slice(0, 6);
-    }, [bookings]);
+    }, [bookings, t]);
 
     // ─── Bookings by Platform ─────────────────────────
     const bookingsByPlatform = useMemo(() => {
@@ -196,7 +203,7 @@ export default function Dashboard() {
         <div className="flex h-screen items-center justify-center">
             <div className="flex flex-col items-center gap-4">
                 <div className="h-10 w-10 animate-spin rounded-full border-4 border-indigo-500 border-t-transparent" />
-                <p className="animate-pulse text-sm text-slate-400">Loading Dashboard...</p>
+                <p className="animate-pulse text-sm text-slate-400">{t('dashboard.loading')}</p>
             </div>
         </div>
     );
@@ -212,7 +219,7 @@ export default function Dashboard() {
                         animate={{ opacity: 1, y: 0 }}
                         className="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-white mb-1"
                     >
-                        Dashboard
+                        {t('dashboard.title')}
                     </motion.h1>
                     <motion.p
                         initial={{ opacity: 0 }}
@@ -220,7 +227,7 @@ export default function Dashboard() {
                         transition={{ delay: 0.1 }}
                         className="text-slate-400 text-sm sm:text-base"
                     >
-                        Overview of your vacation rental business
+                        {t('dashboard.subtitle')}
                     </motion.p>
                 </header>
 
@@ -236,29 +243,29 @@ export default function Dashboard() {
                                 <Zap className="h-6 w-6 sm:h-8 sm:w-8 text-indigo-400" />
                             </div>
                             <div className="flex-1">
-                                <h2 className="text-xl sm:text-2xl font-bold text-white mb-2">Welcome to Triadak!</h2>
-                                <p className="text-slate-400 text-sm mb-6">Follow these steps to get started:</p>
+                                <h2 className="text-xl sm:text-2xl font-bold text-white mb-2">{t('dashboard.welcome')}</h2>
+                                <p className="text-slate-400 text-sm mb-6">{t('dashboard.followSteps')}</p>
                                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
                                     <Link to="/properties" className="group p-4 bg-white/5 rounded-xl border border-white/10 hover:border-indigo-500/30 hover:bg-white/10 transition-all">
                                         <div className="flex items-center gap-2 mb-2">
                                             <Home className="h-4 w-4 text-emerald-400" />
-                                            <span className="text-xs bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded-full font-semibold">Step 1</span>
+                                            <span className="text-xs bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded-full font-semibold">{t('dashboard.step1')}</span>
                                         </div>
-                                        <h3 className="font-semibold text-white text-sm">Add a Property</h3>
+                                        <h3 className="font-semibold text-white text-sm">{t('dashboard.addProperty')}</h3>
                                     </Link>
                                     <Link to="/bookings" className="group p-4 bg-white/5 rounded-xl border border-white/10 hover:border-indigo-500/30 hover:bg-white/10 transition-all">
                                         <div className="flex items-center gap-2 mb-2">
                                             <Calendar className="h-4 w-4 text-blue-400" />
-                                            <span className="text-xs bg-blue-500/20 text-blue-400 px-2 py-0.5 rounded-full font-semibold">Step 2</span>
+                                            <span className="text-xs bg-blue-500/20 text-blue-400 px-2 py-0.5 rounded-full font-semibold">{t('dashboard.step2')}</span>
                                         </div>
-                                        <h3 className="font-semibold text-white text-sm">Create a Booking</h3>
+                                        <h3 className="font-semibold text-white text-sm">{t('dashboard.createBooking')}</h3>
                                     </Link>
                                     <Link to="/crm" className="group p-4 bg-white/5 rounded-xl border border-white/10 hover:border-indigo-500/30 hover:bg-white/10 transition-all">
                                         <div className="flex items-center gap-2 mb-2">
                                             <Users className="h-4 w-4 text-purple-400" />
-                                            <span className="text-xs bg-purple-500/20 text-purple-400 px-2 py-0.5 rounded-full font-semibold">Step 3</span>
+                                            <span className="text-xs bg-purple-500/20 text-purple-400 px-2 py-0.5 rounded-full font-semibold">{t('dashboard.step3')}</span>
                                         </div>
-                                        <h3 className="font-semibold text-white text-sm">Build Your CRM</h3>
+                                        <h3 className="font-semibold text-white text-sm">{t('dashboard.buildCrm')}</h3>
                                     </Link>
                                 </div>
                             </div>
@@ -269,10 +276,10 @@ export default function Dashboard() {
                 {/* KPI Cards */}
                 <motion.div variants={container} initial="hidden" animate="show" className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
                     {[
-                        { title: 'Total Bookings', value: bookings.length, icon: Calendar, color: 'text-blue-400', bg: 'from-blue-500/20 to-blue-600/5', border: 'border-blue-500/20' },
-                        { title: 'Active Properties', value: properties.filter(p => p.status === 'active').length, icon: Building2, color: 'text-emerald-400', bg: 'from-emerald-500/20 to-emerald-600/5', border: 'border-emerald-500/20' },
-                        { title: 'CRM Contacts', value: contacts.length, icon: Users, color: 'text-amber-400', bg: 'from-amber-500/20 to-amber-600/5', border: 'border-amber-500/20' },
-                        { title: 'Total Revenue', value: `€${totalRevenue.toLocaleString()}`, icon: DollarSign, color: 'text-purple-400', bg: 'from-purple-500/20 to-purple-600/5', border: 'border-purple-500/20' },
+                        { title: t('dashboard.kpi.totalBookings'), value: bookings.length, icon: Calendar, color: 'text-blue-400', bg: 'from-blue-500/20 to-blue-600/5', border: 'border-blue-500/20' },
+                        { title: t('dashboard.kpi.activeProperties'), value: properties.filter(p => p.status === 'active').length, icon: Building2, color: 'text-emerald-400', bg: 'from-emerald-500/20 to-emerald-600/5', border: 'border-emerald-500/20' },
+                        { title: t('dashboard.kpi.crmContacts'), value: contacts.length, icon: Users, color: 'text-amber-400', bg: 'from-amber-500/20 to-amber-600/5', border: 'border-amber-500/20' },
+                        { title: t('dashboard.kpi.totalRevenue'), value: `€${totalRevenue.toLocaleString()}`, icon: DollarSign, color: 'text-purple-400', bg: 'from-purple-500/20 to-purple-600/5', border: 'border-purple-500/20' },
                     ].map((kpi) => (
                         <motion.div
                             key={kpi.title}
@@ -303,9 +310,9 @@ export default function Dashboard() {
                             <div>
                                 <h3 className="text-base sm:text-lg font-semibold text-white flex items-center gap-2">
                                     <TrendingUp className="h-5 w-5 text-indigo-400" />
-                                    Monthly Revenue
+                                    {t('dashboard.charts.monthlyRevenue')}
                                 </h3>
-                                <p className="text-xs text-slate-500 mt-0.5">Last 12 months</p>
+                                <p className="text-xs text-slate-500 mt-0.5">{t('dashboard.charts.last12Months')}</p>
                             </div>
                         </div>
                         <div className="h-48 sm:h-64">
@@ -321,7 +328,7 @@ export default function Dashboard() {
                                     <XAxis dataKey="month" tick={{ fill: '#64748b', fontSize: 11 }} axisLine={false} tickLine={false} />
                                     <YAxis tick={{ fill: '#64748b', fontSize: 11 }} axisLine={false} tickLine={false} tickFormatter={(v) => `€${v}`} width={50} />
                                     <Tooltip content={<ChartTooltip />} />
-                                    <Area type="monotone" dataKey="revenue" name="Revenue" stroke="#818cf8" fill="url(#revenueGrad)" strokeWidth={2} />
+                                    <Area type="monotone" dataKey="revenue" name={t('dashboard.charts.revenue')} stroke="#818cf8" fill="url(#revenueGrad)" strokeWidth={2} />
                                 </AreaChart>
                             </ResponsiveContainer>
                         </div>
@@ -334,7 +341,7 @@ export default function Dashboard() {
                         transition={{ delay: 0.3 }}
                         className="bg-white/5 border border-white/5 rounded-2xl p-4 sm:p-6"
                     >
-                        <h3 className="text-base sm:text-lg font-semibold text-white mb-4 sm:mb-6">Bookings by Platform</h3>
+                        <h3 className="text-base sm:text-lg font-semibold text-white mb-4 sm:mb-6">{t('dashboard.charts.bookingsByPlatform')}</h3>
                         {bookingsByPlatform.length > 0 ? (
                             <>
                                 <div className="h-40 sm:h-48">
@@ -370,7 +377,7 @@ export default function Dashboard() {
                                 </div>
                             </>
                         ) : (
-                            <div className="flex items-center justify-center h-48 text-slate-500 text-sm">No data yet</div>
+                            <div className="flex items-center justify-center h-48 text-slate-500 text-sm">{t('common.noData')}</div>
                         )}
                     </motion.div>
                 </div>
@@ -387,7 +394,7 @@ export default function Dashboard() {
                         <div className="flex items-center justify-between mb-4 sm:mb-6">
                             <h3 className="text-base sm:text-lg font-semibold text-white flex items-center gap-2">
                                 <BarChart3 className="h-5 w-5 text-purple-400" />
-                                Revenue by Property
+                                {t('dashboard.charts.revenueByProperty')}
                             </h3>
                         </div>
                         {revenueByProperty.length > 0 ? (
@@ -398,7 +405,7 @@ export default function Dashboard() {
                                         <XAxis type="number" tick={{ fill: '#64748b', fontSize: 11 }} axisLine={false} tickLine={false} tickFormatter={(v) => `€${v}`} />
                                         <YAxis type="category" dataKey="name" tick={{ fill: '#94a3b8', fontSize: 11 }} axisLine={false} tickLine={false} width={100} />
                                         <Tooltip content={<ChartTooltip />} />
-                                        <Bar dataKey="revenue" name="Revenue" radius={[0, 6, 6, 0]}>
+                                        <Bar dataKey="revenue" name={t('dashboard.charts.revenue')} radius={[0, 6, 6, 0]}>
                                             {revenueByProperty.map((_, i) => (
                                                 <Cell key={i} fill={CHART_COLORS[i % CHART_COLORS.length]} />
                                             ))}
@@ -407,7 +414,7 @@ export default function Dashboard() {
                                 </ResponsiveContainer>
                             </div>
                         ) : (
-                            <div className="flex items-center justify-center h-48 text-slate-500 text-sm">No data yet</div>
+                            <div className="flex items-center justify-center h-48 text-slate-500 text-sm">{t('common.noData')}</div>
                         )}
                     </motion.div>
 
@@ -422,7 +429,7 @@ export default function Dashboard() {
                             <div>
                                 <h3 className="text-base sm:text-lg font-semibold text-white flex items-center gap-2">
                                     <Home className="h-5 w-5 text-emerald-400" />
-                                    Occupancy This Month
+                                    {t('dashboard.charts.occupancyThisMonth')}
                                 </h3>
                                 <p className="text-xs text-slate-500 mt-0.5">{MONTH_SHORT[new Date().getMonth()]} {new Date().getFullYear()}</p>
                             </div>
@@ -449,7 +456,7 @@ export default function Dashboard() {
                                 ))}
                             </div>
                         ) : (
-                            <div className="flex items-center justify-center h-48 text-slate-500 text-sm">No properties yet</div>
+                            <div className="flex items-center justify-center h-48 text-slate-500 text-sm">{t('dashboard.noProperties')}</div>
                         )}
                     </motion.div>
                 </div>
@@ -464,10 +471,10 @@ export default function Dashboard() {
                     <div className="flex items-center justify-between mb-4 sm:mb-6">
                         <h3 className="text-base sm:text-lg font-semibold text-white flex items-center gap-2">
                             <Calendar className="h-5 w-5 text-blue-400" />
-                            Upcoming Bookings
+                            {t('dashboard.upcoming')}
                         </h3>
                         <Link to="/bookings" className="text-xs text-indigo-400 hover:text-indigo-300 flex items-center gap-1 transition-colors">
-                            View all <ArrowRight className="h-3 w-3" />
+                            {t('common.viewAll')} <ArrowRight className="h-3 w-3" />
                         </Link>
                     </div>
 
@@ -483,7 +490,7 @@ export default function Dashboard() {
                                             </div>
                                             <div>
                                                 <p className="text-sm font-medium text-white">{b.guest_name}</p>
-                                                <p className="text-xs text-slate-500">{b.properties?.name || 'Unknown'}</p>
+                                                <p className="text-xs text-slate-500">{b.properties?.name || t('dashboard.unknown')}</p>
                                             </div>
                                         </div>
                                         <div className="flex items-center gap-4 sm:gap-6 ml-13 sm:ml-0">
@@ -498,7 +505,7 @@ export default function Dashboard() {
                             })}
                         </div>
                     ) : (
-                        <div className="text-center py-8 text-slate-500 text-sm">No upcoming bookings</div>
+                        <div className="text-center py-8 text-slate-500 text-sm">{t('dashboard.noUpcoming')}</div>
                     )}
                 </motion.div>
             </div>

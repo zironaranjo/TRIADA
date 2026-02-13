@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
     Building2,
@@ -36,6 +37,7 @@ const stagger = {
 
 // ─── Navbar ───────────────────────────────────────────
 function Navbar() {
+    const { t, i18n } = useTranslation();
     const [open, setOpen] = useState(false);
     const [scrolled, setScrolled] = useState(false);
 
@@ -53,10 +55,10 @@ function Navbar() {
     }, []);
 
     const links = [
-        { label: 'Features', href: '#features' },
-        { label: 'How it works', href: '#how-it-works' },
-        { label: 'Pricing', href: '#pricing' },
-        { label: 'FAQ', href: '#faq' },
+        { label: t('landing.nav.features'), href: '#features' },
+        { label: t('landing.nav.howItWorks'), href: '#how-it-works' },
+        { label: t('landing.nav.pricing'), href: '#pricing' },
+        { label: t('landing.nav.faq'), href: '#faq' },
     ];
 
     return (
@@ -68,7 +70,7 @@ function Navbar() {
                         <div className="overflow-hidden h-16">
                             <img src="/logotriadak.png" alt="Triadak" className="h-40 w-auto object-contain -my-12" />
                         </div>
-                        <span className="text-[10px] font-bold text-slate-500 tracking-[0.2em] uppercase -mt-1">Vacational Renting</span>
+                        <span className="text-[10px] font-bold text-slate-500 tracking-[0.2em] uppercase -mt-1">{t('layout.tagline')}</span>
                     </Link>
                     <button
                         onClick={() => setOpen(!open)}
@@ -83,7 +85,7 @@ function Navbar() {
                 <div className="hidden md:flex items-center justify-between h-36">
                     <Link to="/" className="flex items-center gap-2 flex-shrink-0">
                         <img src="/logotriadak.png" alt="Triadak" className="h-48 w-auto object-contain" />
-                        <span className="text-xs font-bold text-slate-500 tracking-[0.25em] uppercase">Vacational Renting</span>
+                        <span className="text-xs font-bold text-slate-500 tracking-[0.25em] uppercase">{t('layout.tagline')}</span>
                     </Link>
 
                     <div className="flex items-center gap-8">
@@ -99,17 +101,28 @@ function Navbar() {
                     </div>
 
                     <div className="flex items-center gap-3">
+                        <select
+                            value={i18n.language}
+                            onChange={(e) => i18n.changeLanguage(e.target.value)}
+                            className="text-xs bg-white/5 border border-white/10 rounded-lg px-2 py-1.5 text-slate-300 hover:text-white focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                            aria-label="Language"
+                        >
+                            <option value="en">EN</option>
+                            <option value="de">DE</option>
+                            <option value="es">ES</option>
+                            <option value="fr">FR</option>
+                        </select>
                         <Link
                             to="/login"
                             className="text-sm text-slate-300 hover:text-white transition-colors px-4 py-2"
                         >
-                            Sign in
+                            {t('landing.nav.login')}
                         </Link>
                         <Link
                             to="/login"
                             className="text-sm font-semibold bg-gradient-to-r from-indigo-500 to-purple-500 text-white px-5 py-2.5 rounded-xl hover:shadow-lg hover:shadow-indigo-500/25 transition-all"
                         >
-                            Start Free
+                            {t('landing.nav.startFree')}
                         </Link>
                     </div>
                 </div>
@@ -137,19 +150,30 @@ function Navbar() {
                                 </a>
                             ))}
                             <div className="pt-3 mt-2 border-t border-white/5 space-y-2">
+                                <select
+                                    value={i18n.language}
+                                    onChange={(e) => i18n.changeLanguage(e.target.value)}
+                                    className="w-full text-sm bg-white/5 border border-white/10 rounded-lg px-3 py-2.5 text-slate-300 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                                    aria-label="Language"
+                                >
+                                    <option value="en">English</option>
+                                    <option value="de">Deutsch</option>
+                                    <option value="es">Español</option>
+                                    <option value="fr">Français</option>
+                                </select>
                                 <Link
                                     to="/login"
                                     onClick={() => setOpen(false)}
                                     className="block text-base text-slate-300 hover:text-white transition-colors py-3 px-2 text-center rounded-lg hover:bg-white/5"
                                 >
-                                    Sign in
+                                    {t('landing.nav.login')}
                                 </Link>
                                 <Link
                                     to="/login"
                                     onClick={() => setOpen(false)}
                                     className="block text-base font-semibold bg-gradient-to-r from-indigo-500 to-purple-500 text-white px-5 py-3 rounded-xl text-center"
                                 >
-                                    Start Free
+                                    {t('landing.nav.startFree')}
                                 </Link>
                             </div>
                         </div>
@@ -162,6 +186,7 @@ function Navbar() {
 
 // ─── Hero Section ─────────────────────────────────────
 function Hero() {
+    const { t } = useTranslation();
     return (
         <section className="relative pt-28 pb-12 sm:pt-32 sm:pb-20 lg:pt-40 lg:pb-32 overflow-hidden">
             {/* Background effects — smaller on mobile for perf */}
@@ -179,7 +204,7 @@ function Hero() {
                         className="inline-flex items-center gap-1.5 sm:gap-2 bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 text-xs sm:text-sm font-medium px-3 sm:px-4 py-1.5 rounded-full mb-6 sm:mb-8"
                     >
                         <Zap className="h-3.5 w-3.5 sm:h-4 sm:w-4 flex-shrink-0" />
-                        <span>The modern way to manage vacation rentals</span>
+                        <span>{t('landing.hero.badge')}</span>
                     </motion.div>
 
                     {/* Headline */}
@@ -189,9 +214,9 @@ function Hero() {
                         transition={{ delay: 0.1 }}
                         className="text-3xl sm:text-5xl lg:text-7xl font-extrabold text-white leading-[1.15] tracking-tight"
                     >
-                        Manage your rentals{' '}
+                        {t('landing.hero.title1')}{' '}
                         <span className="bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
-                            at lightspeed
+                            {t('landing.hero.titleHighlight')}
                         </span>
                     </motion.h1>
 
@@ -202,8 +227,7 @@ function Hero() {
                         transition={{ delay: 0.2 }}
                         className="mt-4 sm:mt-6 text-base sm:text-lg lg:text-xl text-slate-400 max-w-2xl mx-auto leading-relaxed px-2"
                     >
-                        Properties, bookings, guests, and finances — all in one powerful platform.
-                        Automate your vacation rental business and focus on what matters.
+                        {t('landing.hero.subtitle')}
                     </motion.p>
 
                     {/* CTA Buttons */}
@@ -217,14 +241,14 @@ function Hero() {
                             to="/login"
                             className="w-full sm:w-auto bg-gradient-to-r from-indigo-500 to-purple-500 text-white font-semibold px-6 sm:px-8 py-3.5 sm:py-4 rounded-xl text-sm sm:text-base hover:shadow-xl hover:shadow-indigo-500/25 transition-all flex items-center justify-center gap-2 group"
                         >
-                            Start Free — No Credit Card
+                            {t('landing.hero.cta')}
                             <ArrowRight className="h-4 w-4 sm:h-5 sm:w-5 group-hover:translate-x-1 transition-transform" />
                         </Link>
                         <a
                             href="#features"
                             className="w-full sm:w-auto text-slate-300 hover:text-white font-medium px-6 sm:px-8 py-3.5 sm:py-4 rounded-xl border border-white/10 hover:border-white/20 transition-all text-sm sm:text-base text-center"
                         >
-                            See Features
+                            {t('landing.hero.secondary')}
                         </a>
                     </motion.div>
 
@@ -239,10 +263,10 @@ function Hero() {
                             {[...Array(5)].map((_, i) => (
                                 <Star key={i} className="h-3.5 w-3.5 sm:h-4 sm:w-4 fill-amber-400 text-amber-400" />
                             ))}
-                            <span className="ml-1.5 sm:ml-2 text-slate-400">5.0 from early users</span>
+                            <span className="ml-1.5 sm:ml-2 text-slate-400">{t('landing.hero.rating')}</span>
                         </div>
                         <span className="hidden sm:block text-slate-700">|</span>
-                        <span className="text-slate-400">Free plan available forever</span>
+                        <span className="text-slate-400">{t('landing.hero.freePlan')}</span>
                     </motion.div>
                 </div>
 
@@ -324,6 +348,7 @@ const features = [
 ];
 
 function Features() {
+    const { t } = useTranslation();
     return (
         <section id="features" className="py-14 sm:py-20 lg:py-32 relative">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -336,12 +361,12 @@ function Features() {
                     custom={0}
                     className="text-center max-w-2xl mx-auto mb-10 sm:mb-16"
                 >
-                    <p className="text-xs sm:text-sm font-semibold text-indigo-400 uppercase tracking-wider mb-2 sm:mb-3">Features</p>
+                    <p className="text-xs sm:text-sm font-semibold text-indigo-400 uppercase tracking-wider mb-2 sm:mb-3">{t('landing.features.badge')}</p>
                     <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-3 sm:mb-4 px-2">
-                        Everything you need to run your rental business
+                        {t('landing.features.title')}
                     </h2>
                     <p className="text-slate-400 text-sm sm:text-lg px-2">
-                        From properties to payments, Triadak covers the entire vacation rental workflow.
+                        {t('landing.features.subtitle')}
                     </p>
                 </motion.div>
 
@@ -363,8 +388,8 @@ function Features() {
                             <div className={`inline-flex items-center justify-center p-2.5 sm:p-3 rounded-lg sm:rounded-xl bg-gradient-to-br ${f.color} shadow-lg mb-4 sm:mb-5`}>
                                 <f.icon className="h-5 w-5 sm:h-6 sm:w-6 text-white" />
                             </div>
-                            <h3 className="text-base sm:text-lg font-semibold text-white mb-1.5 sm:mb-2">{f.title}</h3>
-                            <p className="text-slate-400 text-sm leading-relaxed">{f.description}</p>
+                            <h3 className="text-base sm:text-lg font-semibold text-white mb-1.5 sm:mb-2">{t(`landing.features.items.${i}.title`)}</h3>
+                            <p className="text-slate-400 text-sm leading-relaxed">{t(`landing.features.items.${i}.description`)}</p>
                         </motion.div>
                     ))}
                 </motion.div>
@@ -396,6 +421,7 @@ const steps = [
 ];
 
 function HowItWorks() {
+    const { t } = useTranslation();
     return (
         <section id="how-it-works" className="py-14 sm:py-20 lg:py-32 relative">
             <div className="absolute inset-0 pointer-events-none">
@@ -412,12 +438,12 @@ function HowItWorks() {
                     custom={0}
                     className="text-center max-w-2xl mx-auto mb-10 sm:mb-16"
                 >
-                    <p className="text-xs sm:text-sm font-semibold text-indigo-400 uppercase tracking-wider mb-2 sm:mb-3">How it works</p>
+                    <p className="text-xs sm:text-sm font-semibold text-indigo-400 uppercase tracking-wider mb-2 sm:mb-3">{t('landing.howItWorks.badge')}</p>
                     <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-3 sm:mb-4">
-                        Up and running in minutes
+                        {t('landing.howItWorks.title')}
                     </h2>
                     <p className="text-slate-400 text-sm sm:text-lg px-2">
-                        No complex setup. No training required. Just sign up and start managing.
+                        {t('landing.howItWorks.subtitle')}
                     </p>
                 </motion.div>
 
@@ -441,8 +467,8 @@ function HowItWorks() {
                                     <step.icon className="h-6 w-6 sm:h-8 sm:w-8 text-indigo-400" />
                                 </div>
                             </div>
-                            <h3 className="text-lg sm:text-xl font-semibold text-white mb-1.5 sm:mb-2">{step.title}</h3>
-                            <p className="text-slate-400 text-sm leading-relaxed max-w-xs mx-auto">{step.description}</p>
+                            <h3 className="text-lg sm:text-xl font-semibold text-white mb-1.5 sm:mb-2">{t(`landing.howItWorks.step${i + 1}Title`)}</h3>
+                            <p className="text-slate-400 text-sm leading-relaxed max-w-xs mx-auto">{t(`landing.howItWorks.step${i + 1}Desc`)}</p>
                         </motion.div>
                     ))}
                 </motion.div>
@@ -496,6 +522,7 @@ const plans = [
 ];
 
 function Pricing() {
+    const { t } = useTranslation();
     return (
         <section id="pricing" className="py-14 sm:py-20 lg:py-32 relative">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -508,12 +535,12 @@ function Pricing() {
                     custom={0}
                     className="text-center max-w-2xl mx-auto mb-10 sm:mb-16"
                 >
-                    <p className="text-xs sm:text-sm font-semibold text-indigo-400 uppercase tracking-wider mb-2 sm:mb-3">Pricing</p>
+                    <p className="text-xs sm:text-sm font-semibold text-indigo-400 uppercase tracking-wider mb-2 sm:mb-3">{t('landing.pricing.badge')}</p>
                     <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-3 sm:mb-4">
-                        Simple, transparent pricing
+                        {t('landing.pricing.title')}
                     </h2>
                     <p className="text-slate-400 text-sm sm:text-lg px-2">
-                        Start free. Upgrade when you need more. No hidden fees.
+                        {t('landing.pricing.subtitle')}
                     </p>
                 </motion.div>
 
@@ -528,22 +555,22 @@ function Pricing() {
                                 {plan.popular && (
                                     <div className="absolute top-0 right-0">
                                         <div className="bg-gradient-to-r from-indigo-500 to-purple-500 text-white text-[10px] font-bold px-3 py-1 rounded-bl-xl flex items-center gap-1">
-                                            <Star className="h-2.5 w-2.5" /> MOST POPULAR
+                                            <Star className="h-2.5 w-2.5" /> {t('landing.pricing.popular').toUpperCase()}
                                         </div>
                                     </div>
                                 )}
                                 <div className="p-5 flex-1">
                                     <h3 className="text-lg font-bold text-white">{plan.name}</h3>
-                                    <p className="text-xs text-slate-400 mt-1">{plan.description}</p>
+                                    <p className="text-xs text-slate-400 mt-1">{t(`landing.pricing.planDesc.${plan.name.toLowerCase()}`)}</p>
                                     <div className="mt-3 mb-5 flex items-baseline gap-1">
                                         <span className="text-2xl font-bold text-white">{plan.price}</span>
-                                        <span className="text-slate-400 text-sm">{plan.period}</span>
+                                        <span className="text-slate-400 text-sm">{plan.period === 'forever' ? t('landing.pricing.forever') : t('landing.pricing.perMonth')}</span>
                                     </div>
                                     <ul className="space-y-2">
-                                        {plan.features.map((f) => (
+                                        {plan.features.map((f, fi) => (
                                             <li key={f} className="flex items-center gap-2 text-sm text-slate-300">
                                                 <Check className="h-3.5 w-3.5 text-emerald-400 flex-shrink-0" />
-                                                {f}
+                                                {t(`landing.pricing.features.${plan.name.toLowerCase()}.${fi}`)}
                                             </li>
                                         ))}
                                     </ul>
@@ -556,14 +583,14 @@ function Pricing() {
                                                 : 'bg-white/5 text-white border border-white/10 hover:bg-white/10'
                                             }`}
                                     >
-                                        {plan.cta}
+                                        {t(`landing.pricing.planCta.${plan.name.toLowerCase()}`)}
                                     </Link>
                                 </div>
                             </div>
                         ))}
                     </div>
                     {/* Scroll hint */}
-                    <p className="text-center text-slate-600 text-xs mt-3">Swipe to see all plans →</p>
+                    <p className="text-center text-slate-600 text-xs mt-3">{t('landing.pricing.swipeHint')}</p>
                 </div>
 
                 {/* Plans — grid on tablet+ */}
@@ -584,23 +611,23 @@ function Pricing() {
                             {plan.popular && (
                                 <div className="absolute top-0 right-0">
                                     <div className="bg-gradient-to-r from-indigo-500 to-purple-500 text-white text-xs font-bold px-4 py-1.5 rounded-bl-xl flex items-center gap-1">
-                                        <Star className="h-3 w-3" /> MOST POPULAR
+                                        <Star className="h-3 w-3" /> {t('landing.pricing.popular').toUpperCase()}
                                     </div>
                                 </div>
                             )}
 
                             <div className="p-6 flex-1">
                                 <h3 className="text-xl font-bold text-white">{plan.name}</h3>
-                                <p className="text-sm text-slate-400 mt-1">{plan.description}</p>
+                                <p className="text-sm text-slate-400 mt-1">{t(`landing.pricing.planDesc.${plan.name.toLowerCase()}`)}</p>
                                 <div className="mt-4 mb-6 flex items-baseline gap-1">
                                     <span className="text-3xl font-bold text-white">{plan.price}</span>
-                                    <span className="text-slate-400 text-sm">{plan.period}</span>
+                                    <span className="text-slate-400 text-sm">{plan.period === 'forever' ? t('landing.pricing.forever') : t('landing.pricing.perMonth')}</span>
                                 </div>
                                 <ul className="space-y-2.5">
-                                    {plan.features.map((f) => (
+                                    {plan.features.map((f, fi) => (
                                         <li key={f} className="flex items-center gap-2.5 text-sm text-slate-300">
                                             <Check className="h-4 w-4 text-emerald-400 flex-shrink-0" />
-                                            {f}
+                                            {t(`landing.pricing.features.${plan.name.toLowerCase()}.${fi}`)}
                                         </li>
                                     ))}
                                 </ul>
@@ -614,7 +641,7 @@ function Pricing() {
                                             : 'bg-white/5 text-white border border-white/10 hover:bg-white/10'
                                         }`}
                                 >
-                                    {plan.cta}
+                                    {t(`landing.pricing.planCta.${plan.name.toLowerCase()}`)}
                                 </Link>
                             </div>
                         </motion.div>
@@ -622,7 +649,7 @@ function Pricing() {
                 </motion.div>
 
                 <p className="text-center text-slate-500 text-xs sm:text-sm mt-6 sm:mt-8 px-2">
-                    All paid plans include a 14-day free trial. No credit card required.
+                    {t('landing.pricing.trialNote')}
                 </p>
             </div>
         </section>
@@ -652,6 +679,7 @@ const testimonials = [
 ];
 
 function Testimonials() {
+    const { t } = useTranslation();
     return (
         <section className="py-14 sm:py-20 lg:py-32 relative">
             <div className="absolute inset-0 pointer-events-none">
@@ -667,9 +695,9 @@ function Testimonials() {
                     custom={0}
                     className="text-center max-w-2xl mx-auto mb-10 sm:mb-16"
                 >
-                    <p className="text-xs sm:text-sm font-semibold text-indigo-400 uppercase tracking-wider mb-2 sm:mb-3">Testimonials</p>
+                    <p className="text-xs sm:text-sm font-semibold text-indigo-400 uppercase tracking-wider mb-2 sm:mb-3">{t('landing.testimonials.badge')}</p>
                     <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-3 sm:mb-4">
-                        Trusted by property managers
+                        {t('landing.testimonials.title')}
                     </h2>
                 </motion.div>
 
@@ -681,9 +709,9 @@ function Testimonials() {
                     variants={stagger}
                     className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 lg:gap-8"
                 >
-                    {testimonials.map((t, i) => (
+                    {testimonials.map((testimonial, i) => (
                         <motion.div
-                            key={t.name}
+                            key={testimonial.name}
                             variants={fadeUp}
                             custom={i}
                             className="p-5 sm:p-6 lg:p-8 rounded-xl sm:rounded-2xl border border-white/5 bg-[#1e293b]/50"
@@ -694,14 +722,14 @@ function Testimonials() {
                                     <Star key={j} className="h-3.5 w-3.5 sm:h-4 sm:w-4 fill-amber-400 text-amber-400" />
                                 ))}
                             </div>
-                            <p className="text-slate-300 text-sm leading-relaxed mb-4 sm:mb-6">"{t.quote}"</p>
+                            <p className="text-slate-300 text-sm leading-relaxed mb-4 sm:mb-6">"{t(`landing.testimonials.items.${i}.quote`)}"</p>
                             <div className="flex items-center gap-3">
                                 <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center flex-shrink-0">
-                                    <span className="text-[10px] sm:text-xs font-bold text-white">{t.avatar}</span>
+                                    <span className="text-[10px] sm:text-xs font-bold text-white">{testimonial.avatar}</span>
                                 </div>
                                 <div>
-                                    <p className="text-sm font-medium text-white">{t.name}</p>
-                                    <p className="text-xs text-slate-500">{t.role}</p>
+                                    <p className="text-sm font-medium text-white">{testimonial.name}</p>
+                                    <p className="text-xs text-slate-500">{testimonial.role}</p>
                                 </div>
                             </div>
                         </motion.div>
@@ -741,6 +769,7 @@ const faqs = [
 ];
 
 function FAQ() {
+    const { t } = useTranslation();
     const [openIdx, setOpenIdx] = useState<number | null>(null);
 
     return (
@@ -754,10 +783,11 @@ function FAQ() {
                     custom={0}
                     className="text-center mb-10 sm:mb-16"
                 >
-                    <p className="text-xs sm:text-sm font-semibold text-indigo-400 uppercase tracking-wider mb-2 sm:mb-3">FAQ</p>
+                    <p className="text-xs sm:text-sm font-semibold text-indigo-400 uppercase tracking-wider mb-2 sm:mb-3">{t('landing.faq.badge')}</p>
                     <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-3 sm:mb-4">
-                        Frequently asked questions
+                        {t('landing.faq.title')}
                     </h2>
+                    <p className="text-slate-400 text-sm sm:text-lg px-2">{t('landing.faq.subtitle')}</p>
                 </motion.div>
 
                 <motion.div
@@ -767,7 +797,7 @@ function FAQ() {
                     variants={stagger}
                     className="space-y-2 sm:space-y-3"
                 >
-                    {faqs.map((faq, i) => (
+                    {faqs.map((_, i) => (
                         <motion.div
                             key={i}
                             variants={fadeUp}
@@ -778,7 +808,7 @@ function FAQ() {
                                 onClick={() => setOpenIdx(openIdx === i ? null : i)}
                                 className="flex items-center justify-between w-full px-4 sm:px-6 py-3.5 sm:py-4 text-left gap-3"
                             >
-                                <span className="text-sm font-medium text-white">{faq.q}</span>
+                                <span className="text-sm font-medium text-white">{t(`landing.faq.items.${i}.question`)}</span>
                                 <ChevronDown
                                     className={`h-4 w-4 sm:h-5 sm:w-5 text-slate-400 flex-shrink-0 transition-transform duration-200 ${openIdx === i ? 'rotate-180' : ''}`}
                                 />
@@ -793,7 +823,7 @@ function FAQ() {
                                         className="overflow-hidden"
                                     >
                                         <div className="px-4 sm:px-6 pb-3.5 sm:pb-4">
-                                            <p className="text-sm text-slate-400 leading-relaxed">{faq.a}</p>
+                                            <p className="text-sm text-slate-400 leading-relaxed">{t(`landing.faq.items.${i}.answer`)}</p>
                                         </div>
                                     </motion.div>
                                 )}
@@ -808,6 +838,7 @@ function FAQ() {
 
 // ─── CTA Section ──────────────────────────────────────
 function CTASection() {
+    const { t } = useTranslation();
     return (
         <section className="py-14 sm:py-20 lg:py-32 relative">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -826,17 +857,16 @@ function CTASection() {
 
                     <div className="relative z-10">
                         <h2 className="text-2xl sm:text-3xl lg:text-5xl font-bold text-white mb-3 sm:mb-4 leading-tight">
-                            Ready to simplify your rental business?
+                            {t('landing.cta.title')}
                         </h2>
                         <p className="text-slate-400 text-sm sm:text-lg max-w-xl mx-auto mb-6 sm:mb-8 px-2">
-                            Join property managers who are saving hours every week with Triadak.
-                            Start free — upgrade when you're ready.
+                            {t('landing.cta.subtitle')}
                         </p>
                         <Link
                             to="/login"
                             className="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-indigo-500 to-purple-500 text-white font-semibold px-6 sm:px-8 py-3.5 sm:py-4 rounded-xl text-sm sm:text-base hover:shadow-xl hover:shadow-indigo-500/25 transition-all group w-full sm:w-auto"
                         >
-                            Get Started for Free
+                            {t('landing.cta.button')}
                             <ArrowRight className="h-4 w-4 sm:h-5 sm:w-5 group-hover:translate-x-1 transition-transform" />
                         </Link>
                     </div>
@@ -848,6 +878,7 @@ function CTASection() {
 
 // ─── Footer ───────────────────────────────────────────
 function Footer() {
+    const { t } = useTranslation();
     return (
         <footer className="border-t border-white/5 bg-[#0b1120]">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-12">
@@ -856,55 +887,55 @@ function Footer() {
                     <div className="col-span-2 lg:col-span-1">
                         <img src="/logotriadak.png" alt="Triadak" className="h-24 sm:h-28 w-auto object-contain mb-3 sm:mb-4" />
                         <p className="text-sm text-slate-500 max-w-xs">
-                            The modern platform for vacation rental management. Built for property managers who demand efficiency.
+                            {t('landing.footer.description')}
                         </p>
                     </div>
 
                     {/* Product */}
                     <div>
-                        <h4 className="text-sm font-semibold text-white mb-3 sm:mb-4">Product</h4>
+                        <h4 className="text-sm font-semibold text-white mb-3 sm:mb-4">{t('landing.footer.product')}</h4>
                         <ul className="space-y-2 sm:space-y-2.5">
-                            <li><a href="#features" className="text-sm text-slate-500 hover:text-slate-300 transition-colors">Features</a></li>
-                            <li><a href="#pricing" className="text-sm text-slate-500 hover:text-slate-300 transition-colors">Pricing</a></li>
-                            <li><a href="#faq" className="text-sm text-slate-500 hover:text-slate-300 transition-colors">FAQ</a></li>
+                            <li><a href="#features" className="text-sm text-slate-500 hover:text-slate-300 transition-colors">{t('landing.nav.features')}</a></li>
+                            <li><a href="#pricing" className="text-sm text-slate-500 hover:text-slate-300 transition-colors">{t('landing.nav.pricing')}</a></li>
+                            <li><a href="#faq" className="text-sm text-slate-500 hover:text-slate-300 transition-colors">{t('landing.nav.faq')}</a></li>
                         </ul>
                     </div>
 
                     {/* Company */}
                     <div>
-                        <h4 className="text-sm font-semibold text-white mb-3 sm:mb-4">Company</h4>
+                        <h4 className="text-sm font-semibold text-white mb-3 sm:mb-4">{t('landing.footer.company')}</h4>
                         <ul className="space-y-2 sm:space-y-2.5">
-                            <li><span className="text-sm text-slate-500">About</span></li>
-                            <li><span className="text-sm text-slate-500">Blog</span></li>
-                            <li><span className="text-sm text-slate-500">Careers</span></li>
+                            <li><span className="text-sm text-slate-500">{t('landing.footer.about')}</span></li>
+                            <li><span className="text-sm text-slate-500">{t('landing.footer.blog')}</span></li>
+                            <li><span className="text-sm text-slate-500">{t('landing.footer.careers')}</span></li>
                         </ul>
                     </div>
 
                     {/* Highlights */}
                     <div className="col-span-2 sm:col-span-1">
-                        <h4 className="text-sm font-semibold text-white mb-3 sm:mb-4">Why Triadak</h4>
+                        <h4 className="text-sm font-semibold text-white mb-3 sm:mb-4">{t('landing.footer.whyTriadak')}</h4>
                         <ul className="grid grid-cols-2 sm:grid-cols-1 gap-2 sm:space-y-2.5 sm:gap-0">
                             <li className="flex items-center gap-2 text-sm text-slate-500">
-                                <Clock className="h-4 w-4 text-indigo-400 flex-shrink-0" /> Setup in 2 minutes
+                                <Clock className="h-4 w-4 text-indigo-400 flex-shrink-0" /> {t('landing.footer.setup2min')}
                             </li>
                             <li className="flex items-center gap-2 text-sm text-slate-500">
-                                <Shield className="h-4 w-4 text-indigo-400 flex-shrink-0" /> Enterprise security
+                                <Shield className="h-4 w-4 text-indigo-400 flex-shrink-0" /> {t('landing.footer.security')}
                             </li>
                             <li className="flex items-center gap-2 text-sm text-slate-500">
-                                <Smartphone className="h-4 w-4 text-indigo-400 flex-shrink-0" /> Mobile friendly
+                                <Smartphone className="h-4 w-4 text-indigo-400 flex-shrink-0" /> {t('landing.footer.mobileFriendly')}
                             </li>
                             <li className="flex items-center gap-2 text-sm text-slate-500">
-                                <Globe className="h-4 w-4 text-indigo-400 flex-shrink-0" /> Available worldwide
+                                <Globe className="h-4 w-4 text-indigo-400 flex-shrink-0" /> {t('landing.footer.worldwide')}
                             </li>
                         </ul>
                     </div>
                 </div>
 
                 <div className="mt-8 sm:mt-12 pt-6 sm:pt-8 border-t border-white/5 flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4">
-                    <p className="text-xs text-slate-600">&copy; {new Date().getFullYear()} Triadak. All rights reserved.</p>
+                    <p className="text-xs text-slate-600">{t('landing.footer.copyright', { year: new Date().getFullYear() })}</p>
                     <div className="flex items-center gap-6">
-                        <span className="text-xs text-slate-600 hover:text-slate-400 cursor-pointer transition-colors">Privacy Policy</span>
-                        <span className="text-xs text-slate-600 hover:text-slate-400 cursor-pointer transition-colors">Terms of Service</span>
+                        <span className="text-xs text-slate-600 hover:text-slate-400 cursor-pointer transition-colors">{t('landing.footer.privacy')}</span>
+                        <span className="text-xs text-slate-600 hover:text-slate-400 cursor-pointer transition-colors">{t('landing.footer.terms')}</span>
                     </div>
                 </div>
             </div>

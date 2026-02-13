@@ -1,4 +1,5 @@
 import { useEffect, useState, useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { GlassCard } from '@/components/GlassCard';
@@ -71,6 +72,7 @@ const NOTE_ICONS: Record<string, any> = {
 
 // ─── Main CRM Component ──────────────────────────────
 export default function CRM() {
+    const { t } = useTranslation();
     const { canCreate } = usePlanLimits();
     const [limitMessage, setLimitMessage] = useState('');
     const [contacts, setContacts] = useState<Contact[]>([]);
@@ -152,7 +154,7 @@ export default function CRM() {
     };
 
     const handleDeleteContact = async (id: string) => {
-        if (!confirm('Are you sure you want to delete this contact?')) return;
+        if (!confirm(t('crm.confirmDelete'))) return;
         try {
             // Delete notes first
             await supabase.from('contact_notes').delete().eq('contact_id', id);
@@ -165,7 +167,7 @@ export default function CRM() {
             }
         } catch (error) {
             console.error('Error deleting contact:', error);
-            alert('Error deleting contact');
+            alert(t('crm.alertDeleteError'));
         }
     };
 
@@ -181,16 +183,16 @@ export default function CRM() {
                             animate={{ opacity: 1, x: 0 }}
                             className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-1"
                         >
-                            CRM
+                            {t('crm.title')}
                         </motion.h1>
-                        <p className="text-slate-400">Manage contacts, guests, owners & interactions.</p>
+                        <p className="text-slate-400">{t('crm.subtitle')}</p>
                     </div>
                     <div className="flex items-center gap-3">
                         <div className="relative">
                             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500" />
                             <input
                                 type="text"
-                                placeholder="Search contacts..."
+                                placeholder={t('crm.searchPlaceholder')}
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
                                 className="bg-slate-900 border border-white/10 rounded-lg pl-10 pr-4 py-2 text-sm focus:outline-none focus:border-indigo-500 w-64 text-white placeholder:text-slate-600"
@@ -201,7 +203,7 @@ export default function CRM() {
                             className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-2 rounded-lg font-semibold shadow-lg shadow-indigo-500/20 transition-all active:scale-95"
                         >
                             <UserPlus className="h-5 w-5" />
-                            Add Contact
+                            {t('crm.addContact')}
                         </button>
                     </div>
                 </div>
@@ -211,7 +213,7 @@ export default function CRM() {
                     <div className="bg-amber-500/10 border border-amber-500/30 rounded-xl p-4 flex items-center justify-between">
                         <p className="text-sm text-amber-300">{limitMessage}</p>
                         <Link to="/pricing" className="text-xs bg-amber-600 hover:bg-amber-500 text-white px-3 py-1.5 rounded-lg font-medium transition-all flex-shrink-0 ml-4">
-                            Upgrade
+                            {t('common.upgrade')}
                         </Link>
                     </div>
                 )}
@@ -219,25 +221,25 @@ export default function CRM() {
                 {/* ─── Stats Row ────────────────────── */}
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                     <StatsCard
-                        title="Total Contacts"
+                        title={t('crm.statTotalContacts')}
                         value={stats.total.toString()}
                         icon={<Users className="h-5 w-5 text-indigo-400" />}
                         color="indigo"
                     />
                     <StatsCard
-                        title="Guests"
+                        title={t('crm.statGuests')}
                         value={stats.guests.toString()}
                         icon={<User className="h-5 w-5 text-blue-400" />}
                         color="blue"
                     />
                     <StatsCard
-                        title="Owners"
+                        title={t('crm.statOwners')}
                         value={stats.owners.toString()}
                         icon={<Home className="h-5 w-5 text-purple-400" />}
                         color="purple"
                     />
                     <StatsCard
-                        title="Total Revenue"
+                        title={t('crm.statTotalRevenue')}
                         value={`€${stats.totalRevenue.toLocaleString()}`}
                         icon={<Briefcase className="h-5 w-5 text-emerald-400" />}
                         color="emerald"
@@ -248,41 +250,41 @@ export default function CRM() {
                 <div className="flex items-center gap-3 flex-wrap">
                     <div className="flex items-center gap-2 text-slate-400 text-sm">
                         <Filter className="h-4 w-4" />
-                        <span>Filters:</span>
+                        <span>{t('common.filters')}:</span>
                     </div>
                     <select
                         value={typeFilter}
                         onChange={(e) => setTypeFilter(e.target.value as ContactType)}
                         className="bg-slate-900 border border-white/10 rounded-lg px-3 py-1.5 text-sm text-white focus:outline-none focus:border-indigo-500"
                     >
-                        <option value="ALL">All Types</option>
-                        <option value="GUEST">Guests</option>
-                        <option value="OWNER">Owners</option>
-                        <option value="VENDOR">Vendors</option>
-                        <option value="OTHER">Other</option>
+                        <option value="ALL">{t('crm.filterAllTypes')}</option>
+                        <option value="GUEST">{t('crm.filterGuests')}</option>
+                        <option value="OWNER">{t('crm.filterOwners')}</option>
+                        <option value="VENDOR">{t('crm.filterVendors')}</option>
+                        <option value="OTHER">{t('crm.filterOther')}</option>
                     </select>
                     <select
                         value={sourceFilter}
                         onChange={(e) => setSourceFilter(e.target.value as ContactSource)}
                         className="bg-slate-900 border border-white/10 rounded-lg px-3 py-1.5 text-sm text-white focus:outline-none focus:border-indigo-500"
                     >
-                        <option value="ALL">All Sources</option>
-                        <option value="MANUAL">Manual</option>
-                        <option value="AIRBNB">Airbnb</option>
-                        <option value="BOOKING_COM">Booking.com</option>
-                        <option value="DIRECT">Direct</option>
-                        <option value="VRBO">VRBO</option>
+                        <option value="ALL">{t('crm.filterAllSources')}</option>
+                        <option value="MANUAL">{t('crm.filterManual')}</option>
+                        <option value="AIRBNB">{t('crm.filterAirbnb')}</option>
+                        <option value="BOOKING_COM">{t('crm.filterBookingCom')}</option>
+                        <option value="DIRECT">{t('crm.filterDirect')}</option>
+                        <option value="VRBO">{t('crm.filterVrbo')}</option>
                     </select>
                     {(typeFilter !== 'ALL' || sourceFilter !== 'ALL') && (
                         <button
                             onClick={() => { setTypeFilter('ALL'); setSourceFilter('ALL'); }}
                             className="text-xs text-slate-400 hover:text-white transition-colors underline"
                         >
-                            Clear filters
+                            {t('common.clearFilters')}
                         </button>
                     )}
                     <span className="text-xs text-slate-500 ml-auto">
-                        {filteredContacts.length} contact{filteredContacts.length !== 1 ? 's' : ''}
+                        {t('crm.contactCount', { count: filteredContacts.length })}
                     </span>
                 </div>
 
@@ -290,11 +292,11 @@ export default function CRM() {
                 <GlassCard className="p-0 overflow-hidden min-h-[400px]">
                     <div className="p-4 border-b border-white/5 bg-white/5">
                         <div className="grid grid-cols-12 gap-4 text-xs font-semibold text-slate-500 uppercase tracking-wider px-2">
-                            <div className="col-span-4">Contact</div>
-                            <div className="col-span-2">Type</div>
-                            <div className="col-span-2">Source</div>
-                            <div className="col-span-1 text-center">Bookings</div>
-                            <div className="col-span-2 text-right">Revenue</div>
+                            <div className="col-span-4">{t('crm.tableContact')}</div>
+                            <div className="col-span-2">{t('crm.tableType')}</div>
+                            <div className="col-span-2">{t('crm.tableSource')}</div>
+                            <div className="col-span-1 text-center">{t('crm.tableBookings')}</div>
+                            <div className="col-span-2 text-right">{t('crm.tableRevenue')}</div>
                             <div className="col-span-1"></div>
                         </div>
                     </div>
@@ -340,14 +342,14 @@ export default function CRM() {
                                         {/* Type Badge */}
                                         <div className="col-span-2">
                                             <span className={`text-xs font-semibold px-2.5 py-1 rounded-full border ${TYPE_COLORS[contact.type] || TYPE_COLORS.OTHER}`}>
-                                                {contact.type}
+                                                {contact.type === 'GUEST' ? t('crm.filterGuests') : contact.type === 'OWNER' ? t('crm.filterOwners') : contact.type === 'VENDOR' ? t('crm.filterVendors') : t('crm.filterOther')}
                                             </span>
                                         </div>
 
                                         {/* Source Badge */}
                                         <div className="col-span-2">
                                             <span className={`text-xs font-medium px-2 py-1 rounded-full ${SOURCE_COLORS[contact.source] || SOURCE_COLORS.OTHER}`}>
-                                                {contact.source?.replace('_', '.')}
+                                                {contact.source === 'MANUAL' ? t('crm.filterManual') : contact.source === 'AIRBNB' ? t('crm.filterAirbnb') : contact.source === 'BOOKING_COM' ? t('crm.filterBookingCom') : contact.source === 'DIRECT' ? t('crm.filterDirect') : contact.source === 'VRBO' ? t('crm.filterVrbo') : contact.source?.replace('_', '.')}
                                             </span>
                                         </div>
 
@@ -376,13 +378,13 @@ export default function CRM() {
                             <div className="h-20 w-20 bg-slate-800 rounded-full flex items-center justify-center mb-6">
                                 <Users className="h-10 w-10 text-slate-600" />
                             </div>
-                            <h3 className="text-xl font-semibold text-white mb-2">No contacts yet</h3>
-                            <p className="text-slate-400 text-sm max-w-md mb-6">Add your first contact to start building your guest database. Contacts are also created automatically from bookings.</p>
+                            <h3 className="text-xl font-semibold text-white mb-2">{t('crm.emptyTitle')}</h3>
+                            <p className="text-slate-400 text-sm max-w-md mb-6">{t('crm.emptyDescription')}</p>
                             <button
                                 onClick={handleOpenCreateModal}
                                 className="bg-indigo-600 hover:bg-indigo-500 text-white px-6 py-2.5 rounded-xl font-medium flex items-center gap-2 transition-all"
                             >
-                                <Plus className="h-4 w-4" /> Add Your First Contact
+                                <Plus className="h-4 w-4" /> {t('crm.addFirstContact')}
                             </button>
                         </div>
                     )}
@@ -422,6 +424,7 @@ function StatsCard({ title, value, icon }: { title: string; value: string; icon:
 
 // ─── Create Contact Modal ─────────────────────────────
 function CreateContactModal({ isOpen, onClose, onSuccess }: { isOpen: boolean; onClose: () => void; onSuccess: () => void }) {
+    const { t } = useTranslation();
     const [loading, setLoading] = useState(false);
     const [form, setForm] = useState({
         first_name: '', last_name: '', email: '', phone: '',
@@ -453,7 +456,7 @@ function CreateContactModal({ isOpen, onClose, onSuccess }: { isOpen: boolean; o
             onSuccess();
         } catch (error: any) {
             console.error('Error creating contact:', error);
-            alert(`Error: ${error?.message || 'Could not create contact'}`);
+            alert(t('crm.alertCreateError', { message: error?.message || 'Could not create contact' }));
         } finally {
             setLoading(false);
         }
@@ -475,7 +478,7 @@ function CreateContactModal({ isOpen, onClose, onSuccess }: { isOpen: boolean; o
                     <div className="p-6 border-b border-white/10 flex justify-between items-center bg-[#0f172a]/50 sticky top-0 z-10">
                         <h2 className="text-xl font-bold text-white flex items-center gap-2">
                             <UserPlus className="h-5 w-5 text-indigo-400" />
-                            New Contact
+                            {t('crm.createModalTitle')}
                         </h2>
                         <button onClick={onClose} className="text-slate-400 hover:text-white transition-colors">
                             <X className="h-5 w-5" />
@@ -484,53 +487,53 @@ function CreateContactModal({ isOpen, onClose, onSuccess }: { isOpen: boolean; o
 
                     <form onSubmit={handleSubmit} className="p-6 space-y-4">
                         <div className="grid grid-cols-2 gap-4">
-                            <InputField label="First Name" name="first_name" value={form.first_name} onChange={handleChange} required />
-                            <InputField label="Last Name" name="last_name" value={form.last_name} onChange={handleChange} required />
+                            <InputField label={t('crm.labelFirstName')} name="first_name" value={form.first_name} onChange={handleChange} required />
+                            <InputField label={t('crm.labelLastName')} name="last_name" value={form.last_name} onChange={handleChange} required />
                         </div>
-                        <InputField label="Email" name="email" type="email" value={form.email} onChange={handleChange} required />
+                        <InputField label={t('crm.labelEmail')} name="email" type="email" value={form.email} onChange={handleChange} required />
                         <div className="grid grid-cols-2 gap-4">
-                            <InputField label="Phone" name="phone" type="tel" value={form.phone} onChange={handleChange} />
-                            <InputField label="Company" name="company" value={form.company} onChange={handleChange} />
+                            <InputField label={t('crm.labelPhone')} name="phone" type="tel" value={form.phone} onChange={handleChange} />
+                            <InputField label={t('crm.labelCompany')} name="company" value={form.company} onChange={handleChange} />
                         </div>
                         <div className="grid grid-cols-2 gap-4">
                             <div className="space-y-2">
-                                <label className="text-sm font-medium text-slate-300">Type</label>
+                                <label className="text-sm font-medium text-slate-300">{t('crm.labelType')}</label>
                                 <select name="type" value={form.type} onChange={handleChange}
                                     className="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-white focus:border-indigo-500 focus:outline-none">
-                                    <option value="GUEST">Guest</option>
-                                    <option value="OWNER">Owner</option>
-                                    <option value="VENDOR">Vendor</option>
-                                    <option value="OTHER">Other</option>
+                                    <option value="GUEST">{t('crm.filterGuests')}</option>
+                                    <option value="OWNER">{t('crm.filterOwners')}</option>
+                                    <option value="VENDOR">{t('crm.filterVendors')}</option>
+                                    <option value="OTHER">{t('crm.filterOther')}</option>
                                 </select>
                             </div>
                             <div className="space-y-2">
-                                <label className="text-sm font-medium text-slate-300">Source</label>
+                                <label className="text-sm font-medium text-slate-300">{t('crm.labelSource')}</label>
                                 <select name="source" value={form.source} onChange={handleChange}
                                     className="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-white focus:border-indigo-500 focus:outline-none">
-                                    <option value="MANUAL">Manual</option>
-                                    <option value="AIRBNB">Airbnb</option>
-                                    <option value="BOOKING_COM">Booking.com</option>
-                                    <option value="DIRECT">Direct</option>
-                                    <option value="VRBO">VRBO</option>
-                                    <option value="OTHER">Other</option>
+                                    <option value="MANUAL">{t('crm.filterManual')}</option>
+                                    <option value="AIRBNB">{t('crm.filterAirbnb')}</option>
+                                    <option value="BOOKING_COM">{t('crm.filterBookingCom')}</option>
+                                    <option value="DIRECT">{t('crm.filterDirect')}</option>
+                                    <option value="VRBO">{t('crm.filterVrbo')}</option>
+                                    <option value="OTHER">{t('crm.filterOther')}</option>
                                 </select>
                             </div>
                         </div>
-                        <InputField label="Tags (comma separated)" name="tags" value={form.tags} onChange={handleChange} placeholder="vip, repeat, corporate" />
+                        <InputField label={t('crm.labelTags')} name="tags" value={form.tags} onChange={handleChange} placeholder={t('crm.placeholderTags')} />
                         <div className="space-y-2">
-                            <label className="text-sm font-medium text-slate-300">Notes</label>
+                            <label className="text-sm font-medium text-slate-300">{t('crm.labelNotes')}</label>
                             <textarea
                                 name="notes" value={form.notes} onChange={handleChange} rows={3}
                                 className="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-white focus:border-indigo-500 focus:outline-none resize-none"
-                                placeholder="Any additional notes..."
+                                placeholder={t('crm.placeholderNotes')}
                             />
                         </div>
 
                         <div className="pt-4 flex justify-end gap-3 border-t border-white/5">
-                            <button type="button" onClick={onClose} className="px-4 py-2 text-slate-300 hover:text-white transition-colors">Cancel</button>
+                            <button type="button" onClick={onClose} className="px-4 py-2 text-slate-300 hover:text-white transition-colors">{t('common.cancel')}</button>
                             <button type="submit" disabled={loading}
                                 className="px-6 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg font-semibold shadow-lg shadow-indigo-500/20 disabled:opacity-50 transition-all">
-                                {loading ? 'Creating...' : 'Create Contact'}
+                                {loading ? t('common.creating') : t('crm.createContact')}
                             </button>
                         </div>
                     </form>
@@ -557,6 +560,7 @@ function InputField({ label, name, value, onChange, type = 'text', required = fa
 // ─── Contact Detail Panel ─────────────────────────────
 function ContactDetailPanel({ contact, isOpen, onClose, onUpdate, onDelete }:
     { contact: Contact | null; isOpen: boolean; onClose: () => void; onUpdate: () => void; onDelete: (id: string) => void }) {
+    const { t } = useTranslation();
     const { user } = useAuth();
     const [notes, setNotes] = useState<ContactNote[]>([]);
     const [loadingNotes, setLoadingNotes] = useState(false);
@@ -633,7 +637,7 @@ function ContactDetailPanel({ contact, isOpen, onClose, onUpdate, onDelete }:
             onUpdate();
         } catch (error: any) {
             console.error('Error updating contact:', error);
-            alert(`Error: ${error?.message || 'Could not update'}`);
+            alert(t('crm.alertUpdateError', { message: error?.message || 'Could not update' }));
         }
     };
 
@@ -663,10 +667,10 @@ function ContactDetailPanel({ contact, isOpen, onClose, onUpdate, onDelete }:
                                     </h2>
                                     <div className="flex items-center gap-2 mt-1">
                                         <span className={`text-xs font-semibold px-2 py-0.5 rounded-full border ${TYPE_COLORS[contact.type]}`}>
-                                            {contact.type}
+                                            {contact.type === 'GUEST' ? t('crm.filterGuests') : contact.type === 'OWNER' ? t('crm.filterOwners') : contact.type === 'VENDOR' ? t('crm.filterVendors') : t('crm.filterOther')}
                                         </span>
                                         <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${SOURCE_COLORS[contact.source]}`}>
-                                            {contact.source?.replace('_', '.')}
+                                            {contact.source === 'MANUAL' ? t('crm.filterManual') : contact.source === 'AIRBNB' ? t('crm.filterAirbnb') : contact.source === 'BOOKING_COM' ? t('crm.filterBookingCom') : contact.source === 'DIRECT' ? t('crm.filterDirect') : contact.source === 'VRBO' ? t('crm.filterVrbo') : contact.source?.replace('_', '.')}
                                         </span>
                                     </div>
                                 </div>
@@ -695,35 +699,35 @@ function ContactDetailPanel({ contact, isOpen, onClose, onUpdate, onDelete }:
                         {isEditing ? (
                             <div className="space-y-4 p-4 bg-white/5 rounded-xl border border-white/10">
                                 <h3 className="font-semibold text-white flex items-center gap-2">
-                                    <Edit3 className="h-4 w-4 text-indigo-400" /> Edit Contact
+                                    <Edit3 className="h-4 w-4 text-indigo-400" /> {t('crm.editContact')}
                                 </h3>
                                 <div className="grid grid-cols-2 gap-3">
                                     <input name="first_name" value={editForm.first_name || ''} onChange={(e) => setEditForm({ ...editForm, first_name: e.target.value })}
-                                        placeholder="First Name" className="bg-slate-900 border border-slate-700 rounded-lg p-2 text-sm text-white focus:border-indigo-500 focus:outline-none" />
+                                        placeholder={t('crm.labelFirstName')} className="bg-slate-900 border border-slate-700 rounded-lg p-2 text-sm text-white focus:border-indigo-500 focus:outline-none" />
                                     <input name="last_name" value={editForm.last_name || ''} onChange={(e) => setEditForm({ ...editForm, last_name: e.target.value })}
-                                        placeholder="Last Name" className="bg-slate-900 border border-slate-700 rounded-lg p-2 text-sm text-white focus:border-indigo-500 focus:outline-none" />
+                                        placeholder={t('crm.labelLastName')} className="bg-slate-900 border border-slate-700 rounded-lg p-2 text-sm text-white focus:border-indigo-500 focus:outline-none" />
                                 </div>
                                 <input value={editForm.email || ''} onChange={(e) => setEditForm({ ...editForm, email: e.target.value })}
-                                    placeholder="Email" className="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-sm text-white focus:border-indigo-500 focus:outline-none" />
+                                    placeholder={t('crm.labelEmail')} className="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-sm text-white focus:border-indigo-500 focus:outline-none" />
                                 <div className="grid grid-cols-2 gap-3">
                                     <input value={editForm.phone || ''} onChange={(e) => setEditForm({ ...editForm, phone: e.target.value })}
-                                        placeholder="Phone" className="bg-slate-900 border border-slate-700 rounded-lg p-2 text-sm text-white focus:border-indigo-500 focus:outline-none" />
+                                        placeholder={t('crm.labelPhone')} className="bg-slate-900 border border-slate-700 rounded-lg p-2 text-sm text-white focus:border-indigo-500 focus:outline-none" />
                                     <input value={editForm.company || ''} onChange={(e) => setEditForm({ ...editForm, company: e.target.value })}
-                                        placeholder="Company" className="bg-slate-900 border border-slate-700 rounded-lg p-2 text-sm text-white focus:border-indigo-500 focus:outline-none" />
+                                        placeholder={t('crm.labelCompany')} className="bg-slate-900 border border-slate-700 rounded-lg p-2 text-sm text-white focus:border-indigo-500 focus:outline-none" />
                                 </div>
                                 <div className="flex gap-2 justify-end">
-                                    <button onClick={() => setIsEditing(false)} className="px-3 py-1.5 text-sm text-slate-400 hover:text-white">Cancel</button>
-                                    <button onClick={saveEdit} className="px-4 py-1.5 bg-indigo-600 hover:bg-indigo-500 text-white text-sm rounded-lg font-medium">Save</button>
+                                    <button onClick={() => setIsEditing(false)} className="px-3 py-1.5 text-sm text-slate-400 hover:text-white">{t('common.cancel')}</button>
+                                    <button onClick={saveEdit} className="px-4 py-1.5 bg-indigo-600 hover:bg-indigo-500 text-white text-sm rounded-lg font-medium">{t('common.save')}</button>
                                 </div>
                             </div>
                         ) : (
                             <div className="grid grid-cols-2 gap-4">
-                                <InfoItem icon={<Mail className="h-4 w-4" />} label="Email" value={contact.email} />
-                                <InfoItem icon={<Phone className="h-4 w-4" />} label="Phone" value={contact.phone || '—'} />
-                                <InfoItem icon={<Building className="h-4 w-4" />} label="Company" value={contact.company || '—'} />
-                                <InfoItem icon={<Calendar className="h-4 w-4" />} label="Since" value={new Date(contact.created_at).toLocaleDateString()} />
-                                <InfoItem icon={<Star className="h-4 w-4" />} label="Bookings" value={`${contact.total_bookings || 0}`} />
-                                <InfoItem icon={<Briefcase className="h-4 w-4" />} label="Total Spent" value={`€${(contact.total_spent || 0).toLocaleString()}`} />
+                                <InfoItem icon={<Mail className="h-4 w-4" />} label={t('crm.labelEmail')} value={contact.email} />
+                                <InfoItem icon={<Phone className="h-4 w-4" />} label={t('crm.labelPhone')} value={contact.phone || '—'} />
+                                <InfoItem icon={<Building className="h-4 w-4" />} label={t('crm.labelCompany')} value={contact.company || '—'} />
+                                <InfoItem icon={<Calendar className="h-4 w-4" />} label={t('crm.since')} value={new Date(contact.created_at).toLocaleDateString()} />
+                                <InfoItem icon={<Star className="h-4 w-4" />} label={t('crm.tableBookings')} value={`${contact.total_bookings || 0}`} />
+                                <InfoItem icon={<Briefcase className="h-4 w-4" />} label={t('crm.totalSpent')} value={`€${(contact.total_spent || 0).toLocaleString()}`} />
                             </div>
                         )}
 
@@ -741,7 +745,7 @@ function ContactDetailPanel({ contact, isOpen, onClose, onUpdate, onDelete }:
                         {/* Notes */}
                         {contact.notes && (
                             <div className="p-3 bg-white/5 rounded-xl border border-white/5 text-sm text-slate-300">
-                                <p className="text-xs font-semibold text-slate-500 uppercase mb-1">Notes</p>
+                                <p className="text-xs font-semibold text-slate-500 uppercase mb-1">{t('crm.notes')}</p>
                                 {contact.notes}
                             </div>
                         )}
@@ -750,23 +754,23 @@ function ContactDetailPanel({ contact, isOpen, onClose, onUpdate, onDelete }:
                         <div className="space-y-4">
                             <h3 className="font-semibold text-white flex items-center gap-2">
                                 <Clock className="h-4 w-4 text-indigo-400" />
-                                Activity Timeline
+                                {t('crm.activityTimeline')}
                             </h3>
 
                             {/* Add Note Form */}
                             <div className="flex gap-2">
                                 <select value={noteType} onChange={(e) => setNoteType(e.target.value as ContactNote['type'])}
                                     className="bg-slate-900 border border-slate-700 rounded-lg px-2 py-2 text-xs text-white focus:outline-none focus:border-indigo-500 w-24">
-                                    <option value="NOTE">Note</option>
-                                    <option value="CALL">Call</option>
-                                    <option value="EMAIL">Email</option>
-                                    <option value="MEETING">Meeting</option>
+                                    <option value="NOTE">{t('crm.noteTypes.note')}</option>
+                                    <option value="CALL">{t('crm.noteTypes.call')}</option>
+                                    <option value="EMAIL">{t('crm.noteTypes.email')}</option>
+                                    <option value="MEETING">{t('crm.noteTypes.meeting')}</option>
                                 </select>
                                 <input
                                     value={newNote}
                                     onChange={(e) => setNewNote(e.target.value)}
                                     onKeyDown={(e) => e.key === 'Enter' && addNote()}
-                                    placeholder="Add a note or log an interaction..."
+                                    placeholder={t('crm.placeholderAddNote')}
                                     className="flex-1 bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:border-indigo-500 focus:outline-none"
                                 />
                                 <button onClick={addNote} disabled={!newNote.trim()}
@@ -797,7 +801,7 @@ function ContactDetailPanel({ contact, isOpen, onClose, onUpdate, onDelete }:
                                                 <div className="flex-1 min-w-0">
                                                     <p className="text-sm text-slate-200">{note.content}</p>
                                                     <div className="flex items-center gap-3 mt-1.5 text-xs text-slate-500">
-                                                        <span>{note.type}</span>
+                                                        <span>{note.type === 'NOTE' ? t('crm.noteTypes.note') : note.type === 'CALL' ? t('crm.noteTypes.call') : note.type === 'EMAIL' ? t('crm.noteTypes.email') : note.type === 'MEETING' ? t('crm.noteTypes.meeting') : note.type}</span>
                                                         <span>•</span>
                                                         <span>{new Date(note.created_at).toLocaleString()}</span>
                                                         {note.created_by && (
@@ -813,7 +817,7 @@ function ContactDetailPanel({ contact, isOpen, onClose, onUpdate, onDelete }:
                                     })}
                                 </div>
                             ) : (
-                                <p className="text-sm text-slate-500 text-center py-4">No interactions recorded yet.</p>
+                                <p className="text-sm text-slate-500 text-center py-4">{t('crm.noInteractions')}</p>
                             )}
                         </div>
                     </div>

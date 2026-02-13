@@ -47,10 +47,16 @@
       "pending": "Pending",
       "confirmed": "Confirmed",
       "checkedIn": "Checked In",
+      "completed": "Completed",
       "cancelled": "Cancelled",
       "paid": "Paid",
       "unpaid": "Unpaid",
-      "partial": "Partial"
+      "partial": "Partial",
+      "refunded": "Refunded"
+    },
+    "daysShort": {
+      "sun": "S", "mon": "M", "tue": "T", "wed": "W",
+      "thu": "T", "fri": "F", "sat": "S"
     }
   },
 
@@ -193,7 +199,12 @@
     "placeholderPrice": "0.00",
     "createReservation": "Create Reservation",
     "night": "night",
-    "nights": "nights"
+    "nights": "nights",
+    "optionDirect": "Direct",
+    "optionAirbnb": "Airbnb",
+    "optionBookingCom": "Booking.com",
+    "optionVrbo": "VRBO",
+    "optionOther": "Other"
   },
 
   "owners": {
@@ -222,6 +233,8 @@
   "ownerStatements": {
     "title": "Owner Statements",
     "subtitle": "Monthly settlement reports for property owners",
+    "owner": "Owner",
+    "period": "Period",
     "loading": "Loading Statements...",
     "pdf": "PDF",
     "csv": "CSV",
@@ -278,6 +291,7 @@
     "recentRevenue": "Recent Revenue",
     "expenses": "Expenses",
     "guest": "Guest",
+    "general": "General",
     "noBookings": "No bookings this period",
     "noExpenses": "No expenses recorded",
     "addFirstExpense": "Add your first expense",
@@ -303,6 +317,13 @@
     "modalAddExpense": "Add Expense",
     "confirmDelete": "Delete this expense?",
     "alertValidAmount": "Please enter a valid amount",
+    "alertCreateError": "Could not create expense",
+    "exportTitle": "Financial Report",
+    "exportYear": "Year {{year}}",
+    "exportMonth": "Month",
+    "exportTotalRevenue": "Total Revenue",
+    "exportTotalExpenses": "Total Expenses",
+    "exportOwnerPayouts": "Owner Payouts",
     "categories": {
       "cleaning": "Cleaning",
       "laundry": "Laundry",
@@ -337,6 +358,9 @@
     "filterOther": "Other",
     "filterAllSources": "All Sources",
     "filterManual": "Manual",
+    "filterAirbnb": "Airbnb",
+    "filterBookingCom": "Booking.com",
+    "filterVrbo": "VRBO",
     "filterDirect": "Direct",
     "contactCount": "{{count}} contact(s)",
     "tableContact": "Contact",
@@ -374,7 +398,9 @@
     "placeholderAddNote": "Add a note or log an interaction...",
     "noInteractions": "No interactions recorded yet.",
     "confirmDelete": "Are you sure you want to delete this contact?",
-    "alertDeleteError": "Error deleting contact"
+    "alertDeleteError": "Error deleting contact",
+    "alertCreateError": "Error: {{message}}",
+    "alertUpdateError": "Error: {{message}}"
   },
 
   "settings": {
@@ -465,23 +491,33 @@
       "startFree": "Start Free"
     },
     "hero": {
-      "badge": "All-in-one vacation rental platform",
+      "badge": "The modern way to manage vacation rentals",
       "title1": "Manage your rentals",
-      "titleHighlight": "like a pro",
-      "subtitle": "Triadak brings property management, booking automation, and financial tools together in one beautiful platform. Less spreadsheets, more growth.",
-      "cta": "Start Free Trial",
-      "secondary": "See How It Works",
-      "noCard": "No credit card required · 14-day free trial"
+      "titleHighlight": "at lightspeed",
+      "subtitle": "Properties, bookings, guests, and finances — all in one powerful platform. Automate your vacation rental business and focus on what matters.",
+      "cta": "Start Free — No Credit Card",
+      "secondary": "See Features",
+      "noCard": "No credit card required · 14-day free trial",
+      "rating": "5.0 from early users",
+      "freePlan": "Free plan available forever"
     },
     "features": {
-      "badge": "Everything you need",
-      "title": "Powerful tools for modern hosts",
-      "subtitle": "From managing a single apartment to scaling a portfolio of properties — Triadak adapts to your workflow."
+      "badge": "Features",
+      "title": "Everything you need to run your rental business",
+      "subtitle": "From properties to payments, Triadak covers the entire vacation rental workflow.",
+      "items": {
+        "0": { "title": "Property Management", "description": "Add unlimited properties with details, photos, pricing, and availability. Track everything in one place." },
+        "1": { "title": "Smart Bookings", "description": "Manage reservations, check-ins, check-outs, and calendar availability. Never double-book again." },
+        "2": { "title": "Guest CRM", "description": "Build guest profiles automatically. Track preferences, history, and communication in one view." },
+        "3": { "title": "Finance Engine", "description": "Track income, expenses, and profitability per property. Real-time financial overview." },
+        "4": { "title": "Analytics Dashboard", "description": "Occupancy rates, revenue trends, and performance metrics at a glance. Data-driven decisions." },
+        "5": { "title": "Secure & Private", "description": "Enterprise-grade security with row-level isolation. Your data is yours — always encrypted, always safe." }
+      }
     },
     "howItWorks": {
       "badge": "How it works",
       "title": "Up and running in minutes",
-      "subtitle": "No complicated setup. No learning curve. Just results.",
+      "subtitle": "No complex setup. No training required. Just sign up and start managing.",
       "step1Title": "Create your account",
       "step1Desc": "Sign up in seconds with email or Google. Choose the Starter plan — it's free forever.",
       "step2Title": "Add your properties",
@@ -491,12 +527,17 @@
     },
     "testimonials": {
       "badge": "Loved by hosts",
-      "title": "What our users say"
+      "title": "What our users say",
+      "items": {
+        "0": { "quote": "Triadak completely transformed how we manage our 8 properties. The automation saves us hours every week." },
+        "1": { "quote": "The financial tracking alone is worth it. I finally have a clear picture of profitability per property." },
+        "2": { "quote": "We switched from spreadsheets to Triadak and never looked back. The CRM is incredibly useful." }
+      }
     },
     "pricing": {
       "badge": "Simple pricing",
       "title": "Choose your plan",
-      "subtitle": "Start free and upgrade as you grow. No hidden fees, no surprises.",
+      "subtitle": "Start free. Upgrade when you need more. No hidden fees.",
       "monthly": "Monthly",
       "yearly": "Yearly",
       "save20": "Save 20%",
@@ -504,17 +545,46 @@
       "startTrial": "Start Free Trial",
       "getStarted": "Get Started",
       "contactSales": "Contact Sales",
-      "perMonth": "/month"
+      "perMonth": "/mo",
+      "forever": "forever",
+      "swipeHint": "Swipe to see all plans →",
+      "trialNote": "All paid plans include a 14-day free trial. No credit card required.",
+      "planDesc": {
+        "starter": "Perfect to get started",
+        "basic": "For small property managers",
+        "pro": "For growing businesses",
+        "enterprise": "For large-scale operations"
+      },
+      "planCta": {
+        "starter": "Start Free",
+        "basic": "Start 14-Day Trial",
+        "pro": "Start 14-Day Trial",
+        "enterprise": "Contact Sales"
+      },
+      "features": {
+        "starter": { "0": "1 property", "1": "10 bookings/month", "2": "Basic CRM (20 contacts)", "3": "Calendar view", "4": "Basic dashboard" },
+        "basic": { "0": "Up to 5 properties", "1": "50 bookings/month", "2": "Full CRM (100 contacts)", "3": "Financial dashboard", "4": "Email notifications" },
+        "pro": { "0": "Up to 20 properties", "1": "Unlimited bookings", "2": "Advanced CRM", "3": "Payment links (Stripe)", "4": "Owner portal" },
+        "enterprise": { "0": "Unlimited everything", "1": "Full API access", "2": "Dedicated support", "3": "Custom onboarding", "4": "Priority features" }
+      }
     },
     "faq": {
       "badge": "FAQ",
       "title": "Frequently asked questions",
-      "subtitle": "Everything you need to know about Triadak."
+      "subtitle": "Everything you need to know about Triadak.",
+      "items": {
+        "0": { "question": "Is Triadak really free to start?", "answer": "Yes! The Starter plan is completely free — forever. It includes 1 property, 10 bookings per month, and basic CRM. No credit card required." },
+        "1": { "question": "Can I upgrade or downgrade at any time?", "answer": "Absolutely. You can change your plan anytime from the Billing page. Upgrades are instant, and downgrades take effect at the end of your billing cycle." },
+        "2": { "question": "Is my data secure?", "answer": "Yes. We use Supabase with row-level security, meaning each user's data is completely isolated. All connections are encrypted with TLS." },
+        "3": { "question": "Do I need to install anything?", "answer": "No. Triadak is a web application that works on any browser — desktop, tablet, or mobile. There's nothing to install." },
+        "4": { "question": "Can I import data from spreadsheets?", "answer": "We're working on CSV import functionality. For now, you can quickly add properties and bookings through our intuitive interface." },
+        "5": { "question": "What payment methods do you accept?", "answer": "We accept all major credit and debit cards through Stripe. Enterprise plans can also pay via bank transfer." }
+      }
     },
     "cta": {
-      "title": "Ready to streamline your rental business?",
-      "subtitle": "Join thousands of property managers who trust Triadak to automate their workflow and maximize revenue.",
-      "button": "Start Your Free Trial",
+      "title": "Ready to simplify your rental business?",
+      "subtitle": "Join property managers who are saving hours every week with Triadak. Start free — upgrade when you're ready.",
+      "button": "Get Started for Free",
       "noCard": "No credit card required · Setup in 2 minutes"
     },
     "footer": {
@@ -529,7 +599,9 @@
       "security": "Enterprise security",
       "mobileFriendly": "Mobile friendly",
       "worldwide": "Available worldwide",
-      "copyright": "© {{year}} Triadak. All rights reserved."
+      "copyright": "© {{year}} Triadak. All rights reserved.",
+      "privacy": "Privacy Policy",
+      "terms": "Terms of Service"
     }
   }
 }

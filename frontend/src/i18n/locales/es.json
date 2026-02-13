@@ -47,10 +47,16 @@
       "pending": "Pendiente",
       "confirmed": "Confirmado",
       "checkedIn": "Registrado",
+      "completed": "Completado",
       "cancelled": "Cancelado",
       "paid": "Pagado",
       "unpaid": "Sin pagar",
-      "partial": "Parcial"
+      "partial": "Parcial",
+      "refunded": "Reembolsado"
+    },
+    "daysShort": {
+      "sun": "D", "mon": "L", "tue": "M", "wed": "M",
+      "thu": "J", "fri": "V", "sat": "S"
     }
   },
 
@@ -193,7 +199,12 @@
     "placeholderPrice": "0.00",
     "createReservation": "Crear Reserva",
     "night": "noche",
-    "nights": "noches"
+    "nights": "noches",
+    "optionDirect": "Directo",
+    "optionAirbnb": "Airbnb",
+    "optionBookingCom": "Booking.com",
+    "optionVrbo": "VRBO",
+    "optionOther": "Otro"
   },
 
   "owners": {
@@ -222,6 +233,8 @@
   "ownerStatements": {
     "title": "Liquidaciones",
     "subtitle": "Informes mensuales de liquidación para propietarios",
+    "owner": "Propietario",
+    "period": "Período",
     "loading": "Cargando Liquidaciones...",
     "pdf": "PDF",
     "csv": "CSV",
@@ -278,6 +291,7 @@
     "recentRevenue": "Ingresos Recientes",
     "expenses": "Gastos",
     "guest": "Huésped",
+    "general": "General",
     "noBookings": "Sin reservas en este período",
     "noExpenses": "Sin gastos registrados",
     "addFirstExpense": "Añade tu primer gasto",
@@ -303,6 +317,13 @@
     "modalAddExpense": "Añadir Gasto",
     "confirmDelete": "¿Eliminar este gasto?",
     "alertValidAmount": "Ingresa un importe válido",
+    "alertCreateError": "No se pudo crear el gasto",
+    "exportTitle": "Informe Financiero",
+    "exportYear": "Año {{year}}",
+    "exportMonth": "Mes",
+    "exportTotalRevenue": "Ingresos Totales",
+    "exportTotalExpenses": "Gastos Totales",
+    "exportOwnerPayouts": "Pagos a Propietarios",
     "categories": {
       "cleaning": "Limpieza",
       "laundry": "Lavandería",
@@ -337,6 +358,9 @@
     "filterOther": "Otros",
     "filterAllSources": "Todas las Fuentes",
     "filterManual": "Manual",
+    "filterAirbnb": "Airbnb",
+    "filterBookingCom": "Booking.com",
+    "filterVrbo": "VRBO",
     "filterDirect": "Directo",
     "contactCount": "{{count}} contacto(s)",
     "tableContact": "Contacto",
@@ -374,7 +398,9 @@
     "placeholderAddNote": "Añadir nota o registrar interacción...",
     "noInteractions": "Sin interacciones registradas aún.",
     "confirmDelete": "¿Estás seguro de que quieres eliminar este contacto?",
-    "alertDeleteError": "Error al eliminar contacto"
+    "alertDeleteError": "Error al eliminar contacto",
+    "alertCreateError": "Error: {{message}}",
+    "alertUpdateError": "Error: {{message}}"
   },
 
   "settings": {
@@ -465,23 +491,33 @@
       "startFree": "Empezar Gratis"
     },
     "hero": {
-      "badge": "Plataforma todo-en-uno para alquiler vacacional",
+      "badge": "La forma moderna de gestionar alquileres vacacionales",
       "title1": "Gestiona tus alquileres",
-      "titleHighlight": "como un profesional",
-      "subtitle": "Triadak reúne gestión de propiedades, automatización de reservas y herramientas financieras en una plataforma elegante. Menos hojas de cálculo, más crecimiento.",
-      "cta": "Empezar Prueba Gratuita",
-      "secondary": "Ver Cómo Funciona",
-      "noCard": "Sin tarjeta de crédito · 14 días de prueba gratuita"
+      "titleHighlight": "a toda velocidad",
+      "subtitle": "Propiedades, reservas, huéspedes y finanzas — todo en una plataforma potente. Automatiza tu negocio de alquiler vacacional y enfócate en lo que importa.",
+      "cta": "Empezar gratis — Sin tarjeta de crédito",
+      "secondary": "Ver Funciones",
+      "noCard": "Sin tarjeta de crédito · 14 días de prueba gratuita",
+      "rating": "5.0 de usuarios iniciales",
+      "freePlan": "Plan gratuito disponible para siempre"
     },
     "features": {
-      "badge": "Todo lo que necesitas",
-      "title": "Herramientas poderosas para anfitriones modernos",
-      "subtitle": "Desde gestionar un solo apartamento hasta escalar un portafolio de propiedades — Triadak se adapta a tu flujo de trabajo."
+      "badge": "Funciones",
+      "title": "Todo lo que necesitas para gestionar tu negocio de alquiler",
+      "subtitle": "De propiedades a pagos, Triadak cubre todo el flujo de trabajo del alquiler vacacional.",
+      "items": {
+        "0": { "title": "Gestión de Propiedades", "description": "Añade propiedades ilimitadas con detalles, fotos, precios y disponibilidad. Todo en un solo lugar." },
+        "1": { "title": "Reservas Inteligentes", "description": "Gestiona reservas, check-ins, check-outs y disponibilidad del calendario. Nunca más dobles reservas." },
+        "2": { "title": "CRM de Huéspedes", "description": "Crea perfiles de huéspedes automáticamente. Rastrea preferencias, historial y comunicación en una vista." },
+        "3": { "title": "Motor Financiero", "description": "Rastrea ingresos, gastos y rentabilidad por propiedad. Vista financiera en tiempo real." },
+        "4": { "title": "Panel de Análisis", "description": "Tasas de ocupación, tendencias de ingresos y métricas de rendimiento de un vistazo. Decisiones basadas en datos." },
+        "5": { "title": "Seguro y Privado", "description": "Seguridad de nivel empresarial con aislamiento por filas. Tus datos son tuyos — siempre encriptados, siempre seguros." }
+      }
     },
     "howItWorks": {
       "badge": "Cómo funciona",
       "title": "Listo en minutos",
-      "subtitle": "Sin configuración complicada. Sin curva de aprendizaje. Solo resultados.",
+      "subtitle": "Sin configuración compleja. Sin formación necesaria. Solo regístrate y empieza a gestionar.",
       "step1Title": "Crea tu cuenta",
       "step1Desc": "Regístrate en segundos con email o Google. Elige el plan Starter — es gratis para siempre.",
       "step2Title": "Añade tus propiedades",
@@ -491,12 +527,17 @@
     },
     "testimonials": {
       "badge": "Amado por anfitriones",
-      "title": "Lo que dicen nuestros usuarios"
+      "title": "Lo que dicen nuestros usuarios",
+      "items": {
+        "0": { "quote": "Triadak transformó por completo cómo gestionamos nuestras 8 propiedades. La automatización nos ahorra horas cada semana." },
+        "1": { "quote": "Solo el seguimiento financiero ya vale la pena. Por fin tengo una visión clara de la rentabilidad por propiedad." },
+        "2": { "quote": "Pasamos de hojas de cálculo a Triadak y nunca miramos atrás. El CRM es increíblemente útil." }
+      }
     },
     "pricing": {
       "badge": "Precios simples",
       "title": "Elige tu plan",
-      "subtitle": "Empieza gratis y mejora según crezcas. Sin cargos ocultos, sin sorpresas.",
+      "subtitle": "Empieza gratis. Mejora cuando lo necesites. Sin cargos ocultos.",
       "monthly": "Mensual",
       "yearly": "Anual",
       "save20": "Ahorra 20%",
@@ -504,17 +545,46 @@
       "startTrial": "Empezar Prueba Gratuita",
       "getStarted": "Comenzar",
       "contactSales": "Contactar Ventas",
-      "perMonth": "/mes"
+      "perMonth": "/mes",
+      "forever": "para siempre",
+      "swipeHint": "Desliza para ver todos los planes →",
+      "trialNote": "Todos los planes de pago incluyen una prueba gratuita de 14 días. Sin tarjeta de crédito.",
+      "planDesc": {
+        "starter": "Perfecto para empezar",
+        "basic": "Para pequeños gestores de propiedades",
+        "pro": "Para negocios en crecimiento",
+        "enterprise": "Para operaciones a gran escala"
+      },
+      "planCta": {
+        "starter": "Empezar gratis",
+        "basic": "Prueba de 14 días",
+        "pro": "Prueba de 14 días",
+        "enterprise": "Contactar Ventas"
+      },
+      "features": {
+        "starter": { "0": "1 propiedad", "1": "10 reservas/mes", "2": "CRM básico (20 contactos)", "3": "Vista calendario", "4": "Panel básico" },
+        "basic": { "0": "Hasta 5 propiedades", "1": "50 reservas/mes", "2": "CRM completo (100 contactos)", "3": "Panel financiero", "4": "Notificaciones por email" },
+        "pro": { "0": "Hasta 20 propiedades", "1": "Reservas ilimitadas", "2": "CRM avanzado", "3": "Enlaces de pago (Stripe)", "4": "Portal de propietarios" },
+        "enterprise": { "0": "Todo ilimitado", "1": "Acceso API completo", "2": "Soporte dedicado", "3": "Onboarding personalizado", "4": "Funciones prioritarias" }
+      }
     },
     "faq": {
       "badge": "FAQ",
       "title": "Preguntas frecuentes",
-      "subtitle": "Todo lo que necesitas saber sobre Triadak."
+      "subtitle": "Todo lo que necesitas saber sobre Triadak.",
+      "items": {
+        "0": { "question": "¿Triadak es realmente gratis para empezar?", "answer": "¡Sí! El plan Starter es completamente gratis — para siempre. Incluye 1 propiedad, 10 reservas al mes y CRM básico. Sin tarjeta de crédito." },
+        "1": { "question": "¿Puedo cambiar de plan en cualquier momento?", "answer": "Absolutamente. Puedes cambiar tu plan en cualquier momento desde la página de Facturación. Las mejoras son instantáneas y las bajadas son al final del ciclo de facturación." },
+        "2": { "question": "¿Mis datos están seguros?", "answer": "Sí. Usamos Supabase con seguridad a nivel de fila, lo que significa que los datos de cada usuario están completamente aislados. Todas las conexiones están encriptadas con TLS." },
+        "3": { "question": "¿Necesito instalar algo?", "answer": "No. Triadak es una aplicación web que funciona en cualquier navegador — escritorio, tablet o móvil. No hay nada que instalar." },
+        "4": { "question": "¿Puedo importar datos de hojas de cálculo?", "answer": "Estamos trabajando en la funcionalidad de importación CSV. Por ahora, puedes añadir rápidamente propiedades y reservas a través de nuestra interfaz intuitiva." },
+        "5": { "question": "¿Qué métodos de pago aceptan?", "answer": "Aceptamos todas las tarjetas de crédito y débito principales a través de Stripe. Los planes Enterprise también pueden pagar por transferencia bancaria." }
+      }
     },
     "cta": {
-      "title": "¿Listo para optimizar tu negocio de alquiler?",
-      "subtitle": "Únete a miles de gestores de propiedades que confían en Triadak para automatizar su flujo de trabajo y maximizar ingresos.",
-      "button": "Empezar Tu Prueba Gratuita",
+      "title": "¿Listo para simplificar tu negocio de alquiler?",
+      "subtitle": "Únete a gestores de propiedades que ahorran horas cada semana con Triadak. Empieza gratis — mejora cuando estés listo.",
+      "button": "Empezar gratis",
       "noCard": "Sin tarjeta de crédito · Configuración en 2 minutos"
     },
     "footer": {
@@ -529,7 +599,9 @@
       "security": "Seguridad empresarial",
       "mobileFriendly": "Compatible con móvil",
       "worldwide": "Disponible mundialmente",
-      "copyright": "© {{year}} Triadak. Todos los derechos reservados."
+      "copyright": "© {{year}} Triadak. Todos los derechos reservados.",
+      "privacy": "Política de Privacidad",
+      "terms": "Términos de Servicio"
     }
   }
 }

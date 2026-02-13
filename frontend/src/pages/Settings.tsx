@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import {
     User, Mail, Shield, Bell, Globe, Palette,
@@ -26,12 +27,8 @@ interface ProfileForm {
 
 type TabId = 'profile' | 'preferences' | 'notifications' | 'danger';
 
-const TABS: { id: TabId; label: string; icon: React.ElementType }[] = [
-    { id: 'profile', label: 'Profile', icon: User },
-    { id: 'preferences', label: 'Preferences', icon: Palette },
-    { id: 'notifications', label: 'Notifications', icon: Bell },
-    { id: 'danger', label: 'Danger Zone', icon: AlertTriangle },
-];
+const TAB_IDS: TabId[] = ['profile', 'preferences', 'notifications', 'danger'];
+const TAB_ICONS: Record<TabId, React.ElementType> = { profile: User, preferences: Palette, notifications: Bell, danger: AlertTriangle };
 
 const TIMEZONES = [
     'Europe/Madrid', 'Europe/London', 'Europe/Berlin', 'Europe/Paris',
@@ -41,11 +38,10 @@ const TIMEZONES = [
 ];
 
 const LANGUAGES = [
-    { code: 'en', label: 'English' },
-    { code: 'es', label: 'Español' },
-    { code: 'de', label: 'Deutsch' },
-    { code: 'fr', label: 'Français' },
-    { code: 'pt', label: 'Português' },
+    { code: 'en' as const },
+    { code: 'de' as const },
+    { code: 'es' as const },
+    { code: 'fr' as const },
 ];
 
 const CURRENCIES = [
@@ -58,6 +54,7 @@ const CURRENCIES = [
 
 // ─── Main Settings Component ─────────────────────────
 export default function Settings() {
+    const { t, i18n } = useTranslation();
     const { user, profile, refreshProfile, signOut } = useAuth();
     const [activeTab, setActiveTab] = useState<TabId>('profile');
     const [saving, setSaving] = useState(false);
@@ -96,6 +93,7 @@ export default function Settings() {
             try {
                 const parsed = JSON.parse(savedSettings);
                 setForm(prev => ({ ...prev, ...parsed }));
+                if (parsed.language) i18n.changeLanguage(parsed.language);
             } catch { /* ignore */ }
         }
 
@@ -139,11 +137,11 @@ export default function Settings() {
         if (!file || !user) return;
 
         if (file.size > 2 * 1024 * 1024) {
-            alert('The image must be less than 2MB');
+            alert(t('settings.alerts.avatarSize'));
             return;
         }
         if (!file.type.startsWith('image/')) {
-            alert('Please select a valid image file');
+            alert(t('settings.alerts.avatarInvalid'));
             return;
         }
 
@@ -165,7 +163,7 @@ export default function Settings() {
             setAvatarUrl(data.publicUrl + '?t=' + Date.now());
         } catch (err: any) {
             console.error('Error uploading avatar:', err);
-            alert('Error uploading avatar: ' + (err.message || 'Unknown error'));
+            alert(t('settings.alerts.avatarError', { message: err.message || 'Unknown error' }));
         } finally {
             setUploadingAvatar(false);
         }
@@ -174,6 +172,7 @@ export default function Settings() {
     const updateField = (field: keyof ProfileForm, value: string | boolean) => {
         setForm(prev => ({ ...prev, [field]: value }));
         setSaved(false);
+        if (field === 'language') i18n.changeLanguage(value as string);
     };
 
     const handleSave = async () => {
@@ -219,11 +218,11 @@ export default function Settings() {
 
     const handleDeleteAccount = async () => {
         const confirmed = window.confirm(
-            '⚠️ Are you sure you want to delete your account? This action cannot be undone and all your data will be permanently lost.'
+            '⚠️ ' + t('settings.alerts.deleteConfirm')
         );
         if (confirmed) {
             const doubleConfirm = window.confirm(
-                'This is your last chance. Type OK to confirm deletion of all data.'
+                t('settings.alerts.deleteDoubleConfirm')
             );
             if (doubleConfirm) {
                 await signOut();
@@ -242,7 +241,7 @@ export default function Settings() {
                         animate={{ opacity: 1, y: 0 }}
                         className="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-white mb-1"
                     >
-                        Settings
+                        {t('settings.title')}
                     </motion.h1>
                     <motion.p
                         initial={{ opacity: 0 }}
@@ -250,26 +249,30 @@ export default function Settings() {
                         transition={{ delay: 0.1 }}
                         className="text-slate-400 text-sm sm:text-base"
                     >
-                        Manage your profile, preferences, and notifications
+                        {t('settings.subtitle')}
                     </motion.p>
                 </header>
 
                 {/* Tabs */}
                 <div className="flex gap-1 bg-white/5 rounded-xl p-1 overflow-x-auto">
-                    {TABS.map(tab => (
-                        <button
-                            key={tab.id}
-                            onClick={() => setActiveTab(tab.id)}
-                            className={`flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium transition-all whitespace-nowrap flex-1 justify-center ${
-                                activeTab === tab.id
-                                    ? 'bg-white/10 text-white shadow-sm'
-                                    : 'text-slate-400 hover:text-white hover:bg-white/5'
-                            } ${tab.id === 'danger' ? 'text-red-400' : ''}`}
-                        >
-                            <tab.icon className={`h-4 w-4 ${tab.id === 'danger' && activeTab !== tab.id ? 'text-red-400/60' : ''}`} />
-                            <span className="hidden sm:inline">{tab.label}</span>
-                        </button>
-                    ))}
+                    {TAB_IDS.map(id => {
+                        const Icon = TAB_ICONS[id];
+                        const labelKey = id === 'danger' ? 'settings.tabs.dangerZone' : `settings.tabs.${id}`;
+                        return (
+                            <button
+                                key={id}
+                                onClick={() => setActiveTab(id)}
+                                className={`flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium transition-all whitespace-nowrap flex-1 justify-center ${
+                                    activeTab === id
+                                        ? 'bg-white/10 text-white shadow-sm'
+                                        : 'text-slate-400 hover:text-white hover:bg-white/5'
+                                } ${id === 'danger' ? 'text-red-400' : ''}`}
+                            >
+                                <Icon className={`h-4 w-4 ${id === 'danger' && activeTab !== id ? 'text-red-400/60' : ''}`} />
+                                <span className="hidden sm:inline">{t(labelKey)}</span>
+                            </button>
+                        );
+                    })}
                 </div>
 
                 {/* Tab Content */}
@@ -285,7 +288,7 @@ export default function Settings() {
                             <div className="bg-white/5 border border-white/5 rounded-2xl p-6">
                                 <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
                                     <Camera className="h-5 w-5 text-indigo-400" />
-                                    Profile Photo
+                                    {t('settings.profile.photoTitle')}
                                 </h3>
                                 <div className="flex items-center gap-6">
                                     <div className="relative">
@@ -310,9 +313,9 @@ export default function Settings() {
                                         </label>
                                     </div>
                                     <div>
-                                        <p className="text-sm text-white font-medium">Upload a photo</p>
-                                        <p className="text-xs text-slate-500 mt-1">JPG, PNG or WebP. Max 2MB.</p>
-                                        {uploadingAvatar && <p className="text-xs text-indigo-400 mt-1 animate-pulse">Uploading...</p>}
+                                        <p className="text-sm text-white font-medium">{t('settings.profile.uploadPhoto')}</p>
+                                        <p className="text-xs text-slate-500 mt-1">{t('settings.profile.uploadHint')}</p>
+                                        {uploadingAvatar && <p className="text-xs text-indigo-400 mt-1 animate-pulse">{t('settings.profile.uploading')}</p>}
                                     </div>
                                 </div>
                             </div>
@@ -321,21 +324,21 @@ export default function Settings() {
                             <div className="bg-white/5 border border-white/5 rounded-2xl p-6">
                                 <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
                                     <User className="h-5 w-5 text-indigo-400" />
-                                    Personal Information
+                                    {t('settings.profile.personalInfo')}
                                 </h3>
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                     <div>
-                                        <label className="block text-xs font-medium text-slate-400 mb-1.5">Full Name</label>
+                                        <label className="block text-xs font-medium text-slate-400 mb-1.5">{t('settings.profile.fullName')}</label>
                                         <input
                                             type="text"
                                             value={form.full_name}
                                             onChange={e => updateField('full_name', e.target.value)}
                                             className="w-full px-3 py-2.5 bg-white/5 border border-white/10 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500/50 transition-all"
-                                            placeholder="Your name"
+                                            placeholder={t('settings.profile.fullNamePlaceholder')}
                                         />
                                     </div>
                                     <div>
-                                        <label className="block text-xs font-medium text-slate-400 mb-1.5">Email</label>
+                                        <label className="block text-xs font-medium text-slate-400 mb-1.5">{t('settings.profile.email')}</label>
                                         <div className="flex items-center gap-2">
                                             <input
                                                 type="email"
@@ -345,26 +348,26 @@ export default function Settings() {
                                             />
                                             <Mail className="h-4 w-4 text-slate-600 flex-shrink-0" />
                                         </div>
-                                        <p className="text-[10px] text-slate-600 mt-1">Email cannot be changed from here</p>
+                                        <p className="text-[10px] text-slate-600 mt-1">{t('settings.profile.emailHint')}</p>
                                     </div>
                                     <div>
-                                        <label className="block text-xs font-medium text-slate-400 mb-1.5">Phone</label>
+                                        <label className="block text-xs font-medium text-slate-400 mb-1.5">{t('settings.profile.phone')}</label>
                                         <input
                                             type="tel"
                                             value={form.phone}
                                             onChange={e => updateField('phone', e.target.value)}
                                             className="w-full px-3 py-2.5 bg-white/5 border border-white/10 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500/50 transition-all"
-                                            placeholder="+34 600 000 000"
+                                            placeholder={t('settings.profile.phonePlaceholder')}
                                         />
                                     </div>
                                     <div>
-                                        <label className="block text-xs font-medium text-slate-400 mb-1.5">Company</label>
+                                        <label className="block text-xs font-medium text-slate-400 mb-1.5">{t('settings.profile.company')}</label>
                                         <input
                                             type="text"
                                             value={form.company}
                                             onChange={e => updateField('company', e.target.value)}
                                             className="w-full px-3 py-2.5 bg-white/5 border border-white/10 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500/50 transition-all"
-                                            placeholder="Your company name"
+                                            placeholder={t('settings.profile.companyPlaceholder')}
                                         />
                                     </div>
                                 </div>
@@ -372,7 +375,7 @@ export default function Settings() {
                                 {/* Role Badge */}
                                 <div className="mt-4 flex items-center gap-3">
                                     <Shield className="h-4 w-4 text-slate-500" />
-                                    <span className="text-xs text-slate-400">Role:</span>
+                                    <span className="text-xs text-slate-400">{t('settings.profile.role')}</span>
                                     <span className={`text-xs font-semibold uppercase px-2.5 py-0.5 rounded-full ${
                                         profile?.role === 'admin'
                                             ? 'bg-amber-500/20 text-amber-400'
@@ -391,23 +394,23 @@ export default function Settings() {
                             <div className="bg-white/5 border border-white/5 rounded-2xl p-6">
                                 <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
                                     <Globe className="h-5 w-5 text-indigo-400" />
-                                    Regional Settings
+                                    {t('settings.preferences.regional')}
                                 </h3>
                                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                                     <div>
-                                        <label className="block text-xs font-medium text-slate-400 mb-1.5">Language</label>
+                                        <label className="block text-xs font-medium text-slate-400 mb-1.5">{t('settings.preferences.language')}</label>
                                         <select
                                             value={form.language}
                                             onChange={e => updateField('language', e.target.value)}
                                             className="w-full px-3 py-2.5 bg-white/5 border border-white/10 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/50 appearance-none cursor-pointer"
                                         >
                                             {LANGUAGES.map(l => (
-                                                <option key={l.code} value={l.code} className="bg-slate-800">{l.label}</option>
+                                                <option key={l.code} value={l.code} className="bg-slate-800">{t(`settings.languages.${l.code}`)}</option>
                                             ))}
                                         </select>
                                     </div>
                                     <div>
-                                        <label className="block text-xs font-medium text-slate-400 mb-1.5">Currency</label>
+                                        <label className="block text-xs font-medium text-slate-400 mb-1.5">{t('settings.preferences.currency')}</label>
                                         <select
                                             value={form.currency}
                                             onChange={e => updateField('currency', e.target.value)}
@@ -419,7 +422,7 @@ export default function Settings() {
                                         </select>
                                     </div>
                                     <div>
-                                        <label className="block text-xs font-medium text-slate-400 mb-1.5">Timezone</label>
+                                        <label className="block text-xs font-medium text-slate-400 mb-1.5">{t('settings.preferences.timezone')}</label>
                                         <select
                                             value={form.timezone}
                                             onChange={e => updateField('timezone', e.target.value)}
@@ -437,13 +440,13 @@ export default function Settings() {
                             <div className="bg-white/5 border border-white/5 rounded-2xl p-6">
                                 <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
                                     <Palette className="h-5 w-5 text-indigo-400" />
-                                    Appearance
+                                    {t('settings.preferences.appearance')}
                                 </h3>
                                 <div className="grid grid-cols-3 gap-3">
                                     {[
-                                        { value: 'light' as const, label: 'Light', icon: Sun },
-                                        { value: 'dark' as const, label: 'Dark', icon: Moon },
-                                        { value: 'system' as const, label: 'System', icon: Monitor },
+                                        { value: 'light' as const, labelKey: 'settings.preferences.themeLight', icon: Sun },
+                                        { value: 'dark' as const, labelKey: 'settings.preferences.themeDark', icon: Moon },
+                                        { value: 'system' as const, labelKey: 'settings.preferences.themeSystem', icon: Monitor },
                                     ].map(opt => (
                                         <button
                                             key={opt.value}
@@ -455,7 +458,7 @@ export default function Settings() {
                                             }`}
                                         >
                                             <opt.icon className={`h-6 w-6 ${form.theme === opt.value ? 'text-indigo-400' : ''}`} />
-                                            <span className="text-xs font-medium">{opt.label}</span>
+                                            <span className="text-xs font-medium">{t(opt.labelKey)}</span>
                                             {form.theme === opt.value && (
                                                 <motion.div
                                                     initial={{ scale: 0 }}
@@ -467,7 +470,7 @@ export default function Settings() {
                                     ))}
                                 </div>
                                 <p className="text-[10px] text-slate-600 mt-3">
-                                    * Theme switching will be fully implemented with the i18n update. Currently using dark mode.
+                                    {t('settings.preferences.themeNote')}
                                 </p>
                             </div>
                         </div>
@@ -477,24 +480,24 @@ export default function Settings() {
                         <div className="bg-white/5 border border-white/5 rounded-2xl p-6">
                             <h3 className="text-lg font-semibold text-white mb-2 flex items-center gap-2">
                                 <Bell className="h-5 w-5 text-indigo-400" />
-                                Notification Preferences
+                                {t('settings.notifications.title')}
                             </h3>
-                            <p className="text-xs text-slate-500 mb-6">Choose which notifications you want to receive</p>
+                            <p className="text-xs text-slate-500 mb-6">{t('settings.notifications.subtitle')}</p>
 
                             <div className="space-y-4">
                                 {[
-                                    { key: 'notifications_email' as const, title: 'Email Notifications', desc: 'Receive general updates and news via email' },
-                                    { key: 'notifications_bookings' as const, title: 'Booking Alerts', desc: 'Get notified when a new booking is created or updated' },
-                                    { key: 'notifications_payments' as const, title: 'Payment Alerts', desc: 'Receive alerts for payments and invoices' },
-                                    { key: 'notifications_reminders' as const, title: 'Check-in/Check-out Reminders', desc: 'Reminders before guest arrivals and departures' },
+                                    { key: 'notifications_email' as const, titleKey: 'settings.notifications.email', descKey: 'settings.notifications.emailDesc' },
+                                    { key: 'notifications_bookings' as const, titleKey: 'settings.notifications.bookings', descKey: 'settings.notifications.bookingsDesc' },
+                                    { key: 'notifications_payments' as const, titleKey: 'settings.notifications.payments', descKey: 'settings.notifications.paymentsDesc' },
+                                    { key: 'notifications_reminders' as const, titleKey: 'settings.notifications.reminders', descKey: 'settings.notifications.remindersDesc' },
                                 ].map(notif => (
                                     <div
                                         key={notif.key}
                                         className="flex items-center justify-between p-4 rounded-xl bg-white/[0.02] border border-white/5 hover:bg-white/[0.04] transition-colors"
                                     >
                                         <div>
-                                            <p className="text-sm font-medium text-white">{notif.title}</p>
-                                            <p className="text-xs text-slate-500 mt-0.5">{notif.desc}</p>
+                                            <p className="text-sm font-medium text-white">{t(notif.titleKey)}</p>
+                                            <p className="text-xs text-slate-500 mt-0.5">{t(notif.descKey)}</p>
                                         </div>
                                         <button
                                             onClick={() => updateField(notif.key, !form[notif.key])}
@@ -519,44 +522,44 @@ export default function Settings() {
                             <div className="bg-red-500/5 border border-red-500/20 rounded-2xl p-6">
                                 <h3 className="text-lg font-semibold text-red-400 mb-2 flex items-center gap-2">
                                     <AlertTriangle className="h-5 w-5" />
-                                    Danger Zone
+                                    {t('settings.danger.title')}
                                 </h3>
                                 <p className="text-xs text-slate-500 mb-6">
-                                    These actions are irreversible. Please proceed with caution.
+                                    {t('settings.danger.warning')}
                                 </p>
 
                                 <div className="space-y-4">
                                     {/* Change Password */}
                                     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 rounded-xl border border-white/5">
                                         <div>
-                                            <p className="text-sm font-medium text-white">Change Password</p>
-                                            <p className="text-xs text-slate-500 mt-0.5">Update your account password</p>
+                                            <p className="text-sm font-medium text-white">{t('settings.danger.changePassword')}</p>
+                                            <p className="text-xs text-slate-500 mt-0.5">{t('settings.danger.changePasswordDesc')}</p>
                                         </div>
                                         <button
                                             onClick={async () => {
                                                 if (user?.email) {
                                                     await supabase.auth.resetPasswordForEmail(user.email);
-                                                    alert('Password reset email sent! Check your inbox.');
+                                                    alert(t('settings.alerts.passwordResetSent'));
                                                 }
                                             }}
                                             className="px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-sm text-white hover:bg-white/10 transition-colors"
                                         >
-                                            Send Reset Email
+                                            {t('settings.danger.sendResetEmail')}
                                         </button>
                                     </div>
 
                                     {/* Delete Account */}
                                     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 rounded-xl border border-red-500/20 bg-red-500/5">
                                         <div>
-                                            <p className="text-sm font-medium text-red-400">Delete Account</p>
-                                            <p className="text-xs text-slate-500 mt-0.5">Permanently remove your account and all data</p>
+                                            <p className="text-sm font-medium text-red-400">{t('settings.danger.deleteAccount')}</p>
+                                            <p className="text-xs text-slate-500 mt-0.5">{t('settings.danger.deleteAccountDesc')}</p>
                                         </div>
                                         <button
                                             onClick={handleDeleteAccount}
                                             className="px-4 py-2 bg-red-500/10 border border-red-500/30 rounded-lg text-sm text-red-400 hover:bg-red-500/20 transition-colors flex items-center gap-2"
                                         >
                                             <Trash2 className="h-3.5 w-3.5" />
-                                            Delete Account
+                                            {t('settings.danger.deleteAccount')}
                                         </button>
                                     </div>
                                 </div>
@@ -575,10 +578,10 @@ export default function Settings() {
                         <p className="text-xs text-slate-500">
                             {saved ? (
                                 <span className="text-emerald-400 flex items-center gap-1">
-                                    <Check className="h-3.5 w-3.5" /> Changes saved successfully
+                                    <Check className="h-3.5 w-3.5" /> {t('settings.save.success')}
                                 </span>
                             ) : (
-                                'Remember to save your changes'
+                                t('settings.save.reminder')
                             )}
                         </p>
                         <button
@@ -591,7 +594,7 @@ export default function Settings() {
                             ) : (
                                 <Save className="h-4 w-4" />
                             )}
-                            {saving ? 'Saving...' : 'Save Changes'}
+                            {saving ? t('common.saving') : t('settings.save.button')}
                         </button>
                     </motion.div>
                 )}

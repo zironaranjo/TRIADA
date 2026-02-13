@@ -18,9 +18,11 @@ import {
 import { cn } from '@/lib/utils';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../lib/supabase';
+import { useTranslation } from 'react-i18next';
 import NotificationCenter from './NotificationCenter';
 
 const Layout = () => {
+    const { t } = useTranslation();
     const location = useLocation();
     const { signOut, profile } = useAuth();
     const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -61,13 +63,13 @@ const Layout = () => {
     }, []);
 
     const navItems = [
-        { path: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
-        { path: '/properties', label: 'Properties', icon: Building2 },
-        { path: '/bookings', label: 'Bookings', icon: CalendarDays },
-        { path: '/owners', label: 'Owners', icon: Users },
-        { path: '/crm', label: 'CRM', icon: ContactIcon },
-        { path: '/accounting', label: 'Finance Engine', icon: PiggyBank },
-        { path: '/statements', label: 'Owner Statements', icon: FileText },
+        { path: '/dashboard', labelKey: 'layout.nav.dashboard', icon: LayoutDashboard },
+        { path: '/properties', labelKey: 'layout.nav.properties', icon: Building2 },
+        { path: '/bookings', labelKey: 'layout.nav.bookings', icon: CalendarDays },
+        { path: '/owners', labelKey: 'layout.nav.owners', icon: Users },
+        { path: '/crm', labelKey: 'layout.nav.crm', icon: ContactIcon },
+        { path: '/accounting', labelKey: 'layout.nav.financeEngine', icon: PiggyBank },
+        { path: '/statements', labelKey: 'layout.nav.ownerStatements', icon: FileText },
     ];
 
     const handleNavClick = () => {
@@ -80,13 +82,13 @@ const Layout = () => {
             <div className="flex flex-col items-center justify-center py-6 lg:py-8 border-b border-white/5">
                 <img src="/logotriadak.png" alt="TRIADAK" className="h-32 lg:h-52 w-auto max-w-full px-2 object-contain mb-0 drop-shadow-xl" />
                 <span className="text-xs font-bold text-slate-500 tracking-[0.3em] uppercase opacity-80 -mt-1 lg:-mt-2">
-                    Vacational Renting
+                    {t('layout.tagline')}
                 </span>
             </div>
 
             {/* Navigation */}
             <nav className="flex-1 px-3 py-4 lg:py-6 space-y-1 overflow-y-auto">
-                <p className="px-3 text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">Main Menu</p>
+                <p className="px-3 text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">{t('layout.mainMenu')}</p>
                 {navItems.map((item) => {
                     const active = isActive(item.path);
                     return (
@@ -111,14 +113,14 @@ const Layout = () => {
                                 />
                             )}
                             <item.icon className={cn("h-5 w-5 transition-colors", active ? "text-indigo-400" : "text-slate-500 group-hover:text-slate-300")} />
-                            <span className="flex-1">{item.label}</span>
+                            <span className="flex-1">{t(item.labelKey)}</span>
                             {active && <ChevronRight className="h-4 w-4 text-slate-500" />}
                         </Link>
                     );
                 })}
 
                 <div className="mt-8">
-                    <p className="px-3 text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">System</p>
+                    <p className="px-3 text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">{t('layout.system')}</p>
                     <Link
                         to="/settings"
                         onClick={handleNavClick}
@@ -130,7 +132,7 @@ const Layout = () => {
                         )}
                     >
                         <Settings className="h-5 w-5 text-slate-500" />
-                        Settings
+                        {t('layout.nav.settings')}
                     </Link>
                     <Link
                         to="/billing"
@@ -143,7 +145,7 @@ const Layout = () => {
                         )}
                     >
                         <PiggyBank className="h-5 w-5 text-slate-500" />
-                        Billing
+                        {t('layout.nav.billing')}
                     </Link>
                 </div>
             </nav>
@@ -183,7 +185,7 @@ const Layout = () => {
                     className="mt-3 flex items-center gap-2 text-xs text-slate-500 hover:text-red-400 transition-colors w-full justify-center"
                 >
                     <LogOut className="h-3 w-3" />
-                    Sign Out
+                    {t('layout.signOut')}
                 </button>
             </div>
         </>

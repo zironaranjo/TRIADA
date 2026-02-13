@@ -1,4 +1,5 @@
 import { useEffect, useState, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import {
     FileText, Users, DollarSign, TrendingDown,
@@ -65,7 +66,7 @@ const PLATFORM_RATES: Record<string, number> = {
     VRBO: 0.05,
 };
 
-const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+const MONTH_KEYS = ['january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december'] as const;
 
 const fmt = (v: number) => new Intl.NumberFormat('es-ES', {
     style: 'currency', currency: 'EUR', maximumFractionDigits: 2
@@ -73,12 +74,14 @@ const fmt = (v: number) => new Intl.NumberFormat('es-ES', {
 
 // ─── Main Component ──────────────────────────────────
 export default function OwnerStatements() {
+    const { t } = useTranslation();
     const [owners, setOwners] = useState<Owner[]>([]);
     const [properties, setProperties] = useState<Property[]>([]);
     const [bookings, setBookings] = useState<Booking[]>([]);
     const [expenses, setExpenses] = useState<Expense[]>([]);
     const [loading, setLoading] = useState(true);
 
+    const months = useMemo(() => MONTH_KEYS.map(k => t(`common.months.${k}`)), [t]);
     const now = new Date();
     const [selectedMonth, setSelectedMonth] = useState(now.getMonth());
     const [selectedYear, setSelectedYear] = useState(now.getFullYear());
@@ -153,11 +156,11 @@ export default function OwnerStatements() {
 
     // ─── Export Functions ─────────────────────────────
     const exportStatementsPDF = () => {
-        const period = `${MONTHS[selectedMonth]} ${selectedYear}`;
+        const period = `${months[selectedMonth]} ${selectedYear}`;
         exportToPDF({
-            title: 'Owner Statements',
+            title: t('ownerStatements.title'),
             subtitle: period,
-            headers: ['Owner', 'Properties', 'Bookings', 'Gross Revenue', 'Platform Fees', 'Agency (20%)', 'Expenses', 'Net Payout'],
+            headers: [t('ownerStatements.owner'), t('ownerStatements.propertiesLabel'), t('ownerStatements.bookings'), t('ownerStatements.grossRevenue'), t('ownerStatements.platformFees'), t('ownerStatements.agencyCommission'), t('ownerStatements.propertyExpenses'), t('ownerStatements.netPayout')],
             rows: statements.map(st => [
                 `${st.owner.firstName} ${st.owner.lastName}`,
                 st.properties.map(p => p.name).join(', '),
@@ -169,10 +172,10 @@ export default function OwnerStatements() {
                 fmt(st.netPayout),
             ]),
             summaryRows: [
-                { label: 'Period', value: period },
-                { label: 'Total Revenue', value: fmt(totalRevenue) },
-                { label: 'Total Owner Payouts', value: fmt(totalPayout), bold: true },
-                { label: 'Owners', value: String(statements.length) },
+                { label: t('ownerStatements.period'), value: period },
+                { label: t('ownerStatements.totalRevenue'), value: fmt(totalRevenue) },
+                { label: t('ownerStatements.totalPayouts'), value: fmt(totalPayout), bold: true },
+                { label: t('ownerStatements.owners'), value: String(statements.length) },
             ],
             filename: `owner-statements-${selectedYear}-${String(selectedMonth + 1).padStart(2, '0')}`,
         });
@@ -181,7 +184,7 @@ export default function OwnerStatements() {
     const exportStatementsCSV = () => {
         exportToCSV(
             `owner-statements-${selectedYear}-${String(selectedMonth + 1).padStart(2, '0')}`,
-            ['Owner', 'Properties', 'Bookings', 'Gross Revenue', 'Platform Fees', 'Agency Commission', 'Expenses', 'Net Payout'],
+            [t('ownerStatements.owner'), t('ownerStatements.propertiesLabel'), t('ownerStatements.bookings'), t('ownerStatements.grossRevenue'), t('ownerStatements.platformFees'), t('ownerStatements.agencyCommission'), t('ownerStatements.propertyExpenses'), t('ownerStatements.netPayout')],
             statements.map(st => [
                 `${st.owner.firstName} ${st.owner.lastName}`,
                 st.properties.map(p => p.name).join(' | '),
@@ -199,7 +202,7 @@ export default function OwnerStatements() {
         <div className="flex h-screen items-center justify-center">
             <div className="flex flex-col items-center gap-4">
                 <div className="h-10 w-10 animate-spin rounded-full border-4 border-indigo-500 border-t-transparent" />
-                <p className="animate-pulse text-sm text-slate-400">Loading Statements...</p>
+                <p className="animate-pulse text-sm text-slate-400">{t('ownerStatements.loading')}</p>
             </div>
         </div>
     );
@@ -216,9 +219,9 @@ export default function OwnerStatements() {
                             animate={{ opacity: 1, y: 0 }}
                             className="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-white mb-1"
                         >
-                            Owner Statements
+                            {t('ownerStatements.title')}
                         </motion.h1>
-                        <p className="text-slate-400 text-sm sm:text-base">Monthly settlement reports for property owners</p>
+                        <p className="text-slate-400 text-sm sm:text-base">{t('ownerStatements.subtitle')}</p>
                     </div>
                     <div className="flex flex-wrap items-center gap-2">
                         <select
@@ -226,7 +229,7 @@ export default function OwnerStatements() {
                             onChange={e => setSelectedMonth(Number(e.target.value))}
                             className="bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-indigo-500"
                         >
-                            {MONTHS.map((m, i) => (
+                            {months.map((m, i) => (
                                 <option key={i} value={i} className="bg-slate-800">{m}</option>
                             ))}
                         </select>
@@ -246,14 +249,14 @@ export default function OwnerStatements() {
                                     className="flex items-center gap-1.5 px-3 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg text-sm font-medium transition-colors"
                                 >
                                     <Download className="h-3.5 w-3.5" />
-                                    <span className="hidden sm:inline">PDF</span>
+                                    <span className="hidden sm:inline">{t('ownerStatements.pdf')}</span>
                                 </button>
                                 <button
                                     onClick={exportStatementsCSV}
                                     className="flex items-center gap-1.5 px-3 py-2 bg-white/5 border border-white/10 hover:bg-white/10 text-white rounded-lg text-sm font-medium transition-colors"
                                 >
                                     <Download className="h-3.5 w-3.5" />
-                                    <span className="hidden sm:inline">CSV</span>
+                                    <span className="hidden sm:inline">{t('ownerStatements.csv')}</span>
                                 </button>
                             </div>
                         )}
@@ -262,10 +265,10 @@ export default function OwnerStatements() {
 
                 {/* Summary Cards */}
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                    <SummaryCard label="Total Revenue" value={fmt(totalRevenue)} icon={DollarSign} color="text-indigo-400" />
-                    <SummaryCard label="Total Payouts" value={fmt(totalPayout)} icon={Users} color="text-emerald-400" />
-                    <SummaryCard label="Owners" value={String(statements.length)} icon={Building2} color="text-amber-400" />
-                    <SummaryCard label="Bookings" value={String(bookings.length)} icon={Calendar} color="text-blue-400" />
+                    <SummaryCard label={t('ownerStatements.totalRevenue')} value={fmt(totalRevenue)} icon={DollarSign} color="text-indigo-400" />
+                    <SummaryCard label={t('ownerStatements.totalPayouts')} value={fmt(totalPayout)} icon={Users} color="text-emerald-400" />
+                    <SummaryCard label={t('ownerStatements.owners')} value={String(statements.length)} icon={Building2} color="text-amber-400" />
+                    <SummaryCard label={t('ownerStatements.bookings')} value={String(bookings.length)} icon={Calendar} color="text-blue-400" />
                 </div>
 
                 {/* Statements */}
@@ -300,13 +303,13 @@ export default function OwnerStatements() {
                                                     {st.owner.firstName} {st.owner.lastName}
                                                 </p>
                                                 <p className="text-[10px] sm:text-xs text-slate-500">
-                                                    {st.properties.length} {st.properties.length === 1 ? 'property' : 'properties'} · {st.bookings.length} bookings
+                                                    {st.properties.length} {st.properties.length === 1 ? t('ownerStatements.property') : t('ownerStatements.properties')} · {st.bookings.length} {st.bookings.length === 1 ? t('ownerStatements.booking') : t('ownerStatements.bookings')}
                                                 </p>
                                             </div>
                                         </div>
                                         <div className="flex items-center gap-3 sm:gap-6">
                                             <div className="text-right">
-                                                <p className="text-xs text-slate-500">Net Payout</p>
+                                                <p className="text-xs text-slate-500">{t('ownerStatements.netPayout')}</p>
                                                 <p className={`text-base sm:text-xl font-bold ${st.netPayout >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
                                                     {fmt(st.netPayout)}
                                                 </p>
@@ -326,29 +329,29 @@ export default function OwnerStatements() {
                                             <div className="p-4 sm:p-5">
                                                 <h4 className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3 flex items-center gap-2">
                                                     <FileText className="h-3.5 w-3.5" />
-                                                    Settlement - {MONTHS[selectedMonth]} {selectedYear}
+                                                    {t('ownerStatements.settlement', { month: months[selectedMonth], year: selectedYear })}
                                                 </h4>
                                                 <div className="bg-black/20 rounded-xl overflow-hidden">
                                                     <table className="w-full text-sm">
                                                         <tbody className="divide-y divide-white/5">
                                                             <tr>
-                                                                <td className="px-4 py-2.5 text-slate-300">Gross Revenue</td>
+                                                                <td className="px-4 py-2.5 text-slate-300">{t('ownerStatements.grossRevenue')}</td>
                                                                 <td className="px-4 py-2.5 text-right text-white font-semibold">{fmt(st.grossRevenue)}</td>
                                                             </tr>
                                                             <tr>
-                                                                <td className="px-4 py-2.5 text-slate-400">− Platform Fees (OTA/Stripe)</td>
+                                                                <td className="px-4 py-2.5 text-slate-400">{t('ownerStatements.platformFees')}</td>
                                                                 <td className="px-4 py-2.5 text-right text-rose-400">-{fmt(st.platformFees)}</td>
                                                             </tr>
                                                             <tr>
-                                                                <td className="px-4 py-2.5 text-slate-400">− Agency Commission (20%)</td>
+                                                                <td className="px-4 py-2.5 text-slate-400">{t('ownerStatements.agencyCommission')}</td>
                                                                 <td className="px-4 py-2.5 text-right text-amber-400">-{fmt(st.agencyCommission)}</td>
                                                             </tr>
                                                             <tr>
-                                                                <td className="px-4 py-2.5 text-slate-400">− Property Expenses</td>
+                                                                <td className="px-4 py-2.5 text-slate-400">{t('ownerStatements.propertyExpenses')}</td>
                                                                 <td className="px-4 py-2.5 text-right text-rose-400">-{fmt(st.propertyExpenses)}</td>
                                                             </tr>
                                                             <tr className="bg-emerald-500/5">
-                                                                <td className="px-4 py-3 text-emerald-400 font-bold">= Net Payout to Owner</td>
+                                                                <td className="px-4 py-3 text-emerald-400 font-bold">{t('ownerStatements.netPayoutToOwner')}</td>
                                                                 <td className="px-4 py-3 text-right text-emerald-400 font-bold text-base">{fmt(st.netPayout)}</td>
                                                             </tr>
                                                         </tbody>
@@ -361,7 +364,7 @@ export default function OwnerStatements() {
                                                 <div className="px-4 sm:px-5 pb-4 sm:pb-5">
                                                     <h4 className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2 flex items-center gap-2">
                                                         <Calendar className="h-3.5 w-3.5" />
-                                                        Bookings Detail
+                                                        {t('ownerStatements.bookingsDetail')}
                                                     </h4>
                                                     <div className="space-y-1.5">
                                                         {st.bookings.map(b => {
@@ -392,7 +395,7 @@ export default function OwnerStatements() {
                                                 <div className="px-4 sm:px-5 pb-4 sm:pb-5">
                                                     <h4 className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2 flex items-center gap-2">
                                                         <TrendingDown className="h-3.5 w-3.5" />
-                                                        Expenses Detail
+                                                        {t('ownerStatements.expensesDetail')}
                                                     </h4>
                                                     <div className="space-y-1.5">
                                                         {st.expenses.map(e => (
@@ -413,7 +416,7 @@ export default function OwnerStatements() {
                                             <div className="px-4 sm:px-5 pb-4 sm:pb-5">
                                                 <h4 className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2 flex items-center gap-2">
                                                     <Building2 className="h-3.5 w-3.5" />
-                                                    Properties
+                                                    {t('ownerStatements.propertiesLabel')}
                                                 </h4>
                                                 <div className="flex flex-wrap gap-2">
                                                     {st.properties.map(p => (
@@ -432,8 +435,8 @@ export default function OwnerStatements() {
                 ) : (
                     <div className="bg-white/5 border border-white/5 rounded-2xl p-12 text-center">
                         <FileText className="h-10 w-10 text-slate-600 mx-auto mb-3" />
-                        <p className="text-slate-400 text-sm">No statements for this period</p>
-                        <p className="text-slate-600 text-xs mt-1">Create owners and assign properties to see statements here</p>
+                        <p className="text-slate-400 text-sm">{t('ownerStatements.emptyTitle')}</p>
+                        <p className="text-slate-600 text-xs mt-1">{t('ownerStatements.emptyDescription')}</p>
                     </div>
                 )}
             </div>

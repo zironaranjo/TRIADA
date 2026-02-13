@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { ownersApi } from "@/api/client";
 import { motion, AnimatePresence } from "framer-motion";
 import { GlassCard } from "@/components/GlassCard";
@@ -18,6 +19,7 @@ interface Owner {
 }
 
 export default function Owners() {
+    const { t } = useTranslation();
     const [owners, setOwners] = useState<Owner[]>([]);
     const [loading, setLoading] = useState(true);
     const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
@@ -52,9 +54,9 @@ export default function Owners() {
                             animate={{ opacity: 1, x: 0 }}
                             className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-1"
                         >
-                            Owners
+                            {t('owners.title')}
                         </motion.h1>
-                        <p className="text-slate-400">Manage relationships and payouts.</p>
+                        <p className="text-slate-400">{t('owners.subtitle')}</p>
                     </div>
 
                     <div className="flex items-center gap-3">
@@ -62,7 +64,7 @@ export default function Owners() {
                             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500" />
                             <input
                                 type="text"
-                                placeholder="Search owners..."
+                                placeholder={t('owners.searchPlaceholder')}
                                 className="bg-slate-900 border border-white/10 rounded-lg pl-10 pr-4 py-2 text-sm focus:outline-none focus:border-primary w-64 text-white placeholder:text-slate-600"
                             />
                         </div>
@@ -71,23 +73,23 @@ export default function Owners() {
                             className="flex items-center gap-2 bg-primary hover:bg-primary-dark text-white px-4 py-2 rounded-lg font-semibold shadow-lg shadow-primary/20 transition-all active:scale-95"
                         >
                             <Plus className="h-5 w-5" />
-                            Add Owner
+                            {t('owners.addOwner')}
                         </button>
                     </div>
                 </div>
 
                 {/* Stats Row (Mocked for visual balance) */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <StatsCard title="Total Owners" value={owners.length.toString()} icon={<User className="h-5 w-5" />} trend="+2 this month" />
-                    <StatsCard title="Pending Payouts" value="€12,450" icon={<Wallet className="h-5 w-5 text-amber-400" />} trend="Due in 3 days" />
-                    <StatsCard title="Properties Managed" value="24" icon={<Building className="h-5 w-5 text-emerald-400" />} trend="+4 new" />
+                    <StatsCard title={t('owners.statTotalOwners')} value={owners.length.toString()} icon={<User className="h-5 w-5" />} trend={t('owners.trendThisMonth')} />
+                    <StatsCard title={t('owners.statPendingPayouts')} value="€12,450" icon={<Wallet className="h-5 w-5 text-amber-400" />} trend={t('owners.trendDueIn')} />
+                    <StatsCard title={t('owners.statPropertiesManaged')} value="24" icon={<Building className="h-5 w-5 text-emerald-400" />} trend={t('owners.trendNew')} />
                 </div>
 
                 {/* Owners List */}
                 <GlassCard className="p-0 overflow-hidden min-h-[400px]">
                     <div className="p-6 border-b border-white/5 bg-white/5 flex items-center justify-between">
-                        <h3 className="font-semibold text-lg text-white">All Owners</h3>
-                        <button className="text-sm text-primary hover:text-primary-light font-medium">View All</button>
+                        <h3 className="font-semibold text-lg text-white">{t('owners.allOwners')}</h3>
+                        <button className="text-sm text-primary hover:text-primary-light font-medium">{t('common.viewAll')}</button>
                     </div>
 
                     {loading ? (
@@ -129,7 +131,7 @@ export default function Owners() {
 
                                     <div className="flex items-center gap-6">
                                         <div className="text-right hidden sm:block">
-                                            <p className="text-xs text-slate-500 uppercase font-medium">Properties</p>
+                                            <p className="text-xs text-slate-500 uppercase font-medium">{t('owners.properties')}</p>
                                             <p className="text-sm font-bold text-white">{owner.properties?.length || 0}</p>
                                         </div>
                                         <button className="p-2 rounded-lg hover:bg-white/10 text-slate-400 hover:text-white transition-colors">
@@ -144,15 +146,15 @@ export default function Owners() {
                             <div className="h-16 w-16 bg-slate-800 rounded-full flex items-center justify-center mb-4">
                                 <User className="h-8 w-8 text-slate-500" />
                             </div>
-                            <h3 className="text-lg font-medium text-white">No owners found</h3>
+                            <h3 className="text-lg font-medium text-white">{t('owners.emptyTitle')}</h3>
                             <p className="text-slate-400 mt-2 mb-6 max-w-sm">
-                                Start by adding an owner to assign properties and manage payouts.
+                                {t('owners.emptyDescription')}
                             </p>
                             <button
                                 onClick={() => setIsCreateModalOpen(true)}
                                 className="px-6 py-2 bg-primary hover:bg-primary-dark text-white rounded-lg font-semibold"
                             >
-                                Create Owner
+                                {t('owners.createOwner')}
                             </button>
                         </div>
                     )}
@@ -186,6 +188,7 @@ function StatsCard({ title, value, icon, trend }: any) {
 }
 
 function CreateOwnerModal({ isOpen, onClose, onSuccess }: any) {
+    const { t } = useTranslation();
     const [formData, setFormData] = useState({
         firstName: '',
         lastName: '',
@@ -225,7 +228,7 @@ function CreateOwnerModal({ isOpen, onClose, onSuccess }: any) {
                     className="w-full max-w-md bg-[#1e293b] rounded-2xl border border-white/10 shadow-2xl overflow-hidden"
                 >
                     <div className="p-6 border-b border-white/10 flex justify-between items-center bg-[#0f172a]/50">
-                        <h2 className="text-xl font-bold text-white">Add New Owner</h2>
+                        <h2 className="text-xl font-bold text-white">{t('owners.modalTitle')}</h2>
                         <button onClick={onClose} className="text-slate-400 hover:text-white transition-colors">
                             <X className="h-5 w-5" />
                         </button>
@@ -234,7 +237,7 @@ function CreateOwnerModal({ isOpen, onClose, onSuccess }: any) {
                     <form onSubmit={handleSubmit} className="p-6 space-y-4">
                         <div className="grid grid-cols-2 gap-4">
                             <div className="space-y-2">
-                                <label className="text-sm font-medium text-slate-300">First Name</label>
+                                <label className="text-sm font-medium text-slate-300">{t('owners.labelFirstName')}</label>
                                 <input
                                     name="firstName" required
                                     value={formData.firstName} onChange={handleChange}
@@ -242,7 +245,7 @@ function CreateOwnerModal({ isOpen, onClose, onSuccess }: any) {
                                 />
                             </div>
                             <div className="space-y-2">
-                                <label className="text-sm font-medium text-slate-300">Last Name</label>
+                                <label className="text-sm font-medium text-slate-300">{t('owners.labelLastName')}</label>
                                 <input
                                     name="lastName" required
                                     value={formData.lastName} onChange={handleChange}
@@ -252,7 +255,7 @@ function CreateOwnerModal({ isOpen, onClose, onSuccess }: any) {
                         </div>
 
                         <div className="space-y-2">
-                            <label className="text-sm font-medium text-slate-300">Email Address</label>
+                            <label className="text-sm font-medium text-slate-300">{t('owners.labelEmail')}</label>
                             <input
                                 name="email" type="email" required
                                 value={formData.email} onChange={handleChange}
@@ -261,7 +264,7 @@ function CreateOwnerModal({ isOpen, onClose, onSuccess }: any) {
                         </div>
 
                         <div className="space-y-2">
-                            <label className="text-sm font-medium text-slate-300">Phone</label>
+                            <label className="text-sm font-medium text-slate-300">{t('owners.labelPhone')}</label>
                             <input
                                 name="phone" type="tel"
                                 value={formData.phone} onChange={handleChange}
@@ -271,14 +274,14 @@ function CreateOwnerModal({ isOpen, onClose, onSuccess }: any) {
 
                         <div className="pt-4 flex justify-end gap-3">
                             <button type="button" onClick={onClose} className="px-4 py-2 text-slate-300 hover:text-white transition-colors">
-                                Cancel
+                                {t('common.cancel')}
                             </button>
                             <button
                                 type="submit"
                                 disabled={loading}
                                 className="px-6 py-2 bg-primary hover:bg-primary-dark text-white rounded-lg font-semibold shadow-lg shadow-primary/20 disabled:opacity-50"
                             >
-                                {loading ? 'Creating...' : 'Create Owner'}
+                                {loading ? t('common.creating') : t('owners.createOwner')}
                             </button>
                         </div>
                     </form>

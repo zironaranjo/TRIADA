@@ -19,11 +19,14 @@ SaaS platform for **vacation rental management** (triadak.io). Combines features
 
 ## Architecture
 - Frontend connects **directly to Supabase** for most CRUD (properties, bookings, contacts, etc.)
-- Backend NestJS used for email sending, webhooks, sync endpoints
+- Backend NestJS used for email sending, webhooks, sync endpoints (Owners page still uses NestJS API via `ownersApi`)
 - Row Level Security (RLS) enabled for multi-tenancy
-- Supabase Storage bucket `property-images` for property images AND avatars (avatars/{userId}/)
+- Supabase Storage bucket `property-images` with organized subfolders:
+  - `avatars/{userId}/` — User profile avatars
+  - `properties/` — Property images
 - Notifications use `createPortal` to render outside sidebar (avoids overflow clipping)
-- Supabase Realtime for live notification updates
+- Supabase Realtime for live notification updates (requires `ALTER PUBLICATION supabase_realtime ADD TABLE notifications`)
+- Reusable `useUserAvatar` hook for loading avatar across all pages
 
 ## Database Tables (Supabase - schema public)
 - `bookings` - Reservations (guest_name, start_date, end_date, total_price, platform, status, property_id)
@@ -32,72 +35,93 @@ SaaS platform for **vacation rental management** (triadak.io). Combines features
 - `expenses` - Operational expenses (category, amount, description, property_id, date)
 - `ledger_entry` - Accounting entries (UNRESTRICTED RLS - needs review)
 - `notifications` - In-app notifications (user_id, type, title, message, read, metadata) + DB trigger on booking insert
-- `owner` - Property owners (UNRESTRICTED RLS - needs review)
+- `owner` - Property owners (firstName, lastName, email, phone) — camelCase columns (UNRESTRICTED RLS - needs review)
 - `profiles` - User profiles (user_id, email, full_name, role)
-- `properties` - Vacation rental properties (name, status, images, owner_id, etc.)
+- `properties` - Vacation rental properties (name, status, images, owner_id FK → owner.id, price_per_night, etc.)
 - `settlements` - Owner settlement records (UNRESTRICTED RLS - needs review)
 - `subscriptions` - User subscription plans
 - `vendors` - Vendor/supplier records (UNRESTRICTED RLS - needs review)
 
 **Note**: Tables marked UNRESTRICTED need RLS policies added for production security.
+**Note**: `properties.owner_id` FK now points to `owner(id)` table (was changed from `profiles`).
 
 ## Completed Features
 1. **Auth** - Supabase Auth with email verification, forgot password
-2. **Properties CRUD** - Create, edit, delete properties with image upload to Supabase Storage
+2. **Properties CRUD** - Create, edit, delete properties with image upload to `properties/` subfolder in Supabase Storage
 3. **Bookings CRUD** - Full booking management with list and calendar tab views
 4. **Visual Calendar** - Integrated into Bookings page as tab (monthly view, mobile dots, stats)
 5. **CRM/Contacts** - Contact management
-6. **Owners** - Owner management
+6. **Owners** - Owner management (via NestJS API)
 7. **Accounting/Ledger** - Basic ledger entries
 8. **Dashboard Analytics** - Real data from Supabase: monthly revenue chart (AreaChart), platform distribution (PieChart), revenue by property (BarChart horizontal), occupancy progress bars, upcoming bookings list
-9. **Landing Page** - Professional public page at / with hero, features, pricing, testimonials, FAQ
+9. **Landing Page** - Professional public page with real dashboard screenshot in hero, features, pricing, testimonials, FAQ, enlarged footer logo
 10. **Mobile Responsive** - Full responsive layout with hamburger menu sidebar
 11. **Onboarding** - Empty state guides for new users
 12. **Email Confirmation** - Booking confirmation emails via Resend
 13. **Multi-tenancy/RLS** - Row Level Security in Supabase
-14. **Settings Page** - Profile (avatar upload, name, phone, company), Preferences (language, currency, timezone, theme selector), Notifications (toggle switches for email/bookings/payments/reminders), Danger Zone (password reset, delete account). Saves to Supabase (profile) + localStorage (preferences)
+14. **Settings Page** - Profile (avatar upload, name, phone, company), Preferences (language, currency, timezone, theme selector), Notifications (toggle switches), Danger Zone (password reset, delete account). Saves to Supabase (profile) + localStorage (preferences)
 15. **Notification Center** - Bell icon in mobile header + desktop sidebar, portal-based dropdown panel with realtime updates, read/unread indicators, mark all read, clear all, delete individual, auto-notifications via DB trigger on booking insert
 16. **Owner Statements** - Monthly settlement reports per owner: gross revenue, platform fees, agency commission, expenses, net payout. Expandable detail with bookings and expenses breakdown
-17. **PDF/CSV Export** - Professional PDF reports (jspdf + jspdf-autotable) and CSV export for Owner Statements and Finance Dashboard. Branded with TRIADAK header, summary section, and paginated tables
+17. **PDF/CSV Export** - Professional PDF reports (jspdf + jspdf-autotable) and CSV export for Owner Statements and Finance Dashboard
+18. **User Avatar System** - Reusable `useUserAvatar` hook, avatar displayed in sidebar, mobile header, Owners page, and Owner Statements. Persists via localStorage + Supabase Storage fallback
 
-## Pending / Roadmap (next priorities in order)
-- [ ] Multi-language support (i18n with react-i18next) - ready to implement, structure defined
-- [ ] Scheduled email notifications (cron for check-in/out reminders - needs backend/edge function)
-- [ ] Stripe payment integration (deferred by user)
-- [x] Finance dashboard (improved with responsive layout, filters, export buttons)
-- [x] Owner Statements (monthly settlement reports with PDF/CSV export)
+## Pending / Roadmap (Fase 2 & 3)
+
+### Fase 2 - Funcionalidades clave
+- [ ] Multi-language support (i18n with react-i18next) — most visible for client presentation
+- [ ] Owner portal (separate view for owners to see their property performance)
+- [ ] Accounting/Ledger improvements (expense categorization, reconciliation, balance sheet — Bexio inspired)
+- [ ] Scheduled email notifications (cron for check-in/out reminders — needs Edge Function)
+
+### Fase 3 - Integraciones externas
 - [ ] Airbnb API integration
 - [ ] Booking.com API integration
 - [ ] Lodgify integration (channel manager sync)
+- [ ] Stripe payment integration (deferred by user)
+
+### Completed
+- [x] Finance dashboard (improved with responsive layout, filters, export buttons)
+- [x] Owner Statements (monthly settlement reports with PDF/CSV export)
 - [x] Advanced reports (exportable PDF/CSV with jspdf)
-- [ ] Owner portal (owners can view their property performance)
+- [x] Landing page polish (real dashboard screenshot, removed step numbers, footer logo enlarged)
+- [x] Avatar in sidebar/header/Owners/Statements (useUserAvatar hook)
+- [x] Property image upload fix (organized into properties/ folder, removed artificial timeout)
+- [x] DB fix: properties.owner_id FK changed from profiles → owner table
 
 ## Key Files
-- `frontend/src/App.tsx` - Main routing (public: /, /login; protected: /dashboard, /properties, /bookings, /owners, /crm, /accounting, /pricing, /billing, /settings)
-- `frontend/src/components/Layout.tsx` - App shell with sidebar + mobile menu + NotificationCenter
+- `frontend/src/App.tsx` - Main routing (public: /, /login; protected: /dashboard, /properties, /bookings, /owners, /crm, /accounting, /pricing, /billing, /settings, /statements)
+- `frontend/src/components/Layout.tsx` - App shell with sidebar + mobile menu + NotificationCenter + user avatar
 - `frontend/src/components/NotificationCenter.tsx` - Bell icon + portal dropdown with realtime notifications
+- `frontend/src/hooks/useUserAvatar.ts` - Reusable hook to load user avatar (localStorage + Supabase Storage fallback)
 - `frontend/src/pages/Dashboard.tsx` - Analytics dashboard with real Recharts graphs
 - `frontend/src/pages/Bookings.tsx` - Bookings list + calendar tab view
-- `frontend/src/pages/Properties.tsx` - Property CRUD + image upload
+- `frontend/src/pages/Properties.tsx` - Property CRUD + image upload to properties/ subfolder
 - `frontend/src/pages/Settings.tsx` - User settings (profile, preferences, notifications, danger zone)
-- `frontend/src/pages/LandingPage.tsx` - Public landing page
+- `frontend/src/pages/LandingPage.tsx` - Public landing page with real dashboard screenshot
+- `frontend/src/pages/Owners.tsx` - Owner management (uses NestJS API via ownersApi)
+- `frontend/src/pages/OwnerStatements.tsx` - Monthly owner settlement reports (queries Supabase directly, table: `owner`)
 - `frontend/src/contexts/AuthContext.tsx` - Auth provider with profile, subscription, role management
-- `frontend/src/pages/OwnerStatements.tsx` - Monthly owner settlement reports
+- `frontend/src/api/client.ts` - Axios client for NestJS backend API (owners, properties, bookings)
 - `frontend/src/lib/supabase.ts` - Supabase client config
 - `frontend/src/lib/exportUtils.ts` - PDF/CSV export utilities (jspdf + jspdf-autotable)
 
 ## Conventions
-- Use Supabase direct queries (not backend API) for frontend CRUD
+- Use Supabase direct queries (not backend API) for frontend CRUD — except Owners which still uses NestJS API
 - Tailwind for all styling, dark theme (bg-[#0f172a] base)
 - Framer Motion for animations
 - GlassCard component for card UI
 - Mobile-first responsive: use `sm:`, `md:`, `lg:` breakpoints
-- PowerShell terminal: do NOT chain commands with `&&`, run them separately
+- PowerShell terminal: do NOT chain commands with `&&`, use `;` instead
 - Production build is strict TypeScript: remove ALL unused imports/variables (TS6133 errors break Docker build)
-- Supabase Storage: use `property-images` bucket for all uploads (property images + avatars)
+- Supabase Storage: use `property-images` bucket with subfolders (properties/, avatars/{userId}/)
+- Owner table uses camelCase columns (firstName, lastName) — not snake_case
 
 ## Known Issues / Notes
 - Docker build uses strict `tsc -b` which fails on unused imports (always clean up)
 - Avatar upload uses `property-images` bucket with path `avatars/{userId}/avatar.{ext}`
+- Property images upload to `properties/` subfolder (RLS policies needed for this path)
 - Notification panel uses `createPortal(... , document.body)` to avoid sidebar overflow clipping
 - Settings preferences (language, currency, etc.) saved to localStorage until i18n is fully implemented
+- Supabase Realtime must be enabled via SQL: `ALTER PUBLICATION supabase_realtime ADD TABLE notifications`
+- `owner` table is singular (not `owners`) — OwnerStatements queries it directly via Supabase
+- `properties.owner_id` FK points to `owner(id)` — was changed from `profiles(id)`

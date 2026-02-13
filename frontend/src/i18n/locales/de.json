@@ -47,10 +47,16 @@
       "pending": "Ausstehend",
       "confirmed": "Bestätigt",
       "checkedIn": "Eingecheckt",
+      "completed": "Abgeschlossen",
       "cancelled": "Storniert",
       "paid": "Bezahlt",
       "unpaid": "Unbezahlt",
-      "partial": "Teilweise"
+      "partial": "Teilweise",
+      "refunded": "Erstattet"
+    },
+    "daysShort": {
+      "sun": "S", "mon": "M", "tue": "D", "wed": "M",
+      "thu": "D", "fri": "F", "sat": "S"
     }
   },
 
@@ -193,7 +199,12 @@
     "placeholderPrice": "0.00",
     "createReservation": "Reservierung erstellen",
     "night": "Nacht",
-    "nights": "Nächte"
+    "nights": "Nächte",
+    "optionDirect": "Direkt",
+    "optionAirbnb": "Airbnb",
+    "optionBookingCom": "Booking.com",
+    "optionVrbo": "VRBO",
+    "optionOther": "Sonstige"
   },
 
   "owners": {
@@ -222,6 +233,8 @@
   "ownerStatements": {
     "title": "Abrechnungen",
     "subtitle": "Monatliche Abrechnungsberichte für Eigentümer",
+    "owner": "Eigentümer",
+    "period": "Zeitraum",
     "loading": "Abrechnungen werden geladen...",
     "pdf": "PDF",
     "csv": "CSV",
@@ -278,6 +291,7 @@
     "recentRevenue": "Letzte Einnahmen",
     "expenses": "Ausgaben",
     "guest": "Gast",
+    "general": "Allgemein",
     "noBookings": "Keine Buchungen in diesem Zeitraum",
     "noExpenses": "Keine Ausgaben erfasst",
     "addFirstExpense": "Erste Ausgabe hinzufügen",
@@ -303,6 +317,13 @@
     "modalAddExpense": "Ausgabe hinzufügen",
     "confirmDelete": "Diese Ausgabe löschen?",
     "alertValidAmount": "Bitte gültigen Betrag eingeben",
+    "alertCreateError": "Ausgabe konnte nicht erstellt werden",
+    "exportTitle": "Finanzbericht",
+    "exportYear": "Jahr {{year}}",
+    "exportMonth": "Monat",
+    "exportTotalRevenue": "Gesamtumsatz",
+    "exportTotalExpenses": "Gesamtausgaben",
+    "exportOwnerPayouts": "Eigentümerauszahlungen",
     "categories": {
       "cleaning": "Reinigung",
       "laundry": "Wäsche",
@@ -337,6 +358,9 @@
     "filterOther": "Sonstige",
     "filterAllSources": "Alle Quellen",
     "filterManual": "Manuell",
+    "filterAirbnb": "Airbnb",
+    "filterBookingCom": "Booking.com",
+    "filterVrbo": "VRBO",
     "filterDirect": "Direkt",
     "contactCount": "{{count}} Kontakt(e)",
     "tableContact": "Kontakt",
@@ -374,7 +398,9 @@
     "placeholderAddNote": "Notiz hinzufügen oder Interaktion protokollieren...",
     "noInteractions": "Noch keine Interaktionen erfasst.",
     "confirmDelete": "Möchten Sie diesen Kontakt wirklich löschen?",
-    "alertDeleteError": "Fehler beim Löschen des Kontakts"
+    "alertDeleteError": "Fehler beim Löschen des Kontakts",
+    "alertCreateError": "Fehler: {{message}}",
+    "alertUpdateError": "Fehler: {{message}}"
   },
 
   "settings": {
@@ -465,23 +491,33 @@
       "startFree": "Kostenlos starten"
     },
     "hero": {
-      "badge": "All-in-one Ferienvermietungsplattform",
+      "badge": "Die moderne Art, Ferienvermietungen zu verwalten",
       "title1": "Verwalten Sie Ihre Vermietungen",
-      "titleHighlight": "wie ein Profi",
-      "subtitle": "Triadak vereint Immobilienverwaltung, Buchungsautomatisierung und Finanztools in einer eleganten Plattform. Weniger Tabellen, mehr Wachstum.",
-      "cta": "Kostenlos testen",
-      "secondary": "So funktioniert's",
-      "noCard": "Keine Kreditkarte erforderlich · 14 Tage kostenlos testen"
+      "titleHighlight": "im Eiltempo",
+      "subtitle": "Immobilien, Buchungen, Gäste und Finanzen — alles in einer leistungsstarken Plattform. Automatisieren Sie Ihr Ferienvermietungsgeschäft und konzentrieren Sie sich auf das Wesentliche.",
+      "cta": "Kostenlos starten — Keine Kreditkarte",
+      "secondary": "Funktionen ansehen",
+      "noCard": "Keine Kreditkarte erforderlich · 14 Tage kostenlos testen",
+      "rating": "5.0 von frühen Nutzern",
+      "freePlan": "Kostenloser Plan für immer verfügbar"
     },
     "features": {
-      "badge": "Alles was Sie brauchen",
-      "title": "Leistungsstarke Tools für moderne Gastgeber",
-      "subtitle": "Von der Verwaltung einer einzelnen Wohnung bis zur Skalierung eines Immobilienportfolios — Triadak passt sich Ihrem Workflow an."
+      "badge": "Funktionen",
+      "title": "Alles was Sie brauchen, um Ihr Vermietungsgeschäft zu führen",
+      "subtitle": "Von Immobilien bis Zahlungen — Triadak deckt den gesamten Ferienvermietungs-Workflow ab.",
+      "items": {
+        "0": { "title": "Immobilienverwaltung", "description": "Fügen Sie unbegrenzt Immobilien mit Details, Fotos, Preisen und Verfügbarkeit hinzu. Alles an einem Ort." },
+        "1": { "title": "Intelligente Buchungen", "description": "Verwalten Sie Reservierungen, Check-ins, Check-outs und Kalenderverfügbarkeit. Keine Doppelbuchungen mehr." },
+        "2": { "title": "Gäste-CRM", "description": "Erstellen Sie automatisch Gästeprofile. Verfolgen Sie Präferenzen, Historie und Kommunikation in einer Ansicht." },
+        "3": { "title": "Finanz-Engine", "description": "Verfolgen Sie Einnahmen, Ausgaben und Rentabilität pro Immobilie. Echtzeit-Finanzüberblick." },
+        "4": { "title": "Analytics-Dashboard", "description": "Belegungsraten, Umsatztrends und Leistungskennzahlen auf einen Blick. Datengetriebene Entscheidungen." },
+        "5": { "title": "Sicher & Privat", "description": "Sicherheit auf Unternehmensniveau mit zeilenweiser Isolation. Ihre Daten gehören Ihnen — immer verschlüsselt, immer sicher." }
+      }
     },
     "howItWorks": {
       "badge": "So funktioniert's",
       "title": "In wenigen Minuten einsatzbereit",
-      "subtitle": "Keine komplizierte Einrichtung. Keine Lernkurve. Nur Ergebnisse.",
+      "subtitle": "Keine komplexe Einrichtung. Kein Schulungsbedarf. Einfach anmelden und loslegen.",
       "step1Title": "Konto erstellen",
       "step1Desc": "Melden Sie sich in Sekunden mit E-Mail oder Google an. Wählen Sie den Starter-Plan — kostenlos für immer.",
       "step2Title": "Objekte hinzufügen",
@@ -491,12 +527,17 @@
     },
     "testimonials": {
       "badge": "Von Gastgebern geliebt",
-      "title": "Was unsere Nutzer sagen"
+      "title": "Was unsere Nutzer sagen",
+      "items": {
+        "0": { "quote": "Triadak hat unsere Verwaltung von 8 Immobilien komplett transformiert. Die Automatisierung spart uns jede Woche Stunden." },
+        "1": { "quote": "Die Finanzverfolgung allein ist es wert. Ich habe endlich ein klares Bild der Rentabilität pro Immobilie." },
+        "2": { "quote": "Wir sind von Tabellenkalkulationen zu Triadak gewechselt und haben nie zurückgeblickt. Das CRM ist unglaublich nützlich." }
+      }
     },
     "pricing": {
       "badge": "Einfache Preise",
       "title": "Wählen Sie Ihren Plan",
-      "subtitle": "Starten Sie kostenlos und upgraden Sie bei Bedarf. Keine versteckten Gebühren.",
+      "subtitle": "Kostenlos starten. Bei Bedarf upgraden. Keine versteckten Gebühren.",
       "monthly": "Monatlich",
       "yearly": "Jährlich",
       "save20": "20% sparen",
@@ -504,17 +545,46 @@
       "startTrial": "Kostenlos testen",
       "getStarted": "Loslegen",
       "contactSales": "Vertrieb kontaktieren",
-      "perMonth": "/Monat"
+      "perMonth": "/Monat",
+      "forever": "für immer",
+      "swipeHint": "Wischen Sie, um alle Pläne zu sehen →",
+      "trialNote": "Alle kostenpflichtigen Pläne beinhalten eine 14-tägige kostenlose Testversion. Keine Kreditkarte erforderlich.",
+      "planDesc": {
+        "starter": "Perfekt zum Einstieg",
+        "basic": "Für kleine Immobilienverwalter",
+        "pro": "Für wachsende Unternehmen",
+        "enterprise": "Für Grossbetriebe"
+      },
+      "planCta": {
+        "starter": "Kostenlos starten",
+        "basic": "14-Tage-Testversion",
+        "pro": "14-Tage-Testversion",
+        "enterprise": "Vertrieb kontaktieren"
+      },
+      "features": {
+        "starter": { "0": "1 Immobilie", "1": "10 Buchungen/Monat", "2": "Basis-CRM (20 Kontakte)", "3": "Kalenderansicht", "4": "Basis-Dashboard" },
+        "basic": { "0": "Bis zu 5 Immobilien", "1": "50 Buchungen/Monat", "2": "Vollständiges CRM (100 Kontakte)", "3": "Finanz-Dashboard", "4": "E-Mail-Benachrichtigungen" },
+        "pro": { "0": "Bis zu 20 Immobilien", "1": "Unbegrenzte Buchungen", "2": "Erweitertes CRM", "3": "Zahlungslinks (Stripe)", "4": "Eigentümer-Portal" },
+        "enterprise": { "0": "Alles unbegrenzt", "1": "Vollständiger API-Zugang", "2": "Dedizierter Support", "3": "Individuelle Einarbeitung", "4": "Prioritäts-Funktionen" }
+      }
     },
     "faq": {
       "badge": "FAQ",
       "title": "Häufig gestellte Fragen",
-      "subtitle": "Alles, was Sie über Triadak wissen müssen."
+      "subtitle": "Alles, was Sie über Triadak wissen müssen.",
+      "items": {
+        "0": { "question": "Ist Triadak wirklich kostenlos zum Start?", "answer": "Ja! Der Starter-Plan ist komplett kostenlos — für immer. Er beinhaltet 1 Immobilie, 10 Buchungen pro Monat und Basis-CRM. Keine Kreditkarte erforderlich." },
+        "1": { "question": "Kann ich jederzeit upgraden oder downgraden?", "answer": "Absolut. Sie können Ihren Plan jederzeit auf der Abrechnungsseite ändern. Upgrades sind sofort wirksam, Downgrades am Ende Ihres Abrechnungszyklus." },
+        "2": { "question": "Sind meine Daten sicher?", "answer": "Ja. Wir nutzen Supabase mit Row-Level-Security, sodass die Daten jedes Nutzers vollständig isoliert sind. Alle Verbindungen sind mit TLS verschlüsselt." },
+        "3": { "question": "Muss ich etwas installieren?", "answer": "Nein. Triadak ist eine Webanwendung, die in jedem Browser funktioniert — Desktop, Tablet oder Mobil. Es gibt nichts zu installieren." },
+        "4": { "question": "Kann ich Daten aus Tabellenkalkulationen importieren?", "answer": "Wir arbeiten an CSV-Import-Funktionalität. Vorerst können Sie schnell Immobilien und Buchungen über unsere intuitive Oberfläche hinzufügen." },
+        "5": { "question": "Welche Zahlungsmethoden akzeptieren Sie?", "answer": "Wir akzeptieren alle gängigen Kredit- und Debitkarten über Stripe. Enterprise-Pläne können auch per Banküberweisung zahlen." }
+      }
     },
     "cta": {
-      "title": "Bereit, Ihr Vermietungsgeschäft zu optimieren?",
-      "subtitle": "Schliessen Sie sich Tausenden von Immobilienverwaltern an, die Triadak vertrauen.",
-      "button": "Kostenlose Testversion starten",
+      "title": "Bereit, Ihr Vermietungsgeschäft zu vereinfachen?",
+      "subtitle": "Schliessen Sie sich Immobilienverwaltern an, die mit Triadak jede Woche Stunden sparen. Kostenlos starten — upgraden Sie, wenn Sie bereit sind.",
+      "button": "Kostenlos loslegen",
       "noCard": "Keine Kreditkarte erforderlich · Einrichtung in 2 Minuten"
     },
     "footer": {
@@ -529,7 +599,9 @@
       "security": "Enterprise-Sicherheit",
       "mobileFriendly": "Mobilfreundlich",
       "worldwide": "Weltweit verfügbar",
-      "copyright": "© {{year}} Triadak. Alle Rechte vorbehalten."
+      "copyright": "© {{year}} Triadak. Alle Rechte vorbehalten.",
+      "privacy": "Datenschutz",
+      "terms": "Nutzungsbedingungen"
     }
   }
 }
