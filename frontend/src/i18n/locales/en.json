@@ -488,6 +488,13 @@
         "staff": "Can manage properties, bookings, and contacts",
         "owner": "Read-only access to their own properties and statements"
       },
+      "invite": "Invite",
+      "inviteTitle": "Invite a team member",
+      "emailPlaceholder": "colleague@company.com",
+      "sendInvite": "Send",
+      "inviteSent": "Invitation sent successfully! They will receive a login link by email.",
+      "inviteHint": "An email with a login link will be sent. If the user already exists, their role will be updated.",
+      "inviteError": "Error sending invitation. Please try again.",
       "howItWorks": "How role assignment works",
       "howAdmin": "The first user to register becomes Admin automatically",
       "howStaff": "New users who register are assigned Staff role by default",

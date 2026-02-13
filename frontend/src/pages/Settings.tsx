@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import {
     User, Mail, Shield, Bell, Globe,
     Save, Camera, Check, AlertTriangle, Trash2,
-    Users, Crown, UserCog, Eye,
+    Users, Crown, UserCog, Eye, Send, Plus, X,
 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
@@ -81,6 +81,11 @@ export default function Settings() {
     // Team state
     const [teamMembers, setTeamMembers] = useState<TeamMember[]>([]);
     const [loadingTeam, setLoadingTeam] = useState(false);
+    const [showInviteForm, setShowInviteForm] = useState(false);
+    const [inviteEmail, setInviteEmail] = useState('');
+    const [inviteRole, setInviteRole] = useState<UserRole>('staff');
+    const [inviting, setInviting] = useState(false);
+    const [inviteSuccess, setInviteSuccess] = useState(false);
 
     // Only show team tab for admins
     const TAB_IDS: TabId[] = isAdmin
@@ -140,6 +145,53 @@ export default function Settings() {
             setTeamMembers(prev => prev.filter(m => m.id !== memberId));
         } catch (err) {
             console.error('Error removing member:', err);
+        }
+    };
+
+    const inviteMember = async () => {
+        if (!inviteEmail.trim()) return;
+        setInviting(true);
+        setInviteSuccess(false);
+
+        try {
+            // Check if user already exists in profiles
+            const { data: existing } = await supabase
+                .from('profiles')
+                .select('id')
+                .eq('email', inviteEmail.trim())
+                .maybeSingle();
+
+            if (existing) {
+                // User already registered, just update role
+                await supabase
+                    .from('profiles')
+                    .update({ role: inviteRole })
+                    .eq('email', inviteEmail.trim());
+                await fetchTeam();
+            } else {
+                // Create a pre-registration entry so when they sign up, the role is ready
+                // For now we use Supabase Auth admin invite (sends magic link)
+                const { error } = await supabase.auth.signInWithOtp({
+                    email: inviteEmail.trim(),
+                    options: {
+                        shouldCreateUser: true,
+                        data: { invited_role: inviteRole },
+                    },
+                });
+                if (error) throw error;
+            }
+
+            setInviteSuccess(true);
+            setInviteEmail('');
+            setTimeout(() => {
+                setInviteSuccess(false);
+                setShowInviteForm(false);
+            }, 3000);
+        } catch (err) {
+            console.error('Error inviting member:', err);
+            alert(t('settings.team.inviteError'));
+        } finally {
+            setInviting(false);
         }
     };
 
@@ -586,7 +638,70 @@ export default function Settings() {
                                         {t('settings.team.membersTitle')}
                                         <span className="text-sm text-slate-500 font-normal">({teamMembers.length})</span>
                                     </h3>
+                                    <button
+                                        onClick={() => setShowInviteForm(!showInviteForm)}
+                                        className="flex items-center gap-2 px-4 py-2 bg-indigo-500/20 text-indigo-400 rounded-xl text-sm font-medium hover:bg-indigo-500/30 transition-colors"
+                                    >
+                                        {showInviteForm ? <X className="h-4 w-4" /> : <Plus className="h-4 w-4" />}
+                                        {showInviteForm ? t('common.cancel') : t('settings.team.invite')}
+                                    </button>
                                 </div>
+
+                                {/* Invite Form */}
+                                {showInviteForm && (
+                                    <motion.div
+                                        initial={{ opacity: 0, height: 0 }}
+                                        animate={{ opacity: 1, height: 'auto' }}
+                                        className="mb-4 p-4 rounded-xl bg-indigo-500/5 border border-indigo-500/20"
+                                    >
+                                        <p className="text-sm text-white font-medium mb-3 flex items-center gap-2">
+                                            <Send className="h-4 w-4 text-indigo-400" />
+                                            {t('settings.team.inviteTitle')}
+                                        </p>
+                                        <div className="flex flex-col sm:flex-row gap-3">
+                                            <div className="flex-1">
+                                                <div className="relative">
+                                                    <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500" />
+                                                    <input
+                                                        type="email"
+                                                        value={inviteEmail}
+                                                        onChange={e => setInviteEmail(e.target.value)}
+                                                        placeholder={t('settings.team.emailPlaceholder')}
+                                                        className="w-full bg-white/5 border border-white/10 rounded-lg py-2.5 pl-10 pr-4 text-sm text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/50"
+                                                    />
+                                                </div>
+                                            </div>
+                                            <select
+                                                value={inviteRole}
+                                                onChange={e => setInviteRole(e.target.value as UserRole)}
+                                                className="bg-white/5 border border-white/10 rounded-lg px-3 py-2.5 text-sm text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/50 appearance-none cursor-pointer"
+                                            >
+                                                <option value="staff" className="bg-slate-900">Staff</option>
+                                                <option value="admin" className="bg-slate-900">Admin</option>
+                                                <option value="owner" className="bg-slate-900">Owner</option>
+                                            </select>
+                                            <button
+                                                onClick={inviteMember}
+                                                disabled={inviting || !inviteEmail.trim()}
+                                                className="flex items-center justify-center gap-2 px-5 py-2.5 bg-indigo-500 hover:bg-indigo-400 disabled:opacity-50 rounded-lg text-sm font-medium text-white transition-colors"
+                                            >
+                                                {inviting ? (
+                                                    <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
+                                                ) : (
+                                                    <Send className="h-4 w-4" />
+                                                )}
+                                                {t('settings.team.sendInvite')}
+                                            </button>
+                                        </div>
+                                        {inviteSuccess && (
+                                            <p className="mt-3 text-sm text-emerald-400 flex items-center gap-2">
+                                                <Check className="h-4 w-4" />
+                                                {t('settings.team.inviteSent')}
+                                            </p>
+                                        )}
+                                        <p className="mt-2 text-[10px] text-slate-600">{t('settings.team.inviteHint')}</p>
+                                    </motion.div>
+                                )}
 
                                 {loadingTeam ? (
                                     <div className="flex justify-center py-8">

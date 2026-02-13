@@ -488,6 +488,13 @@
         "staff": "Puede gestionar propiedades, reservas y contactos",
         "owner": "Acceso de solo lectura a sus propiedades y liquidaciones"
       },
+      "invite": "Invitar",
+      "inviteTitle": "Invitar a un miembro del equipo",
+      "emailPlaceholder": "colega@empresa.com",
+      "sendInvite": "Enviar",
+      "inviteSent": "¡Invitación enviada! Recibirá un enlace de acceso por email.",
+      "inviteHint": "Se enviará un email con un enlace de acceso. Si el usuario ya existe, su rol será actualizado.",
+      "inviteError": "Error al enviar la invitación. Inténtalo de nuevo.",
       "howItWorks": "Cómo funciona la asignación de roles",
       "howAdmin": "El primer usuario en registrarse se convierte en Administrador automáticamente",
       "howStaff": "Los nuevos usuarios que se registran reciben el rol de Empleado por defecto",
