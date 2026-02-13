@@ -2,13 +2,11 @@ import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import {
-    User, Mail, Shield, Bell, Globe, Palette,
+    User, Mail, Shield, Bell, Globe,
     Save, Camera, Check, AlertTriangle, Trash2,
-    Sun, Moon, Monitor,
 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
-import { applyTheme } from '../hooks/useTheme';
 
 // ─── Types ────────────────────────────────────────────
 interface ProfileForm {
@@ -29,7 +27,7 @@ interface ProfileForm {
 type TabId = 'profile' | 'preferences' | 'notifications' | 'danger';
 
 const TAB_IDS: TabId[] = ['profile', 'preferences', 'notifications', 'danger'];
-const TAB_ICONS: Record<TabId, React.ElementType> = { profile: User, preferences: Palette, notifications: Bell, danger: AlertTriangle };
+const TAB_ICONS: Record<TabId, React.ElementType> = { profile: User, preferences: Globe, notifications: Bell, danger: AlertTriangle };
 
 const TIMEZONES = [
     'Europe/Madrid', 'Europe/London', 'Europe/Berlin', 'Europe/Paris',
@@ -174,9 +172,6 @@ export default function Settings() {
         setForm(prev => ({ ...prev, [field]: value }));
         setSaved(false);
         if (field === 'language') i18n.changeLanguage(value as string);
-        if (field === 'theme') {
-            applyTheme(value as 'light' | 'dark' | 'system');
-        }
     };
 
     const handleSave = async () => {
@@ -440,44 +435,6 @@ export default function Settings() {
                                 </div>
                             </div>
 
-                            {/* Appearance */}
-                            <div className="bg-white/5 border border-white/5 rounded-2xl p-6">
-                                <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-                                    <Palette className="h-5 w-5 text-indigo-400" />
-                                    {t('settings.preferences.appearance')}
-                                </h3>
-                                <div className="grid grid-cols-3 gap-3">
-                                    {[
-                                        { value: 'light' as const, labelKey: 'settings.preferences.themeLight', icon: Sun },
-                                        { value: 'dark' as const, labelKey: 'settings.preferences.themeDark', icon: Moon },
-                                        { value: 'system' as const, labelKey: 'settings.preferences.themeSystem', icon: Monitor },
-                                    ].map(opt => (
-                                        <button
-                                            key={opt.value}
-                                            onClick={() => updateField('theme', opt.value)}
-                                            className={`flex flex-col items-center gap-2 p-4 rounded-xl border transition-all ${
-                                                form.theme === opt.value
-                                                    ? 'bg-indigo-500/10 border-indigo-500/30 text-white'
-                                                    : 'bg-white/5 border-white/5 text-slate-400 hover:border-white/20'
-                                            }`}
-                                        >
-                                            <opt.icon className={`h-6 w-6 ${form.theme === opt.value ? 'text-indigo-400' : ''}`} />
-                                            <span className="text-xs font-medium">{t(opt.labelKey)}</span>
-                                            {form.theme === opt.value && (
-                                                <motion.div
-                                                    initial={{ scale: 0 }}
-                                                    animate={{ scale: 1 }}
-                                                    className="w-1.5 h-1.5 rounded-full bg-indigo-400"
-                                                />
-                                            )}
-                                        </button>
-                                    ))}
-                                </div>
-                                <p className="text-[10px] text-slate-600 mt-3">
-                                    {t('settings.preferences.themeNote')}
-                                </p>
-                                {/* Theme is now fully functional */}
-                            </div>
                         </div>
                     )}
 

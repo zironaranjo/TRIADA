@@ -59,7 +59,7 @@ SaaS platform for **vacation rental management** (triadak.io). Combines features
 11. **Onboarding** - Empty state guides for new users
 12. **Email Confirmation** - Booking confirmation emails via Resend
 13. **Multi-tenancy/RLS** - Row Level Security in Supabase
-14. **Settings Page** - Profile (avatar upload, name, phone, company), Preferences (language, currency, timezone, theme selector), Notifications (toggle switches), Danger Zone (password reset, delete account). Saves to Supabase (profile) + localStorage (preferences)
+14. **Settings Page** - Profile (avatar upload, name, phone, company), Preferences (language, currency, timezone), Notifications (toggle switches), Danger Zone (password reset, delete account). Saves to Supabase (profile) + localStorage (preferences). Dark-only theme (no light/system toggle)
 15. **Notification Center** - Bell icon in mobile header + desktop sidebar, portal-based dropdown panel with realtime updates, read/unread indicators, mark all read, clear all, delete individual, auto-notifications via DB trigger on booking insert
 16. **Owner Statements** - Monthly settlement reports per owner: gross revenue, platform fees, agency commission, expenses, net payout. Expandable detail with bookings and expenses breakdown
 17. **PDF/CSV Export** - Professional PDF reports (jspdf + jspdf-autotable) and CSV export for Owner Statements and Finance Dashboard
@@ -68,7 +68,8 @@ SaaS platform for **vacation rental management** (triadak.io). Combines features
 ## Pending / Roadmap (Fase 2 & 3)
 
 ### Fase 2 - Funcionalidades clave
-- [ ] Multi-language support (i18n with react-i18next) — most visible for client presentation
+- [x] Multi-language support (i18n with react-i18next) — EN, DE, ES, FR implemented across all pages
+- [x] Theme system removed — dark-only theme (light mode looked bad, reverted)
 - [ ] Owner portal (separate view for owners to see their property performance)
 - [ ] Accounting/Ledger improvements (expense categorization, reconciliation, balance sheet — Bexio inspired)
 - [ ] Scheduled email notifications (cron for check-in/out reminders — needs Edge Function)
@@ -107,7 +108,7 @@ SaaS platform for **vacation rental management** (triadak.io). Combines features
 
 ## Conventions
 - Use Supabase direct queries (not backend API) for frontend CRUD — except Owners which still uses NestJS API
-- Tailwind for all styling, dark theme (bg-[#0f172a] base)
+- Tailwind for all styling, **dark-only** theme (bg-[#0f172a] base) — NO light mode
 - Framer Motion for animations
 - GlassCard component for card UI
 - Mobile-first responsive: use `sm:`, `md:`, `lg:` breakpoints
