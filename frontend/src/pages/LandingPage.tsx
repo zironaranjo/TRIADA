@@ -267,35 +267,13 @@ function Hero() {
                                 </div>
                             </div>
                         </div>
-                        {/* Dashboard preview content */}
-                        <div className="p-3 sm:p-6 lg:p-8 space-y-3 sm:space-y-4">
-                            {/* Stats row */}
-                            <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3">
-                                {[
-                                    { label: 'Properties', value: '12', color: 'from-blue-500 to-cyan-500' },
-                                    { label: 'Bookings', value: '84', color: 'from-indigo-500 to-purple-500' },
-                                    { label: 'Revenue', value: '€24,560', color: 'from-emerald-500 to-green-500' },
-                                    { label: 'Occupancy', value: '87%', color: 'from-amber-500 to-orange-500' },
-                                ].map((stat) => (
-                                    <div key={stat.label} className="bg-white/5 rounded-lg sm:rounded-xl p-2.5 sm:p-4 border border-white/5">
-                                        <p className="text-[10px] sm:text-xs text-slate-500">{stat.label}</p>
-                                        <p className={`text-lg sm:text-2xl font-bold bg-gradient-to-r ${stat.color} bg-clip-text text-transparent`}>
-                                            {stat.value}
-                                        </p>
-                                    </div>
-                                ))}
-                            </div>
-                            {/* Placeholder bars */}
-                            <div className="bg-white/5 rounded-lg sm:rounded-xl p-3 sm:p-4 border border-white/5 h-24 sm:h-40 flex items-end gap-1 sm:gap-2 px-3 sm:px-6">
-                                {[65, 45, 80, 55, 70, 90, 60, 75, 85, 50, 95, 70].map((h, i) => (
-                                    <div
-                                        key={i}
-                                        className={`flex-1 bg-gradient-to-t from-indigo-500 to-purple-500 rounded-t-sm sm:rounded-t-md opacity-60 ${i >= 8 ? 'hidden sm:block' : ''}`}
-                                        style={{ height: `${h}%` }}
-                                    />
-                                ))}
-                            </div>
-                        </div>
+                        {/* Real Dashboard Screenshot */}
+                        <img
+                            src="/dashboard-preview.png"
+                            alt="Triadak Dashboard"
+                            className="w-full h-auto"
+                            loading="lazy"
+                        />
                     </div>
                     {/* Glow under mockup */}
                     <div className="absolute -bottom-8 sm:-bottom-10 left-1/2 -translate-x-1/2 w-3/4 h-16 sm:h-20 bg-indigo-500/20 blur-3xl rounded-full" />
@@ -458,13 +436,10 @@ function HowItWorks() {
                             custom={i}
                             className="text-center flex flex-col items-center"
                         >
-                            <div className="relative inline-flex items-center justify-center mb-4 sm:mb-6">
+                            <div className="inline-flex items-center justify-center mb-4 sm:mb-6">
                                 <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-xl sm:rounded-2xl bg-gradient-to-br from-indigo-500/20 to-purple-500/20 border border-indigo-500/20 flex items-center justify-center">
                                     <step.icon className="h-6 w-6 sm:h-8 sm:w-8 text-indigo-400" />
                                 </div>
-                                <span className="absolute -top-1.5 -right-1.5 sm:-top-2 sm:-right-2 text-[10px] sm:text-xs font-bold bg-indigo-500 text-white w-6 h-6 sm:w-7 sm:h-7 rounded-full flex items-center justify-center">
-                                    {step.num}
-                                </span>
                             </div>
                             <h3 className="text-lg sm:text-xl font-semibold text-white mb-1.5 sm:mb-2">{step.title}</h3>
                             <p className="text-slate-400 text-sm leading-relaxed max-w-xs mx-auto">{step.description}</p>
