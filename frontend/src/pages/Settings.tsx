@@ -105,8 +105,6 @@ export default function Settings() {
         }
     }, [profile, user]);
 
-    const AVATAR_PATH = (userId: string) => `avatars/${userId}/avatar`;
-
     const loadAvatar = async (userId: string) => {
         // First check localStorage for saved avatar path
         const savedPath = localStorage.getItem(`triadak_avatar_${userId}`);
