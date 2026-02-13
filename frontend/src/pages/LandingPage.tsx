@@ -939,7 +939,7 @@ function Footer() {
                             <span className="text-xs text-slate-600 hover:text-slate-400 cursor-pointer transition-colors">{t('landing.footer.terms')}</span>
                         </div>
                     </div>
-                    <p className="text-[10px] text-slate-700">
+                    <p className="text-xs sm:text-sm text-slate-700">
                         Developed by{' '}
                         <a href="https://zirox.io" target="_blank" rel="noopener noreferrer" className="text-indigo-500/60 hover:text-indigo-400 transition-colors">
                             zirox.io

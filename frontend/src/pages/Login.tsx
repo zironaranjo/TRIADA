@@ -272,7 +272,7 @@ const Login = () => {
                     <p className="text-gray-500 text-xs sm:text-sm">
                         &copy; {new Date().getFullYear()} TRIADAK. All rights reserved.
                     </p>
-                    <p className="text-gray-600 text-[10px] sm:text-xs">
+                    <p className="text-gray-600 text-xs sm:text-sm">
                         Developed by{' '}
                         <a href="https://zirox.io" target="_blank" rel="noopener noreferrer" className="text-blue-500/70 hover:text-blue-400 transition-colors">
                             zirox.io
