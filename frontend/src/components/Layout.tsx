@@ -8,6 +8,7 @@ import {
     Users,
     ContactIcon,
     PiggyBank,
+    FileText,
     Settings,
     LogOut,
     ChevronRight,
@@ -32,6 +33,7 @@ const Layout = () => {
         { path: '/owners', label: 'Owners', icon: Users },
         { path: '/crm', label: 'CRM', icon: ContactIcon },
         { path: '/accounting', label: 'Finance Engine', icon: PiggyBank },
+        { path: '/statements', label: 'Owner Statements', icon: FileText },
     ];
 
     const handleNavClick = () => {

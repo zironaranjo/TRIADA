@@ -11,6 +11,7 @@ import FinanceDashboard from './pages/FinanceDashboard';
 import Pricing from './pages/Pricing';
 import Billing from './pages/Billing';
 import Settings from './pages/Settings';
+import OwnerStatements from './pages/OwnerStatements';
 import Layout from './components/Layout';
 import LandingPage from './pages/LandingPage';
 
@@ -40,6 +41,7 @@ function App() {
             <Route path="pricing" element={<Pricing />} />
             <Route path="billing" element={<Billing />} />
             <Route path="settings" element={<Settings />} />
+            <Route path="statements" element={<OwnerStatements />} />
           </Route>
 
           {/* Catch-all */}
