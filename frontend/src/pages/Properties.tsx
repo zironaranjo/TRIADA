@@ -38,6 +38,7 @@ interface Property {
     rooms: number;
     max_guests: number;
     owner_id: string;
+    ical_url: string | null;
 }
 
 // --- Status Badge Component ---
