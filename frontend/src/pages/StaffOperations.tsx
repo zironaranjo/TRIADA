@@ -96,10 +96,10 @@ export default function StaffOperations() {
     const [editingMember, setEditingMember] = useState<StaffMember | null>(null);
     const [searchQuery, setSearchQuery] = useState('');
 
-    useEffect(() => { fetchAll(); }, []);
+    useEffect(() => { fetchAll(true); }, []);
 
-    const fetchAll = async () => {
-        setLoading(true);
+    const fetchAll = async (isInitial = false) => {
+        if (isInitial) setLoading(true);
         try {
             const [membersRes, tasksRes, propsRes] = await Promise.allSettled([
                 supabase.from('staff_members').select('*').order('full_name'),
@@ -112,7 +112,7 @@ export default function StaffOperations() {
         } catch (err) {
             console.error('Error fetching staff data:', err);
         } finally {
-            setLoading(false);
+            if (isInitial) setLoading(false);
         }
     };
 
@@ -487,10 +487,13 @@ function MemberModal({ member, onClose, onSuccess }: {
         setSaving(true);
         try {
             const payload = { ...form, salary: parseFloat(form.salary) || 0, end_date: form.end_date || null, email: form.email || null, phone: form.phone || null, address: form.address || null, document_id: form.document_id || null, notes: form.notes || null };
-            if (member) {
-                await supabase.from('staff_members').update(payload).eq('id', member.id);
-            } else {
-                await supabase.from('staff_members').insert(payload);
+            const { error } = member
+                ? await supabase.from('staff_members').update(payload).eq('id', member.id)
+                : await supabase.from('staff_members').insert(payload);
+            if (error) {
+                console.error('Supabase error:', error);
+                alert(error.message);
+                return;
             }
             onSuccess();
         } catch (err) {
@@ -606,7 +609,7 @@ function TaskModal({ members, properties, onClose, onSuccess }: {
         if (!form.staff_member_id || !form.scheduled_date) return;
         setSaving(true);
         try {
-            await supabase.from('staff_tasks').insert({
+            const { error } = await supabase.from('staff_tasks').insert({
                 staff_member_id: form.staff_member_id,
                 property_id: form.property_id || null,
                 task_type: form.task_type,
@@ -616,6 +619,11 @@ function TaskModal({ members, properties, onClose, onSuccess }: {
                 checklist: form.checklist,
                 status: 'pending',
             });
+            if (error) {
+                console.error('Supabase error:', error);
+                alert(error.message);
+                return;
+            }
             onSuccess();
         } catch (err) {
             console.error('Error creating task:', err);
