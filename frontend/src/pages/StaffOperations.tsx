@@ -7,7 +7,7 @@ import {
     Users, ClipboardCheck, Plus, X, Search, Star,
     Phone, Mail, MapPin, FileText, Clock,
     CheckCircle2, Circle, Trash2, Edit3,
-    DollarSign,
+    DollarSign, Camera, Briefcase, Calendar, Home,
 } from 'lucide-react';
 
 // ─── Types ────────────────────────────────────────────
@@ -26,6 +26,7 @@ interface StaffMember {
     status: 'active' | 'inactive';
     assigned_properties: string[];
     notes: string | null;
+    avatar_url: string | null;
     created_at: string;
 }
 
@@ -94,6 +95,7 @@ export default function StaffOperations() {
     const [showMemberModal, setShowMemberModal] = useState(false);
     const [showTaskModal, setShowTaskModal] = useState(false);
     const [editingMember, setEditingMember] = useState<StaffMember | null>(null);
+    const [selectedMember, setSelectedMember] = useState<StaffMember | null>(null);
     const [searchQuery, setSearchQuery] = useState('');
 
     useEffect(() => { fetchAll(true); }, []);
@@ -224,11 +226,13 @@ export default function StaffOperations() {
                 {activeTab === 'staff' && (
                     <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
                         {members.filter(m => !searchQuery || m.full_name.toLowerCase().includes(searchQuery.toLowerCase())).map(member => (
-                            <GlassCard key={member.id} className="p-4 space-y-3">
+                            <GlassCard key={member.id} className="p-4 space-y-3 cursor-pointer hover:border-indigo-500/30 transition-all" onClick={() => setSelectedMember(member)}>
                                 <div className="flex items-center justify-between">
                                     <div className="flex items-center gap-3">
-                                        <div className="h-10 w-10 rounded-full bg-gradient-to-br from-blue-500 to-cyan-600 flex items-center justify-center text-white font-bold text-sm">
-                                            {member.full_name.split(' ').map(n => n[0]).join('').slice(0, 2)}
+                                        <div className="h-10 w-10 rounded-full bg-gradient-to-br from-blue-500 to-cyan-600 flex items-center justify-center text-white font-bold text-sm overflow-hidden">
+                                            {member.avatar_url
+                                                ? <img src={member.avatar_url} alt={member.full_name} className="h-full w-full object-cover" />
+                                                : member.full_name.split(' ').map(n => n[0]).join('').slice(0, 2)}
                                         </div>
                                         <div>
                                             <h4 className="font-semibold text-white text-sm">{member.full_name}</h4>
@@ -238,8 +242,8 @@ export default function StaffOperations() {
                                         </div>
                                     </div>
                                     <div className="flex items-center gap-1">
-                                        <button onClick={() => { setEditingMember(member); setShowMemberModal(true); }} className="p-1.5 text-slate-500 hover:text-indigo-400 transition-colors"><Edit3 className="h-3.5 w-3.5" /></button>
-                                        <button onClick={() => deleteMember(member.id)} className="p-1.5 text-slate-500 hover:text-red-400 transition-colors"><Trash2 className="h-3.5 w-3.5" /></button>
+                                        <button onClick={e => { e.stopPropagation(); setEditingMember(member); setShowMemberModal(true); }} className="p-1.5 text-slate-500 hover:text-indigo-400 transition-colors"><Edit3 className="h-3.5 w-3.5" /></button>
+                                        <button onClick={e => { e.stopPropagation(); deleteMember(member.id); }} className="p-1.5 text-slate-500 hover:text-red-400 transition-colors"><Trash2 className="h-3.5 w-3.5" /></button>
                                     </div>
                                 </div>
 
@@ -434,6 +438,19 @@ export default function StaffOperations() {
                     />
                 )}
             </AnimatePresence>
+
+            {/* ─── Staff Detail Modal ──────────────── */}
+            <AnimatePresence>
+                {selectedMember && (
+                    <StaffDetailModal
+                        member={selectedMember}
+                        tasks={tasks.filter(t => t.staff_member_id === selectedMember.id)}
+                        properties={properties}
+                        onClose={() => setSelectedMember(null)}
+                        onEdit={() => { setSelectedMember(null); setEditingMember(selectedMember); setShowMemberModal(true); }}
+                    />
+                )}
+            </AnimatePresence>
         </div>
     );
 }
@@ -460,6 +477,8 @@ function MemberModal({ member, onClose, onSuccess }: {
 }) {
     const { t } = useTranslation();
     const [saving, setSaving] = useState(false);
+    const [avatarFile, setAvatarFile] = useState<File | null>(null);
+    const [avatarPreview, setAvatarPreview] = useState<string | null>(member?.avatar_url || null);
     const [form, setForm] = useState<{
         full_name: string; email: string; phone: string; address: string; document_id: string;
         contract_type: 'full_time' | 'part_time' | 'freelance'; salary: string;
@@ -481,19 +500,42 @@ function MemberModal({ member, onClose, onSuccess }: {
         notes: member?.notes || '',
     });
 
+    const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+        if (file.size > 2 * 1024 * 1024) { alert(t('settings.alerts.avatarSize')); return; }
+        if (!file.type.startsWith('image/')) { alert(t('settings.alerts.avatarInvalid')); return; }
+        setAvatarFile(file);
+        setAvatarPreview(URL.createObjectURL(file));
+    };
+
+    const uploadAvatar = async (memberId: string): Promise<string | null> => {
+        if (!avatarFile) return member?.avatar_url || null;
+        const ext = avatarFile.name.split('.').pop() || 'jpg';
+        const path = `staff-avatars/${memberId}/avatar.${ext}`;
+        const { error } = await supabase.storage.from('property-images').upload(path, avatarFile, { upsert: true });
+        if (error) { console.error('Avatar upload error:', error); return member?.avatar_url || null; }
+        const { data } = supabase.storage.from('property-images').getPublicUrl(path);
+        return data.publicUrl;
+    };
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!form.full_name.trim()) return;
         setSaving(true);
         try {
             const payload = { ...form, salary: parseFloat(form.salary) || 0, end_date: form.end_date || null, email: form.email || null, phone: form.phone || null, address: form.address || null, document_id: form.document_id || null, notes: form.notes || null };
-            const { error } = member
-                ? await supabase.from('staff_members').update(payload).eq('id', member.id)
-                : await supabase.from('staff_members').insert(payload);
-            if (error) {
-                console.error('Supabase error:', error);
-                alert(error.message);
-                return;
+            if (member) {
+                const avatarUrl = await uploadAvatar(member.id);
+                const { error } = await supabase.from('staff_members').update({ ...payload, avatar_url: avatarUrl }).eq('id', member.id);
+                if (error) { console.error('Supabase error:', error); alert(error.message); return; }
+            } else {
+                const { data: inserted, error } = await supabase.from('staff_members').insert(payload).select('id').single();
+                if (error || !inserted) { console.error('Supabase error:', error); alert(error?.message || 'Error'); return; }
+                if (avatarFile) {
+                    const avatarUrl = await uploadAvatar(inserted.id);
+                    if (avatarUrl) await supabase.from('staff_members').update({ avatar_url: avatarUrl }).eq('id', inserted.id);
+                }
             }
             onSuccess();
         } catch (err) {
@@ -502,6 +544,8 @@ function MemberModal({ member, onClose, onSuccess }: {
             setSaving(false);
         }
     };
+
+    const initials = form.full_name ? form.full_name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase() : '?';
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
@@ -512,6 +556,25 @@ function MemberModal({ member, onClose, onSuccess }: {
                     <button onClick={onClose} className="text-slate-400 hover:text-white"><X className="h-5 w-5" /></button>
                 </div>
                 <form onSubmit={handleSubmit} className="flex-1 overflow-y-auto p-5 space-y-4">
+                    {/* Avatar Upload */}
+                    <div className="flex items-center gap-4">
+                        <div className="relative group">
+                            <div className="h-16 w-16 rounded-full bg-gradient-to-br from-blue-500 to-cyan-600 flex items-center justify-center text-white text-lg font-bold overflow-hidden ring-2 ring-white/10">
+                                {avatarPreview
+                                    ? <img src={avatarPreview} alt="Avatar" className="h-full w-full object-cover" />
+                                    : initials}
+                            </div>
+                            <label className="absolute inset-0 flex items-center justify-center bg-black/50 rounded-full opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer">
+                                <Camera className="h-5 w-5 text-white" />
+                                <input type="file" accept="image/*" onChange={handleAvatarChange} className="hidden" />
+                            </label>
+                        </div>
+                        <div className="text-xs text-slate-500">
+                            <p className="font-medium text-slate-300">{t('staffOps.avatarUpload')}</p>
+                            <p>{t('staffOps.avatarHint')}</p>
+                        </div>
+                    </div>
+
                     <div className="grid grid-cols-2 gap-3">
                         <div className="col-span-2 space-y-1">
                             <label className="text-xs font-medium text-slate-400">{t('staffOps.fieldName')}</label>
@@ -700,6 +763,205 @@ function TaskModal({ members, properties, onClose, onSuccess }: {
                         </button>
                     </div>
                 </form>
+            </motion.div>
+        </div>
+    );
+}
+
+// ─── Staff Detail Modal ───────────────────────────────
+function StaffDetailModal({ member, tasks, properties, onClose, onEdit }: {
+    member: StaffMember; tasks: StaffTask[]; properties: Property[];
+    onClose: () => void; onEdit: () => void;
+}) {
+    const { t } = useTranslation();
+    const fmt = (v: number) => new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(v);
+    const initials = member.full_name.split(' ').map(n => n[0]).join('').slice(0, 2);
+    const assignedProps = properties.filter(p => (member.assigned_properties || []).includes(p.id));
+    const completedTasks = tasks.filter(tk => tk.status === 'completed' || tk.status === 'verified');
+    const totalEarned = tasks.reduce((s, tk) => s + Number(tk.cost || 0), 0);
+    const ratedTasks = completedTasks.filter(tk => tk.rating);
+    const avgRating = ratedTasks.length > 0
+        ? ratedTasks.reduce((s, tk) => s + (tk.rating || 0), 0) / ratedTasks.length
+        : 0;
+
+    return (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4" onClick={onClose}>
+            <motion.div
+                initial={{ opacity: 0, scale: 0.95, y: 20 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.95, y: 20 }}
+                onClick={e => e.stopPropagation()}
+                className="w-full max-w-lg bg-[#1e293b] rounded-2xl border border-white/10 shadow-2xl overflow-hidden max-h-[85vh] flex flex-col"
+            >
+                {/* Header with Avatar */}
+                <div className="p-6 border-b border-white/10 bg-gradient-to-r from-blue-500/10 to-cyan-500/10">
+                    <div className="flex items-center justify-between mb-4">
+                        <div className="flex items-center gap-4">
+                            <div className="h-16 w-16 rounded-full bg-gradient-to-br from-blue-500 to-cyan-600 flex items-center justify-center text-white text-xl font-bold shadow-lg overflow-hidden ring-2 ring-white/10">
+                                {member.avatar_url
+                                    ? <img src={member.avatar_url} alt={member.full_name} className="h-full w-full object-cover" />
+                                    : initials}
+                            </div>
+                            <div>
+                                <h2 className="text-xl font-bold text-white">{member.full_name}</h2>
+                                <div className="flex items-center gap-2 mt-1">
+                                    <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${member.status === 'active' ? 'bg-emerald-500/10 text-emerald-400' : 'bg-red-500/10 text-red-400'}`}>
+                                        {t(`staffOps.status.${member.status}`)}
+                                    </span>
+                                    <span className="text-xs text-slate-500">{t(`staffOps.contract.${member.contract_type}`)}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <button onClick={onClose} className="text-slate-400 hover:text-white transition-colors">
+                            <X className="h-5 w-5" />
+                        </button>
+                    </div>
+
+                    {/* Quick KPIs */}
+                    <div className="grid grid-cols-3 gap-3">
+                        <div className="bg-white/5 rounded-lg p-2.5 text-center">
+                            <p className="text-lg font-bold text-white">{tasks.length}</p>
+                            <p className="text-[10px] text-slate-400">{t('staffOps.kpiTotalTasks')}</p>
+                        </div>
+                        <div className="bg-white/5 rounded-lg p-2.5 text-center">
+                            <p className="text-lg font-bold text-emerald-400">{fmt(totalEarned)}</p>
+                            <p className="text-[10px] text-slate-400">{t('staffOps.detailEarned')}</p>
+                        </div>
+                        <div className="bg-white/5 rounded-lg p-2.5 text-center">
+                            <div className="flex items-center justify-center gap-1">
+                                <Star className="h-3.5 w-3.5 text-amber-400 fill-amber-400" />
+                                <p className="text-lg font-bold text-white">{avgRating > 0 ? avgRating.toFixed(1) : '—'}</p>
+                            </div>
+                            <p className="text-[10px] text-slate-400">{t('staffOps.detailRating')}</p>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Scrollable Content */}
+                <div className="flex-1 overflow-y-auto p-5 space-y-5">
+                    {/* Personal Info */}
+                    <div>
+                        <h3 className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3">{t('staffOps.detailPersonal')}</h3>
+                        <div className="space-y-2 text-sm">
+                            {member.email && <p className="flex items-center gap-2 text-slate-300"><Mail className="h-4 w-4 text-slate-500" />{member.email}</p>}
+                            {member.phone && <p className="flex items-center gap-2 text-slate-300"><Phone className="h-4 w-4 text-slate-500" />{member.phone}</p>}
+                            {member.address && <p className="flex items-center gap-2 text-slate-300"><MapPin className="h-4 w-4 text-slate-500" />{member.address}</p>}
+                            {member.document_id && <p className="flex items-center gap-2 text-slate-300"><FileText className="h-4 w-4 text-slate-500" />ID: {member.document_id}</p>}
+                            {!member.email && !member.phone && !member.address && !member.document_id && (
+                                <p className="text-xs text-slate-600 italic">{t('staffOps.detailNoInfo')}</p>
+                            )}
+                        </div>
+                    </div>
+
+                    {/* Contract & Salary */}
+                    <div>
+                        <h3 className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3">{t('staffOps.detailContract')}</h3>
+                        <div className="grid grid-cols-2 gap-3">
+                            <div className="bg-white/5 rounded-lg p-3">
+                                <div className="flex items-center gap-2 mb-1">
+                                    <Briefcase className="h-3.5 w-3.5 text-slate-500" />
+                                    <p className="text-[10px] text-slate-400">{t('staffOps.fieldContract')}</p>
+                                </div>
+                                <p className="text-sm font-medium text-white">{t(`staffOps.contract.${member.contract_type}`)}</p>
+                            </div>
+                            <div className="bg-white/5 rounded-lg p-3">
+                                <div className="flex items-center gap-2 mb-1">
+                                    <DollarSign className="h-3.5 w-3.5 text-slate-500" />
+                                    <p className="text-[10px] text-slate-400">{t('staffOps.fieldSalary')}</p>
+                                </div>
+                                <p className="text-sm font-medium text-emerald-400">{fmt(member.salary)} <span className="text-slate-500 text-xs">/ {member.salary_type === 'monthly' ? t('staffOps.salaryMonthly').toLowerCase() : t('staffOps.salaryPerService').toLowerCase()}</span></p>
+                            </div>
+                            <div className="bg-white/5 rounded-lg p-3">
+                                <div className="flex items-center gap-2 mb-1">
+                                    <Calendar className="h-3.5 w-3.5 text-slate-500" />
+                                    <p className="text-[10px] text-slate-400">{t('staffOps.detailMemberSince')}</p>
+                                </div>
+                                <p className="text-sm font-medium text-white">{member.start_date ? new Date(member.start_date).toLocaleDateString() : '—'}</p>
+                            </div>
+                            {member.end_date && (
+                                <div className="bg-white/5 rounded-lg p-3">
+                                    <div className="flex items-center gap-2 mb-1">
+                                        <Calendar className="h-3.5 w-3.5 text-slate-500" />
+                                        <p className="text-[10px] text-slate-400">{t('staffOps.fieldEndDate')}</p>
+                                    </div>
+                                    <p className="text-sm font-medium text-white">{new Date(member.end_date).toLocaleDateString()}</p>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+
+                    {/* Assigned Properties */}
+                    {assignedProps.length > 0 && (
+                        <div>
+                            <h3 className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3">{t('staffOps.detailProperties')}</h3>
+                            <div className="flex flex-wrap gap-2">
+                                {assignedProps.map(p => (
+                                    <span key={p.id} className="flex items-center gap-1.5 text-xs bg-indigo-500/10 text-indigo-400 px-3 py-1.5 rounded-full">
+                                        <Home className="h-3 w-3" />{p.name}
+                                    </span>
+                                ))}
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Recent Tasks */}
+                    <div>
+                        <h3 className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3">{t('staffOps.detailRecentTasks')}</h3>
+                        {tasks.length > 0 ? (
+                            <div className="space-y-2">
+                                {tasks.slice(0, 5).map(task => {
+                                    const typeConf = TASK_TYPE_CONFIG[task.task_type] || TASK_TYPE_CONFIG.other;
+                                    const statusConf = STATUS_CONFIG[task.status] || STATUS_CONFIG.pending;
+                                    return (
+                                        <div key={task.id} className="flex items-center justify-between bg-white/5 rounded-lg p-2.5">
+                                            <div className="flex items-center gap-2 min-w-0">
+                                                <span className="text-base">{typeConf.icon}</span>
+                                                <div className="min-w-0">
+                                                    <p className="text-xs font-medium text-white truncate">{t(`staffOps.taskType.${task.task_type}`)} {task.properties?.name ? `· ${task.properties.name}` : ''}</p>
+                                                    <p className="text-[10px] text-slate-500">{new Date(task.scheduled_date).toLocaleDateString()}</p>
+                                                </div>
+                                            </div>
+                                            <div className="flex items-center gap-2 flex-shrink-0">
+                                                {task.rating && (
+                                                    <div className="flex gap-0.5">
+                                                        {[1, 2, 3, 4, 5].map(s => (
+                                                            <Star key={s} className={`h-2.5 w-2.5 ${s <= task.rating! ? 'text-amber-400 fill-amber-400' : 'text-slate-700'}`} />
+                                                        ))}
+                                                    </div>
+                                                )}
+                                                <span className={`text-[10px] font-medium px-2 py-0.5 rounded-full ${statusConf.bg} ${statusConf.color}`}>
+                                                    {t(`staffOps.taskStatus.${task.status}`)}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        ) : (
+                            <p className="text-xs text-slate-600 italic">{t('staffOps.detailNoTasks')}</p>
+                        )}
+                    </div>
+
+                    {/* Notes */}
+                    {member.notes && (
+                        <div>
+                            <h3 className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">{t('staffOps.detailNotes')}</h3>
+                            <p className="text-sm text-slate-300 bg-white/5 rounded-lg p-3">{member.notes}</p>
+                        </div>
+                    )}
+                </div>
+
+                {/* Footer */}
+                <div className="p-4 border-t border-white/10 flex items-center justify-between">
+                    <button onClick={onClose} className="px-4 py-2 text-sm text-slate-400 hover:text-white transition-colors">
+                        {t('common.close')}
+                    </button>
+                    <button onClick={onEdit}
+                        className="flex items-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg text-sm font-medium transition-colors">
+                        <Edit3 className="h-4 w-4" />
+                        {t('staffOps.editMember')}
+                    </button>
+                </div>
             </motion.div>
         </div>
     );

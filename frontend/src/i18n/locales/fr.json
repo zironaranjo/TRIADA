@@ -778,6 +778,18 @@
     "checklistBedrooms": "Nettoyer les chambres", "checklistBathrooms": "Nettoyer les salles de bain",
     "checklistKitchen": "Nettoyer la cuisine", "checklistLinens": "Changer les draps", "checklistTrash": "Sortir les poubelles",
     "payrollSummary": "Résumé de la Paie", "payrollName": "Employé", "payrollContract": "Contrat",
-    "payrollBase": "Salaire de Base", "payrollTasks": "Coût des Tâches", "payrollTotal": "Total", "payrollGrandTotal": "Total Général"
+    "payrollBase": "Salaire de Base", "payrollTasks": "Coût des Tâches", "payrollTotal": "Total", "payrollGrandTotal": "Total Général",
+    "avatarUpload": "Photo de Profil",
+    "avatarHint": "Cliquez pour télécharger (max 2Mo)",
+    "detailPersonal": "Informations Personnelles",
+    "detailContract": "Contrat et Salaire",
+    "detailProperties": "Propriétés Assignées",
+    "detailRecentTasks": "Tâches Récentes",
+    "detailNoTasks": "Aucune tâche assignée",
+    "detailNoInfo": "Aucune information personnelle",
+    "detailNotes": "Notes",
+    "detailEarned": "Gagné",
+    "detailRating": "Note Moyenne",
+    "detailMemberSince": "Membre Depuis"
   }
 }

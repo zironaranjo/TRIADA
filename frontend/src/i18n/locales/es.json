@@ -819,6 +819,18 @@
     "payrollBase": "Salario Base",
     "payrollTasks": "Coste Tareas",
     "payrollTotal": "Total",
-    "payrollGrandTotal": "Total General"
+    "payrollGrandTotal": "Total General",
+    "avatarUpload": "Foto de Perfil",
+    "avatarHint": "Clic para subir (max 2MB)",
+    "detailPersonal": "Datos Personales",
+    "detailContract": "Contrato y Salario",
+    "detailProperties": "Propiedades Asignadas",
+    "detailRecentTasks": "Tareas Recientes",
+    "detailNoTasks": "Sin tareas asignadas",
+    "detailNoInfo": "Sin datos personales",
+    "detailNotes": "Notas",
+    "detailEarned": "Ganado",
+    "detailRating": "Rating Promedio",
+    "detailMemberSince": "Miembro Desde"
   }
 }

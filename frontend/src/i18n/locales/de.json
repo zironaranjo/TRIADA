@@ -778,6 +778,18 @@
     "checklistBedrooms": "Schlafzimmer reinigen", "checklistBathrooms": "Badezimmer reinigen",
     "checklistKitchen": "Küche reinigen", "checklistLinens": "Bettwäsche wechseln", "checklistTrash": "Müll entsorgen",
     "payrollSummary": "Gehaltsübersicht", "payrollName": "Mitarbeiter", "payrollContract": "Vertrag",
-    "payrollBase": "Grundgehalt", "payrollTasks": "Aufgabenkosten", "payrollTotal": "Gesamt", "payrollGrandTotal": "Gesamtsumme"
+    "payrollBase": "Grundgehalt", "payrollTasks": "Aufgabenkosten", "payrollTotal": "Gesamt", "payrollGrandTotal": "Gesamtsumme",
+    "avatarUpload": "Profilfoto",
+    "avatarHint": "Klicken zum Hochladen (max 2MB)",
+    "detailPersonal": "Persönliche Informationen",
+    "detailContract": "Vertrag & Gehalt",
+    "detailProperties": "Zugewiesene Objekte",
+    "detailRecentTasks": "Letzte Aufgaben",
+    "detailNoTasks": "Noch keine Aufgaben zugewiesen",
+    "detailNoInfo": "Keine persönlichen Daten vorhanden",
+    "detailNotes": "Notizen",
+    "detailEarned": "Verdient",
+    "detailRating": "Durchschn. Bewertung",
+    "detailMemberSince": "Mitglied seit"
   }
 }
