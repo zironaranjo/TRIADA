@@ -24,6 +24,8 @@ SaaS platform for **vacation rental management** (triadak.io). Combines features
 - Supabase Storage bucket `property-images` with organized subfolders:
   - `avatars/{userId}/` — User profile avatars
   - `properties/` — Property images
+  - `staff-avatars/{memberId}/` — Staff member avatars
+  - `owner-avatars/{ownerId}/` — Owner avatars
 - Notifications use `createPortal` to render outside sidebar (avoids overflow clipping)
 - Supabase Realtime for live notification updates (requires `ALTER PUBLICATION supabase_realtime ADD TABLE notifications`)
 - Reusable `useUserAvatar` hook for loading avatar across all pages
@@ -35,7 +37,7 @@ SaaS platform for **vacation rental management** (triadak.io). Combines features
 - `expenses` - Operational expenses (category, amount, description, property_id, date)
 - `ledger_entry` - Accounting entries (UNRESTRICTED RLS - needs review)
 - `notifications` - In-app notifications (user_id, type, title, message, read, metadata) + DB trigger on booking insert
-- `owner` - Property owners (firstName, lastName, email, phone) — camelCase columns (UNRESTRICTED RLS - needs review)
+- `owner` - Property owners (firstName, lastName, email, phone, avatar_url) — camelCase columns (UNRESTRICTED RLS - needs review)
 - `profiles` - User profiles (user_id, email, full_name, role)
 - `properties` - Vacation rental properties (name, status, images, owner_id FK → owner.id, price_per_night, etc.)
 - `settlements` - Owner settlement records (UNRESTRICTED RLS - needs review)
@@ -78,11 +80,13 @@ SaaS platform for **vacation rental management** (triadak.io). Combines features
 24. **Scheduled Notifications System** - Supabase Edge Functions for automated check-in/check-out reminders (hourly cron) and daily digest (08:00 UTC cron). Configurable timing (6/12/24/48h) in Settings. SQL migration with notifications table schema
 25. **Owner Detail System** - Click on owner opens modal with KPIs (properties, revenue, bookings, this month). "View Full Profile" navigates to `/owners/:id` with full page: header with edit, KPIs, tabs (Properties cards with per-property revenue, Statements link, Payment history). Working search filter on owners list
 26. **Staff Operations (Enterprise)** - Full operational staff management at `/staff`:
-    - Personnel tab: CRUD for cleaners/maintenance with name, email, phone, address, document ID, contract type (full-time/part-time/freelance), salary, assigned properties
+    - Personnel tab: CRUD for cleaners/maintenance with name, email, phone, address, document ID, contract type (full-time/part-time/freelance), salary, assigned properties. Avatar upload via Supabase Storage
     - Tasks tab: task creation with type (cleaning/maintenance/inspection/laundry), property assignment, checklist items, date, cost. Status workflow (pending → in progress → completed → verified). Star rating system (1-5) for quality assessment
     - Payroll tab: summary table per employee with base salary + task costs = total. Grand total
+    - Staff detail modal: click on card opens modal with avatar, KPIs (tasks/earned/rating), personal info, contract details, assigned properties, recent tasks
     - Auto-expense integration: completed tasks automatically create expenses in `expenses` table (appears in Finance Engine P&L)
-    - SQL migration: `staff_members` and `staff_tasks` tables with RLS, triggers for updated_at
+    - SQL migration: `staff_members` (with avatar_url) and `staff_tasks` tables with RLS, triggers for updated_at
+27. **Owner Avatar System** - Owner photos displayed in list, detail modal, and full profile page. Upload via hover on avatar in profile page and create modal. Stored in `property-images/owner-avatars/{id}/`
 
 ## Pending / Roadmap (Fase 2 & 3)
 
@@ -121,6 +125,7 @@ SaaS platform for **vacation rental management** (triadak.io). Combines features
 - [ ] **Backup/Export de datos** — Exportar toda la data (propiedades, reservas, contactos, finanzas) en formato ZIP para cumplimiento legal y tranquilidad del cliente
 - [ ] **WhatsApp/SMS integration** — Mensajes automáticos a huéspedes (confirmación, instrucciones check-in, agradecimiento post-checkout) via Twilio o WhatsApp Business API
 - [ ] **KPI Benchmarking** — Comparar rendimiento entre propiedades: RevPAR, ADR, tasa de ocupación, tiempo medio de reserva. Ideal para presentar valor al propietario
+- [ ] **Rol Operativo (future)** — Dar acceso limitado a cleaners/mantenimiento: ver tareas asignadas del día, marcar completadas, subir fotos de verificación, ver historial de pagos. No prioritario hasta post Fase 3
 
 ### Completed
 - [x] Finance dashboard (improved with responsive layout, filters, export buttons)
