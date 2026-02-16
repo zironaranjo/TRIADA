@@ -37,7 +37,7 @@ export class SubscriptionsService {
 
     this.frontendUrl =
       this.configService.get<string>('FRONTEND_URL') ||
-      'https://staging.triadak.io';
+      'https://triadak.io';
 
     // Load Stripe Price IDs from env (or use placeholders for test mode)
     this.priceIds = {

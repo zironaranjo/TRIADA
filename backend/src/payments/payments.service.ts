@@ -42,7 +42,7 @@ export class PaymentsService {
   }) {
     try {
       const frontendUrl =
-        this.configService.get('FRONTEND_URL') || 'https://staging.triadak.io';
+        this.configService.get('FRONTEND_URL') || 'https://triadak.io';
       const amountInCents = Math.round(data.amount * 100);
 
       // Build session params

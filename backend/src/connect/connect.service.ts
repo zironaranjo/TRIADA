@@ -25,7 +25,7 @@ export class ConnectService {
 
     this.frontendUrl =
       this.configService.get<string>('FRONTEND_URL') ||
-      'https://staging.triadak.io';
+      'https://triadak.io';
   }
 
   /**
