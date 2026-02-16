@@ -8,7 +8,7 @@ import { GlassCard } from '@/components/GlassCard';
 import {
     ArrowLeft, Building, DollarSign, TrendingUp,
     Mail, Phone, Home, Edit3, Save, X,
-    BarChart3, FileText, CreditCard,
+    BarChart3, FileText, CreditCard, Camera,
 } from 'lucide-react';
 
 interface Owner {
@@ -17,6 +17,7 @@ interface Owner {
     lastName: string;
     email: string;
     phone?: string;
+    avatar_url?: string | null;
 }
 
 interface Property {
@@ -60,10 +61,29 @@ export default function OwnerProfile() {
         if (id) loadData();
     }, [id]);
 
+    const handleAvatarUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file || !owner) return;
+        if (file.size > 2 * 1024 * 1024) { alert('Max 2MB'); return; }
+        if (!file.type.startsWith('image/')) return;
+        const ext = file.name.split('.').pop() || 'jpg';
+        const path = `owner-avatars/${owner.id}/avatar.${ext}`;
+        const { error } = await supabase.storage.from('property-images').upload(path, file, { upsert: true });
+        if (!error) {
+            const { data: urlData } = supabase.storage.from('property-images').getPublicUrl(path);
+            const newUrl = urlData.publicUrl + '?t=' + Date.now();
+            await supabase.from('owner').update({ avatar_url: urlData.publicUrl }).eq('id', owner.id);
+            setOwner({ ...owner, avatar_url: newUrl });
+        }
+    };
+
     const loadData = async () => {
         setLoading(true);
         try {
             const { data: ownerRes } = await ownersApi.getOne(id!);
+            // Load avatar from Supabase
+            const { data: ownerRow } = await supabase.from('owner').select('avatar_url').eq('id', id).single();
+            if (ownerRow?.avatar_url) ownerRes.avatar_url = ownerRow.avatar_url;
             setOwner(ownerRes);
             setEditForm({
                 firstName: ownerRes.firstName,
@@ -159,8 +179,16 @@ export default function OwnerProfile() {
                     <GlassCard className="p-6">
                         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                             <div className="flex items-center gap-4">
-                                <div className="h-16 w-16 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white text-xl font-bold shadow-lg">
-                                    {owner.firstName[0]}{owner.lastName[0]}
+                                <div className="relative group">
+                                    <div className="h-16 w-16 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white text-xl font-bold shadow-lg overflow-hidden ring-2 ring-white/10">
+                                        {owner.avatar_url
+                                            ? <img src={owner.avatar_url} alt={owner.firstName} className="h-full w-full object-cover" />
+                                            : <>{owner.firstName[0]}{owner.lastName[0]}</>}
+                                    </div>
+                                    <label className="absolute inset-0 flex items-center justify-center bg-black/50 rounded-full opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer">
+                                        <Camera className="h-5 w-5 text-white" />
+                                        <input type="file" accept="image/*" onChange={handleAvatarUpload} className="hidden" />
+                                    </label>
                                 </div>
                                 <div>
                                     {editing ? (

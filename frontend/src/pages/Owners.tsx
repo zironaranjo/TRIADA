@@ -8,9 +8,8 @@ import { GlassCard } from "@/components/GlassCard";
 import {
     Plus, Search, Mail, Phone, Building,
     User, Wallet, X, Eye, DollarSign, Home,
-    CalendarDays, TrendingUp, ExternalLink,
+    CalendarDays, TrendingUp, ExternalLink, Camera,
 } from "lucide-react";
-import { useUserAvatar } from "@/hooks/useUserAvatar";
 
 interface Owner {
     id: string;
@@ -19,6 +18,7 @@ interface Owner {
     email: string;
     phone?: string;
     properties?: any[];
+    avatar_url?: string | null;
 }
 
 interface OwnerDetailData {
@@ -39,7 +39,6 @@ export default function Owners() {
     const [detailData, setDetailData] = useState<OwnerDetailData | null>(null);
     const [detailLoading, setDetailLoading] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
-    const userAvatar = useUserAvatar();
 
     useEffect(() => {
         loadOwners();
@@ -48,7 +47,20 @@ export default function Owners() {
     const loadOwners = async () => {
         try {
             const { data } = await ownersApi.getAll();
-            setOwners(data);
+            const ownersData: Owner[] = data || [];
+            // Load avatar URLs from Supabase owner table
+            const ownerIds = ownersData.map((o: Owner) => o.id);
+            if (ownerIds.length > 0) {
+                const { data: avatars } = await supabase
+                    .from('owner')
+                    .select('id, avatar_url')
+                    .in('id', ownerIds);
+                if (avatars) {
+                    const avatarMap = new Map(avatars.map(a => [a.id, a.avatar_url]));
+                    ownersData.forEach(o => { o.avatar_url = avatarMap.get(o.id) || null; });
+                }
+            }
+            setOwners(ownersData);
         } catch (error) {
             console.error("Failed to load owners", error);
         } finally {
@@ -178,8 +190,8 @@ export default function Owners() {
                                 >
                                     <div className="flex items-center gap-4">
                                         <div className="h-10 w-10 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white font-bold shadow-lg overflow-hidden">
-                                            {userAvatar ? (
-                                                <img src={userAvatar} alt="Avatar" className="h-full w-full object-cover" />
+                                            {owner.avatar_url ? (
+                                                <img src={owner.avatar_url} alt={owner.firstName} className="h-full w-full object-cover" />
                                             ) : (
                                                 <>{owner.firstName[0]}{owner.lastName[0]}</>
                                             )}
@@ -246,8 +258,10 @@ export default function Owners() {
                             <div className="p-6 border-b border-white/10 bg-gradient-to-r from-indigo-500/10 to-purple-500/10">
                                 <div className="flex items-center justify-between mb-4">
                                     <div className="flex items-center gap-4">
-                                        <div className="h-14 w-14 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white text-lg font-bold shadow-lg">
-                                            {selectedOwner.firstName[0]}{selectedOwner.lastName[0]}
+                                        <div className="h-14 w-14 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white text-lg font-bold shadow-lg overflow-hidden ring-2 ring-white/10">
+                                            {selectedOwner.avatar_url
+                                                ? <img src={selectedOwner.avatar_url} alt={selectedOwner.firstName} className="h-full w-full object-cover" />
+                                                : <>{selectedOwner.firstName[0]}{selectedOwner.lastName[0]}</>}
                                         </div>
                                         <div>
                                             <h2 className="text-xl font-bold text-white">{selectedOwner.firstName} {selectedOwner.lastName}</h2>
@@ -380,14 +394,38 @@ function CreateOwnerModal({ isOpen, onClose, onSuccess }: any) {
         phone: ''
     });
     const [loading, setLoading] = useState(false);
+    const [avatarFile, setAvatarFile] = useState<File | null>(null);
+    const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
 
     if (!isOpen) return null;
+
+    const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+        if (file.size > 2 * 1024 * 1024) { alert(t('settings.alerts.avatarSize')); return; }
+        if (!file.type.startsWith('image/')) { alert(t('settings.alerts.avatarInvalid')); return; }
+        setAvatarFile(file);
+        setAvatarPreview(URL.createObjectURL(file));
+    };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setLoading(true);
         try {
-            await ownersApi.create(formData);
+            const { data: created } = await ownersApi.create(formData);
+            const ownerId = created?.id;
+
+            // Upload avatar if selected
+            if (avatarFile && ownerId) {
+                const ext = avatarFile.name.split('.').pop() || 'jpg';
+                const path = `owner-avatars/${ownerId}/avatar.${ext}`;
+                const { error: upErr } = await supabase.storage.from('property-images').upload(path, avatarFile, { upsert: true });
+                if (!upErr) {
+                    const { data: urlData } = supabase.storage.from('property-images').getPublicUrl(path);
+                    await supabase.from('owner').update({ avatar_url: urlData.publicUrl }).eq('id', ownerId);
+                }
+            }
+
             onSuccess();
             onClose();
         } catch (err) {
@@ -395,12 +433,18 @@ function CreateOwnerModal({ isOpen, onClose, onSuccess }: any) {
         } finally {
             setLoading(false);
             setFormData({ firstName: '', lastName: '', email: '', phone: '' });
+            setAvatarFile(null);
+            setAvatarPreview(null);
         }
     };
 
     const handleChange = (e: any) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
+
+    const initials = formData.firstName && formData.lastName
+        ? `${formData.firstName[0]}${formData.lastName[0]}`.toUpperCase()
+        : '?';
 
     return (
         <AnimatePresence>
@@ -419,6 +463,25 @@ function CreateOwnerModal({ isOpen, onClose, onSuccess }: any) {
                     </div>
 
                     <form onSubmit={handleSubmit} className="p-6 space-y-4">
+                        {/* Avatar Upload */}
+                        <div className="flex items-center gap-4">
+                            <div className="relative group">
+                                <div className="h-16 w-16 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white text-lg font-bold overflow-hidden ring-2 ring-white/10">
+                                    {avatarPreview
+                                        ? <img src={avatarPreview} alt="Avatar" className="h-full w-full object-cover" />
+                                        : initials}
+                                </div>
+                                <label className="absolute inset-0 flex items-center justify-center bg-black/50 rounded-full opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer">
+                                    <Camera className="h-5 w-5 text-white" />
+                                    <input type="file" accept="image/*" onChange={handleAvatarChange} className="hidden" />
+                                </label>
+                            </div>
+                            <div className="text-xs text-slate-500">
+                                <p className="font-medium text-slate-300">{t('staffOps.avatarUpload')}</p>
+                                <p>{t('staffOps.avatarHint')}</p>
+                            </div>
+                        </div>
+
                         <div className="grid grid-cols-2 gap-4">
                             <div className="space-y-2">
                                 <label className="text-sm font-medium text-slate-300">{t('owners.labelFirstName')}</label>
