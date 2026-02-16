@@ -74,7 +74,8 @@
       "ownerStatements": "Relevés",
       "settings": "Paramètres",
       "billing": "Facturation",
-      "ownerPortal": "Portail Propriétaire"
+      "ownerPortal": "Portail Propriétaire",
+      "staffOps": "Personnel Opérationnel"
     },
     "signOut": "Déconnexion"
   },
@@ -285,7 +286,30 @@
     "labelFirstName": "Prénom",
     "labelLastName": "Nom",
     "labelEmail": "Adresse Email",
-    "labelPhone": "Téléphone"
+    "labelPhone": "Téléphone",
+    "viewFullProfile": "Voir le Profil Complet",
+    "detailProperties": "Propriétés",
+    "detailRevenue": "Revenu Total",
+    "detailBookings": "Réservations",
+    "detailThisMonth": "Ce Mois",
+    "detailPropertyList": "Portefeuille de Propriétés",
+    "profileTabProperties": "Propriétés",
+    "profileTabStatements": "Relevés",
+    "profileTabPayments": "Paiements",
+    "editOwner": "Modifier",
+    "kpiActive": "actives",
+    "kpiBookings": "réservations",
+    "kpiCurrent": "mois en cours",
+    "kpiOccupancy": "Occupation",
+    "kpiAvgRate": "taux moyen",
+    "backToOwners": "Retour aux Propriétaires",
+    "notFound": "Propriétaire non trouvé",
+    "noProperties": "Aucune propriété assignée",
+    "statementsTitle": "Relevés",
+    "statementsDesc": "Voir les rapports de règlement mensuel pour ce propriétaire",
+    "goToStatements": "Aller aux Relevés",
+    "paymentHistory": "Historique des Paiements",
+    "noPayments": "Aucun paiement enregistré"
   },
 
   "ownerStatements": {
@@ -718,5 +742,42 @@
       "privacy": "Politique de confidentialité",
       "terms": "Conditions d'utilisation"
     }
+  },
+
+  "staffOps": {
+    "title": "Personnel Opérationnel",
+    "subtitle": "Gérez votre équipe opérationnelle, tâches et paie",
+    "search": "Rechercher personnel ou tâches...",
+    "tabStaff": "Personnel",
+    "tabTasks": "Tâches",
+    "tabPayroll": "Paie",
+    "addMember": "Ajouter un Membre",
+    "editMember": "Modifier le Membre",
+    "addTask": "Nouvelle Tâche",
+    "createTask": "Créer une Tâche",
+    "kpiActiveStaff": "Personnel Actif",
+    "kpiTotalTasks": "Total des Tâches",
+    "kpiCompleted": "Terminées",
+    "kpiLabourCost": "Coût du Travail",
+    "noMembers": "Aucun membre du personnel",
+    "noTasks": "Aucune tâche programmée",
+    "addFirst": "Ajoutez votre premier membre d'équipe",
+    "addFirstTask": "Créez votre première tâche",
+    "confirmDeleteMember": "Supprimer ce membre du personnel?",
+    "confirmDeleteTask": "Supprimer cette tâche?",
+    "status": { "active": "Actif", "inactive": "Inactif" },
+    "contract": { "full_time": "Temps plein", "part_time": "Temps partiel", "freelance": "Freelance" },
+    "taskType": { "cleaning": "Ménage", "maintenance": "Maintenance", "inspection": "Inspection", "laundry": "Blanchisserie", "other": "Autre" },
+    "taskStatus": { "pending": "En attente", "in_progress": "En cours", "completed": "Terminée", "verified": "Vérifiée", "cancelled": "Annulée" },
+    "fieldName": "Nom Complet", "fieldEmail": "E-mail", "fieldPhone": "Téléphone", "fieldAddress": "Adresse",
+    "fieldDocId": "N° Pièce d'identité", "fieldContract": "Type de Contrat", "fieldSalary": "Salaire", "fieldSalaryType": "Type de Paiement",
+    "fieldStartDate": "Date de Début", "fieldEndDate": "Date de Fin", "fieldAssignTo": "Assigner à", "fieldProperty": "Propriété",
+    "fieldTaskType": "Type de Tâche", "fieldDate": "Date", "fieldCost": "Coût", "noProperty": "Pas de propriété",
+    "salaryMonthly": "Mensuel", "salaryPerService": "Par Service",
+    "checklist": "Checklist", "addChecklistItem": "Ajouter un élément",
+    "checklistBedrooms": "Nettoyer les chambres", "checklistBathrooms": "Nettoyer les salles de bain",
+    "checklistKitchen": "Nettoyer la cuisine", "checklistLinens": "Changer les draps", "checklistTrash": "Sortir les poubelles",
+    "payrollSummary": "Résumé de la Paie", "payrollName": "Employé", "payrollContract": "Contrat",
+    "payrollBase": "Salaire de Base", "payrollTasks": "Coût des Tâches", "payrollTotal": "Total", "payrollGrandTotal": "Total Général"
   }
 }

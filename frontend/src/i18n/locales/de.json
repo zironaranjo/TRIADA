@@ -74,7 +74,8 @@
       "ownerStatements": "Abrechnungen",
       "settings": "Einstellungen",
       "billing": "Abrechnung",
-      "ownerPortal": "Eigentümerportal"
+      "ownerPortal": "Eigentümerportal",
+      "staffOps": "Betriebspersonal"
     },
     "signOut": "Abmelden"
   },
@@ -285,7 +286,30 @@
     "labelFirstName": "Vorname",
     "labelLastName": "Nachname",
     "labelEmail": "E-Mail-Adresse",
-    "labelPhone": "Telefon"
+    "labelPhone": "Telefon",
+    "viewFullProfile": "Vollständiges Profil",
+    "detailProperties": "Objekte",
+    "detailRevenue": "Gesamtumsatz",
+    "detailBookings": "Buchungen",
+    "detailThisMonth": "Diesen Monat",
+    "detailPropertyList": "Objektportfolio",
+    "profileTabProperties": "Objekte",
+    "profileTabStatements": "Abrechnungen",
+    "profileTabPayments": "Zahlungen",
+    "editOwner": "Bearbeiten",
+    "kpiActive": "aktiv",
+    "kpiBookings": "Buchungen",
+    "kpiCurrent": "aktueller Monat",
+    "kpiOccupancy": "Auslastung",
+    "kpiAvgRate": "Durchschnitt",
+    "backToOwners": "Zurück zu Eigentümern",
+    "notFound": "Eigentümer nicht gefunden",
+    "noProperties": "Keine Objekte zugewiesen",
+    "statementsTitle": "Abrechnungen",
+    "statementsDesc": "Monatliche Abrechnungen für diesen Eigentümer anzeigen",
+    "goToStatements": "Zu Abrechnungen",
+    "paymentHistory": "Zahlungsverlauf",
+    "noPayments": "Keine Zahlungen erfasst"
   },
 
   "ownerStatements": {
@@ -718,5 +742,42 @@
       "privacy": "Datenschutz",
       "terms": "Nutzungsbedingungen"
     }
+  },
+
+  "staffOps": {
+    "title": "Betriebspersonal",
+    "subtitle": "Verwalten Sie Ihr Betriebsteam, Aufgaben und Gehaltsabrechnungen",
+    "search": "Personal oder Aufgaben suchen...",
+    "tabStaff": "Personal",
+    "tabTasks": "Aufgaben",
+    "tabPayroll": "Gehälter",
+    "addMember": "Mitglied hinzufügen",
+    "editMember": "Mitglied bearbeiten",
+    "addTask": "Neue Aufgabe",
+    "createTask": "Aufgabe erstellen",
+    "kpiActiveStaff": "Aktives Personal",
+    "kpiTotalTasks": "Aufgaben gesamt",
+    "kpiCompleted": "Abgeschlossen",
+    "kpiLabourCost": "Arbeitskosten",
+    "noMembers": "Noch keine Teammitglieder",
+    "noTasks": "Keine Aufgaben geplant",
+    "addFirst": "Fügen Sie Ihr erstes Teammitglied hinzu",
+    "addFirstTask": "Erstellen Sie Ihre erste Aufgabe",
+    "confirmDeleteMember": "Dieses Teammitglied löschen?",
+    "confirmDeleteTask": "Diese Aufgabe löschen?",
+    "status": { "active": "Aktiv", "inactive": "Inaktiv" },
+    "contract": { "full_time": "Vollzeit", "part_time": "Teilzeit", "freelance": "Freiberuflich" },
+    "taskType": { "cleaning": "Reinigung", "maintenance": "Wartung", "inspection": "Inspektion", "laundry": "Wäsche", "other": "Sonstiges" },
+    "taskStatus": { "pending": "Ausstehend", "in_progress": "In Arbeit", "completed": "Abgeschlossen", "verified": "Verifiziert", "cancelled": "Storniert" },
+    "fieldName": "Vollständiger Name", "fieldEmail": "E-Mail", "fieldPhone": "Telefon", "fieldAddress": "Adresse",
+    "fieldDocId": "Ausweis-Nr.", "fieldContract": "Vertragsart", "fieldSalary": "Gehalt", "fieldSalaryType": "Zahlungsart",
+    "fieldStartDate": "Startdatum", "fieldEndDate": "Enddatum", "fieldAssignTo": "Zuweisen an", "fieldProperty": "Objekt",
+    "fieldTaskType": "Aufgabentyp", "fieldDate": "Datum", "fieldCost": "Kosten", "noProperty": "Kein Objekt",
+    "salaryMonthly": "Monatlich", "salaryPerService": "Pro Service",
+    "checklist": "Checkliste", "addChecklistItem": "Element hinzufügen",
+    "checklistBedrooms": "Schlafzimmer reinigen", "checklistBathrooms": "Badezimmer reinigen",
+    "checklistKitchen": "Küche reinigen", "checklistLinens": "Bettwäsche wechseln", "checklistTrash": "Müll entsorgen",
+    "payrollSummary": "Gehaltsübersicht", "payrollName": "Mitarbeiter", "payrollContract": "Vertrag",
+    "payrollBase": "Grundgehalt", "payrollTasks": "Aufgabenkosten", "payrollTotal": "Gesamt", "payrollGrandTotal": "Gesamtsumme"
   }
 }

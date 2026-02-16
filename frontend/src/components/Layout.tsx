@@ -15,6 +15,7 @@ import {
     Menu,
     X,
     ExternalLink,
+    HardHat,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useAuth } from '../contexts/AuthContext';
@@ -71,6 +72,7 @@ const Layout = () => {
         { path: '/crm', labelKey: 'layout.nav.crm', icon: ContactIcon },
         { path: '/accounting', labelKey: 'layout.nav.financeEngine', icon: PiggyBank },
         { path: '/statements', labelKey: 'layout.nav.ownerStatements', icon: FileText },
+        { path: '/staff', labelKey: 'layout.nav.staffOps', icon: HardHat },
     ];
 
     const handleNavClick = () => {

@@ -74,7 +74,8 @@
       "ownerStatements": "Owner Statements",
       "settings": "Settings",
       "billing": "Billing",
-      "ownerPortal": "Owner Portal"
+      "ownerPortal": "Owner Portal",
+      "staffOps": "Staff Operations"
     },
     "signOut": "Sign Out"
   },
@@ -285,7 +286,30 @@
     "labelFirstName": "First Name",
     "labelLastName": "Last Name",
     "labelEmail": "Email Address",
-    "labelPhone": "Phone"
+    "labelPhone": "Phone",
+    "viewFullProfile": "View Full Profile",
+    "detailProperties": "Properties",
+    "detailRevenue": "Total Revenue",
+    "detailBookings": "Bookings",
+    "detailThisMonth": "This Month",
+    "detailPropertyList": "Property Portfolio",
+    "profileTabProperties": "Properties",
+    "profileTabStatements": "Statements",
+    "profileTabPayments": "Payments",
+    "editOwner": "Edit",
+    "kpiActive": "active",
+    "kpiBookings": "bookings",
+    "kpiCurrent": "current month",
+    "kpiOccupancy": "Occupancy",
+    "kpiAvgRate": "avg rate",
+    "backToOwners": "Back to Owners",
+    "notFound": "Owner not found",
+    "noProperties": "No properties assigned",
+    "statementsTitle": "Owner Statements",
+    "statementsDesc": "View monthly settlement reports for this owner",
+    "goToStatements": "Go to Statements",
+    "paymentHistory": "Payment History",
+    "noPayments": "No payments recorded"
   },
 
   "ownerStatements": {
@@ -718,5 +742,83 @@
       "privacy": "Privacy Policy",
       "terms": "Terms of Service"
     }
+  },
+
+  "staffOps": {
+    "title": "Staff Operations",
+    "subtitle": "Manage your operational team, tasks, and payroll",
+    "search": "Search staff or tasks...",
+    "tabStaff": "Personnel",
+    "tabTasks": "Tasks",
+    "tabPayroll": "Payroll",
+    "addMember": "Add Member",
+    "editMember": "Edit Member",
+    "addTask": "New Task",
+    "createTask": "Create Task",
+    "kpiActiveStaff": "Active Staff",
+    "kpiTotalTasks": "Total Tasks",
+    "kpiCompleted": "Completed",
+    "kpiLabourCost": "Labour Cost",
+    "noMembers": "No staff members yet",
+    "noTasks": "No tasks scheduled",
+    "addFirst": "Add your first team member",
+    "addFirstTask": "Create your first task",
+    "confirmDeleteMember": "Delete this staff member?",
+    "confirmDeleteTask": "Delete this task?",
+    "status": {
+      "active": "Active",
+      "inactive": "Inactive"
+    },
+    "contract": {
+      "full_time": "Full-time",
+      "part_time": "Part-time",
+      "freelance": "Freelance"
+    },
+    "taskType": {
+      "cleaning": "Cleaning",
+      "maintenance": "Maintenance",
+      "inspection": "Inspection",
+      "laundry": "Laundry",
+      "other": "Other"
+    },
+    "taskStatus": {
+      "pending": "Pending",
+      "in_progress": "In Progress",
+      "completed": "Completed",
+      "verified": "Verified",
+      "cancelled": "Cancelled"
+    },
+    "fieldName": "Full Name",
+    "fieldEmail": "Email",
+    "fieldPhone": "Phone",
+    "fieldAddress": "Address",
+    "fieldDocId": "Document ID",
+    "fieldContract": "Contract Type",
+    "fieldSalary": "Salary",
+    "fieldSalaryType": "Payment Type",
+    "fieldStartDate": "Start Date",
+    "fieldEndDate": "End Date",
+    "fieldAssignTo": "Assign To",
+    "fieldProperty": "Property",
+    "fieldTaskType": "Task Type",
+    "fieldDate": "Date",
+    "fieldCost": "Cost",
+    "noProperty": "No property",
+    "salaryMonthly": "Monthly",
+    "salaryPerService": "Per Service",
+    "checklist": "Checklist",
+    "addChecklistItem": "Add item",
+    "checklistBedrooms": "Clean bedrooms",
+    "checklistBathrooms": "Clean bathrooms",
+    "checklistKitchen": "Clean kitchen",
+    "checklistLinens": "Change linens",
+    "checklistTrash": "Take out trash",
+    "payrollSummary": "Payroll Summary",
+    "payrollName": "Employee",
+    "payrollContract": "Contract",
+    "payrollBase": "Base Salary",
+    "payrollTasks": "Task Costs",
+    "payrollTotal": "Total",
+    "payrollGrandTotal": "Grand Total"
   }
 }

@@ -76,6 +76,13 @@ SaaS platform for **vacation rental management** (triadak.io). Combines features
     - Owner portal at `/portal/*` uses separate OwnerLayout; admin accesses owner pages via `/owner/*` within main Layout
 23. **Advanced Finance Engine** - Profit & Loss statement, expense reconciliation system (localStorage persisted), category filtering, reconciliation progress bar + status panel
 24. **Scheduled Notifications System** - Supabase Edge Functions for automated check-in/check-out reminders (hourly cron) and daily digest (08:00 UTC cron). Configurable timing (6/12/24/48h) in Settings. SQL migration with notifications table schema
+25. **Owner Detail System** - Click on owner opens modal with KPIs (properties, revenue, bookings, this month). "View Full Profile" navigates to `/owners/:id` with full page: header with edit, KPIs, tabs (Properties cards with per-property revenue, Statements link, Payment history). Working search filter on owners list
+26. **Staff Operations (Enterprise)** - Full operational staff management at `/staff`:
+    - Personnel tab: CRUD for cleaners/maintenance with name, email, phone, address, document ID, contract type (full-time/part-time/freelance), salary, assigned properties
+    - Tasks tab: task creation with type (cleaning/maintenance/inspection/laundry), property assignment, checklist items, date, cost. Status workflow (pending → in progress → completed → verified). Star rating system (1-5) for quality assessment
+    - Payroll tab: summary table per employee with base salary + task costs = total. Grand total
+    - Auto-expense integration: completed tasks automatically create expenses in `expenses` table (appears in Finance Engine P&L)
+    - SQL migration: `staff_members` and `staff_tasks` tables with RLS, triggers for updated_at
 
 ## Pending / Roadmap (Fase 2 & 3)
 
@@ -144,6 +151,9 @@ SaaS platform for **vacation rental management** (triadak.io). Combines features
 - `frontend/src/api/client.ts` - Axios client for NestJS backend API (owners, properties, bookings)
 - `frontend/src/lib/supabase.ts` - Supabase client config
 - `frontend/src/lib/exportUtils.ts` - PDF/CSV export utilities (jspdf + jspdf-autotable)
+- `frontend/src/pages/OwnerProfile.tsx` - Owner full profile page with tabs (properties, statements, payments)
+- `frontend/src/pages/StaffOperations.tsx` - Staff operations management (personnel, tasks, payroll)
+- `supabase/migrations/002_staff_operations.sql` - SQL setup for staff_members and staff_tasks tables
 - `supabase/functions/send-reminders/index.ts` - Edge Function: hourly check-in/check-out reminder generator
 - `supabase/functions/daily-digest/index.ts` - Edge Function: daily morning digest notification
 - `supabase/migrations/001_notifications_table.sql` - SQL setup for notifications table, RLS, and cron jobs

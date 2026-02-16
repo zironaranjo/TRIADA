@@ -74,7 +74,8 @@
       "ownerStatements": "Liquidaciones",
       "settings": "Configuración",
       "billing": "Facturación",
-      "ownerPortal": "Portal Propietario"
+      "ownerPortal": "Portal Propietario",
+      "staffOps": "Personal Operativo"
     },
     "signOut": "Cerrar sesión"
   },
@@ -285,7 +286,30 @@
     "labelFirstName": "Nombre",
     "labelLastName": "Apellido",
     "labelEmail": "Correo Electrónico",
-    "labelPhone": "Teléfono"
+    "labelPhone": "Teléfono",
+    "viewFullProfile": "Ver Perfil Completo",
+    "detailProperties": "Propiedades",
+    "detailRevenue": "Ingresos Totales",
+    "detailBookings": "Reservas",
+    "detailThisMonth": "Este Mes",
+    "detailPropertyList": "Portafolio de Propiedades",
+    "profileTabProperties": "Propiedades",
+    "profileTabStatements": "Liquidaciones",
+    "profileTabPayments": "Pagos",
+    "editOwner": "Editar",
+    "kpiActive": "activas",
+    "kpiBookings": "reservas",
+    "kpiCurrent": "mes actual",
+    "kpiOccupancy": "Ocupación",
+    "kpiAvgRate": "tasa media",
+    "backToOwners": "Volver a Propietarios",
+    "notFound": "Propietario no encontrado",
+    "noProperties": "Sin propiedades asignadas",
+    "statementsTitle": "Liquidaciones",
+    "statementsDesc": "Ver los informes de liquidación mensual de este propietario",
+    "goToStatements": "Ir a Liquidaciones",
+    "paymentHistory": "Historial de Pagos",
+    "noPayments": "Sin pagos registrados"
   },
 
   "ownerStatements": {
@@ -718,5 +742,83 @@
       "privacy": "Política de Privacidad",
       "terms": "Términos de Servicio"
     }
+  },
+
+  "staffOps": {
+    "title": "Personal Operativo",
+    "subtitle": "Gestiona tu equipo operativo, tareas y nóminas",
+    "search": "Buscar personal o tareas...",
+    "tabStaff": "Personal",
+    "tabTasks": "Tareas",
+    "tabPayroll": "Nóminas",
+    "addMember": "Añadir Miembro",
+    "editMember": "Editar Miembro",
+    "addTask": "Nueva Tarea",
+    "createTask": "Crear Tarea",
+    "kpiActiveStaff": "Personal Activo",
+    "kpiTotalTasks": "Total Tareas",
+    "kpiCompleted": "Completadas",
+    "kpiLabourCost": "Coste Laboral",
+    "noMembers": "Aún no hay miembros del equipo",
+    "noTasks": "No hay tareas programadas",
+    "addFirst": "Añade tu primer miembro del equipo",
+    "addFirstTask": "Crea tu primera tarea",
+    "confirmDeleteMember": "¿Eliminar este miembro del equipo?",
+    "confirmDeleteTask": "¿Eliminar esta tarea?",
+    "status": {
+      "active": "Activo",
+      "inactive": "Inactivo"
+    },
+    "contract": {
+      "full_time": "Tiempo completo",
+      "part_time": "Medio tiempo",
+      "freelance": "Freelance"
+    },
+    "taskType": {
+      "cleaning": "Limpieza",
+      "maintenance": "Mantenimiento",
+      "inspection": "Inspección",
+      "laundry": "Lavandería",
+      "other": "Otro"
+    },
+    "taskStatus": {
+      "pending": "Pendiente",
+      "in_progress": "En Progreso",
+      "completed": "Completada",
+      "verified": "Verificada",
+      "cancelled": "Cancelada"
+    },
+    "fieldName": "Nombre Completo",
+    "fieldEmail": "Email",
+    "fieldPhone": "Teléfono",
+    "fieldAddress": "Dirección",
+    "fieldDocId": "DNI/ID",
+    "fieldContract": "Tipo de Contrato",
+    "fieldSalary": "Salario",
+    "fieldSalaryType": "Tipo de Pago",
+    "fieldStartDate": "Fecha Inicio",
+    "fieldEndDate": "Fecha Fin",
+    "fieldAssignTo": "Asignar A",
+    "fieldProperty": "Propiedad",
+    "fieldTaskType": "Tipo de Tarea",
+    "fieldDate": "Fecha",
+    "fieldCost": "Coste",
+    "noProperty": "Sin propiedad",
+    "salaryMonthly": "Mensual",
+    "salaryPerService": "Por Servicio",
+    "checklist": "Checklist",
+    "addChecklistItem": "Añadir item",
+    "checklistBedrooms": "Limpiar dormitorios",
+    "checklistBathrooms": "Limpiar baños",
+    "checklistKitchen": "Limpiar cocina",
+    "checklistLinens": "Cambiar sábanas",
+    "checklistTrash": "Sacar basura",
+    "payrollSummary": "Resumen de Nóminas",
+    "payrollName": "Empleado",
+    "payrollContract": "Contrato",
+    "payrollBase": "Salario Base",
+    "payrollTasks": "Coste Tareas",
+    "payrollTotal": "Total",
+    "payrollGrandTotal": "Total General"
   }
 }

@@ -1,11 +1,14 @@
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 import { ownersApi } from "@/api/client";
+import { supabase } from "@/lib/supabase";
 import { motion, AnimatePresence } from "framer-motion";
 import { GlassCard } from "@/components/GlassCard";
 import {
     Plus, Search, Mail, Phone, Building,
-    MoreHorizontal, User, Wallet, X
+    User, Wallet, X, Eye, DollarSign, Home,
+    CalendarDays, TrendingUp, ExternalLink,
 } from "lucide-react";
 import { useUserAvatar } from "@/hooks/useUserAvatar";
 
@@ -15,14 +18,27 @@ interface Owner {
     lastName: string;
     email: string;
     phone?: string;
-    properties?: any[]; // We'll count these if available
+    properties?: any[];
+}
+
+interface OwnerDetailData {
+    properties: { id: string; name: string; status: string; price_per_night: number }[];
+    totalRevenue: number;
+    monthRevenue: number;
+    bookingsCount: number;
+    pendingPayouts: number;
 }
 
 export default function Owners() {
     const { t } = useTranslation();
+    const navigate = useNavigate();
     const [owners, setOwners] = useState<Owner[]>([]);
     const [loading, setLoading] = useState(true);
     const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+    const [selectedOwner, setSelectedOwner] = useState<Owner | null>(null);
+    const [detailData, setDetailData] = useState<OwnerDetailData | null>(null);
+    const [detailLoading, setDetailLoading] = useState(false);
+    const [searchQuery, setSearchQuery] = useState('');
     const userAvatar = useUserAvatar();
 
     useEffect(() => {
@@ -40,7 +56,60 @@ export default function Owners() {
         }
     };
 
+    const openOwnerDetail = async (owner: Owner) => {
+        setSelectedOwner(owner);
+        setDetailLoading(true);
+        setDetailData(null);
+        try {
+            const { data: props } = await supabase
+                .from('properties')
+                .select('id, name, status, price_per_night')
+                .eq('owner_id', owner.id);
 
+            const propertyIds = (props || []).map(p => p.id);
+            let totalRevenue = 0;
+            let monthRevenue = 0;
+            let bookingsCount = 0;
+
+            if (propertyIds.length > 0) {
+                const now = new Date();
+                const monthStart = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-01`;
+
+                const { data: bookings } = await supabase
+                    .from('bookings')
+                    .select('total_price, start_date')
+                    .in('property_id', propertyIds)
+                    .in('status', ['confirmed', 'completed', 'checked_in']);
+
+                (bookings || []).forEach(b => {
+                    const price = Number(b.total_price || 0);
+                    totalRevenue += price;
+                    bookingsCount++;
+                    if (b.start_date >= monthStart) monthRevenue += price;
+                });
+            }
+
+            setDetailData({
+                properties: props || [],
+                totalRevenue,
+                monthRevenue,
+                bookingsCount,
+                pendingPayouts: totalRevenue * 0.77,
+            });
+        } catch (error) {
+            console.error('Error loading owner detail:', error);
+        } finally {
+            setDetailLoading(false);
+        }
+    };
+
+    const filteredOwners = owners.filter(o => {
+        if (!searchQuery) return true;
+        const q = searchQuery.toLowerCase();
+        return `${o.firstName} ${o.lastName}`.toLowerCase().includes(q) || o.email.toLowerCase().includes(q);
+    });
+
+    const totalProperties = owners.reduce((sum, o) => sum + (o.properties?.length || 0), 0);
 
     return (
         <div className="text-slate-100 p-4 sm:p-6 lg:p-8">
@@ -64,6 +133,8 @@ export default function Owners() {
                             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500" />
                             <input
                                 type="text"
+                                value={searchQuery}
+                                onChange={(e) => setSearchQuery(e.target.value)}
                                 placeholder={t('owners.searchPlaceholder')}
                                 className="bg-slate-900 border border-white/10 rounded-lg pl-10 pr-4 py-2 text-sm focus:outline-none focus:border-primary w-64 text-white placeholder:text-slate-600"
                             />
@@ -78,31 +149,32 @@ export default function Owners() {
                     </div>
                 </div>
 
-                {/* Stats Row (Mocked for visual balance) */}
+                {/* Stats Row */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <StatsCard title={t('owners.statTotalOwners')} value={owners.length.toString()} icon={<User className="h-5 w-5" />} trend={t('owners.trendThisMonth')} />
                     <StatsCard title={t('owners.statPendingPayouts')} value="€12,450" icon={<Wallet className="h-5 w-5 text-amber-400" />} trend={t('owners.trendDueIn')} />
-                    <StatsCard title={t('owners.statPropertiesManaged')} value="24" icon={<Building className="h-5 w-5 text-emerald-400" />} trend={t('owners.trendNew')} />
+                    <StatsCard title={t('owners.statPropertiesManaged')} value={String(totalProperties)} icon={<Building className="h-5 w-5 text-emerald-400" />} trend={t('owners.trendNew')} />
                 </div>
 
                 {/* Owners List */}
                 <GlassCard className="p-0 overflow-hidden min-h-[400px]">
                     <div className="p-6 border-b border-white/5 bg-white/5 flex items-center justify-between">
                         <h3 className="font-semibold text-lg text-white">{t('owners.allOwners')}</h3>
-                        <button className="text-sm text-primary hover:text-primary-light font-medium">{t('common.viewAll')}</button>
+                        <span className="text-sm text-slate-500">{filteredOwners.length} {t('owners.properties').toLowerCase()}</span>
                     </div>
 
                     {loading ? (
                         <div className="p-12 flex justify-center">
                             <div className="animate-spin h-8 w-8 border-4 border-primary border-t-transparent rounded-full"></div>
                         </div>
-                    ) : owners.length > 0 ? (
+                    ) : filteredOwners.length > 0 ? (
                         <div className="divide-y divide-white/5">
-                            {owners.map((owner) => (
+                            {filteredOwners.map((owner) => (
                                 <motion.div
                                     key={owner.id}
                                     variants={{ hidden: { opacity: 0 }, show: { opacity: 1 } }}
-                                    className="p-4 hover:bg-white/5 transition-colors flex items-center justify-between group"
+                                    onClick={() => openOwnerDetail(owner)}
+                                    className="p-4 hover:bg-white/5 transition-colors flex items-center justify-between group cursor-pointer"
                                 >
                                     <div className="flex items-center gap-4">
                                         <div className="h-10 w-10 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white font-bold shadow-lg overflow-hidden">
@@ -113,7 +185,7 @@ export default function Owners() {
                                             )}
                                         </div>
                                         <div>
-                                            <h4 className="font-medium text-white group-hover:text-primary transition-colors">
+                                            <h4 className="font-medium text-white group-hover:text-indigo-400 transition-colors">
                                                 {owner.firstName} {owner.lastName}
                                             </h4>
                                             <div className="flex items-center gap-4 text-xs text-slate-400 mt-1">
@@ -134,9 +206,7 @@ export default function Owners() {
                                             <p className="text-xs text-slate-500 uppercase font-medium">{t('owners.properties')}</p>
                                             <p className="text-sm font-bold text-white">{owner.properties?.length || 0}</p>
                                         </div>
-                                        <button className="p-2 rounded-lg hover:bg-white/10 text-slate-400 hover:text-white transition-colors">
-                                            <MoreHorizontal className="h-5 w-5" />
-                                        </button>
+                                        <Eye className="h-4 w-4 text-slate-600 group-hover:text-indigo-400 transition-colors" />
                                     </div>
                                 </motion.div>
                             ))}
@@ -160,6 +230,120 @@ export default function Owners() {
                     )}
                 </GlassCard>
             </div>
+
+            {/* Owner Detail Modal */}
+            <AnimatePresence>
+                {selectedOwner && (
+                    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4" onClick={() => setSelectedOwner(null)}>
+                        <motion.div
+                            initial={{ opacity: 0, scale: 0.95, y: 20 }}
+                            animate={{ opacity: 1, scale: 1, y: 0 }}
+                            exit={{ opacity: 0, scale: 0.95, y: 20 }}
+                            onClick={(e) => e.stopPropagation()}
+                            className="w-full max-w-lg bg-[#1e293b] rounded-2xl border border-white/10 shadow-2xl overflow-hidden max-h-[85vh] flex flex-col"
+                        >
+                            {/* Modal Header */}
+                            <div className="p-6 border-b border-white/10 bg-gradient-to-r from-indigo-500/10 to-purple-500/10">
+                                <div className="flex items-center justify-between mb-4">
+                                    <div className="flex items-center gap-4">
+                                        <div className="h-14 w-14 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white text-lg font-bold shadow-lg">
+                                            {selectedOwner.firstName[0]}{selectedOwner.lastName[0]}
+                                        </div>
+                                        <div>
+                                            <h2 className="text-xl font-bold text-white">{selectedOwner.firstName} {selectedOwner.lastName}</h2>
+                                            <p className="text-sm text-slate-400">{selectedOwner.email}</p>
+                                            {selectedOwner.phone && <p className="text-xs text-slate-500">{selectedOwner.phone}</p>}
+                                        </div>
+                                    </div>
+                                    <button onClick={() => setSelectedOwner(null)} className="text-slate-400 hover:text-white transition-colors">
+                                        <X className="h-5 w-5" />
+                                    </button>
+                                </div>
+                            </div>
+
+                            {/* Modal Content */}
+                            <div className="flex-1 overflow-y-auto p-6 space-y-4">
+                                {detailLoading ? (
+                                    <div className="flex items-center justify-center py-12">
+                                        <div className="h-8 w-8 animate-spin rounded-full border-4 border-indigo-500 border-t-transparent" />
+                                    </div>
+                                ) : detailData ? (
+                                    <>
+                                        {/* KPIs */}
+                                        <div className="grid grid-cols-2 gap-3">
+                                            <div className="bg-white/5 rounded-xl p-3 border border-white/5">
+                                                <div className="flex items-center gap-2 mb-1">
+                                                    <Home className="h-4 w-4 text-indigo-400" />
+                                                    <span className="text-[10px] text-slate-500 uppercase">{t('owners.detailProperties')}</span>
+                                                </div>
+                                                <p className="text-lg font-bold text-white">{detailData.properties.length}</p>
+                                            </div>
+                                            <div className="bg-white/5 rounded-xl p-3 border border-white/5">
+                                                <div className="flex items-center gap-2 mb-1">
+                                                    <DollarSign className="h-4 w-4 text-emerald-400" />
+                                                    <span className="text-[10px] text-slate-500 uppercase">{t('owners.detailRevenue')}</span>
+                                                </div>
+                                                <p className="text-lg font-bold text-emerald-400">€{detailData.totalRevenue.toLocaleString()}</p>
+                                            </div>
+                                            <div className="bg-white/5 rounded-xl p-3 border border-white/5">
+                                                <div className="flex items-center gap-2 mb-1">
+                                                    <CalendarDays className="h-4 w-4 text-blue-400" />
+                                                    <span className="text-[10px] text-slate-500 uppercase">{t('owners.detailBookings')}</span>
+                                                </div>
+                                                <p className="text-lg font-bold text-white">{detailData.bookingsCount}</p>
+                                            </div>
+                                            <div className="bg-white/5 rounded-xl p-3 border border-white/5">
+                                                <div className="flex items-center gap-2 mb-1">
+                                                    <TrendingUp className="h-4 w-4 text-amber-400" />
+                                                    <span className="text-[10px] text-slate-500 uppercase">{t('owners.detailThisMonth')}</span>
+                                                </div>
+                                                <p className="text-lg font-bold text-amber-400">€{detailData.monthRevenue.toLocaleString()}</p>
+                                            </div>
+                                        </div>
+
+                                        {/* Properties List */}
+                                        {detailData.properties.length > 0 && (
+                                            <div>
+                                                <h4 className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">{t('owners.detailPropertyList')}</h4>
+                                                <div className="space-y-2">
+                                                    {detailData.properties.map(p => (
+                                                        <div key={p.id} className="flex items-center justify-between p-3 bg-white/[0.02] rounded-lg border border-white/5">
+                                                            <div className="flex items-center gap-3">
+                                                                <Building className="h-4 w-4 text-slate-500" />
+                                                                <div>
+                                                                    <p className="text-sm font-medium text-white">{p.name}</p>
+                                                                    <p className="text-[10px] text-slate-500">€{p.price_per_night}/night</p>
+                                                                </div>
+                                                            </div>
+                                                            <span className={`text-[10px] font-medium px-2 py-0.5 rounded-full ${p.status === 'active' ? 'bg-emerald-500/10 text-emerald-400' : 'bg-slate-500/10 text-slate-400'}`}>
+                                                                {p.status}
+                                                            </span>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        )}
+                                    </>
+                                ) : null}
+                            </div>
+
+                            {/* Modal Footer */}
+                            <div className="p-4 border-t border-white/10 flex items-center justify-between">
+                                <button onClick={() => setSelectedOwner(null)} className="px-4 py-2 text-sm text-slate-400 hover:text-white transition-colors">
+                                    {t('common.close')}
+                                </button>
+                                <button
+                                    onClick={() => { setSelectedOwner(null); navigate(`/owners/${selectedOwner.id}`); }}
+                                    className="flex items-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg text-sm font-medium transition-colors"
+                                >
+                                    <ExternalLink className="h-4 w-4" />
+                                    {t('owners.viewFullProfile')}
+                                </button>
+                            </div>
+                        </motion.div>
+                    </div>
+                )}
+            </AnimatePresence>
 
             <CreateOwnerModal
                 isOpen={isCreateModalOpen}

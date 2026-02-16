@@ -6,12 +6,14 @@ import Login from './pages/Login';
 import Properties from './pages/Properties';
 import Bookings from './pages/Bookings';
 import Owners from './pages/Owners';
+import OwnerProfile from './pages/OwnerProfile';
 import CRM from './pages/CRM';
 import FinanceDashboard from './pages/FinanceDashboard';
 import Pricing from './pages/Pricing';
 import Billing from './pages/Billing';
 import Settings from './pages/Settings';
 import OwnerStatements from './pages/OwnerStatements';
+import StaffOperations from './pages/StaffOperations';
 import Layout from './components/Layout';
 import LandingPage from './pages/LandingPage';
 
@@ -42,12 +44,14 @@ function App() {
             <Route path="properties" element={<Properties />} />
             <Route path="bookings" element={<Bookings />} />
             <Route path="owners" element={<Owners />} />
+            <Route path="owners/:id" element={<OwnerProfile />} />
             <Route path="crm" element={<CRM />} />
             <Route path="accounting" element={<FinanceDashboard />} />
             <Route path="pricing" element={<Pricing />} />
             <Route path="billing" element={<Billing />} />
             <Route path="settings" element={<Settings />} />
             <Route path="statements" element={<OwnerStatements />} />
+            <Route path="staff" element={<StaffOperations />} />
             {/* Owner Portal pages accessible within main layout */}
             <Route path="owner/dashboard" element={<OwnerDashboard />} />
             <Route path="owner/properties" element={<OwnerProperties />} />
