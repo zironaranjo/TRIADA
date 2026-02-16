@@ -29,4 +29,5 @@ export const bookingsApi = {
     getAll: () => api.get('/bookings'),
     getOne: (id: string) => api.get(`/bookings/${id}`),
     create: (data: any) => api.post('/bookings', data),
+    syncCalendar: (propertyId: string) => api.post(`/bookings/sync/${propertyId}`),
 };

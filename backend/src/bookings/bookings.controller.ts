@@ -1,6 +1,5 @@
-import { Controller, Get, Post, Body, Param } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Header } from '@nestjs/common';
 import { BookingsService } from './bookings.service';
-
 import { IcalService } from './ical.service';
 
 @Controller('bookings')
@@ -13,6 +12,14 @@ export class BookingsController {
   @Post('sync/:propertyId')
   syncCalendar(@Param('propertyId') propertyId: string) {
     return this.icalService.syncPropertyCalendar(propertyId);
+  }
+
+  @Get('ical/:propertyId')
+  @Header('Content-Type', 'text/calendar; charset=utf-8')
+  async exportIcal(
+    @Param('propertyId') propertyId: string,
+  ): Promise<string> {
+    return this.icalService.generateIcalExport(propertyId);
   }
 
   @Post()

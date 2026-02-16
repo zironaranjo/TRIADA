@@ -4,16 +4,22 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {
     Plus,
     Search,
-    MoreVertical,
     MapPin,
     BedDouble,
     Users,
     DollarSign,
     Home,
     Image as ImageIcon,
-    Loader2
+    Loader2,
+    RefreshCw,
+    Link2,
+    CheckCircle2,
+    XCircle,
+    Copy,
+    ExternalLink,
 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
+import { bookingsApi } from '../api/client';
 import { useAuth } from '../contexts/AuthContext';
 import { usePlanLimits } from '../hooks/usePlanLimits';
 import { Link } from 'react-router-dom';
@@ -59,6 +65,33 @@ const Properties = () => {
     const [limitMessage, setLimitMessage] = useState('');
     const [searchTerm, setSearchTerm] = useState('');
     const [statusFilter, setStatusFilter] = useState<string>('all');
+    const [syncingId, setSyncingId] = useState<string | null>(null);
+    const [syncResult, setSyncResult] = useState<{ id: string; ok: boolean; msg: string } | null>(null);
+    const [copiedExportId, setCopiedExportId] = useState<string | null>(null);
+
+    const API_BASE = import.meta.env.VITE_API_URL || (import.meta.env.PROD ? 'https://api.triadak.io' : 'http://localhost:3000');
+
+    const handleSyncCalendar = async (propertyId: string) => {
+        setSyncingId(propertyId);
+        setSyncResult(null);
+        try {
+            const { data } = await bookingsApi.syncCalendar(propertyId);
+            setSyncResult({ id: propertyId, ok: true, msg: `+${data.added} ${t('properties.syncAdded')}, ${data.updated} ${t('properties.syncUpdated')}` });
+            setTimeout(() => setSyncResult(null), 5000);
+        } catch (err: any) {
+            setSyncResult({ id: propertyId, ok: false, msg: err?.response?.data?.message || err.message || 'Sync failed' });
+            setTimeout(() => setSyncResult(null), 5000);
+        } finally {
+            setSyncingId(null);
+        }
+    };
+
+    const copyExportUrl = (propertyId: string) => {
+        const url = `${API_BASE}/bookings/ical/${propertyId}`;
+        navigator.clipboard.writeText(url);
+        setCopiedExportId(propertyId);
+        setTimeout(() => setCopiedExportId(null), 2000);
+    };
 
     // --- Fetch Properties ---
     const fetchProperties = async () => {
@@ -282,18 +315,43 @@ const Properties = () => {
                                 )}
                                 <div className="absolute top-3 right-3">
                                     <div className="flex items-center gap-2">
-                                        {/* Calendar sync via backend is not yet wired to the Supabase properties table. */}
-                                        {/* Button left as visual placeholder but disabled to avoid broken calls. */}
-                                        <button
-                                            disabled
-                                            className="p-1 rounded-full bg-slate-900/50 text-slate-600 cursor-not-allowed"
-                                            title={t('properties.calendarSync')}
-                                        >
-                                            <Loader2 className="h-3 w-3" />
-                                        </button>
+                                        {property.ical_url && (
+                                            <button
+                                                onClick={() => handleSyncCalendar(property.id)}
+                                                disabled={syncingId === property.id}
+                                                className={`p-1.5 rounded-full backdrop-blur-sm transition-all ${
+                                                    syncingId === property.id
+                                                        ? 'bg-blue-500/20 text-blue-400'
+                                                        : syncResult?.id === property.id
+                                                            ? syncResult.ok
+                                                                ? 'bg-emerald-500/20 text-emerald-400'
+                                                                : 'bg-red-500/20 text-red-400'
+                                                            : 'bg-slate-900/70 text-slate-300 hover:text-blue-400 hover:bg-blue-500/20'
+                                                }`}
+                                                title={t('properties.calendarSync')}
+                                            >
+                                                {syncingId === property.id
+                                                    ? <RefreshCw className="h-3.5 w-3.5 animate-spin" />
+                                                    : syncResult?.id === property.id
+                                                        ? syncResult.ok ? <CheckCircle2 className="h-3.5 w-3.5" /> : <XCircle className="h-3.5 w-3.5" />
+                                                        : <RefreshCw className="h-3.5 w-3.5" />
+                                                }
+                                            </button>
+                                        )}
+                                        {property.ical_url && (
+                                            <span className="p-1.5 rounded-full bg-emerald-500/20 text-emerald-400" title="iCal connected">
+                                                <Link2 className="h-3 w-3" />
+                                            </span>
+                                        )}
                                         <StatusBadge status={property.status} />
                                     </div>
                                 </div>
+                                {/* Sync result toast */}
+                                {syncResult?.id === property.id && (
+                                    <div className={`absolute bottom-3 left-3 right-3 text-xs px-3 py-1.5 rounded-lg backdrop-blur-sm ${syncResult.ok ? 'bg-emerald-500/20 text-emerald-300' : 'bg-red-500/20 text-red-300'}`}>
+                                        {syncResult.msg}
+                                    </div>
+                                )}
                             </div>
 
                             <div className="p-5">
@@ -307,9 +365,6 @@ const Properties = () => {
                                             {property.city}, {property.country || t('dashboard.unknown')}
                                         </div>
                                     </div>
-                                    <button className="text-slate-400 hover:text-white p-1 rounded-lg hover:bg-slate-700/50 transition-colors">
-                                        <MoreVertical className="h-5 w-5" />
-                                    </button>
                                 </div>
 
                                 <div className="grid grid-cols-2 gap-3 mt-4 py-4 border-t border-slate-700/50">
@@ -330,6 +385,38 @@ const Properties = () => {
                                         <span className="text-slate-500 text-sm font-normal ml-1">{t('properties.perNight')}</span>
                                     </div>
                                 </div>
+
+                                {/* iCal Section */}
+                                {property.ical_url && (
+                                    <div className="mt-3 pt-3 border-t border-slate-700/50">
+                                        <div className="flex items-center justify-between">
+                                            <div className="flex items-center gap-1.5 text-emerald-400 text-[10px] font-medium">
+                                                <Link2 className="h-3 w-3" />
+                                                {t('properties.icalConnected')}
+                                            </div>
+                                            <div className="flex items-center gap-1">
+                                                <button
+                                                    onClick={() => copyExportUrl(property.id)}
+                                                    className="flex items-center gap-1 text-[10px] text-slate-500 hover:text-indigo-400 transition-colors px-2 py-0.5 rounded bg-white/5 hover:bg-white/10"
+                                                    title={t('properties.copyExportUrl')}
+                                                >
+                                                    {copiedExportId === property.id
+                                                        ? <><CheckCircle2 className="h-3 w-3 text-emerald-400" /> {t('properties.copied')}</>
+                                                        : <><Copy className="h-3 w-3" /> {t('properties.exportIcal')}</>}
+                                                </button>
+                                                <a
+                                                    href={`${API_BASE}/bookings/ical/${property.id}`}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className="text-slate-500 hover:text-indigo-400 transition-colors p-0.5"
+                                                    title={t('properties.openExportUrl')}
+                                                >
+                                                    <ExternalLink className="h-3 w-3" />
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                )}
                             </div>
                         </motion.div>
                     ))}

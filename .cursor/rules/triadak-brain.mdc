@@ -87,6 +87,12 @@ SaaS platform for **vacation rental management** (triadak.io). Combines features
     - Auto-expense integration: completed tasks automatically create expenses in `expenses` table (appears in Finance Engine P&L)
     - SQL migration: `staff_members` (with avatar_url) and `staff_tasks` tables with RLS, triggers for updated_at
 27. **Owner Avatar System** - Owner photos displayed in list, detail modal, and full profile page. Upload via hover on avatar in profile page and create modal. Stored in `property-images/owner-avatars/{id}/`
+28. **iCal Sync Integration** - Bidirectional iCal calendar sync:
+    - Import: Sync bookings from Airbnb/Booking.com via iCal URL per property. Auto-detects platform from URL. Deduplicates via `icalUid`. Status lowercase (`confirmed`). Per-event error handling
+    - Export: `GET /bookings/ical/:propertyId` endpoint generates .ics feed for any property. Excludes cancelled bookings
+    - Frontend: Sync button on property cards (only visible when iCal URL configured). Visual indicator (Link2 icon). Sync result toast (+added, updated). Copy export URL button. Direct link to .ics feed
+    - Backend: `IcalService.syncPropertyCalendar()` + `IcalService.generateIcalExport()` in NestJS. Platform detection: Airbnb, Booking.com, VRBO, Other
+    - i18n: All labels translated (EN, ES, DE, FR)
 
 ## Pending / Roadmap (Fase 2 & 3)
 
@@ -108,13 +114,14 @@ SaaS platform for **vacation rental management** (triadak.io). Combines features
   - Supabase pg_cron integration (hourly reminders + daily digest at 08:00 UTC)
 
 ### Fase 3 - Integraciones externas
-- [ ] Airbnb API integration (iCal sync first, then API if available)
-- [ ] Booking.com API integration (iCal sync + XML API for availability)
+- [x] iCal Sync — Import from Airbnb/Booking.com + Export .ics feed per property (completed)
+- [ ] Airbnb API integration (iCal sync done, full API if available)
+- [ ] Booking.com API integration (iCal sync done, XML API for availability)
 - [ ] Lodgify integration (channel manager sync — centralized calendar)
 - [ ] Stripe payment integration (deferred by user)
 
 ### Sugerencias adicionales (post Fase 3)
-- [ ] **iCal Sync universal** — Importar/exportar calendarios iCal (.ics) por propiedad. Es la forma más rápida de sincronizar con Airbnb/Booking sin depender de APIs complejas. Bloquea fechas automáticamente entre plataformas
+- [x] **iCal Sync universal** — Importar/exportar calendarios iCal (.ics) por propiedad. Sync + export implementado en Fase 3
 - [ ] **Dashboard de ocupación visual** — Calendario tipo Gantt por propiedad mostrando reservas, huecos libres y tasas de ocupación. Muy visual para presentaciones a clientes
 - [ ] **Gestión de tareas/limpieza** — Sistema de tareas automáticas post-checkout (limpieza, lavandería, inspección). Asignar a miembros del staff con checklist y foto de verificación
 - [ ] **Contratos y documentos** — Generación automática de contratos de alquiler en PDF con datos de la reserva. Firma digital integrada
@@ -159,6 +166,8 @@ SaaS platform for **vacation rental management** (triadak.io). Combines features
 - `frontend/src/pages/OwnerProfile.tsx` - Owner full profile page with tabs (properties, statements, payments)
 - `frontend/src/pages/StaffOperations.tsx` - Staff operations management (personnel, tasks, payroll)
 - `supabase/migrations/002_staff_operations.sql` - SQL setup for staff_members and staff_tasks tables
+- `backend/src/bookings/ical.service.ts` - iCal sync (import from URL) + export (.ics generation) service
+- `backend/src/bookings/bookings.controller.ts` - Bookings API endpoints including sync + iCal export
 - `supabase/functions/send-reminders/index.ts` - Edge Function: hourly check-in/check-out reminder generator
 - `supabase/functions/daily-digest/index.ts` - Edge Function: daily morning digest notification
 - `supabase/migrations/001_notifications_table.sql` - SQL setup for notifications table, RLS, and cron jobs
