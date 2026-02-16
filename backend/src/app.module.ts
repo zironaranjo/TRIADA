@@ -9,6 +9,8 @@ import { BookingsModule } from './bookings/bookings.module';
 import { AccountingModule } from './accounting/accounting.module';
 import { CrmModule } from './crm/crm.module';
 import { PaymentsModule } from './payments/payments.module';
+import { SubscriptionsModule } from './subscriptions/subscriptions.module';
+import { ConnectModule } from './connect/connect.module';
 import { EmailsModule } from './emails/emails.module';
 
 @Module({
@@ -49,6 +51,8 @@ import { EmailsModule } from './emails/emails.module';
     AccountingModule,
     CrmModule,
     PaymentsModule,
+    SubscriptionsModule,
+    ConnectModule,
     EmailsModule,
   ],
   controllers: [AppController],

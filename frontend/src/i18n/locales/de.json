@@ -798,5 +798,32 @@
     "detailEarned": "Verdient",
     "detailRating": "Durchschn. Bewertung",
     "detailMemberSince": "Mitglied seit"
+  },
+
+  "pricing": {
+    "perTransaction": "pro Buchungstransaktion",
+    "trialActivated": "14-Tage-Testversion aktiviert! Weiterleitung zum Dashboard..."
+  },
+
+  "billing": {
+    "commissionRate": "Provisionssatz",
+    "perBookingTransaction": "pro Buchungstransaktion",
+    "upgradePlan": "Plan upgraden",
+    "changePlan": "Plan ändern",
+    "managePayment": "Zahlung verwalten",
+    "receivePayments": "Zahlungen empfangen",
+    "connected": "Verbunden",
+    "stripeConnected": "Stripe-Konto verbunden",
+    "stripeConnectedDesc": "Ihr Konto ist eingerichtet, um Gastzahlungen direkt zu empfangen. Gelder werden nach jeder Buchung automatisch überwiesen.",
+    "charges": "Gebühren",
+    "payouts": "Auszahlungen",
+    "enabled": "Aktiviert",
+    "pending": "Ausstehend",
+    "openStripeDashboard": "Stripe-Dashboard öffnen",
+    "connectStripe": "Stripe-Konto verbinden",
+    "connectStripeDesc": "Verknüpfen Sie Ihr Bankkonto über Stripe, um Gastzahlungen direkt zu empfangen. Sicher, schnell und automatisch.",
+    "connectWithStripe": "Mit Stripe verbinden",
+    "history": "Rechnungsverlauf",
+    "noInvoices": "Noch keine Rechnungen. Sie erscheinen hier nach Ihrer ersten Zahlung."
   }
 }

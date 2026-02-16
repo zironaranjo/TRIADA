@@ -798,5 +798,32 @@
     "detailEarned": "Gagné",
     "detailRating": "Note Moyenne",
     "detailMemberSince": "Membre Depuis"
+  },
+
+  "pricing": {
+    "perTransaction": "par transaction de réservation",
+    "trialActivated": "Essai gratuit de 14 jours activé ! Redirection vers le tableau de bord..."
+  },
+
+  "billing": {
+    "commissionRate": "Taux de Commission",
+    "perBookingTransaction": "par transaction de réservation",
+    "upgradePlan": "Mettre à niveau",
+    "changePlan": "Changer de Plan",
+    "managePayment": "Gérer le Paiement",
+    "receivePayments": "Recevoir des Paiements",
+    "connected": "Connecté",
+    "stripeConnected": "Compte Stripe connecté",
+    "stripeConnectedDesc": "Votre compte est configuré pour recevoir les paiements des clients directement. Les fonds sont transférés automatiquement après chaque réservation.",
+    "charges": "Paiements",
+    "payouts": "Virements",
+    "enabled": "Activé",
+    "pending": "En attente",
+    "openStripeDashboard": "Ouvrir le Tableau Stripe",
+    "connectStripe": "Connecter votre compte Stripe",
+    "connectStripeDesc": "Liez votre compte bancaire via Stripe pour recevoir les paiements des clients directement. Sécurisé, rapide et automatique.",
+    "connectWithStripe": "Se connecter avec Stripe",
+    "history": "Historique de Facturation",
+    "noInvoices": "Aucune facture pour le moment. Elles apparaîtront ici après votre premier paiement."
   }
 }

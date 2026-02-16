@@ -839,5 +839,32 @@
     "detailEarned": "Earned",
     "detailRating": "Avg Rating",
     "detailMemberSince": "Member Since"
+  },
+
+  "pricing": {
+    "perTransaction": "per booking transaction",
+    "trialActivated": "14-day free trial activated! Redirecting to dashboard..."
+  },
+
+  "billing": {
+    "commissionRate": "Commission Rate",
+    "perBookingTransaction": "per booking transaction",
+    "upgradePlan": "Upgrade Plan",
+    "changePlan": "Change Plan",
+    "managePayment": "Manage Payment",
+    "receivePayments": "Receive Payments",
+    "connected": "Connected",
+    "stripeConnected": "Stripe account connected",
+    "stripeConnectedDesc": "Your account is set up to receive guest payments directly. Funds are transferred automatically after each booking.",
+    "charges": "Charges",
+    "payouts": "Payouts",
+    "enabled": "Enabled",
+    "pending": "Pending",
+    "openStripeDashboard": "Open Stripe Dashboard",
+    "connectStripe": "Connect your Stripe account",
+    "connectStripeDesc": "Link your bank account via Stripe to receive guest payments directly. Secure, fast, and automatic.",
+    "connectWithStripe": "Connect with Stripe",
+    "history": "Billing History",
+    "noInvoices": "No invoices yet. They will appear here after your first payment."
   }
 }

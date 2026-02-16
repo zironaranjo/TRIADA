@@ -31,3 +31,22 @@ export const bookingsApi = {
     create: (data: any) => api.post('/bookings', data),
     syncCalendar: (propertyId: string) => api.post(`/bookings/sync/${propertyId}`),
 };
+
+// Subscriptions API
+export const subscriptionsApi = {
+    createCheckout: (data: { userId: string; email: string; planId: string; interval: string }) =>
+        api.post('/subscriptions/create-checkout', data),
+    createPortal: (stripeCustomerId: string) =>
+        api.post('/subscriptions/portal', { stripeCustomerId }),
+    verifySession: (sessionId: string) =>
+        api.get(`/subscriptions/verify-session?session_id=${sessionId}`),
+    getCommissionRate: (planId: string) =>
+        api.get(`/subscriptions/commission-rate?planId=${planId}`),
+};
+
+// Connect API (Stripe Connect for receiving guest payments)
+export const connectApi = {
+    onboard: (userId: string) => api.post('/connect/onboard', { userId }),
+    getStatus: (userId: string) => api.get(`/connect/status?userId=${userId}`),
+    getDashboardLink: (userId: string) => api.get(`/connect/dashboard-link?userId=${userId}`),
+};

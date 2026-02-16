@@ -1,9 +1,11 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Check, X, Zap, Building, Crown, ArrowRight, Star, Gift, CheckCircle } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
+import { subscriptionsApi } from '../api/client';
 
 // ─── Plan Definitions ─────────────────────────────────
 export const PLANS = {
@@ -12,6 +14,7 @@ export const PLANS = {
         name: 'Starter',
         price: 0,
         yearlyPrice: 0,
+        commissionRate: 8,
         icon: Gift,
         color: 'from-slate-400 to-slate-500',
         borderColor: 'border-slate-500/30',
@@ -42,6 +45,7 @@ export const PLANS = {
         name: 'Basic',
         price: 29,
         yearlyPrice: 290,
+        commissionRate: 5,
         icon: Building,
         color: 'from-blue-500 to-cyan-500',
         borderColor: 'border-blue-500/30',
@@ -72,6 +76,7 @@ export const PLANS = {
         name: 'Pro',
         price: 79,
         yearlyPrice: 790,
+        commissionRate: 3,
         icon: Zap,
         color: 'from-indigo-500 to-purple-500',
         borderColor: 'border-indigo-500/30',
@@ -102,6 +107,7 @@ export const PLANS = {
         name: 'Enterprise',
         price: 149,
         yearlyPrice: 1490,
+        commissionRate: 2,
         icon: Crown,
         color: 'from-amber-500 to-orange-500',
         borderColor: 'border-amber-500/30',
@@ -133,6 +139,7 @@ export type PlanId = keyof typeof PLANS;
 
 // ─── Main Pricing Page ────────────────────────────────
 export default function Pricing() {
+    const { t } = useTranslation();
     const { user, refreshSubscription } = useAuth();
     const navigate = useNavigate();
     const [billing, setBilling] = useState<'monthly' | 'yearly'>('monthly');
@@ -169,28 +176,24 @@ export default function Pricing() {
                 return;
             }
 
-            // Paid plans: try Stripe Checkout
-            const API_URL = import.meta.env.VITE_API_URL || 'https://api.triadak.io';
-            const res = await fetch(`${API_URL}/subscriptions/create-checkout`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
+            // Paid plans: create Stripe Checkout session
+            try {
+                const { data } = await subscriptionsApi.createCheckout({
                     userId: user.id,
-                    email: user.email,
+                    email: user.email || '',
                     planId,
                     interval: billing,
-                }),
-            });
+                });
 
-            if (res.ok) {
-                const data = await res.json();
                 if (data.url) {
                     window.location.href = data.url;
                     return;
                 }
+            } catch (stripeErr) {
+                console.warn('Stripe checkout failed, using fallback:', stripeErr);
             }
 
-            // Fallback: save directly to Supabase (test mode)
+            // Fallback: save directly to Supabase (test/dev mode)
             const { error } = await supabase.from('subscriptions').upsert({
                 user_id: user.id,
                 email: user.email || '',
@@ -199,13 +202,13 @@ export default function Pricing() {
                 status: 'trialing',
                 interval: billing,
                 current_period_start: new Date().toISOString(),
-                current_period_end: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString(), // 14-day trial
+                current_period_end: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString(),
                 updated_at: new Date().toISOString(),
             }, { onConflict: 'user_id' });
 
             if (error) throw error;
             await refreshSubscription();
-            setSuccess({ plan: selectedPlan.name, message: '14-day free trial activated! Redirecting to dashboard...' });
+            setSuccess({ plan: selectedPlan.name, message: t('pricing.trialActivated') });
             setTimeout(() => navigate('/dashboard'), 1500);
         } catch (err: any) {
             console.error('Error selecting plan:', err);
@@ -335,6 +338,9 @@ export default function Pricing() {
                                                 )}
                                             </>
                                         )}
+                                        <p className="text-xs text-slate-500 mt-2">
+                                            + {plan.commissionRate}% {t('pricing.perTransaction')}
+                                        </p>
                                     </div>
 
                                     {/* Features */}

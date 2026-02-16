@@ -839,5 +839,32 @@
     "detailEarned": "Ganado",
     "detailRating": "Rating Promedio",
     "detailMemberSince": "Miembro Desde"
+  },
+
+  "pricing": {
+    "perTransaction": "por transacción de reserva",
+    "trialActivated": "¡Prueba gratuita de 14 días activada! Redirigiendo al panel..."
+  },
+
+  "billing": {
+    "commissionRate": "Tasa de Comisión",
+    "perBookingTransaction": "por transacción de reserva",
+    "upgradePlan": "Mejorar Plan",
+    "changePlan": "Cambiar Plan",
+    "managePayment": "Gestionar Pago",
+    "receivePayments": "Recibir Pagos",
+    "connected": "Conectado",
+    "stripeConnected": "Cuenta Stripe conectada",
+    "stripeConnectedDesc": "Tu cuenta está configurada para recibir pagos de huéspedes directamente. Los fondos se transfieren automáticamente después de cada reserva.",
+    "charges": "Cobros",
+    "payouts": "Pagos",
+    "enabled": "Activo",
+    "pending": "Pendiente",
+    "openStripeDashboard": "Abrir Panel de Stripe",
+    "connectStripe": "Conecta tu cuenta Stripe",
+    "connectStripeDesc": "Vincula tu cuenta bancaria a través de Stripe para recibir pagos de huéspedes directamente. Seguro, rápido y automático.",
+    "connectWithStripe": "Conectar con Stripe",
+    "history": "Historial de Facturación",
+    "noInvoices": "Aún no hay facturas. Aparecerán aquí después de tu primer pago."
   }
 }

@@ -1,9 +1,11 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import Stripe from 'stripe'; // Ensure usage of default import or * as Stripe
+import Stripe from 'stripe';
 
 import { BookingsService } from '../bookings/bookings.service';
 import { AccountingService } from '../accounting/accounting.service';
+import { SubscriptionsService } from '../subscriptions/subscriptions.service';
+import { ConnectService } from '../connect/connect.service';
 
 @Injectable()
 export class PaymentsService {
@@ -14,6 +16,8 @@ export class PaymentsService {
     private configService: ConfigService,
     private bookingsService: BookingsService,
     private accountingService: AccountingService,
+    private subscriptionsService: SubscriptionsService,
+    private connectService: ConnectService,
   ) {
     const apiKey = this.configService.get<string>('STRIPE_SECRET_KEY');
     if (!apiKey) {
@@ -26,16 +30,23 @@ export class PaymentsService {
     });
   }
 
-  // ─── Create Checkout Session ─────────────────────────
+  // ─── Create Checkout Session (supports Stripe Connect) ──
   async createCheckoutSession(data: {
     bookingId: string;
     amount: number;
     guestEmail: string;
     guestName: string;
     propertyName: string;
+    ownerId?: string;
+    planId?: string;
   }) {
     try {
-      const session = await this.stripe.checkout.sessions.create({
+      const frontendUrl =
+        this.configService.get('FRONTEND_URL') || 'https://staging.triadak.io';
+      const amountInCents = Math.round(data.amount * 100);
+
+      // Build session params
+      const sessionParams: Stripe.Checkout.SessionCreateParams = {
         payment_method_types: ['card'],
         mode: 'payment',
         customer_email: data.guestEmail,
@@ -50,14 +61,42 @@ export class PaymentsService {
                 name: `Booking - ${data.propertyName}`,
                 description: `Reservation for ${data.guestName}`,
               },
-              unit_amount: Math.round(data.amount * 100), // Stripe uses cents
+              unit_amount: amountInCents,
             },
             quantity: 1,
           },
         ],
-        success_url: `${this.configService.get('FRONTEND_URL') || 'https://staging.triadak.io'}/bookings?payment=success`,
-        cancel_url: `${this.configService.get('FRONTEND_URL') || 'https://staging.triadak.io'}/bookings?payment=cancelled`,
-      });
+        success_url: `${frontendUrl}/bookings?payment=success`,
+        cancel_url: `${frontendUrl}/bookings?payment=cancelled`,
+      };
+
+      // If the property owner has a Connect account, route payment through Connect
+      if (data.ownerId) {
+        const stripeAccountId = await this.connectService.getStripeAccountId(
+          data.ownerId,
+        );
+
+        if (stripeAccountId) {
+          const planId = data.planId || 'starter';
+          const feeAmount = this.connectService.calculateApplicationFee(
+            amountInCents,
+            planId,
+          );
+
+          sessionParams.payment_intent_data = {
+            application_fee_amount: feeAmount,
+            transfer_data: {
+              destination: stripeAccountId,
+            },
+          };
+
+          this.logger.log(
+            `Connect payment: ${stripeAccountId}, fee: ${feeAmount} cents (${planId} plan)`,
+          );
+        }
+      }
+
+      const session = await this.stripe.checkout.sessions.create(sessionParams);
 
       this.logger.log(
         `Checkout session created: ${session.id} for booking ${data.bookingId}`,
@@ -93,13 +132,25 @@ export class PaymentsService {
   }
 
   async handleEvent(event: Stripe.Event) {
+    // Subscription-related events
+    const subscriptionEvents = [
+      'checkout.session.completed',
+      'customer.subscription.updated',
+      'customer.subscription.deleted',
+      'invoice.payment_failed',
+    ];
+
+    if (subscriptionEvents.includes(event.type)) {
+      await this.subscriptionsService.handleSubscriptionEvent(event);
+      return;
+    }
+
     switch (event.type) {
       case 'payment_intent.succeeded':
         const paymentIntent = event.data.object;
         this.logger.log(
-          `💰 Payment succeeded detected: ${paymentIntent.id} - Amount: ${paymentIntent.amount}`,
+          `Payment succeeded: ${paymentIntent.id} - Amount: ${paymentIntent.amount}`,
         );
-        // Here we will integrate logic to search for the booking metadata
         await this.handlePaymentSuccess(paymentIntent);
         break;
       default:

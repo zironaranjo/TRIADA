@@ -93,6 +93,12 @@ SaaS platform for **vacation rental management** (triadak.io). Combines features
     - Frontend: Sync button on property cards (only visible when iCal URL configured). Visual indicator (Link2 icon). Sync result toast (+added, updated). Copy export URL button. Direct link to .ics feed
     - Backend: `IcalService.syncPropertyCalendar()` + `IcalService.generateIcalExport()` in NestJS. Platform detection: Airbnb, Booking.com, VRBO, Other
     - i18n: All labels translated (EN, ES, DE, FR)
+29. **Stripe Payments Integration** - Complete payment system with two flows:
+    - **SaaS Subscriptions (Stripe Billing)**: `SubscriptionsModule` in NestJS with `POST /subscriptions/create-checkout` (Stripe Checkout in subscription mode), `POST /subscriptions/portal` (Stripe Customer Portal), `GET /subscriptions/verify-session` (verify after redirect), `GET /subscriptions/commission-rate`. Price IDs configurable via env vars. Webhook routing for subscription events (checkout.session.completed, subscription.updated/deleted, invoice.payment_failed)
+    - **Guest Payments (Stripe Connect)**: `ConnectModule` in NestJS with `POST /connect/onboard` (Express account creation + onboarding link), `GET /connect/status` (account status from Stripe), `GET /connect/dashboard-link` (Express dashboard login). Entity `StripeConnectAccount` with TypeORM. SQL migration `003_stripe_connect.sql`
+    - **Hybrid Commission Model**: Starter 0eur+8%, Basic 29eur+5%, Pro 79eur+3%, Enterprise 149eur+2%. Commission visible in Pricing.tsx and Billing.tsx. `application_fee_amount` applied to booking payments via Stripe Connect `transfer_data`
+    - **Frontend**: Pricing.tsx calls `subscriptionsApi.createCheckout()` with fallback to Supabase trial. Billing.tsx shows commission rate, Stripe Customer Portal button, Stripe Connect onboarding/status section. `subscriptionsApi` and `connectApi` in client.ts
+    - **i18n**: billing/pricing keys in EN, ES, DE, FR
 
 ## Pending / Roadmap (Fase 2 & 3)
 
@@ -118,7 +124,7 @@ SaaS platform for **vacation rental management** (triadak.io). Combines features
 - [ ] Airbnb API integration (iCal sync done, full API if available)
 - [ ] Booking.com API integration (iCal sync done, XML API for availability)
 - [ ] Lodgify integration (channel manager sync — centralized calendar)
-- [ ] Stripe payment integration (deferred by user)
+- [x] Stripe payment integration — SaaS subscriptions (Billing) + Guest payments (Connect) + Hybrid commission model
 
 ### Sugerencias adicionales (post Fase 3)
 - [x] **iCal Sync universal** — Importar/exportar calendarios iCal (.ics) por propiedad. Sync + export implementado en Fase 3
@@ -168,6 +174,11 @@ SaaS platform for **vacation rental management** (triadak.io). Combines features
 - `supabase/migrations/002_staff_operations.sql` - SQL setup for staff_members and staff_tasks tables
 - `backend/src/bookings/ical.service.ts` - iCal sync (import from URL) + export (.ics generation) service
 - `backend/src/bookings/bookings.controller.ts` - Bookings API endpoints including sync + iCal export
+- `backend/src/subscriptions/subscriptions.service.ts` - Stripe Billing: checkout sessions, customer portal, webhook handling
+- `backend/src/subscriptions/subscriptions.controller.ts` - Subscription endpoints (create-checkout, portal, verify-session, commission-rate)
+- `backend/src/connect/connect.service.ts` - Stripe Connect: Express accounts, onboarding, status, dashboard links, fee calculation
+- `backend/src/connect/connect.controller.ts` - Connect endpoints (onboard, status, dashboard-link)
+- `backend/src/payments/payments.service.ts` - Booking payments with Connect support (application_fee + transfer_data)
 - `supabase/functions/send-reminders/index.ts` - Edge Function: hourly check-in/check-out reminder generator
 - `supabase/functions/daily-digest/index.ts` - Edge Function: daily morning digest notification
 - `supabase/migrations/001_notifications_table.sql` - SQL setup for notifications table, RLS, and cron jobs

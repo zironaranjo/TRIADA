@@ -1,15 +1,18 @@
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { GlassCard } from '@/components/GlassCard';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
+import { subscriptionsApi, connectApi } from '../api/client';
 import { PLANS } from './Pricing';
 import type { PlanId } from './Pricing';
 import {
     CreditCard, Calendar, ArrowUpRight, Shield,
-    CheckCircle, AlertCircle, Zap, Building
+    CheckCircle, AlertCircle, Zap, Building,
+    ExternalLink, Loader2, Banknote, Percent, Link2
 } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 
 interface Subscription {
     id: string;
@@ -31,20 +34,107 @@ interface UsageStats {
 }
 
 export default function Billing() {
+    const { t } = useTranslation();
     const { user } = useAuth();
+    const [searchParams] = useSearchParams();
     const [subscription, setSubscription] = useState<Subscription | null>(null);
     const [usage, setUsage] = useState<UsageStats>({ properties: 0, bookings: 0, contacts: 0 });
     const [loading, setLoading] = useState(true);
+    const [portalLoading, setPortalLoading] = useState(false);
+    const [connectStatus, setConnectStatus] = useState<{
+        status: string;
+        chargesEnabled: boolean;
+        payoutsEnabled: boolean;
+    } | null>(null);
+    const [connectLoading, setConnectLoading] = useState(false);
 
     useEffect(() => {
-        if (user) fetchData();
+        if (user) {
+            fetchData();
+            fetchConnectStatus();
+            // Verify Stripe session after redirect
+            const sessionId = searchParams.get('session_id');
+            if (sessionId) {
+                verifyStripeSession(sessionId);
+            }
+        }
     }, [user]);
+
+    const verifyStripeSession = async (sessionId: string) => {
+        try {
+            const { data } = await subscriptionsApi.verifySession(sessionId);
+            if (data?.customer) {
+                // Update subscription with Stripe data
+                await supabase.from('subscriptions').upsert({
+                    user_id: user!.id,
+                    email: user!.email || '',
+                    full_name: user!.user_metadata?.full_name || '',
+                    plan_id: data.metadata?.planId || 'basic',
+                    status: 'active',
+                    interval: data.metadata?.interval || 'monthly',
+                    stripe_subscription_id: typeof data.subscription === 'string' ? data.subscription : data.subscription?.id,
+                    stripe_customer_id: typeof data.customer === 'string' ? data.customer : data.customer?.id,
+                    current_period_start: new Date().toISOString(),
+                    current_period_end: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
+                    updated_at: new Date().toISOString(),
+                }, { onConflict: 'user_id' });
+                fetchData();
+            }
+        } catch (err) {
+            console.warn('Could not verify Stripe session:', err);
+        }
+    };
+
+    const handleOpenPortal = async () => {
+        if (!subscription?.stripe_customer_id) return;
+        setPortalLoading(true);
+        try {
+            const { data } = await subscriptionsApi.createPortal(subscription.stripe_customer_id);
+            if (data.url) window.location.href = data.url;
+        } catch (err) {
+            console.error('Failed to open portal:', err);
+        } finally {
+            setPortalLoading(false);
+        }
+    };
+
+    const handleConnectOnboard = async () => {
+        if (!user) return;
+        setConnectLoading(true);
+        try {
+            const { data } = await connectApi.onboard(user.id);
+            if (data.url) window.location.href = data.url;
+        } catch (err) {
+            console.error('Failed to start Connect onboarding:', err);
+        } finally {
+            setConnectLoading(false);
+        }
+    };
+
+    const handleOpenConnectDashboard = async () => {
+        if (!user) return;
+        try {
+            const { data } = await connectApi.getDashboardLink(user.id);
+            if (data.url) window.open(data.url, '_blank');
+        } catch (err) {
+            console.error('Failed to open Connect dashboard:', err);
+        }
+    };
+
+    const fetchConnectStatus = async () => {
+        if (!user) return;
+        try {
+            const { data } = await connectApi.getStatus(user.id);
+            setConnectStatus(data);
+        } catch {
+            // Connect not set up yet
+        }
+    };
 
     const fetchData = async () => {
         setLoading(true);
         const timeout = setTimeout(() => setLoading(false), 5000);
         try {
-            // Fetch subscription (use maybeSingle to avoid error when no rows)
             try {
                 const { data: subData } = await supabase
                     .from('subscriptions')
@@ -57,7 +147,6 @@ export default function Billing() {
                 console.warn('Subscriptions table may not exist yet:', subErr);
             }
 
-            // Fetch usage counts
             const [propsRes, bookingsRes, contactsRes] = await Promise.allSettled([
                 supabase.from('properties').select('id', { count: 'exact', head: true }),
                 supabase.from('bookings').select('id', { count: 'exact', head: true }),
@@ -204,15 +293,33 @@ export default function Billing() {
                                 </div>
                             )}
 
+                            {/* Commission Rate */}
+                            {currentPlan && (
+                                <div className="bg-white/5 rounded-xl p-4 flex items-center gap-3">
+                                    <Percent className="h-5 w-5 text-indigo-400" />
+                                    <div>
+                                        <p className="text-xs text-slate-500 uppercase font-semibold">{t('billing.commissionRate')}</p>
+                                        <p className="text-sm text-white mt-0.5">
+                                            {currentPlan.commissionRate}% {t('billing.perBookingTransaction')}
+                                        </p>
+                                    </div>
+                                </div>
+                            )}
+
                             {/* Actions */}
                             <div className="flex gap-3">
                                 <Link to="/pricing"
                                     className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-sm font-medium transition-all">
-                                    <ArrowUpRight className="h-4 w-4" /> {isFreePlan ? 'Upgrade Plan' : 'Change Plan'}
+                                    <ArrowUpRight className="h-4 w-4" /> {isFreePlan ? t('billing.upgradePlan') : t('billing.changePlan')}
                                 </Link>
-                                {!isFreePlan && (
-                                    <button className="px-4 py-2.5 bg-white/5 hover:bg-white/10 text-slate-300 rounded-xl text-sm font-medium border border-white/10 transition-all">
-                                        Manage Payment Method
+                                {!isFreePlan && subscription?.stripe_customer_id && (
+                                    <button
+                                        onClick={handleOpenPortal}
+                                        disabled={portalLoading}
+                                        className="px-4 py-2.5 bg-white/5 hover:bg-white/10 text-slate-300 rounded-xl text-sm font-medium border border-white/10 transition-all flex items-center gap-2"
+                                    >
+                                        {portalLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <CreditCard className="h-4 w-4" />}
+                                        {t('billing.managePayment')}
                                     </button>
                                 )}
                             </div>
@@ -278,14 +385,83 @@ export default function Billing() {
                     </div>
                 </GlassCard>
 
+                {/* ─── Receive Payments (Stripe Connect) ── */}
+                <GlassCard className="p-0 overflow-hidden">
+                    <div className="p-6 border-b border-white/5 bg-white/5 flex items-center justify-between">
+                        <h3 className="font-semibold text-white text-lg flex items-center gap-2">
+                            <Banknote className="h-5 w-5 text-emerald-400" />
+                            {t('billing.receivePayments')}
+                        </h3>
+                        {connectStatus?.chargesEnabled && (
+                            <span className="px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-400">
+                                {t('billing.connected')}
+                            </span>
+                        )}
+                    </div>
+                    <div className="p-6">
+                        {connectStatus?.chargesEnabled ? (
+                            <div className="space-y-4">
+                                <div className="bg-emerald-500/5 border border-emerald-500/20 rounded-xl p-4 flex items-start gap-3">
+                                    <CheckCircle className="h-5 w-5 text-emerald-400 mt-0.5 flex-shrink-0" />
+                                    <div>
+                                        <p className="text-sm font-medium text-white">{t('billing.stripeConnected')}</p>
+                                        <p className="text-xs text-slate-400 mt-1">{t('billing.stripeConnectedDesc')}</p>
+                                    </div>
+                                </div>
+                                <div className="grid grid-cols-2 gap-3">
+                                    <div className="bg-white/5 rounded-xl p-3 text-center">
+                                        <p className="text-xs text-slate-500">{t('billing.charges')}</p>
+                                        <p className="text-sm text-white mt-1 flex items-center justify-center gap-1">
+                                            <CheckCircle className="h-3 w-3 text-emerald-400" /> {t('billing.enabled')}
+                                        </p>
+                                    </div>
+                                    <div className="bg-white/5 rounded-xl p-3 text-center">
+                                        <p className="text-xs text-slate-500">{t('billing.payouts')}</p>
+                                        <p className="text-sm text-white mt-1 flex items-center justify-center gap-1">
+                                            {connectStatus.payoutsEnabled
+                                                ? <><CheckCircle className="h-3 w-3 text-emerald-400" /> {t('billing.enabled')}</>
+                                                : <><AlertCircle className="h-3 w-3 text-amber-400" /> {t('billing.pending')}</>}
+                                        </p>
+                                    </div>
+                                </div>
+                                <button
+                                    onClick={handleOpenConnectDashboard}
+                                    className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-white/5 hover:bg-white/10 text-slate-300 rounded-xl text-sm font-medium border border-white/10 transition-all"
+                                >
+                                    <ExternalLink className="h-4 w-4" /> {t('billing.openStripeDashboard')}
+                                </button>
+                            </div>
+                        ) : (
+                            <div className="space-y-4">
+                                <div className="bg-indigo-500/5 border border-indigo-500/20 rounded-xl p-4 flex items-start gap-3">
+                                    <Link2 className="h-5 w-5 text-indigo-400 mt-0.5 flex-shrink-0" />
+                                    <div>
+                                        <p className="text-sm font-medium text-white">{t('billing.connectStripe')}</p>
+                                        <p className="text-xs text-slate-400 mt-1">{t('billing.connectStripeDesc')}</p>
+                                    </div>
+                                </div>
+                                <button
+                                    onClick={handleConnectOnboard}
+                                    disabled={connectLoading}
+                                    className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-400 hover:to-purple-400 text-white rounded-xl text-sm font-semibold transition-all shadow-lg shadow-indigo-500/20"
+                                >
+                                    {connectLoading
+                                        ? <Loader2 className="h-4 w-4 animate-spin" />
+                                        : <><Banknote className="h-4 w-4" /> {t('billing.connectWithStripe')}</>}
+                                </button>
+                            </div>
+                        )}
+                    </div>
+                </GlassCard>
+
                 {/* ─── Billing History ───────────────── */}
                 <GlassCard className="p-0 overflow-hidden">
                     <div className="p-6 border-b border-white/5 bg-white/5">
-                        <h3 className="font-semibold text-white text-lg">Billing History</h3>
+                        <h3 className="font-semibold text-white text-lg">{t('billing.history')}</h3>
                     </div>
                     <div className="p-8 text-center text-slate-500 text-sm">
                         <Calendar className="h-6 w-6 mx-auto mb-2 text-slate-600" />
-                        No invoices yet. They will appear here after your first payment.
+                        {t('billing.noInvoices')}
                     </div>
                 </GlassCard>
             </div>
