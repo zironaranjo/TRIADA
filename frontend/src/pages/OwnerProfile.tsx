@@ -6,8 +6,8 @@ import { ownersApi } from '@/api/client';
 import { motion } from 'framer-motion';
 import { GlassCard } from '@/components/GlassCard';
 import {
-    ArrowLeft, Building, DollarSign, CalendarDays, TrendingUp,
-    Mail, Phone, Home, User, Edit3, Save, X,
+    ArrowLeft, Building, DollarSign, TrendingUp,
+    Mail, Phone, Home, Edit3, Save, X,
     BarChart3, FileText, CreditCard,
 } from 'lucide-react';
 

@@ -14,6 +14,7 @@ export const ownersApi = {
     getAll: () => api.get('/owners'),
     getOne: (id: string) => api.get(`/owners/${id}`),
     create: (data: any) => api.post('/owners', data),
+    update: (id: string, data: any) => api.patch(`/owners/${id}`, data),
 };
 
 // Properties API
