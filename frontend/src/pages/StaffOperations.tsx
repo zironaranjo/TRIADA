@@ -5,9 +5,9 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { GlassCard } from '@/components/GlassCard';
 import {
     Users, ClipboardCheck, Plus, X, Search, Star,
-    Phone, Mail, MapPin, FileText, Clock, Camera,
-    CheckCircle2, Circle, AlertCircle, Trash2, Edit3,
-    Save, DollarSign, Building, Calendar, Upload,
+    Phone, Mail, MapPin, FileText, Clock,
+    CheckCircle2, Circle, Trash2, Edit3,
+    DollarSign,
 } from 'lucide-react';
 
 // ─── Types ────────────────────────────────────────────
@@ -62,9 +62,8 @@ interface Property {
 }
 
 // ─── Constants ────────────────────────────────────────
-const CONTRACT_TYPES = ['full_time', 'part_time', 'freelance'] as const;
-const TASK_TYPES = ['cleaning', 'maintenance', 'inspection', 'laundry', 'other'] as const;
-const TASK_STATUSES = ['pending', 'in_progress', 'completed', 'verified', 'cancelled'] as const;
+const CONTRACT_TYPES: readonly ('full_time' | 'part_time' | 'freelance')[] = ['full_time', 'part_time', 'freelance'];
+const TASK_TYPES: readonly ('cleaning' | 'maintenance' | 'inspection' | 'laundry' | 'other')[] = ['cleaning', 'maintenance', 'inspection', 'laundry', 'other'];
 
 const TASK_TYPE_CONFIG: Record<string, { icon: string; color: string; bg: string }> = {
     cleaning: { icon: '🧹', color: 'text-blue-400', bg: 'bg-blue-500/10' },
@@ -418,7 +417,6 @@ export default function StaffOperations() {
                 {showMemberModal && (
                     <MemberModal
                         member={editingMember}
-                        properties={properties}
                         onClose={() => { setShowMemberModal(false); setEditingMember(null); }}
                         onSuccess={() => { fetchAll(); setShowMemberModal(false); setEditingMember(null); }}
                     />
@@ -457,12 +455,17 @@ function StatCard({ title, value, icon, color }: { title: string; value: string;
 }
 
 // ─── Member Modal ─────────────────────────────────────
-function MemberModal({ member, properties, onClose, onSuccess }: {
-    member: StaffMember | null; properties: Property[]; onClose: () => void; onSuccess: () => void;
+function MemberModal({ member, onClose, onSuccess }: {
+    member: StaffMember | null; onClose: () => void; onSuccess: () => void;
 }) {
     const { t } = useTranslation();
     const [saving, setSaving] = useState(false);
-    const [form, setForm] = useState({
+    const [form, setForm] = useState<{
+        full_name: string; email: string; phone: string; address: string; document_id: string;
+        contract_type: 'full_time' | 'part_time' | 'freelance'; salary: string;
+        salary_type: 'monthly' | 'per_service'; start_date: string; end_date: string;
+        status: 'active' | 'inactive'; assigned_properties: string[]; notes: string;
+    }>({
         full_name: member?.full_name || '',
         email: member?.email || '',
         phone: member?.phone || '',
@@ -534,7 +537,7 @@ function MemberModal({ member, properties, onClose, onSuccess }: {
                         </div>
                         <div className="space-y-1">
                             <label className="text-xs font-medium text-slate-400">{t('staffOps.fieldContract')}</label>
-                            <select value={form.contract_type} onChange={e => setForm({ ...form, contract_type: e.target.value })}
+                            <select value={form.contract_type} onChange={e => setForm({ ...form, contract_type: e.target.value as 'full_time' | 'part_time' | 'freelance' })}
                                 className="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-sm text-white focus:border-indigo-500 focus:outline-none">
                                 {CONTRACT_TYPES.map(c => <option key={c} value={c} className="bg-slate-800">{t(`staffOps.contract.${c}`)}</option>)}
                             </select>
@@ -546,7 +549,7 @@ function MemberModal({ member, properties, onClose, onSuccess }: {
                         </div>
                         <div className="space-y-1">
                             <label className="text-xs font-medium text-slate-400">{t('staffOps.fieldSalaryType')}</label>
-                            <select value={form.salary_type} onChange={e => setForm({ ...form, salary_type: e.target.value })}
+                            <select value={form.salary_type} onChange={e => setForm({ ...form, salary_type: e.target.value as 'monthly' | 'per_service' })}
                                 className="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-sm text-white focus:border-indigo-500 focus:outline-none">
                                 <option value="monthly" className="bg-slate-800">{t('staffOps.salaryMonthly')}</option>
                                 <option value="per_service" className="bg-slate-800">{t('staffOps.salaryPerService')}</option>
