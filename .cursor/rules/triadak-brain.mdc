@@ -14,7 +14,9 @@ SaaS platform for **vacation rental management** (triadak.io). Combines features
 - **Database/Auth/Storage**: Supabase (PostgreSQL + Auth + Storage + RLS)
 - **Charts**: Recharts
 - **Email**: Resend (via NestJS endpoint)
-- **Deployment**: Docker + CI/CD (GitHub push triggers build)
+- **Payments**: Stripe (Billing for subscriptions + Connect for guest payments)
+- **Deployment**: Docker + Dokploy + CI/CD (GitHub push triggers build)
+- **Production URLs**: Frontend `https://triadak.io` | Backend `https://api.triadak.io`
 - **Language**: Always respond in Spanish to the user
 
 ## Architecture
@@ -41,7 +43,8 @@ SaaS platform for **vacation rental management** (triadak.io). Combines features
 - `profiles` - User profiles (user_id, email, full_name, role)
 - `properties` - Vacation rental properties (name, status, images, owner_id FK → owner.id, price_per_night, etc.)
 - `settlements` - Owner settlement records (UNRESTRICTED RLS - needs review)
-- `subscriptions` - User subscription plans
+- `stripe_connect_accounts` - Stripe Express connected accounts (user_id, stripe_account_id, status, charges_enabled, payouts_enabled) with RLS
+- `subscriptions` - User subscription plans (plan_id, status, interval, stripe_subscription_id, stripe_customer_id)
 - `vendors` - Vendor/supplier records (UNRESTRICTED RLS - needs review)
 
 **Note**: Tables marked UNRESTRICTED need RLS policies added for production security.
@@ -166,7 +169,9 @@ SaaS platform for **vacation rental management** (triadak.io). Combines features
 - `frontend/src/pages/owner/OwnerProperties.tsx` - Read-only property cards for owners
 - `frontend/src/pages/owner/OwnerMyStatements.tsx` - Owner's personal monthly statements with PDF/CSV export
 - `frontend/src/contexts/AuthContext.tsx` - Auth provider with profile, subscription, role management
-- `frontend/src/api/client.ts` - Axios client for NestJS backend API (owners, properties, bookings)
+- `frontend/src/api/client.ts` - Axios client for NestJS backend API (owners, properties, bookings, subscriptions, connect)
+- `frontend/src/pages/Pricing.tsx` - Plan selection with Stripe Checkout integration and commission rates
+- `frontend/src/pages/Billing.tsx` - Subscription management, Stripe Customer Portal, Stripe Connect onboarding
 - `frontend/src/lib/supabase.ts` - Supabase client config
 - `frontend/src/lib/exportUtils.ts` - PDF/CSV export utilities (jspdf + jspdf-autotable)
 - `frontend/src/pages/OwnerProfile.tsx` - Owner full profile page with tabs (properties, statements, payments)
@@ -203,3 +208,7 @@ SaaS platform for **vacation rental management** (triadak.io). Combines features
 - Supabase Realtime must be enabled via SQL: `ALTER PUBLICATION supabase_realtime ADD TABLE notifications`
 - `owner` table is singular (not `owners`) — OwnerStatements queries it directly via Supabase
 - `properties.owner_id` FK points to `owner(id)` — was changed from `profiles(id)`
+- No staging environment — working directly on main/production (triadak.io)
+- Stripe configured in test mode (`sk_test_...`) — switch to `sk_live_...` for production payments
+- Stripe webhook endpoint: `https://api.triadak.io/webhooks/stripe`
+- SQL migration `003_stripe_connect.sql` already executed in Supabase
