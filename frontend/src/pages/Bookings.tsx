@@ -39,6 +39,7 @@ interface Booking {
     platform: string;
     payment_status: 'unpaid' | 'paid' | 'partial' | 'refunded';
     payment_url: string | null;
+    guest_token: string | null;
     property_id: string;
     properties: {
         name: string;
@@ -619,6 +620,37 @@ const BookingDetailModal = ({ booking, onClose, onUpdate }: { booking: Booking; 
                             )}
                         </div>
                     </div>
+
+                    {/* ─── Guest Portal Link ──────────── */}
+                    {booking.guest_token && (
+                        <div className="border-t border-slate-700/50 pt-4">
+                            <h3 className="text-sm font-semibold text-white flex items-center gap-2 mb-2">
+                                <User className="h-4 w-4 text-purple-400" />
+                                {t('bookings.guestPortal')}
+                            </h3>
+                            <div className="bg-purple-500/10 border border-purple-500/20 rounded-xl p-3">
+                                <p className="text-xs text-purple-300 font-medium mb-2">{t('bookings.guestLink')}</p>
+                                <div className="flex items-center gap-2">
+                                    <input
+                                        readOnly
+                                        value={`${window.location.origin}/guest/${booking.guest_token}`}
+                                        className="flex-1 bg-slate-900/50 text-xs text-slate-300 rounded-lg px-2 py-1.5 truncate border border-slate-700"
+                                    />
+                                    <button
+                                        onClick={async () => {
+                                            await navigator.clipboard.writeText(`${window.location.origin}/guest/${booking.guest_token}`);
+                                            setCopied(true);
+                                            setTimeout(() => setCopied(false), 2000);
+                                        }}
+                                        className="px-3 py-1.5 bg-purple-600 hover:bg-purple-500 text-white text-xs rounded-lg font-medium transition-all"
+                                    >
+                                        {copied ? t('bookings.copied') : t('bookings.copy')}
+                                    </button>
+                                </div>
+                                <p className="text-[10px] text-slate-500 mt-1.5">{t('bookings.guestLinkHint')}</p>
+                            </div>
+                        </div>
+                    )}
 
                     {/* ─── Status Actions ───────────── */}
                     <div className="border-t border-slate-700/50 pt-4 space-y-3">

@@ -73,4 +73,39 @@ export class BookingsService {
   async updateStatus(id: string, status: string) {
     return this.bookingsRepository.update(id, { status });
   }
+
+  async findByGuestToken(token: string) {
+    const booking = await this.bookingsRepository.findOne({
+      where: { guestToken: token },
+      relations: ['property'],
+    });
+
+    if (!booking) return null;
+    if (!booking.property?.guestPortalEnabled) return null;
+
+    return {
+      guestName: booking.guestName,
+      startDate: booking.startDate,
+      endDate: booking.endDate,
+      status: booking.status,
+      platform: booking.platform,
+      property: {
+        name: booking.property.name,
+        address: booking.property.address,
+        city: booking.property.city,
+        country: booking.property.country,
+        imageUrl: booking.property.imageUrl,
+        rooms: booking.property.rooms,
+        maxGuests: booking.property.maxGuests,
+        checkinInstructions: booking.property.checkinInstructions,
+        checkoutInstructions: booking.property.checkoutInstructions,
+        wifiName: booking.property.wifiName,
+        wifiPassword: booking.property.wifiPassword,
+        houseRules: booking.property.houseRules,
+        emergencyContact: booking.property.emergencyContact,
+        checkinTime: booking.property.checkinTime,
+        checkoutTime: booking.property.checkoutTime,
+      },
+    };
+  }
 }

@@ -272,7 +272,10 @@
     "optionAirbnb": "Airbnb",
     "optionBookingCom": "Booking.com",
     "optionVrbo": "VRBO",
-    "optionOther": "Otro"
+    "optionOther": "Otro",
+    "guestPortal": "Portal del Huésped",
+    "guestLink": "Comparte este enlace con tu huésped",
+    "guestLinkHint": "El huésped puede ver instrucciones de check-in, WiFi, reglas de la casa y más — sin necesidad de registrarse."
   },
 
   "owners": {

@@ -16,6 +16,7 @@ import OwnerStatements from './pages/OwnerStatements';
 import StaffOperations from './pages/StaffOperations';
 import ChannelManager from './pages/ChannelManager';
 import OccupancyDashboard from './pages/OccupancyDashboard';
+import GuestPortal from './pages/GuestPortal';
 import Layout from './components/Layout';
 import LandingPage from './pages/LandingPage';
 
@@ -33,6 +34,7 @@ function App() {
           {/* Public routes */}
           <Route path="/" element={<LandingPage />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/guest/:token" element={<GuestPortal />} />
 
           {/* Admin/Staff protected routes (includes owner portal pages) */}
           <Route

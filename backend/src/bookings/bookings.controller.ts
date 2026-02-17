@@ -32,6 +32,15 @@ export class BookingsController {
     return this.bookingsService.findAll();
   }
 
+  @Get('guest/:token')
+  async getGuestPortal(@Param('token') token: string) {
+    const data = await this.bookingsService.findByGuestToken(token);
+    if (!data) {
+      return { error: 'Booking not found or guest portal disabled' };
+    }
+    return data;
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.bookingsService.findOne(id);

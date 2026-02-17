@@ -51,6 +51,33 @@ export class Property {
   @Column({ name: 'ical_url', type: 'text', nullable: true })
   icalUrl: string;
 
+  @Column({ name: 'checkin_instructions', type: 'text', nullable: true })
+  checkinInstructions: string;
+
+  @Column({ name: 'checkout_instructions', type: 'text', nullable: true })
+  checkoutInstructions: string;
+
+  @Column({ name: 'wifi_name', nullable: true })
+  wifiName: string;
+
+  @Column({ name: 'wifi_password', nullable: true })
+  wifiPassword: string;
+
+  @Column({ name: 'house_rules', type: 'text', nullable: true })
+  houseRules: string;
+
+  @Column({ name: 'emergency_contact', nullable: true })
+  emergencyContact: string;
+
+  @Column({ name: 'checkin_time', nullable: true, default: '15:00' })
+  checkinTime: string;
+
+  @Column({ name: 'checkout_time', nullable: true, default: '11:00' })
+  checkoutTime: string;
+
+  @Column({ name: 'guest_portal_enabled', default: true })
+  guestPortalEnabled: boolean;
+
   @Column({ name: 'owner_id', nullable: true })
   ownerId: string;
 

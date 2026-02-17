@@ -50,6 +50,9 @@ export class Booking {
   @JoinColumn({ name: 'property_id' })
   property: Property;
 
+  @Column({ name: 'guest_token', type: 'uuid', nullable: true })
+  guestToken: string;
+
   @Column({ name: 'owner_id', nullable: true })
   ownerId: string;
 
