@@ -12,14 +12,12 @@ import {
     Zap,
     AlertTriangle,
     Link2,
-    Settings2,
     History,
     ChevronDown,
     ChevronRight,
     Power,
     PowerOff,
     X,
-    ExternalLink,
     Search,
     Activity,
 } from 'lucide-react';
@@ -127,7 +125,7 @@ const ChannelManager = () => {
     const [syncingId, setSyncingId] = useState<string | null>(null);
     const [showAddModal, setShowAddModal] = useState(false);
     const [showLogsPanel, setShowLogsPanel] = useState(false);
-    const [selectedLogConnectionId, setSelectedLogConnectionId] = useState<string | null>(null);
+    const [, setSelectedLogConnectionId] = useState<string | null>(null);
     const [expandedPlatform, setExpandedPlatform] = useState<string | null>(null);
     const [search, setSearch] = useState('');
 
