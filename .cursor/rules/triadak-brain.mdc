@@ -249,6 +249,7 @@ SaaS platform for **vacation rental management** (triadak.io). Combines features
 - SQL migration `003_stripe_connect.sql` already executed in Supabase
 - SQL migration `004_channel_manager.sql` already executed in Supabase
 - SQL migration `005_guest_portal.sql` already executed in Supabase
-- SQL migration `006_messaging.sql` needs to be executed in Supabase for WhatsApp/SMS messaging
+- SQL migration `006_messaging.sql` already executed in Supabase
 - Airbnb/Booking.com full APIs require partner access — iCal sync available now, API ready when approved
-- Twilio configured in env vars: `TWILIO_ACCOUNT_SID`, `TWILIO_AUTH_TOKEN`, `TWILIO_PHONE_NUMBER`, `TWILIO_WHATSAPP_NUMBER`
+- Twilio configured and working (sandbox WhatsApp tested successfully). Env vars: `TWILIO_ACCOUNT_SID`, `TWILIO_AUTH_TOKEN`, `TWILIO_PHONE_NUMBER`, `TWILIO_WHATSAPP_NUMBER`
+- **PENDING**: Migrar de Twilio WhatsApp Sandbox a **Meta WhatsApp Cloud API** directamente. El usuario ya tiene un número de WhatsApp Business registrado con Meta (usado para atender clientes). Esto evita doble costo y permite usar su perfil existente (logo, nombre). Próximo paso: obtener WhatsApp Business Account ID + Phone Number ID + Permanent Access Token desde https://developers.facebook.com → su app → WhatsApp → API Setup. Luego adaptar `MessagingService` para usar Meta Cloud API (`graph.facebook.com/v21.0/{phone_number_id}/messages`) en vez de Twilio para WhatsApp (mantener Twilio solo para SMS si se necesita)
