@@ -11,6 +11,7 @@ import { CrmModule } from './crm/crm.module';
 import { PaymentsModule } from './payments/payments.module';
 import { SubscriptionsModule } from './subscriptions/subscriptions.module';
 import { ConnectModule } from './connect/connect.module';
+import { ChannelsModule } from './channels/channels.module';
 import { EmailsModule } from './emails/emails.module';
 
 @Module({
@@ -53,6 +54,7 @@ import { EmailsModule } from './emails/emails.module';
     PaymentsModule,
     SubscriptionsModule,
     ConnectModule,
+    ChannelsModule,
     EmailsModule,
   ],
   controllers: [AppController],

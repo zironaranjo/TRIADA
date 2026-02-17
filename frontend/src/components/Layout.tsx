@@ -16,6 +16,7 @@ import {
     X,
     ExternalLink,
     HardHat,
+    Globe,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useAuth } from '../contexts/AuthContext';
@@ -73,6 +74,7 @@ const Layout = () => {
         { path: '/accounting', labelKey: 'layout.nav.financeEngine', icon: PiggyBank },
         { path: '/statements', labelKey: 'layout.nav.ownerStatements', icon: FileText },
         { path: '/staff', labelKey: 'layout.nav.staffOps', icon: HardHat },
+        { path: '/channels', labelKey: 'layout.nav.channels', icon: Globe },
     ];
 
     const handleNavClick = () => {

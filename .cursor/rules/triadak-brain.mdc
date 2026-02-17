@@ -45,6 +45,8 @@ SaaS platform for **vacation rental management** (triadak.io). Combines features
 - `settlements` - Owner settlement records (UNRESTRICTED RLS - needs review)
 - `stripe_connect_accounts` - Stripe Express connected accounts (user_id, stripe_account_id, status, charges_enabled, payouts_enabled) with RLS
 - `subscriptions` - User subscription plans (plan_id, status, interval, stripe_subscription_id, stripe_customer_id)
+- `platform_connections` - Channel manager platform connections (property_id, platform, connection_type, ical_url, api_key, auto_sync_enabled, sync_interval_minutes, last_sync_at/status/message) with RLS
+- `sync_logs` - Channel sync history logs (connection_id, property_id, platform, sync_type, status, added, updated, errors) with RLS
 - `vendors` - Vendor/supplier records (UNRESTRICTED RLS - needs review)
 
 **Note**: Tables marked UNRESTRICTED need RLS policies added for production security.
@@ -102,6 +104,14 @@ SaaS platform for **vacation rental management** (triadak.io). Combines features
     - **Hybrid Commission Model**: Starter 0eur+8%, Basic 29eur+5%, Pro 79eur+3%, Enterprise 149eur+2%. Commission visible in Pricing.tsx and Billing.tsx. `application_fee_amount` applied to booking payments via Stripe Connect `transfer_data`
     - **Frontend**: Pricing.tsx calls `subscriptionsApi.createCheckout()` with fallback to Supabase trial. Billing.tsx shows commission rate, Stripe Customer Portal button, Stripe Connect onboarding/status section. `subscriptionsApi` and `connectApi` in client.ts
     - **i18n**: billing/pricing keys in EN, ES, DE, FR
+30. **Channel Manager** - Centralized platform connection management at `/channels`:
+    - **Platform support**: Airbnb (iCal), Booking.com (iCal), VRBO (iCal), Lodgify (REST API)
+    - **Backend**: `ChannelsModule` with `ChannelsService` (connection CRUD, sync orchestration, Lodgify API, auto-sync scheduler, sync logs, stats). Entities: `PlatformConnection`, `SyncLog`. SQL migration `004_channel_manager.sql`
+    - **Endpoints**: `GET/POST /channels/connections`, `PUT/DELETE /channels/connections/:id`, `POST /channels/connections/:id/sync`, `POST /channels/sync-all`, `GET /channels/sync-logs`, `GET /channels/stats`, `POST /channels/lodgify/test`
+    - **Frontend**: KPI stats (connections, auto-sync, synced today, errors), platform cards with expand to see per-property status, connections table with search/filter, sync/enable/disable/delete actions, sync history panel, add connection modal (platform selection, property selector, iCal URL or API key, auto-sync toggle + interval)
+    - **Lodgify**: Test API key, list properties, sync reservations via REST API
+    - **Auto-sync**: Configurable intervals (15m/30m/1h/6h/12h/24h) per connection. `POST /channels/sync-all` checks all due connections
+    - **i18n**: channels.* keys in EN, ES, DE, FR
 
 ## Pending / Roadmap (Fase 2 & 3)
 
@@ -109,25 +119,16 @@ SaaS platform for **vacation rental management** (triadak.io). Combines features
 - [x] Multi-language support (i18n with react-i18next) — EN, DE, ES, FR implemented across all pages
 - [x] Theme system removed — dark-only theme (light mode looked bad, reverted)
 - [x] Owner portal (separate view at /owner/* with dashboard, properties, statements)
-- [x] Accounting/Ledger improvements:
-  - Category filter in Finance Dashboard header
-  - Reconciliation system (mark expenses as reconciled/pending via checkbox, persisted in localStorage)
-  - Progress bar showing reconciliation status
-  - Full Profit & Loss statement (revenue by platform, expenses by category, fees, margins)
-  - Reconciliation summary panel
-- [x] Scheduled email notifications:
-  - Edge Function `send-reminders` — scans bookings, generates check-in/check-out notifications for staff/admins
-  - Edge Function `daily-digest` — morning summary of today's arrivals, departures, and tomorrow preview
-  - Notification settings UI in Settings: configurable reminder timing (6h/12h/24h/48h), daily digest toggle
-  - SQL migration for notifications table + cron job setup instructions
-  - Supabase pg_cron integration (hourly reminders + daily digest at 08:00 UTC)
+- [x] Accounting/Ledger improvements
+- [x] Scheduled email notifications
 
-### Fase 3 - Integraciones externas
-- [x] iCal Sync — Import from Airbnb/Booking.com + Export .ics feed per property (completed)
-- [ ] Airbnb API integration (iCal sync done, full API if available)
-- [ ] Booking.com API integration (iCal sync done, XML API for availability)
-- [ ] Lodgify integration (channel manager sync — centralized calendar)
+### Fase 3 - Integraciones externas ✅ COMPLETED
+- [x] iCal Sync — Import from Airbnb/Booking.com + Export .ics feed per property
+- [x] Airbnb integration — iCal sync via Channel Manager (full API requires partner access)
+- [x] Booking.com integration — iCal sync via Channel Manager (XML API requires partner access)
+- [x] Lodgify integration — REST API sync via Channel Manager + iCal fallback
 - [x] Stripe payment integration — SaaS subscriptions (Billing) + Guest payments (Connect) + Hybrid commission model
+- [x] Channel Manager — Centralized platform connections, sync orchestration, auto-sync, sync logs
 
 ### Sugerencias adicionales (post Fase 3)
 - [x] **iCal Sync universal** — Importar/exportar calendarios iCal (.ics) por propiedad. Sync + export implementado en Fase 3
@@ -153,7 +154,7 @@ SaaS platform for **vacation rental management** (triadak.io). Combines features
 - [x] DB fix: properties.owner_id FK changed from profiles → owner table
 
 ## Key Files
-- `frontend/src/App.tsx` - Main routing (public: /, /login; protected: /dashboard, /properties, /bookings, /owners, /crm, /accounting, /pricing, /billing, /settings, /statements)
+- `frontend/src/App.tsx` - Main routing (public: /, /login; protected: /dashboard, /properties, /bookings, /owners, /crm, /accounting, /pricing, /billing, /settings, /statements, /channels)
 - `frontend/src/components/Layout.tsx` - App shell with sidebar + mobile menu + NotificationCenter + user avatar
 - `frontend/src/components/NotificationCenter.tsx` - Bell icon + portal dropdown with realtime notifications
 - `frontend/src/hooks/useUserAvatar.ts` - Reusable hook to load user avatar (localStorage + Supabase Storage fallback)
@@ -169,7 +170,8 @@ SaaS platform for **vacation rental management** (triadak.io). Combines features
 - `frontend/src/pages/owner/OwnerProperties.tsx` - Read-only property cards for owners
 - `frontend/src/pages/owner/OwnerMyStatements.tsx` - Owner's personal monthly statements with PDF/CSV export
 - `frontend/src/contexts/AuthContext.tsx` - Auth provider with profile, subscription, role management
-- `frontend/src/api/client.ts` - Axios client for NestJS backend API (owners, properties, bookings, subscriptions, connect)
+- `frontend/src/api/client.ts` - Axios client for NestJS backend API (owners, properties, bookings, subscriptions, connect, channels)
+- `frontend/src/pages/ChannelManager.tsx` - Channel Manager page (platform connections, sync, auto-sync, logs)
 - `frontend/src/pages/Pricing.tsx` - Plan selection with Stripe Checkout integration and commission rates
 - `frontend/src/pages/Billing.tsx` - Subscription management, Stripe Customer Portal, Stripe Connect onboarding
 - `frontend/src/lib/supabase.ts` - Supabase client config
@@ -186,7 +188,10 @@ SaaS platform for **vacation rental management** (triadak.io). Combines features
 - `backend/src/payments/payments.service.ts` - Booking payments with Connect support (application_fee + transfer_data)
 - `supabase/functions/send-reminders/index.ts` - Edge Function: hourly check-in/check-out reminder generator
 - `supabase/functions/daily-digest/index.ts` - Edge Function: daily morning digest notification
+- `backend/src/channels/channels.service.ts` - Channel Manager: connection CRUD, iCal/API sync, Lodgify integration, auto-sync
+- `backend/src/channels/channels.controller.ts` - Channel Manager REST endpoints
 - `supabase/migrations/001_notifications_table.sql` - SQL setup for notifications table, RLS, and cron jobs
+- `supabase/migrations/004_channel_manager.sql` - SQL setup for platform_connections and sync_logs tables
 
 ## Conventions
 - Use Supabase direct queries (not backend API) for frontend CRUD — except Owners which still uses NestJS API
@@ -212,3 +217,5 @@ SaaS platform for **vacation rental management** (triadak.io). Combines features
 - Stripe configured in test mode (`sk_test_...`) — switch to `sk_live_...` for production payments
 - Stripe webhook endpoint: `https://api.triadak.io/webhooks/stripe`
 - SQL migration `003_stripe_connect.sql` already executed in Supabase
+- SQL migration `004_channel_manager.sql` needs to be executed in Supabase for Channel Manager
+- Airbnb/Booking.com full APIs require partner access — iCal sync available now, API ready when approved

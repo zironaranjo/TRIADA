@@ -50,3 +50,19 @@ export const connectApi = {
     getStatus: (userId: string) => api.get(`/connect/status?userId=${userId}`),
     getDashboardLink: (userId: string) => api.get(`/connect/dashboard-link?userId=${userId}`),
 };
+
+// Channel Manager API
+export const channelsApi = {
+    getConnections: (propertyId?: string) =>
+        api.get('/channels/connections' + (propertyId ? `?propertyId=${propertyId}` : '')),
+    getConnection: (id: string) => api.get(`/channels/connections/${id}`),
+    createConnection: (data: any) => api.post('/channels/connections', data),
+    updateConnection: (id: string, data: any) => api.put(`/channels/connections/${id}`, data),
+    deleteConnection: (id: string) => api.delete(`/channels/connections/${id}`),
+    syncConnection: (id: string) => api.post(`/channels/connections/${id}/sync`),
+    syncAll: () => api.post('/channels/sync-all'),
+    getSyncLogs: (connectionId?: string, limit?: number) =>
+        api.get('/channels/sync-logs' + (connectionId ? `?connectionId=${connectionId}` : '') + (limit ? `${connectionId ? '&' : '?'}limit=${limit}` : '')),
+    getStats: () => api.get('/channels/stats'),
+    testLodgifyKey: (apiKey: string) => api.post('/channels/lodgify/test', { apiKey }),
+};
