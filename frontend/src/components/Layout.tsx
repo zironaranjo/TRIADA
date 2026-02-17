@@ -18,6 +18,7 @@ import {
     HardHat,
     Globe,
     BarChart3,
+    MessageSquare,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useAuth } from '../contexts/AuthContext';
@@ -77,6 +78,7 @@ const Layout = () => {
         { path: '/staff', labelKey: 'layout.nav.staffOps', icon: HardHat },
         { path: '/channels', labelKey: 'layout.nav.channels', icon: Globe },
         { path: '/occupancy', labelKey: 'layout.nav.occupancy', icon: BarChart3 },
+        { path: '/messaging', labelKey: 'layout.nav.messaging', icon: MessageSquare },
     ];
 
     const handleNavClick = () => {

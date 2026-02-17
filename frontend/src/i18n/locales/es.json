@@ -77,7 +77,8 @@
       "ownerPortal": "Portal Propietario",
       "staffOps": "Personal Operativo",
       "channels": "Channel Manager",
-      "occupancy": "Ocupación"
+      "occupancy": "Ocupación",
+      "messaging": "Mensajería"
     },
     "signOut": "Cerrar sesión"
   },
@@ -945,5 +946,37 @@
     "connectWithStripe": "Conectar con Stripe",
     "history": "Historial de Facturación",
     "noInvoices": "Aún no hay facturas. Aparecerán aquí después de tu primer pago."
+  },
+
+  "messaging": {
+    "title": "Mensajería",
+    "subtitle": "Envía mensajes de WhatsApp y SMS a huéspedes de forma automática o manual",
+    "sendMessage": "Enviar Mensaje",
+    "totalMessages": "Mensajes Totales",
+    "sentToday": "Enviados Hoy",
+    "templates": "Plantillas",
+    "history": "Historial de Mensajes",
+    "searchPlaceholder": "Buscar destinatario o mensaje...",
+    "allChannels": "Todos los Canales",
+    "noMessages": "Aún no se han enviado mensajes",
+    "noMessagesDesc": "Envía tu primer mensaje de WhatsApp o SMS a un huésped",
+    "justNow": "Ahora",
+    "ago": "hace",
+    "notConnected": "Twilio no configurado",
+    "notConnectedDesc": "Agrega TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_PHONE_NUMBER y TWILIO_WHATSAPP_NUMBER a las variables de entorno del backend para habilitar la mensajería.",
+    "twilioConnected": "Twilio conectado",
+    "modeTemplate": "Plantilla",
+    "modeCustom": "Personalizado",
+    "modeDirect": "Directo",
+    "channel": "Canal",
+    "selectBooking": "Seleccionar Reserva",
+    "chooseBooking": "Elige una reserva...",
+    "noPhoneHint": "{{count}} reservas no tienen número de teléfono",
+    "selectTemplate": "Seleccionar Plantilla",
+    "phoneNumber": "Número de Teléfono",
+    "messageLabel": "Mensaje",
+    "messagePlaceholder": "Escribe tu mensaje aquí...",
+    "sending": "Enviando...",
+    "send": "Enviar Mensaje"
   }
 }

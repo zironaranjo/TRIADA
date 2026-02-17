@@ -77,7 +77,8 @@
       "ownerPortal": "Owner Portal",
       "staffOps": "Staff Operations",
       "channels": "Channel Manager",
-      "occupancy": "Occupancy"
+      "occupancy": "Occupancy",
+      "messaging": "Messaging"
     },
     "signOut": "Sign Out"
   },
@@ -945,5 +946,37 @@
     "connectWithStripe": "Connect with Stripe",
     "history": "Billing History",
     "noInvoices": "No invoices yet. They will appear here after your first payment."
+  },
+
+  "messaging": {
+    "title": "Messaging",
+    "subtitle": "Send WhatsApp and SMS messages to guests automatically or manually",
+    "sendMessage": "Send Message",
+    "totalMessages": "Total Messages",
+    "sentToday": "Sent Today",
+    "templates": "Templates",
+    "history": "Message History",
+    "searchPlaceholder": "Search recipient or message...",
+    "allChannels": "All Channels",
+    "noMessages": "No messages sent yet",
+    "noMessagesDesc": "Send your first WhatsApp or SMS message to a guest",
+    "justNow": "Just now",
+    "ago": "ago",
+    "notConnected": "Twilio not configured",
+    "notConnectedDesc": "Add TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_PHONE_NUMBER, and TWILIO_WHATSAPP_NUMBER to your backend environment variables to enable messaging.",
+    "twilioConnected": "Twilio connected",
+    "modeTemplate": "Template",
+    "modeCustom": "Custom",
+    "modeDirect": "Direct",
+    "channel": "Channel",
+    "selectBooking": "Select Booking",
+    "chooseBooking": "Choose a booking...",
+    "noPhoneHint": "{{count}} bookings have no phone number",
+    "selectTemplate": "Select Template",
+    "phoneNumber": "Phone Number",
+    "messageLabel": "Message",
+    "messagePlaceholder": "Type your message here...",
+    "sending": "Sending...",
+    "send": "Send Message"
   }
 }

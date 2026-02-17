@@ -15,6 +15,7 @@ SaaS platform for **vacation rental management** (triadak.io). Combines features
 - **Charts**: Recharts
 - **Email**: Resend (via NestJS endpoint)
 - **Payments**: Stripe (Billing for subscriptions + Connect for guest payments)
+- **Messaging**: Twilio (WhatsApp + SMS)
 - **Deployment**: Docker + Dokploy + CI/CD (GitHub push triggers build)
 - **Production URLs**: Frontend `https://triadak.io` | Backend `https://api.triadak.io`
 - **Language**: Always respond in Spanish to the user
@@ -33,15 +34,16 @@ SaaS platform for **vacation rental management** (triadak.io). Combines features
 - Reusable `useUserAvatar` hook for loading avatar across all pages
 
 ## Database Tables (Supabase - schema public)
-- `bookings` - Reservations (guest_name, start_date, end_date, total_price, platform, status, property_id)
+- `bookings` - Reservations (guest_name, start_date, end_date, total_price, platform, status, property_id, guest_token UUID for guest portal)
 - `contact_notes` - Notes linked to contacts
 - `contacts` - CRM contacts
 - `expenses` - Operational expenses (category, amount, description, property_id, date)
 - `ledger_entry` - Accounting entries (UNRESTRICTED RLS - needs review)
+- `message_logs` - WhatsApp/SMS message history (booking_id, property_id, recipient_phone, channel, template_key, message, status, external_sid) with RLS
 - `notifications` - In-app notifications (user_id, type, title, message, read, metadata) + DB trigger on booking insert
 - `owner` - Property owners (firstName, lastName, email, phone, avatar_url) — camelCase columns (UNRESTRICTED RLS - needs review)
 - `profiles` - User profiles (user_id, email, full_name, role)
-- `properties` - Vacation rental properties (name, status, images, owner_id FK → owner.id, price_per_night, etc.)
+- `properties` - Vacation rental properties (name, status, images, owner_id FK → owner.id, price_per_night, checkin_instructions, checkout_instructions, wifi_name, wifi_password, house_rules, emergency_contact, checkin_time, checkout_time, guest_portal_enabled, etc.)
 - `settlements` - Owner settlement records (UNRESTRICTED RLS - needs review)
 - `stripe_connect_accounts` - Stripe Express connected accounts (user_id, stripe_account_id, status, charges_enabled, payouts_enabled) with RLS
 - `subscriptions` - User subscription plans (plan_id, status, interval, stripe_subscription_id, stripe_customer_id)
@@ -112,6 +114,27 @@ SaaS platform for **vacation rental management** (triadak.io). Combines features
     - **Lodgify**: Test API key, list properties, sync reservations via REST API
     - **Auto-sync**: Configurable intervals (15m/30m/1h/6h/12h/24h) per connection. `POST /channels/sync-all` checks all due connections
     - **i18n**: channels.* keys in EN, ES, DE, FR
+31. **Occupancy Dashboard** - Visual Gantt-style calendar at `/occupancy`:
+    - Date navigation (prev/next month, today button)
+    - KPI cards: overall occupancy %, property count, booked nights, available nights, revenue
+    - Platform legend with color-coded bars
+    - Gantt chart with property rows, booking bars colored by platform
+    - Per-property occupancy summary with percentage and booking count
+    - Fetches bookings and properties from Supabase
+    - **i18n**: occupancy.* keys in EN, ES, DE, FR
+32. **Guest Portal** - Public-facing guest portal at `/guest/:token`:
+    - **Backend**: `GET /bookings/guest/:token` endpoint returns booking + property details. `guest_token` (UUID) auto-generated on booking insert via SQL trigger
+    - **Frontend**: Mobile-first portal displaying property name, address, dates, guest info, check-in/out instructions, WiFi (with show/hide password), house rules, emergency contact. No login required
+    - **SQL migration**: `005_guest_portal.sql` adds `guest_token` to bookings + guest-facing columns to properties
+    - **Bookings page**: Shows guest portal link with copy button for each booking
+    - Properties can configure: `checkin_instructions`, `checkout_instructions`, `wifi_name`, `wifi_password`, `house_rules`, `emergency_contact`, `checkin_time`, `checkout_time`, `guest_portal_enabled`
+33. **WhatsApp/SMS Messaging** - Twilio-based messaging at `/messaging`:
+    - **Backend**: `MessagingModule` with `MessagingService` (Twilio WhatsApp + SMS, template rendering, message logging). Entity: `MessageLog`. SQL migration `006_messaging.sql`
+    - **Endpoints**: `POST /messaging/send-template`, `POST /messaging/send-custom`, `POST /messaging/send-direct`, `GET /messaging/logs`, `GET /messaging/templates`, `GET /messaging/stats`, `GET /messaging/test-connection`
+    - **6 message templates**: Booking confirmation, Check-in reminder, Check-in instructions (WiFi/rules), Check-out reminder, Guest portal link, Thank you post-checkout. Templates auto-populate booking/property data
+    - **Frontend**: KPI cards (total messages, WhatsApp, SMS, sent today), template quick-action cards, message history with expandable details, send modal (template/custom/direct modes), channel selection (WhatsApp/SMS), booking selector, connection status banner
+    - **Environment variables**: `TWILIO_ACCOUNT_SID`, `TWILIO_AUTH_TOKEN`, `TWILIO_PHONE_NUMBER`, `TWILIO_WHATSAPP_NUMBER`
+    - **i18n**: messaging.* keys in EN, ES, DE, FR
 
 ## Pending / Roadmap (Fase 2 & 3)
 
@@ -132,17 +155,17 @@ SaaS platform for **vacation rental management** (triadak.io). Combines features
 
 ### Sugerencias adicionales (post Fase 3)
 - [x] **iCal Sync universal** — Importar/exportar calendarios iCal (.ics) por propiedad. Sync + export implementado en Fase 3
-- [ ] **Dashboard de ocupación visual** — Calendario tipo Gantt por propiedad mostrando reservas, huecos libres y tasas de ocupación. Muy visual para presentaciones a clientes
+- [x] **Dashboard de ocupación visual** — Calendario tipo Gantt por propiedad mostrando reservas, huecos libres y tasas de ocupación. Implementado en `/occupancy`
+- [x] **Guest App / Portal de huéspedes** — Portal público con instrucciones de check-in, WiFi, reglas de la casa, contacto de emergencia. Acceso por link único. Implementado en `/guest/:token`
+- [x] **WhatsApp/SMS integration** — Mensajes automáticos a huéspedes via Twilio (WhatsApp + SMS). 6 plantillas predefinidas + mensajes personalizados. Implementado en `/messaging`
 - [ ] **Gestión de tareas/limpieza** — Sistema de tareas automáticas post-checkout (limpieza, lavandería, inspección). Asignar a miembros del staff con checklist y foto de verificación
 - [ ] **Contratos y documentos** — Generación automática de contratos de alquiler en PDF con datos de la reserva. Firma digital integrada
 - [ ] **Revenue Management / Dynamic Pricing** — Sugerencias de precios basadas en temporada, ocupación y demanda. Reglas de precios mínimos/máximos por propiedad
-- [ ] **Guest App / Portal de huéspedes** — Portal público donde el huésped ve su reserva, instrucciones de check-in, WiFi, reglas de la casa, contacto de emergencia. Acceso por link único (sin registro)
 - [ ] **Multi-currency support** — Soporte para propiedades en distintos países con conversión automática de divisas
 - [ ] **Auditoría y logs** — Registro de todas las acciones (quién cambió qué, cuándo). Importante para empresas con varios empleados
 - [ ] **Backup/Export de datos** — Exportar toda la data (propiedades, reservas, contactos, finanzas) en formato ZIP para cumplimiento legal y tranquilidad del cliente
-- [ ] **WhatsApp/SMS integration** — Mensajes automáticos a huéspedes (confirmación, instrucciones check-in, agradecimiento post-checkout) via Twilio o WhatsApp Business API
 - [ ] **KPI Benchmarking** — Comparar rendimiento entre propiedades: RevPAR, ADR, tasa de ocupación, tiempo medio de reserva. Ideal para presentar valor al propietario
-- [ ] **Rol Operativo (future)** — Dar acceso limitado a cleaners/mantenimiento: ver tareas asignadas del día, marcar completadas, subir fotos de verificación, ver historial de pagos. No prioritario hasta post Fase 3
+- [ ] **Rol Operativo (future)** — Dar acceso limitado a cleaners/mantenimiento: ver tareas asignadas del día, marcar completadas, subir fotos de verificación, ver historial de pagos
 
 ### Completed
 - [x] Finance dashboard (improved with responsive layout, filters, export buttons)
@@ -170,8 +193,11 @@ SaaS platform for **vacation rental management** (triadak.io). Combines features
 - `frontend/src/pages/owner/OwnerProperties.tsx` - Read-only property cards for owners
 - `frontend/src/pages/owner/OwnerMyStatements.tsx` - Owner's personal monthly statements with PDF/CSV export
 - `frontend/src/contexts/AuthContext.tsx` - Auth provider with profile, subscription, role management
-- `frontend/src/api/client.ts` - Axios client for NestJS backend API (owners, properties, bookings, subscriptions, connect, channels)
+- `frontend/src/api/client.ts` - Axios client for NestJS backend API (owners, properties, bookings, subscriptions, connect, channels, messaging)
 - `frontend/src/pages/ChannelManager.tsx` - Channel Manager page (platform connections, sync, auto-sync, logs)
+- `frontend/src/pages/OccupancyDashboard.tsx` - Gantt-style occupancy calendar
+- `frontend/src/pages/GuestPortal.tsx` - Public guest portal (no auth required)
+- `frontend/src/pages/Messaging.tsx` - WhatsApp/SMS messaging page (templates, history, send modal)
 - `frontend/src/pages/Pricing.tsx` - Plan selection with Stripe Checkout integration and commission rates
 - `frontend/src/pages/Billing.tsx` - Subscription management, Stripe Customer Portal, Stripe Connect onboarding
 - `frontend/src/lib/supabase.ts` - Supabase client config
@@ -190,8 +216,12 @@ SaaS platform for **vacation rental management** (triadak.io). Combines features
 - `supabase/functions/daily-digest/index.ts` - Edge Function: daily morning digest notification
 - `backend/src/channels/channels.service.ts` - Channel Manager: connection CRUD, iCal/API sync, Lodgify integration, auto-sync
 - `backend/src/channels/channels.controller.ts` - Channel Manager REST endpoints
+- `backend/src/messaging/messaging.service.ts` - Twilio WhatsApp/SMS service (send, templates, logs, stats)
+- `backend/src/messaging/messaging.controller.ts` - Messaging REST endpoints
 - `supabase/migrations/001_notifications_table.sql` - SQL setup for notifications table, RLS, and cron jobs
 - `supabase/migrations/004_channel_manager.sql` - SQL setup for platform_connections and sync_logs tables
+- `supabase/migrations/005_guest_portal.sql` - SQL setup for guest_token on bookings + guest-facing columns on properties
+- `supabase/migrations/006_messaging.sql` - SQL setup for message_logs table
 
 ## Conventions
 - Use Supabase direct queries (not backend API) for frontend CRUD — except Owners which still uses NestJS API
@@ -217,5 +247,8 @@ SaaS platform for **vacation rental management** (triadak.io). Combines features
 - Stripe configured in test mode (`sk_test_...`) — switch to `sk_live_...` for production payments
 - Stripe webhook endpoint: `https://api.triadak.io/webhooks/stripe`
 - SQL migration `003_stripe_connect.sql` already executed in Supabase
-- SQL migration `004_channel_manager.sql` needs to be executed in Supabase for Channel Manager
+- SQL migration `004_channel_manager.sql` already executed in Supabase
+- SQL migration `005_guest_portal.sql` already executed in Supabase
+- SQL migration `006_messaging.sql` needs to be executed in Supabase for WhatsApp/SMS messaging
 - Airbnb/Booking.com full APIs require partner access — iCal sync available now, API ready when approved
+- Twilio configured in env vars: `TWILIO_ACCOUNT_SID`, `TWILIO_AUTH_TOKEN`, `TWILIO_PHONE_NUMBER`, `TWILIO_WHATSAPP_NUMBER`

@@ -77,7 +77,8 @@
       "ownerPortal": "Eigentümerportal",
       "staffOps": "Betriebspersonal",
       "channels": "Channel Manager",
-      "occupancy": "Auslastung"
+      "occupancy": "Auslastung",
+      "messaging": "Nachrichten"
     },
     "signOut": "Abmelden"
   },
@@ -904,5 +905,37 @@
     "connectWithStripe": "Mit Stripe verbinden",
     "history": "Rechnungsverlauf",
     "noInvoices": "Noch keine Rechnungen. Sie erscheinen hier nach Ihrer ersten Zahlung."
+  },
+
+  "messaging": {
+    "title": "Nachrichten",
+    "subtitle": "Senden Sie WhatsApp- und SMS-Nachrichten automatisch oder manuell an Gäste",
+    "sendMessage": "Nachricht senden",
+    "totalMessages": "Nachrichten gesamt",
+    "sentToday": "Heute gesendet",
+    "templates": "Vorlagen",
+    "history": "Nachrichtenverlauf",
+    "searchPlaceholder": "Empfänger oder Nachricht suchen...",
+    "allChannels": "Alle Kanäle",
+    "noMessages": "Noch keine Nachrichten gesendet",
+    "noMessagesDesc": "Senden Sie Ihre erste WhatsApp- oder SMS-Nachricht an einen Gast",
+    "justNow": "Gerade eben",
+    "ago": "vor",
+    "notConnected": "Twilio nicht konfiguriert",
+    "notConnectedDesc": "Fügen Sie TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_PHONE_NUMBER und TWILIO_WHATSAPP_NUMBER zu den Backend-Umgebungsvariablen hinzu.",
+    "twilioConnected": "Twilio verbunden",
+    "modeTemplate": "Vorlage",
+    "modeCustom": "Benutzerdefiniert",
+    "modeDirect": "Direkt",
+    "channel": "Kanal",
+    "selectBooking": "Buchung auswählen",
+    "chooseBooking": "Buchung wählen...",
+    "noPhoneHint": "{{count}} Buchungen haben keine Telefonnummer",
+    "selectTemplate": "Vorlage auswählen",
+    "phoneNumber": "Telefonnummer",
+    "messageLabel": "Nachricht",
+    "messagePlaceholder": "Schreiben Sie Ihre Nachricht hier...",
+    "sending": "Wird gesendet...",
+    "send": "Nachricht senden"
   }
 }

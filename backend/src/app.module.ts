@@ -13,6 +13,7 @@ import { SubscriptionsModule } from './subscriptions/subscriptions.module';
 import { ConnectModule } from './connect/connect.module';
 import { ChannelsModule } from './channels/channels.module';
 import { EmailsModule } from './emails/emails.module';
+import { MessagingModule } from './messaging/messaging.module';
 
 @Module({
   imports: [
@@ -38,7 +39,7 @@ import { EmailsModule } from './emails/emails.module';
           type: 'postgres',
           url: configService.get<string>('DATABASE_URL'),
           autoLoadEntities: true,
-          synchronize: false, // Reverted to false to prevent startup crash
+          synchronize: false,
           ssl: { rejectUnauthorized: false },
           retryAttempts: 3,
           retryDelay: 3000,
@@ -56,6 +57,7 @@ import { EmailsModule } from './emails/emails.module';
     ConnectModule,
     ChannelsModule,
     EmailsModule,
+    MessagingModule,
   ],
   controllers: [AppController],
   providers: [AppService],

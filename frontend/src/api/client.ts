@@ -66,3 +66,24 @@ export const channelsApi = {
     getStats: () => api.get('/channels/stats'),
     testLodgifyKey: (apiKey: string) => api.post('/channels/lodgify/test', { apiKey }),
 };
+
+// Messaging API (WhatsApp / SMS via Twilio)
+export const messagingApi = {
+    sendTemplate: (data: { bookingId: string; templateKey: string; channel: 'whatsapp' | 'sms'; sentBy?: string }) =>
+        api.post('/messaging/send-template', data),
+    sendCustom: (data: { bookingId: string; message: string; channel: 'whatsapp' | 'sms'; sentBy?: string }) =>
+        api.post('/messaging/send-custom', data),
+    sendDirect: (data: { phone: string; message: string; channel: 'whatsapp' | 'sms'; sentBy?: string }) =>
+        api.post('/messaging/send-direct', data),
+    getLogs: (filters?: { bookingId?: string; propertyId?: string; channel?: string; limit?: number }) => {
+        const params = new URLSearchParams();
+        if (filters?.bookingId) params.set('bookingId', filters.bookingId);
+        if (filters?.propertyId) params.set('propertyId', filters.propertyId);
+        if (filters?.channel) params.set('channel', filters.channel);
+        if (filters?.limit) params.set('limit', String(filters.limit));
+        return api.get('/messaging/logs' + (params.toString() ? `?${params}` : ''));
+    },
+    getTemplates: () => api.get('/messaging/templates'),
+    getStats: () => api.get('/messaging/stats'),
+    testConnection: () => api.get('/messaging/test-connection'),
+};
