@@ -17,7 +17,6 @@ import {
   RefreshCw,
   FileText,
   User,
-  Home,
   X,
   AlertTriangle,
   Wifi,
