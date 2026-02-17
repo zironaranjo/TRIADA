@@ -17,6 +17,7 @@ import {
     ExternalLink,
     HardHat,
     Globe,
+    BarChart3,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useAuth } from '../contexts/AuthContext';
@@ -75,6 +76,7 @@ const Layout = () => {
         { path: '/statements', labelKey: 'layout.nav.ownerStatements', icon: FileText },
         { path: '/staff', labelKey: 'layout.nav.staffOps', icon: HardHat },
         { path: '/channels', labelKey: 'layout.nav.channels', icon: Globe },
+        { path: '/occupancy', labelKey: 'layout.nav.occupancy', icon: BarChart3 },
     ];
 
     const handleNavClick = () => {

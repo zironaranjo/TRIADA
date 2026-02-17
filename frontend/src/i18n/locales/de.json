@@ -76,7 +76,8 @@
       "billing": "Abrechnung",
       "ownerPortal": "Eigentümerportal",
       "staffOps": "Betriebspersonal",
-      "channels": "Channel Manager"
+      "channels": "Channel Manager",
+      "occupancy": "Auslastung"
     },
     "signOut": "Abmelden"
   },
@@ -804,6 +805,24 @@
   "pricing": {
     "perTransaction": "pro Buchungstransaktion",
     "trialActivated": "14-Tage-Testversion aktiviert! Weiterleitung zum Dashboard..."
+  },
+
+  "occupancy": {
+    "title": "Auslastungs-Dashboard",
+    "subtitle": "Visuelle Übersicht der Objektauslastung und Buchungsverteilung",
+    "today": "Heute",
+    "overallOccupancy": "Auslastung",
+    "properties": "Objekte",
+    "bookedNights": "Gebuchte Nächte",
+    "availableNights": "Verfügbar",
+    "revenue": "Einnahmen",
+    "property": "Objekt",
+    "emptyTitle": "Keine aktiven Objekte",
+    "emptyDescription": "Fügen Sie Objekte und Buchungen hinzu, um die Auslastungszeitlinie zu sehen",
+    "noPlatforms": "Keine Buchungen diesen Monat",
+    "summaryTitle": "Auslastung pro Objekt",
+    "nights": "Nächte",
+    "bookingsLabel": "Buchungen"
   },
 
   "channels": {

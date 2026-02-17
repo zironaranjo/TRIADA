@@ -76,7 +76,8 @@
       "billing": "Billing",
       "ownerPortal": "Owner Portal",
       "staffOps": "Staff Operations",
-      "channels": "Channel Manager"
+      "channels": "Channel Manager",
+      "occupancy": "Occupancy"
     },
     "signOut": "Sign Out"
   },
@@ -845,6 +846,24 @@
   "pricing": {
     "perTransaction": "per booking transaction",
     "trialActivated": "14-day free trial activated! Redirecting to dashboard..."
+  },
+
+  "occupancy": {
+    "title": "Occupancy Dashboard",
+    "subtitle": "Visual overview of property occupancy and booking distribution",
+    "today": "Today",
+    "overallOccupancy": "Occupancy",
+    "properties": "Properties",
+    "bookedNights": "Booked Nights",
+    "availableNights": "Available",
+    "revenue": "Revenue",
+    "property": "Property",
+    "emptyTitle": "No active properties",
+    "emptyDescription": "Add properties and bookings to see the occupancy timeline",
+    "noPlatforms": "No bookings this month",
+    "summaryTitle": "Occupancy by Property",
+    "nights": "nights",
+    "bookingsLabel": "bookings"
   },
 
   "channels": {

@@ -76,7 +76,8 @@
       "billing": "Facturation",
       "ownerPortal": "Portail Propriétaire",
       "staffOps": "Personnel Opérationnel",
-      "channels": "Channel Manager"
+      "channels": "Channel Manager",
+      "occupancy": "Occupation"
     },
     "signOut": "Déconnexion"
   },
@@ -804,6 +805,24 @@
   "pricing": {
     "perTransaction": "par transaction de réservation",
     "trialActivated": "Essai gratuit de 14 jours activé ! Redirection vers le tableau de bord..."
+  },
+
+  "occupancy": {
+    "title": "Tableau d'Occupation",
+    "subtitle": "Vue visuelle de l'occupation des propriétés et de la distribution des réservations",
+    "today": "Aujourd'hui",
+    "overallOccupancy": "Occupation",
+    "properties": "Propriétés",
+    "bookedNights": "Nuits Réservées",
+    "availableNights": "Disponibles",
+    "revenue": "Revenus",
+    "property": "Propriété",
+    "emptyTitle": "Aucune propriété active",
+    "emptyDescription": "Ajoutez des propriétés et des réservations pour voir la chronologie d'occupation",
+    "noPlatforms": "Aucune réservation ce mois",
+    "summaryTitle": "Occupation par Propriété",
+    "nights": "nuits",
+    "bookingsLabel": "réservations"
   },
 
   "channels": {

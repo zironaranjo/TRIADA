@@ -15,6 +15,7 @@ import Settings from './pages/Settings';
 import OwnerStatements from './pages/OwnerStatements';
 import StaffOperations from './pages/StaffOperations';
 import ChannelManager from './pages/ChannelManager';
+import OccupancyDashboard from './pages/OccupancyDashboard';
 import Layout from './components/Layout';
 import LandingPage from './pages/LandingPage';
 
@@ -54,6 +55,7 @@ function App() {
             <Route path="statements" element={<OwnerStatements />} />
             <Route path="staff" element={<StaffOperations />} />
             <Route path="channels" element={<ChannelManager />} />
+            <Route path="occupancy" element={<OccupancyDashboard />} />
             {/* Owner Portal pages accessible within main layout */}
             <Route path="owner/dashboard" element={<OwnerDashboard />} />
             <Route path="owner/properties" element={<OwnerProperties />} />
