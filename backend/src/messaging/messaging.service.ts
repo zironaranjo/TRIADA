@@ -80,10 +80,37 @@ export class MessagingService {
     return !!this.twilioClient;
   }
 
-  // ─── Send WhatsApp via Meta Cloud API ───
-  private async sendWhatsAppMeta(to: string, message: string): Promise<{ success: boolean; messageId?: string; error?: string }> {
-    const phone = to.replace(/[^0-9]/g, '');
+  // ─── Meta template name mapping ───
+  private readonly metaTemplateMap: Record<string, { name: string; paramBuilder: (data: TemplateData) => string[] }> = {
+    booking_confirmation: {
+      name: 'triadak_booking_confirm',
+      paramBuilder: (d) => [d.guestName, d.propertyName, d.checkIn, d.checkOut, String(d.nights), `${d.currency} ${d.totalPrice}`],
+    },
+    checkin_reminder: {
+      name: 'triadak_checkin_reminder',
+      paramBuilder: (d) => [d.guestName, d.propertyName, d.checkinTime || '15:00', d.address || ''],
+    },
+    checkin_instructions: {
+      name: 'triadak_checkin_info',
+      paramBuilder: (d) => [d.propertyName, d.wifiName || '', d.wifiPassword || '', d.guestPortalUrl || ''],
+    },
+    checkout_reminder: {
+      name: 'triadak_checkout_reminder',
+      paramBuilder: (d) => [d.guestName, d.propertyName, d.checkoutTime || '11:00'],
+    },
+    guest_portal: {
+      name: 'triadak_guest_portal',
+      paramBuilder: (d) => [d.guestName, d.propertyName, d.guestPortalUrl || ''],
+    },
+    thank_you: {
+      name: 'triadak_thank_you',
+      paramBuilder: (d) => [d.guestName, d.propertyName],
+    },
+  };
 
+  // ─── Send WhatsApp via Meta Cloud API (text message) ───
+  private async sendWhatsAppText(to: string, message: string): Promise<{ success: boolean; messageId?: string; error?: string }> {
+    const phone = to.replace(/[^0-9]/g, '');
     const url = `https://graph.facebook.com/${this.metaApiVersion}/${this.metaPhoneNumberId}/messages`;
 
     try {
@@ -98,24 +125,65 @@ export class MessagingService {
           recipient_type: 'individual',
           to: phone,
           type: 'text',
-          text: {
-            preview_url: true,
-            body: message,
+          text: { preview_url: true, body: message },
+        }),
+      });
+
+      const data = await response.json() as any;
+      if (!response.ok) {
+        return { success: false, error: data?.error?.message || `HTTP ${response.status}` };
+      }
+      return { success: true, messageId: data?.messages?.[0]?.id || '' };
+    } catch (err: any) {
+      return { success: false, error: err.message || 'Meta API request failed' };
+    }
+  }
+
+  // ─── Send WhatsApp via Meta Cloud API (template message) ───
+  private async sendWhatsAppTemplate(
+    to: string,
+    templateName: string,
+    params: string[],
+    lang = 'en',
+  ): Promise<{ success: boolean; messageId?: string; error?: string }> {
+    const phone = to.replace(/[^0-9]/g, '');
+    const url = `https://graph.facebook.com/${this.metaApiVersion}/${this.metaPhoneNumberId}/messages`;
+
+    const components: any[] = [];
+    if (params.length > 0) {
+      components.push({
+        type: 'body',
+        parameters: params.map((p) => ({ type: 'text', text: p })),
+      });
+    }
+
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${this.metaAccessToken}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          messaging_product: 'whatsapp',
+          recipient_type: 'individual',
+          to: phone,
+          type: 'template',
+          template: {
+            name: templateName,
+            language: { code: lang },
+            components,
           },
         }),
       });
 
       const data = await response.json() as any;
-
       if (!response.ok) {
-        const errMsg = data?.error?.message || `HTTP ${response.status}`;
-        return { success: false, error: errMsg };
+        return { success: false, error: data?.error?.message || `HTTP ${response.status}` };
       }
-
-      const messageId = data?.messages?.[0]?.id || '';
-      return { success: true, messageId };
+      return { success: true, messageId: data?.messages?.[0]?.id || '' };
     } catch (err: any) {
-      return { success: false, error: err.message || 'Meta API request failed' };
+      return { success: false, error: err.message || 'Meta API template request failed' };
     }
   }
 
@@ -137,7 +205,7 @@ export class MessagingService {
   }
 
   // ─── Send a message (WhatsApp or SMS) ───
-  async sendMessage(options: SendMessageOptions): Promise<MessageLog> {
+  async sendMessage(options: SendMessageOptions & { metaTemplateName?: string; metaTemplateParams?: string[] }): Promise<MessageLog> {
     const log = this.messageLogRepo.create({
       bookingId: options.bookingId,
       propertyId: options.propertyId,
@@ -158,7 +226,18 @@ export class MessagingService {
         return log;
       }
 
-      const result = await this.sendWhatsAppMeta(options.to, options.message);
+      let result: { success: boolean; messageId?: string; error?: string };
+
+      if (options.metaTemplateName && options.metaTemplateParams) {
+        result = await this.sendWhatsAppTemplate(
+          options.to,
+          options.metaTemplateName,
+          options.metaTemplateParams,
+        );
+      } else {
+        result = await this.sendWhatsAppText(options.to, options.message);
+      }
+
       if (result.success) {
         log.status = 'sent';
         log.externalSid = result.messageId ?? '';
@@ -188,7 +267,7 @@ export class MessagingService {
     return log;
   }
 
-  // ─── Send from template ───
+  // ─── Send from template (uses Meta templates for WhatsApp) ───
   async sendFromTemplate(
     bookingId: string,
     templateKey: string,
@@ -211,6 +290,9 @@ export class MessagingService {
     const data = this.buildTemplateData(booking);
     const message = this.renderTemplate(templateKey, data);
 
+    const metaTemplate = this.metaTemplateMap[templateKey];
+    const useMetaTemplate = channel === 'whatsapp' && metaTemplate;
+
     return this.sendMessage({
       to: booking.guestPhone,
       message,
@@ -220,6 +302,8 @@ export class MessagingService {
       recipientName: booking.guestName,
       templateKey,
       sentBy,
+      metaTemplateName: useMetaTemplate ? metaTemplate.name : undefined,
+      metaTemplateParams: useMetaTemplate ? metaTemplate.paramBuilder(data) : undefined,
     });
   }
 
