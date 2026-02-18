@@ -80,7 +80,8 @@
       "occupancy": "Occupancy",
       "messaging": "Messaging",
       "contracts": "Contracts",
-      "revenue": "Revenue & Pricing"
+      "revenue": "Revenue & Pricing",
+      "benchmarking": "KPI Benchmarking"
     },
     "signOut": "Sign Out"
   },
@@ -1029,6 +1030,45 @@
       "invalidToken": "Invalid or expired contract link",
       "poweredBy": "Powered by Triadak"
     }
+  },
+  "benchmarking": {
+    "title": "KPI Benchmarking",
+    "subtitle": "Compare performance across all your properties",
+    "period": "Period",
+    "periods": {
+      "thisMonth": "This Month",
+      "lastMonth": "Last Month",
+      "last3Months": "Last 3 Months",
+      "last6Months": "Last 6 Months",
+      "thisYear": "This Year"
+    },
+    "topPerformers": "Top Performers",
+    "rank": "Rank",
+    "property": "Property",
+    "revenue": "Revenue",
+    "occupancy": "Occupancy",
+    "adr": "ADR",
+    "revpar": "RevPAR",
+    "bookings": "Bookings",
+    "avgStay": "Avg Stay",
+    "nights": "nights",
+    "noData": "No booking data for this period",
+    "charts": {
+      "revenueTitle": "Revenue by Property",
+      "occupancyTitle": "Occupancy Rate (%)",
+      "adrTitle": "Average Daily Rate (ADR)",
+      "revparTitle": "RevPAR Comparison"
+    },
+    "best": "Best",
+    "worst": "Needs attention",
+    "vsAvg": "vs avg",
+    "podium": {
+      "first": "1st",
+      "second": "2nd",
+      "third": "3rd"
+    },
+    "metrics": "Detailed Metrics",
+    "exportCsv": "Export CSV"
   },
   "revenue": {
     "title": "Revenue & Pricing",

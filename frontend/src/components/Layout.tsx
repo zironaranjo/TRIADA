@@ -21,6 +21,7 @@ import {
     MessageSquare,
     ScrollText,
     TrendingUp,
+    Trophy,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useAuth } from '../contexts/AuthContext';
@@ -83,6 +84,7 @@ const Layout = () => {
         { path: '/messaging', labelKey: 'layout.nav.messaging', icon: MessageSquare },
         { path: '/contracts', labelKey: 'layout.nav.contracts', icon: ScrollText },
         { path: '/revenue', labelKey: 'layout.nav.revenue', icon: TrendingUp },
+        { path: '/benchmarking', labelKey: 'layout.nav.benchmarking', icon: Trophy },
     ];
 
     const handleNavClick = () => {

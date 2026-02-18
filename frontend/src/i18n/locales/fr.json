@@ -80,7 +80,8 @@
       "occupancy": "Occupation",
       "messaging": "Messagerie",
       "contracts": "Contrats",
-      "revenue": "Revenus & Tarifs"
+      "revenue": "Revenus & Tarifs",
+      "benchmarking": "KPI Benchmarking"
     },
     "signOut": "Déconnexion"
   },
@@ -988,6 +989,45 @@
       "invalidToken": "Lien de contrat invalide ou expiré",
       "poweredBy": "Powered by Triadak"
     }
+  },
+  "benchmarking": {
+    "title": "KPI Benchmarking",
+    "subtitle": "Comparez les performances de tous vos biens",
+    "period": "Période",
+    "periods": {
+      "thisMonth": "Ce mois",
+      "lastMonth": "Mois dernier",
+      "last3Months": "3 derniers mois",
+      "last6Months": "6 derniers mois",
+      "thisYear": "Cette année"
+    },
+    "topPerformers": "Meilleurs Biens",
+    "rank": "Rang",
+    "property": "Bien",
+    "revenue": "Revenus",
+    "occupancy": "Occupation",
+    "adr": "ADR",
+    "revpar": "RevPAR",
+    "bookings": "Réservations",
+    "avgStay": "Séjour moyen",
+    "nights": "nuits",
+    "noData": "Aucune donnée de réservation pour cette période",
+    "charts": {
+      "revenueTitle": "Revenus par Bien",
+      "occupancyTitle": "Taux d'occupation (%)",
+      "adrTitle": "Tarif journalier moyen (ADR)",
+      "revparTitle": "Comparaison RevPAR"
+    },
+    "best": "Meilleur",
+    "worst": "À améliorer",
+    "vsAvg": "vs moy.",
+    "podium": {
+      "first": "1er",
+      "second": "2ème",
+      "third": "3ème"
+    },
+    "metrics": "Métriques Détaillées",
+    "exportCsv": "Exporter CSV"
   },
   "revenue": {
     "title": "Revenus & Tarifs",

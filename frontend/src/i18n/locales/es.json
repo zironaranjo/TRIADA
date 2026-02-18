@@ -80,7 +80,8 @@
       "occupancy": "Ocupación",
       "messaging": "Mensajería",
       "contracts": "Contratos",
-      "revenue": "Ingresos y Precios"
+      "revenue": "Ingresos y Precios",
+      "benchmarking": "KPI Benchmarking"
     },
     "signOut": "Cerrar sesión"
   },
@@ -1029,6 +1030,45 @@
       "invalidToken": "Enlace de contrato inválido o caducado",
       "poweredBy": "Powered by Triadak"
     }
+  },
+  "benchmarking": {
+    "title": "KPI Benchmarking",
+    "subtitle": "Compara el rendimiento de todas tus propiedades",
+    "period": "Período",
+    "periods": {
+      "thisMonth": "Este mes",
+      "lastMonth": "Mes anterior",
+      "last3Months": "Últimos 3 meses",
+      "last6Months": "Últimos 6 meses",
+      "thisYear": "Este año"
+    },
+    "topPerformers": "Mejores Propiedades",
+    "rank": "Pos.",
+    "property": "Propiedad",
+    "revenue": "Ingresos",
+    "occupancy": "Ocupación",
+    "adr": "ADR",
+    "revpar": "RevPAR",
+    "bookings": "Reservas",
+    "avgStay": "Estancia media",
+    "nights": "noches",
+    "noData": "Sin datos de reservas para este período",
+    "charts": {
+      "revenueTitle": "Ingresos por Propiedad",
+      "occupancyTitle": "Tasa de Ocupación (%)",
+      "adrTitle": "Tarifa Media Diaria (ADR)",
+      "revparTitle": "Comparativa RevPAR"
+    },
+    "best": "Mejor",
+    "worst": "Mejorable",
+    "vsAvg": "vs media",
+    "podium": {
+      "first": "1º",
+      "second": "2º",
+      "third": "3º"
+    },
+    "metrics": "Métricas Detalladas",
+    "exportCsv": "Exportar CSV"
   },
   "revenue": {
     "title": "Ingresos y Precios",
