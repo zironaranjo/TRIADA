@@ -22,6 +22,7 @@ import {
     ScrollText,
     TrendingUp,
     Trophy,
+    ShieldCheck,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useAuth } from '../contexts/AuthContext';
@@ -85,6 +86,7 @@ const Layout = () => {
         { path: '/contracts', labelKey: 'layout.nav.contracts', icon: ScrollText },
         { path: '/revenue', labelKey: 'layout.nav.revenue', icon: TrendingUp },
         { path: '/benchmarking', labelKey: 'layout.nav.benchmarking', icon: Trophy },
+        { path: '/audit', labelKey: 'layout.nav.audit', icon: ShieldCheck },
     ];
 
     const handleNavClick = () => {

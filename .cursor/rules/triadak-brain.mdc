@@ -151,6 +151,16 @@ SaaS platform for **vacation rental management** (triadak.io). Combines features
     - Tabla `contracts` con RLS: usuario gestiona sus contratos, acceso público por `sign_token` para leer y firmar
     - SQL migration: `007_contracts.sql`
     - **i18n**: contracts.* keys en EN, ES, DE, FR
+38. **Auditoría y Logs** - Registro de actividad del equipo en `/audit`:
+    - Timeline agrupado por día con badges de color por acción (creado=verde, actualizado=azul, eliminado=rojo, login=violeta, etc.)
+    - Filtros: búsqueda por usuario/entidad, tipo de acción, tipo de entidad, rango de fechas
+    - Cada entrada expandible muestra cambios campo a campo (antes/después en rojo/verde) o JSON completo
+    - Exportar CSV con todos los registros filtrados
+    - Paginación con "Cargar más" (50 por página)
+    - Tabla `audit_logs` en Supabase con triggers automáticos en: bookings, properties, contacts, expenses
+    - Utility `logAudit()` en `frontend/src/lib/auditLog.ts` para registrar acciones manuales desde frontend
+    - SQL migration: `008_audit_logs.sql`
+    - **i18n**: audit.* keys en EN, ES, DE, FR
 37. **KPI Benchmarking** - Comparativa de rendimiento entre propiedades en `/benchmarking`:
     - Pódium visual (1º/2º/3º) con barras de altura proporcional y trofeo
     - Gráficos de barras horizontales switcheables: Ingresos, Ocupación %, ADR, RevPAR. Colores únicos por propiedad
@@ -195,7 +205,7 @@ SaaS platform for **vacation rental management** (triadak.io). Combines features
 - [x] **Contratos y documentos** — Generación automática de contratos PDF desde reservas. Firma digital simple: link único `/contract/:token` para que el huésped revise y firme. Estado: draft → sent → signed. Implementado en `/contracts`
 - [x] **Revenue Management / Dynamic Pricing** — Página `/revenue` con KPIs (RevPAR, ADR, ocupación, ingreso potencial), sugerencias de precios por propiedad (basadas en reglas de temporada, ocupación y fin de semana), calendario de precios visual mensual. Reglas de temporada configurables (alta/media/baja + multiplicador) guardadas en localStorage. Botón "Aplicar" actualiza `price_per_night` en Supabase. 4 idiomas
 - [ ] **Multi-currency support** — Soporte para propiedades en distintos países con conversión automática de divisas
-- [ ] **Auditoría y logs** — Registro de todas las acciones (quién cambió qué, cuándo). Importante para empresas con varios empleados
+- [x] **Auditoría y logs** — Timeline por día con filtros, diff de cambios campo a campo, triggers automáticos en tablas clave, export CSV. Implementado en `/audit`
 - [ ] **Backup/Export de datos** — Exportar toda la data (propiedades, reservas, contactos, finanzas) en formato ZIP para cumplimiento legal y tranquilidad del cliente
 - [x] **KPI Benchmarking** — Pódium, gráficos comparativos (revenue/ocupación/ADR/RevPAR), tabla detallada con vs media, selector de período, export CSV. Implementado en `/benchmarking`
 - [ ] **Rol Operativo (future)** — Dar acceso limitado a cleaners/mantenimiento: ver tareas asignadas del día, marcar completadas, subir fotos de verificación, ver historial de pagos
@@ -254,6 +264,9 @@ SaaS platform for **vacation rental management** (triadak.io). Combines features
 - `frontend/src/pages/ContractSign.tsx` - Public guest signing page at /contract/:token (no auth required)
 - `frontend/src/pages/RevenueManagement.tsx` - Revenue & Pricing page at /revenue (RevPAR/ADR KPIs, price suggestions per property, season rules localStorage, price calendar)
 - `frontend/src/pages/Benchmarking.tsx` - KPI Benchmarking page at /benchmarking (podium, switchable bar charts, detailed metrics table, period selector, CSV export)
+- `frontend/src/pages/AuditLog.tsx` - Audit log page at /audit (timeline by day, action badges, diff viewer, filters, CSV export, load more)
+- `frontend/src/lib/auditLog.ts` - logAudit() utility for manual audit logging from frontend
+- `supabase/migrations/008_audit_logs.sql` - SQL setup for audit_logs table + triggers on bookings/properties/contacts/expenses
 - `supabase/migrations/007_contracts.sql` - SQL setup for contracts table with RLS
 - `backend/src/messaging/messaging.controller.ts` - Messaging REST endpoints
 - `supabase/migrations/001_notifications_table.sql` - SQL setup for notifications table, RLS, and cron jobs
@@ -291,6 +304,8 @@ SaaS platform for **vacation rental management** (triadak.io). Combines features
 - SQL migration `007_contracts.sql` already executed in Supabase
 - Revenue Management rules saved in `localStorage` key `triadak_season_rules` (no DB table needed)
 - Benchmarking page calculates all KPIs client-side from Supabase `properties` + `bookings` (no backend needed)
+- **PENDING**: SQL migration `008_audit_logs.sql` must be executed in Supabase SQL Editor before audit logs work
+- `audit_logs` triggers use `auth.uid()` and JWT claims to capture the acting user. `SECURITY DEFINER` needed for trigger function
 - Airbnb/Booking.com full APIs require partner access — iCal sync available now, API ready when approved
 - **Meta WhatsApp Cloud API** ya configurada y funcionando. Número: `+34 643 26 77 97`. Phone ID: `942271912297397`. Env vars: `META_WHATSAPP_PHONE_ID`, `META_WHATSAPP_TOKEN`
 - **IMPORTANTE**: El `META_WHATSAPP_TOKEN` es un token temporal que caduca (~1h en desarrollo). Para producción estable hay que crear un **System User token permanente** en Meta Business Manager → Configuración → Usuarios del sistema → Generar token sin fecha de expiración con permisos `whatsapp_business_messaging` + `whatsapp_business_management`

@@ -22,6 +22,7 @@ import Contracts from './pages/Contracts';
 import ContractSign from './pages/ContractSign';
 import RevenueManagement from './pages/RevenueManagement';
 import Benchmarking from './pages/Benchmarking';
+import AuditLog from './pages/AuditLog';
 import Layout from './components/Layout';
 import LandingPage from './pages/LandingPage';
 
@@ -68,6 +69,7 @@ function App() {
             <Route path="contracts" element={<Contracts />} />
             <Route path="revenue" element={<RevenueManagement />} />
             <Route path="benchmarking" element={<Benchmarking />} />
+            <Route path="audit" element={<AuditLog />} />
             {/* Owner Portal pages accessible within main layout */}
             <Route path="owner/dashboard" element={<OwnerDashboard />} />
             <Route path="owner/properties" element={<OwnerProperties />} />

@@ -81,7 +81,8 @@
       "messaging": "Nachrichten",
       "contracts": "Verträge",
       "revenue": "Einnahmen & Preise",
-      "benchmarking": "KPI Benchmarking"
+      "benchmarking": "KPI Benchmarking",
+      "audit": "Aktivitätsprotokoll"
     },
     "signOut": "Abmelden"
   },
@@ -989,6 +990,57 @@
       "invalidToken": "Ungültiger oder abgelaufener Vertragslink",
       "poweredBy": "Powered by Triadak"
     }
+  },
+  "audit": {
+    "title": "Aktivitätsprotokoll",
+    "subtitle": "Verfolgen Sie jede Aktion Ihres Teams",
+    "filters": {
+      "all": "Alle",
+      "allActions": "Alle Aktionen",
+      "allEntities": "Alle Typen",
+      "search": "Nach Benutzer oder Entität suchen...",
+      "from": "Von",
+      "to": "Bis"
+    },
+    "actions": {
+      "created": "Erstellt",
+      "updated": "Aktualisiert",
+      "deleted": "Gelöscht",
+      "login": "Anmeldung",
+      "settings_changed": "Einstellungen geändert",
+      "role_changed": "Rolle geändert",
+      "exported": "Exportiert"
+    },
+    "entities": {
+      "bookings": "Buchung",
+      "properties": "Objekt",
+      "contacts": "Kontakt",
+      "expenses": "Ausgabe",
+      "owner": "Eigentümer",
+      "staff_members": "Personal",
+      "contracts": "Vertrag",
+      "settings": "Einstellungen",
+      "session": "Sitzung"
+    },
+    "columns": {
+      "when": "Wann",
+      "who": "Wer",
+      "action": "Aktion",
+      "entity": "Entität",
+      "details": "Details"
+    },
+    "noLogs": "Keine Aktivitätsprotokolle gefunden",
+    "noLogsDesc": "Aktionen werden hier angezeigt, sobald Sie die Plattform nutzen",
+    "showChanges": "Änderungen anzeigen",
+    "hideChanges": "Änderungen ausblenden",
+    "before": "Vorher",
+    "after": "Nachher",
+    "loadMore": "Mehr laden",
+    "today": "Heute",
+    "yesterday": "Gestern",
+    "exportCsv": "CSV exportieren",
+    "refresh": "Aktualisieren",
+    "total": "Einträge gesamt"
   },
   "benchmarking": {
     "title": "KPI Benchmarking",

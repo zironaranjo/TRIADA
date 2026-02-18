@@ -81,7 +81,8 @@
       "messaging": "Messaging",
       "contracts": "Contracts",
       "revenue": "Revenue & Pricing",
-      "benchmarking": "KPI Benchmarking"
+      "benchmarking": "KPI Benchmarking",
+      "audit": "Audit Log"
     },
     "signOut": "Sign Out"
   },
@@ -1030,6 +1031,57 @@
       "invalidToken": "Invalid or expired contract link",
       "poweredBy": "Powered by Triadak"
     }
+  },
+  "audit": {
+    "title": "Audit Log",
+    "subtitle": "Track every action performed by your team",
+    "filters": {
+      "all": "All",
+      "allActions": "All Actions",
+      "allEntities": "All Types",
+      "search": "Search by user or entity...",
+      "from": "From",
+      "to": "To"
+    },
+    "actions": {
+      "created": "Created",
+      "updated": "Updated",
+      "deleted": "Deleted",
+      "login": "Login",
+      "settings_changed": "Settings changed",
+      "role_changed": "Role changed",
+      "exported": "Exported"
+    },
+    "entities": {
+      "bookings": "Booking",
+      "properties": "Property",
+      "contacts": "Contact",
+      "expenses": "Expense",
+      "owner": "Owner",
+      "staff_members": "Staff",
+      "contracts": "Contract",
+      "settings": "Settings",
+      "session": "Session"
+    },
+    "columns": {
+      "when": "When",
+      "who": "Who",
+      "action": "Action",
+      "entity": "Entity",
+      "details": "Details"
+    },
+    "noLogs": "No activity logs found",
+    "noLogsDesc": "Actions will appear here once you start using the platform",
+    "showChanges": "Show changes",
+    "hideChanges": "Hide changes",
+    "before": "Before",
+    "after": "After",
+    "loadMore": "Load more",
+    "today": "Today",
+    "yesterday": "Yesterday",
+    "exportCsv": "Export CSV",
+    "refresh": "Refresh",
+    "total": "Total entries"
   },
   "benchmarking": {
     "title": "KPI Benchmarking",

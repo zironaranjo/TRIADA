@@ -81,7 +81,8 @@
       "messaging": "Mensajería",
       "contracts": "Contratos",
       "revenue": "Ingresos y Precios",
-      "benchmarking": "KPI Benchmarking"
+      "benchmarking": "KPI Benchmarking",
+      "audit": "Auditoría"
     },
     "signOut": "Cerrar sesión"
   },
@@ -1030,6 +1031,57 @@
       "invalidToken": "Enlace de contrato inválido o caducado",
       "poweredBy": "Powered by Triadak"
     }
+  },
+  "audit": {
+    "title": "Auditoría",
+    "subtitle": "Registra cada acción realizada por tu equipo",
+    "filters": {
+      "all": "Todos",
+      "allActions": "Todas las acciones",
+      "allEntities": "Todos los tipos",
+      "search": "Buscar por usuario o entidad...",
+      "from": "Desde",
+      "to": "Hasta"
+    },
+    "actions": {
+      "created": "Creado",
+      "updated": "Actualizado",
+      "deleted": "Eliminado",
+      "login": "Inicio sesión",
+      "settings_changed": "Ajustes cambiados",
+      "role_changed": "Rol cambiado",
+      "exported": "Exportado"
+    },
+    "entities": {
+      "bookings": "Reserva",
+      "properties": "Propiedad",
+      "contacts": "Contacto",
+      "expenses": "Gasto",
+      "owner": "Propietario",
+      "staff_members": "Staff",
+      "contracts": "Contrato",
+      "settings": "Ajustes",
+      "session": "Sesión"
+    },
+    "columns": {
+      "when": "Cuándo",
+      "who": "Quién",
+      "action": "Acción",
+      "entity": "Entidad",
+      "details": "Detalles"
+    },
+    "noLogs": "No hay registros de actividad",
+    "noLogsDesc": "Las acciones aparecerán aquí cuando empieces a usar la plataforma",
+    "showChanges": "Ver cambios",
+    "hideChanges": "Ocultar cambios",
+    "before": "Antes",
+    "after": "Después",
+    "loadMore": "Cargar más",
+    "today": "Hoy",
+    "yesterday": "Ayer",
+    "exportCsv": "Exportar CSV",
+    "refresh": "Actualizar",
+    "total": "Total registros"
   },
   "benchmarking": {
     "title": "KPI Benchmarking",

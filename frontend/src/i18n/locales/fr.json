@@ -81,7 +81,8 @@
       "messaging": "Messagerie",
       "contracts": "Contrats",
       "revenue": "Revenus & Tarifs",
-      "benchmarking": "KPI Benchmarking"
+      "benchmarking": "KPI Benchmarking",
+      "audit": "Journal d'activité"
     },
     "signOut": "Déconnexion"
   },
@@ -989,6 +990,57 @@
       "invalidToken": "Lien de contrat invalide ou expiré",
       "poweredBy": "Powered by Triadak"
     }
+  },
+  "audit": {
+    "title": "Journal d'activité",
+    "subtitle": "Suivez chaque action effectuée par votre équipe",
+    "filters": {
+      "all": "Tous",
+      "allActions": "Toutes les actions",
+      "allEntities": "Tous les types",
+      "search": "Rechercher par utilisateur ou entité...",
+      "from": "Du",
+      "to": "Au"
+    },
+    "actions": {
+      "created": "Créé",
+      "updated": "Modifié",
+      "deleted": "Supprimé",
+      "login": "Connexion",
+      "settings_changed": "Paramètres modifiés",
+      "role_changed": "Rôle modifié",
+      "exported": "Exporté"
+    },
+    "entities": {
+      "bookings": "Réservation",
+      "properties": "Bien",
+      "contacts": "Contact",
+      "expenses": "Dépense",
+      "owner": "Propriétaire",
+      "staff_members": "Personnel",
+      "contracts": "Contrat",
+      "settings": "Paramètres",
+      "session": "Session"
+    },
+    "columns": {
+      "when": "Quand",
+      "who": "Qui",
+      "action": "Action",
+      "entity": "Entité",
+      "details": "Détails"
+    },
+    "noLogs": "Aucun journal d'activité trouvé",
+    "noLogsDesc": "Les actions apparaîtront ici lorsque vous utiliserez la plateforme",
+    "showChanges": "Voir les modifications",
+    "hideChanges": "Masquer les modifications",
+    "before": "Avant",
+    "after": "Après",
+    "loadMore": "Charger plus",
+    "today": "Aujourd'hui",
+    "yesterday": "Hier",
+    "exportCsv": "Exporter CSV",
+    "refresh": "Actualiser",
+    "total": "Total entrées"
   },
   "benchmarking": {
     "title": "KPI Benchmarking",
