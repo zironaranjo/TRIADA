@@ -151,6 +151,15 @@ SaaS platform for **vacation rental management** (triadak.io). Combines features
     - Tabla `contracts` con RLS: usuario gestiona sus contratos, acceso público por `sign_token` para leer y firmar
     - SQL migration: `007_contracts.sql`
     - **i18n**: contracts.* keys en EN, ES, DE, FR
+39. **Backup & Export de Datos** - Exportación completa en `/backup`:
+    - Tarjeta principal: "Exportar ZIP Completo" — genera ZIP con CSV + JSON de cada sección + README.txt
+    - 7 secciones individuales: propiedades, reservas, contactos, gastos, propietarios, contratos, personal
+    - Cada sección muestra: icono, descripción, contador de registros, botones CSV y JSON independientes
+    - Función `toCSV()` con escape correcto de comas, comillas y saltos de línea
+    - Fecha del último backup guardada en `localStorage` key `triadak_last_backup`
+    - Nota de privacidad: datos exportados directamente desde Supabase, sin servidores externos
+    - Librería: `jszip` (instalada en frontend)
+    - **i18n**: backup.* keys en EN, ES, DE, FR
 38. **Auditoría y Logs** - Registro de actividad del equipo en `/audit`:
     - Timeline agrupado por día con badges de color por acción (creado=verde, actualizado=azul, eliminado=rojo, login=violeta, etc.)
     - Filtros: búsqueda por usuario/entidad, tipo de acción, tipo de entidad, rango de fechas
@@ -206,7 +215,7 @@ SaaS platform for **vacation rental management** (triadak.io). Combines features
 - [x] **Revenue Management / Dynamic Pricing** — Página `/revenue` con KPIs (RevPAR, ADR, ocupación, ingreso potencial), sugerencias de precios por propiedad (basadas en reglas de temporada, ocupación y fin de semana), calendario de precios visual mensual. Reglas de temporada configurables (alta/media/baja + multiplicador) guardadas en localStorage. Botón "Aplicar" actualiza `price_per_night` en Supabase. 4 idiomas
 - [ ] **Multi-currency support** — Soporte para propiedades en distintos países con conversión automática de divisas
 - [x] **Auditoría y logs** — Timeline por día con filtros, diff de cambios campo a campo, triggers automáticos en tablas clave, export CSV. Implementado en `/audit`
-- [ ] **Backup/Export de datos** — Exportar toda la data (propiedades, reservas, contactos, finanzas) en formato ZIP para cumplimiento legal y tranquilidad del cliente
+- [x] **Backup/Export de datos** — ZIP completo + exportación individual CSV/JSON por sección (7 tablas). Contador de registros, última fecha de backup en localStorage. Implementado en `/backup`
 - [x] **KPI Benchmarking** — Pódium, gráficos comparativos (revenue/ocupación/ADR/RevPAR), tabla detallada con vs media, selector de período, export CSV. Implementado en `/benchmarking`
 - [ ] **Rol Operativo (future)** — Dar acceso limitado a cleaners/mantenimiento: ver tareas asignadas del día, marcar completadas, subir fotos de verificación, ver historial de pagos
 
@@ -265,6 +274,7 @@ SaaS platform for **vacation rental management** (triadak.io). Combines features
 - `frontend/src/pages/RevenueManagement.tsx` - Revenue & Pricing page at /revenue (RevPAR/ADR KPIs, price suggestions per property, season rules localStorage, price calendar)
 - `frontend/src/pages/Benchmarking.tsx` - KPI Benchmarking page at /benchmarking (podium, switchable bar charts, detailed metrics table, period selector, CSV export)
 - `frontend/src/pages/AuditLog.tsx` - Audit log page at /audit (timeline by day, action badges, diff viewer, filters, CSV export, load more)
+- `frontend/src/pages/DataBackup.tsx` - Data backup page at /backup (full ZIP export, per-section CSV/JSON, record counts, jszip)
 - `frontend/src/lib/auditLog.ts` - logAudit() utility for manual audit logging from frontend
 - `supabase/migrations/008_audit_logs.sql` - SQL setup for audit_logs table + triggers on bookings/properties/contacts/expenses
 - `supabase/migrations/007_contracts.sql` - SQL setup for contracts table with RLS

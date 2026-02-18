@@ -82,7 +82,8 @@
       "contracts": "Contrats",
       "revenue": "Revenus & Tarifs",
       "benchmarking": "KPI Benchmarking",
-      "audit": "Journal d'activité"
+      "audit": "Journal d'activité",
+      "backup": "Sauvegarde des données"
     },
     "signOut": "Déconnexion"
   },
@@ -990,6 +991,42 @@
       "invalidToken": "Lien de contrat invalide ou expiré",
       "poweredBy": "Powered by Triadak"
     }
+  },
+  "backup": {
+    "title": "Sauvegarde & Export des données",
+    "subtitle": "Exportez toutes vos données pour la conformité, la migration ou la tranquillité d'esprit",
+    "lastExport": "Dernier export",
+    "never": "Jamais",
+    "exportAll": "Exporter ZIP complet",
+    "exportAllDesc": "Téléchargez toutes les données en un seul ZIP avec CSV + JSON par section",
+    "generating": "Génération en cours...",
+    "sections": {
+      "properties": "Biens",
+      "bookings": "Réservations",
+      "contacts": "Contacts",
+      "expenses": "Dépenses",
+      "owners": "Propriétaires",
+      "contracts": "Contrats",
+      "staff": "Personnel"
+    },
+    "sectionsDesc": {
+      "properties": "Tous vos biens locatifs et leurs détails",
+      "bookings": "Historique complet des réservations avec les informations des hôtes",
+      "contacts": "Votre base de données de contacts CRM",
+      "expenses": "Toutes les dépenses enregistrées par bien",
+      "owners": "Fiches des propriétaires",
+      "contracts": "Contrats de location et statut de signature",
+      "staff": "Membres du personnel et détails d'emploi"
+    },
+    "records": "enregistrements",
+    "exportCsv": "CSV",
+    "exportJson": "JSON",
+    "loading": "Chargement des données...",
+    "ready": "Prêt à exporter",
+    "done": "Exporté",
+    "error": "Erreur de chargement",
+    "info": "Vos données sont exportées directement depuis Supabase. Aucune donnée n'est envoyée à des serveurs externes.",
+    "zipContains": "Le fichier ZIP contient :"
   },
   "audit": {
     "title": "Journal d'activité",

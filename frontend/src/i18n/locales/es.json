@@ -82,7 +82,8 @@
       "contracts": "Contratos",
       "revenue": "Ingresos y Precios",
       "benchmarking": "KPI Benchmarking",
-      "audit": "Auditoría"
+      "audit": "Auditoría",
+      "backup": "Backup de Datos"
     },
     "signOut": "Cerrar sesión"
   },
@@ -1031,6 +1032,42 @@
       "invalidToken": "Enlace de contrato inválido o caducado",
       "poweredBy": "Powered by Triadak"
     }
+  },
+  "backup": {
+    "title": "Backup y Exportación de Datos",
+    "subtitle": "Exporta todos tus datos para cumplimiento legal, migración o tranquilidad",
+    "lastExport": "Última exportación",
+    "never": "Nunca",
+    "exportAll": "Exportar ZIP Completo",
+    "exportAllDesc": "Descarga todos los datos en un ZIP con CSV + JSON por sección",
+    "generating": "Generando...",
+    "sections": {
+      "properties": "Propiedades",
+      "bookings": "Reservas",
+      "contacts": "Contactos",
+      "expenses": "Gastos",
+      "owners": "Propietarios",
+      "contracts": "Contratos",
+      "staff": "Personal"
+    },
+    "sectionsDesc": {
+      "properties": "Todas tus propiedades de alquiler y sus detalles",
+      "bookings": "Historial completo de reservas con datos del huésped",
+      "contacts": "Tu base de datos de contactos CRM",
+      "expenses": "Todos los gastos registrados por propiedad",
+      "owners": "Registros de propietarios",
+      "contracts": "Contratos de alquiler y estado de firma",
+      "staff": "Miembros del personal y detalles de empleo"
+    },
+    "records": "registros",
+    "exportCsv": "CSV",
+    "exportJson": "JSON",
+    "loading": "Cargando datos...",
+    "ready": "Listo para exportar",
+    "done": "Exportado",
+    "error": "Error al cargar",
+    "info": "Tus datos se exportan directamente desde Supabase. No se envía nada a servidores externos.",
+    "zipContains": "El ZIP contiene:"
   },
   "audit": {
     "title": "Auditoría",

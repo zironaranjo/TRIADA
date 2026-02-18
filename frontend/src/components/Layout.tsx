@@ -23,6 +23,7 @@ import {
     TrendingUp,
     Trophy,
     ShieldCheck,
+    Database,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useAuth } from '../contexts/AuthContext';
@@ -87,6 +88,7 @@ const Layout = () => {
         { path: '/revenue', labelKey: 'layout.nav.revenue', icon: TrendingUp },
         { path: '/benchmarking', labelKey: 'layout.nav.benchmarking', icon: Trophy },
         { path: '/audit', labelKey: 'layout.nav.audit', icon: ShieldCheck },
+        { path: '/backup', labelKey: 'layout.nav.backup', icon: Database },
     ];
 
     const handleNavClick = () => {

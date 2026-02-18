@@ -82,7 +82,8 @@
       "contracts": "Verträge",
       "revenue": "Einnahmen & Preise",
       "benchmarking": "KPI Benchmarking",
-      "audit": "Aktivitätsprotokoll"
+      "audit": "Aktivitätsprotokoll",
+      "backup": "Datensicherung"
     },
     "signOut": "Abmelden"
   },
@@ -990,6 +991,42 @@
       "invalidToken": "Ungültiger oder abgelaufener Vertragslink",
       "poweredBy": "Powered by Triadak"
     }
+  },
+  "backup": {
+    "title": "Datensicherung & Export",
+    "subtitle": "Exportieren Sie alle Daten für Compliance, Migration oder Sicherheit",
+    "lastExport": "Letzter Export",
+    "never": "Nie",
+    "exportAll": "Vollständiges ZIP exportieren",
+    "exportAllDesc": "Alle Daten als ZIP mit CSV + JSON je Abschnitt herunterladen",
+    "generating": "Wird erstellt...",
+    "sections": {
+      "properties": "Objekte",
+      "bookings": "Buchungen",
+      "contacts": "Kontakte",
+      "expenses": "Ausgaben",
+      "owners": "Eigentümer",
+      "contracts": "Verträge",
+      "staff": "Personal"
+    },
+    "sectionsDesc": {
+      "properties": "Alle Ihre Mietobjekte und deren Details",
+      "bookings": "Vollständige Buchungshistorie mit Gastinformationen",
+      "contacts": "Ihre CRM-Kontaktdatenbank",
+      "expenses": "Alle erfassten Ausgaben je Objekt",
+      "owners": "Eigentümerdatensätze",
+      "contracts": "Mietverträge und Unterzeichnungsstatus",
+      "staff": "Mitarbeiter und Beschäftigungsdetails"
+    },
+    "records": "Einträge",
+    "exportCsv": "CSV",
+    "exportJson": "JSON",
+    "loading": "Daten werden geladen...",
+    "ready": "Bereit zum Exportieren",
+    "done": "Exportiert",
+    "error": "Fehler beim Laden",
+    "info": "Ihre Daten werden direkt aus Supabase exportiert. Es werden keine Daten an externe Server gesendet.",
+    "zipContains": "Die ZIP-Datei enthält:"
   },
   "audit": {
     "title": "Aktivitätsprotokoll",

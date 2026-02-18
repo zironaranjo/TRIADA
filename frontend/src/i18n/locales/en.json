@@ -82,7 +82,8 @@
       "contracts": "Contracts",
       "revenue": "Revenue & Pricing",
       "benchmarking": "KPI Benchmarking",
-      "audit": "Audit Log"
+      "audit": "Audit Log",
+      "backup": "Data Backup"
     },
     "signOut": "Sign Out"
   },
@@ -1031,6 +1032,42 @@
       "invalidToken": "Invalid or expired contract link",
       "poweredBy": "Powered by Triadak"
     }
+  },
+  "backup": {
+    "title": "Data Backup & Export",
+    "subtitle": "Export all your data for compliance, migration or peace of mind",
+    "lastExport": "Last export",
+    "never": "Never",
+    "exportAll": "Export Full ZIP",
+    "exportAllDesc": "Download all data as a single ZIP file with CSV + JSON for each section",
+    "generating": "Generating...",
+    "sections": {
+      "properties": "Properties",
+      "bookings": "Bookings",
+      "contacts": "Contacts",
+      "expenses": "Expenses",
+      "owners": "Owners",
+      "contracts": "Contracts",
+      "staff": "Staff Members"
+    },
+    "sectionsDesc": {
+      "properties": "All your rental properties and their details",
+      "bookings": "Complete booking history with guest info",
+      "contacts": "Your CRM contacts database",
+      "expenses": "All recorded expenses by property",
+      "owners": "Property owner records",
+      "contracts": "Rental contracts and signing status",
+      "staff": "Staff members and employment details"
+    },
+    "records": "records",
+    "exportCsv": "CSV",
+    "exportJson": "JSON",
+    "loading": "Loading data...",
+    "ready": "Ready to export",
+    "done": "Exported",
+    "error": "Error loading",
+    "info": "Your data is exported directly from Supabase. No data is sent to external servers.",
+    "zipContains": "The ZIP file contains:"
   },
   "audit": {
     "title": "Audit Log",
