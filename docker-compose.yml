@@ -11,10 +11,16 @@ services:
     expose:
       - "3000"
     environment:
-      # Pass these from the server's .env file or define here
       - DATABASE_URL=${DATABASE_URL}
       - STRIPE_SECRET_KEY=${STRIPE_SECRET_KEY}
       - STRIPE_WEBHOOK_SECRET=${STRIPE_WEBHOOK_SECRET}
+      # Twilio (SMS)
+      - TWILIO_ACCOUNT_SID=${TWILIO_ACCOUNT_SID}
+      - TWILIO_AUTH_TOKEN=${TWILIO_AUTH_TOKEN}
+      - TWILIO_PHONE_NUMBER=${TWILIO_PHONE_NUMBER}
+      # Meta WhatsApp Cloud API
+      - META_WHATSAPP_PHONE_ID=${META_WHATSAPP_PHONE_ID}
+      - META_WHATSAPP_TOKEN=${META_WHATSAPP_TOKEN}
 
   caddy:
     image: caddy:latest

@@ -91,7 +91,7 @@ export class MessagingService {
       paramBuilder: (d) => [d.guestName, d.propertyName, d.checkinTime || '15:00', d.address || ''],
     },
     checkin_instructions: {
-      name: 'triadak_checkin_info',
+      name: 'triadak_stay_details',
       paramBuilder: (d) => [d.propertyName, d.wifiName || '', d.wifiPassword || '', d.guestPortalUrl || ''],
     },
     checkout_reminder: {
