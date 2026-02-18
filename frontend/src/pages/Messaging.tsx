@@ -33,18 +33,18 @@ interface Template {
 
 interface MessageLogEntry {
   id: string;
-  booking_id: string | null;
-  property_id: string | null;
-  recipient_name: string | null;
-  recipient_phone: string;
+  bookingId: string | null;
+  propertyId: string | null;
+  recipientName: string | null;
+  recipientPhone: string;
   channel: 'whatsapp' | 'sms';
-  template_key: string | null;
+  templateKey: string | null;
   message: string;
   status: string;
-  external_sid: string | null;
-  error_message: string | null;
-  sent_by: string | null;
-  created_at: string;
+  externalSid: string | null;
+  errorMessage: string | null;
+  sentBy: string | null;
+  createdAt: string;
 }
 
 interface Stats {
@@ -164,8 +164,8 @@ export default function Messaging() {
     if (searchQuery) {
       const q = searchQuery.toLowerCase();
       return (
-        log.recipient_name?.toLowerCase().includes(q) ||
-        log.recipient_phone.toLowerCase().includes(q) ||
+        log.recipientName?.toLowerCase().includes(q) ||
+        log.recipientPhone.toLowerCase().includes(q) ||
         log.message.toLowerCase().includes(q)
       );
     }
@@ -398,9 +398,9 @@ export default function Messaging() {
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2">
                       <span className="text-white font-medium text-sm">
-                        {log.recipient_name || log.recipient_phone}
+                        {log.recipientName || log.recipientPhone}
                       </span>
-                      <span className="text-slate-600 text-xs">{log.recipient_phone}</span>
+                      <span className="text-slate-600 text-xs">{log.recipientPhone}</span>
                     </div>
                     <p className="text-slate-400 text-xs truncate">{log.message.slice(0, 80)}...</p>
                   </div>
@@ -415,7 +415,7 @@ export default function Messaging() {
                     }`}>
                       {log.status}
                     </span>
-                    <span className="text-slate-500 text-xs w-16 text-right">{timeAgo(log.created_at)}</span>
+                    <span className="text-slate-500 text-xs w-16 text-right">{timeAgo(log.createdAt)}</span>
                     {expandedLog === log.id ? (
                       <ChevronDown className="w-4 h-4 text-slate-500" />
                     ) : (
@@ -438,17 +438,17 @@ export default function Messaging() {
                         </div>
                         <div className="flex flex-wrap gap-4 text-xs text-slate-500">
                           <span>Channel: <span className="text-slate-300">{log.channel.toUpperCase()}</span></span>
-                          {log.template_key && (
-                            <span>Template: <span className="text-slate-300">{log.template_key}</span></span>
+                          {log.templateKey && (
+                            <span>Template: <span className="text-slate-300">{log.templateKey}</span></span>
                           )}
-                          {log.external_sid && (
-                            <span>SID: <span className="text-slate-300 font-mono">{log.external_sid}</span></span>
+                          {log.externalSid && (
+                            <span>SID: <span className="text-slate-300 font-mono">{log.externalSid}</span></span>
                           )}
-                          {log.error_message && (
-                            <span className="text-red-400">Error: {log.error_message}</span>
+                          {log.errorMessage && (
+                            <span className="text-red-400">Error: {log.errorMessage}</span>
                           )}
                           <span>
-                            {new Date(log.created_at).toLocaleString()}
+                            {new Date(log.createdAt).toLocaleString()}
                           </span>
                         </div>
                       </div>
