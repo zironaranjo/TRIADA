@@ -11,6 +11,7 @@ import {
   ResponsiveContainer,
   Cell,
 } from 'recharts';
+import { useCurrency } from '../hooks/useCurrency';
 import {
   Trophy,
   TrendingUp,
@@ -109,6 +110,7 @@ function shortName(name: string, max = 14): string {
 
 export default function Benchmarking() {
   const { t } = useTranslation();
+  const { format, currency } = useCurrency();
   const [properties, setProperties] = useState<Property[]>([]);
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [loading, setLoading] = useState(true);
@@ -189,10 +191,10 @@ export default function Benchmarking() {
   }, [metrics]);
 
   const chartConfig: Record<string, { key: string; label: string; formatter: (v: number) => string }> = {
-    revenue: { key: 'revenue', label: t('benchmarking.charts.revenueTitle'), formatter: v => `€${v.toLocaleString()}` },
-    occupancy: { key: 'occupancy', label: t('benchmarking.charts.occupancyTitle'), formatter: v => `${v}%` },
-    adr: { key: 'adr', label: t('benchmarking.charts.adrTitle'), formatter: v => `€${v}` },
-    revpar: { key: 'revpar', label: t('benchmarking.charts.revparTitle'), formatter: v => `€${v}` },
+    revenue: { key: 'revenue', label: t('benchmarking.charts.revenueTitle'), formatter: (v: number) => format(v) },
+    occupancy: { key: 'occupancy', label: t('benchmarking.charts.occupancyTitle'), formatter: (v: number) => `${v}%` },
+    adr: { key: 'adr', label: t('benchmarking.charts.adrTitle'), formatter: (v: number) => format(v) },
+    revpar: { key: 'revpar', label: t('benchmarking.charts.revparTitle'), formatter: (v: number) => format(v) },
   };
 
   function exportCsv() {
@@ -288,7 +290,7 @@ export default function Benchmarking() {
                         <p className="text-white text-xs font-medium text-center leading-tight mt-1 px-1">
                           {shortName(m.property.name, 18)}
                         </p>
-                        <p className="text-emerald-400 font-bold text-sm mt-1">€{m.revenue.toLocaleString()}</p>
+                        <p className="text-emerald-400 font-bold text-sm mt-1">{format(m.revenue)}</p>
                         <p className="text-slate-500 text-xs">{(m.occupancyRate * 100).toFixed(0)}% occ.</p>
                       </div>
                       <div className={`w-full ${style.height} bg-gradient-to-t ${style.color} rounded-t-xl opacity-80`} />
@@ -317,7 +319,7 @@ export default function Benchmarking() {
               <BarChart data={chartData} layout="vertical" margin={{ left: 8, right: 24 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#334155" horizontal={false} />
                 <XAxis type="number" tick={{ fill: '#94a3b8', fontSize: 11 }}
-                  tickFormatter={v => activeChart === 'occupancy' ? `${v}%` : `€${v}`} />
+                  tickFormatter={v => activeChart === 'occupancy' ? `${v}%` : `${currency.symbol}${v}`} />
                 <YAxis type="category" dataKey="name" width={110} tick={{ fill: '#94a3b8', fontSize: 11 }} />
                 <Tooltip
                   contentStyle={{ backgroundColor: '#1e293b', border: '1px solid #334155', borderRadius: 12 }}
@@ -393,7 +395,7 @@ export default function Benchmarking() {
                           </div>
                         </td>
                         <td className="px-3 py-3.5 text-right">
-                          <span className="text-emerald-400 font-bold">€{m.revenue.toLocaleString()}</span>
+                          <span className="text-emerald-400 font-bold">{format(m.revenue)}</span>
                         </td>
                         <td className="px-3 py-3.5 text-right hidden sm:table-cell">
                           <div className="flex items-center justify-end gap-1 text-slate-300">
@@ -407,13 +409,13 @@ export default function Benchmarking() {
                         <td className="px-3 py-3.5 text-right hidden md:table-cell">
                           <div className="flex items-center justify-end gap-1 text-slate-300">
                             <DollarSign className="w-3 h-3 text-slate-500" />
-                            {m.adr.toFixed(0)}
+                            {format(m.adr)}
                           </div>
                         </td>
                         <td className="px-3 py-3.5 text-right hidden md:table-cell">
                           <div className="flex items-center justify-end gap-1 text-blue-300">
                             <BarChart2 className="w-3 h-3 text-slate-500" />
-                            {m.revpar.toFixed(0)}
+                            {format(m.revpar)}
                           </div>
                         </td>
                         <td className="px-3 py-3.5 text-right text-slate-400 hidden lg:table-cell">
@@ -434,7 +436,7 @@ export default function Benchmarking() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {[
               { label: t('benchmarking.property'), value: metrics.length, icon: <Home className="w-4 h-4 text-slate-400" />, sub: t('common.total') || 'Total' },
-              { label: t('benchmarking.revenue'), value: `€${metrics.reduce((s, m) => s + m.revenue, 0).toLocaleString()}`, icon: <DollarSign className="w-4 h-4 text-emerald-400" />, sub: t('benchmarking.periods.' + period) },
+              { label: t('benchmarking.revenue'), value: format(metrics.reduce((s, m) => s + m.revenue, 0)), icon: <DollarSign className="w-4 h-4 text-emerald-400" />, sub: t('benchmarking.periods.' + period) },
               { label: t('benchmarking.bookings'), value: metrics.reduce((s, m) => s + m.bookingCount, 0), icon: <CalendarDays className="w-4 h-4 text-blue-400" />, sub: t('benchmarking.periods.' + period) },
               { label: `Ø ${t('benchmarking.occupancy')}`, value: `${(avgMetrics.occupancy * 100).toFixed(1)}%`, icon: <BarChart2 className="w-4 h-4 text-violet-400" />, sub: t('benchmarking.periods.' + period) },
             ].map((card, i) => (

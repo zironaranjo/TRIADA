@@ -213,7 +213,7 @@ SaaS platform for **vacation rental management** (triadak.io). Combines features
 - [ ] **Gestión de tareas/limpieza** — Sistema de tareas automáticas post-checkout (limpieza, lavandería, inspección). Asignar a miembros del staff con checklist y foto de verificación
 - [x] **Contratos y documentos** — Generación automática de contratos PDF desde reservas. Firma digital simple: link único `/contract/:token` para que el huésped revise y firme. Estado: draft → sent → signed. Implementado en `/contracts`
 - [x] **Revenue Management / Dynamic Pricing** — Página `/revenue` con KPIs (RevPAR, ADR, ocupación, ingreso potencial), sugerencias de precios por propiedad (basadas en reglas de temporada, ocupación y fin de semana), calendario de precios visual mensual. Reglas de temporada configurables (alta/media/baja + multiplicador) guardadas en localStorage. Botón "Aplicar" actualiza `price_per_night` en Supabase. 4 idiomas
-- [ ] **Multi-currency support** — Soporte para propiedades en distintos países con conversión automática de divisas
+- [x] **Multi-currency support** — `useCurrency` hook con 14 monedas (EUR base), tasas de cambio estáticas, `format()` aplicado en Revenue/Benchmarking. Settings ampliado con 14 opciones. `currency` column en `properties` (migration 009). Sin API externa
 - [x] **Auditoría y logs** — Timeline por día con filtros, diff de cambios campo a campo, triggers automáticos en tablas clave, export CSV. Implementado en `/audit`
 - [x] **Backup/Export de datos** — ZIP completo + exportación individual CSV/JSON por sección (7 tablas). Contador de registros, última fecha de backup en localStorage. Implementado en `/backup`
 - [x] **KPI Benchmarking** — Pódium, gráficos comparativos (revenue/ocupación/ADR/RevPAR), tabla detallada con vs media, selector de período, export CSV. Implementado en `/benchmarking`
@@ -275,6 +275,8 @@ SaaS platform for **vacation rental management** (triadak.io). Combines features
 - `frontend/src/pages/Benchmarking.tsx` - KPI Benchmarking page at /benchmarking (podium, switchable bar charts, detailed metrics table, period selector, CSV export)
 - `frontend/src/pages/AuditLog.tsx` - Audit log page at /audit (timeline by day, action badges, diff viewer, filters, CSV export, load more)
 - `frontend/src/pages/DataBackup.tsx` - Data backup page at /backup (full ZIP export, per-section CSV/JSON, record counts, jszip)
+- `frontend/src/hooks/useCurrency.ts` - Multi-currency hook: 14 currencies, EUR-based static rates, format()/convert()/convertFrom(), reads preferred currency from localStorage
+- `supabase/migrations/009_property_currency.sql` - Adds currency column to properties table (default EUR)
 - `frontend/src/lib/auditLog.ts` - logAudit() utility for manual audit logging from frontend
 - `supabase/migrations/008_audit_logs.sql` - SQL setup for audit_logs table + triggers on bookings/properties/contacts/expenses
 - `supabase/migrations/007_contracts.sql` - SQL setup for contracts table with RLS
@@ -315,6 +317,8 @@ SaaS platform for **vacation rental management** (triadak.io). Combines features
 - Revenue Management rules saved in `localStorage` key `triadak_season_rules` (no DB table needed)
 - Benchmarking page calculates all KPIs client-side from Supabase `properties` + `bookings` (no backend needed)
 - **PENDING**: SQL migration `008_audit_logs.sql` must be executed in Supabase SQL Editor before audit logs work
+- **PENDING**: SQL migration `009_property_currency.sql` must be executed in Supabase SQL Editor
+- `useCurrency` hook reads from `localStorage` key `triadak_preferences` → `currency` field (set in Settings > Preferences). Default: EUR. 14 currencies with static EUR-based rates (Feb 2026)
 - `audit_logs` triggers use `auth.uid()` and JWT claims to capture the acting user. `SECURITY DEFINER` needed for trigger function
 - Airbnb/Booking.com full APIs require partner access — iCal sync available now, API ready when approved
 - **Meta WhatsApp Cloud API** ya configurada y funcionando. Número: `+34 643 26 77 97`. Phone ID: `942271912297397`. Env vars: `META_WHATSAPP_PHONE_ID`, `META_WHATSAPP_TOKEN`

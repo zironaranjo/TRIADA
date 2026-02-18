@@ -1,5 +1,6 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useCurrency } from '../hooks/useCurrency';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   TrendingUp,
@@ -115,6 +116,7 @@ function getSuggestedPrice(basePrice: number, date: Date, rules: SeasonRule[], o
 
 export default function RevenueManagement() {
   const { t } = useTranslation();
+  const { format } = useCurrency();
   const [properties, setProperties] = useState<Property[]>([]);
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [loading, setLoading] = useState(true);
@@ -307,10 +309,10 @@ export default function RevenueManagement() {
       {/* KPI Cards */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {[
-          { label: t('revenue.kpi.revpar'), value: `€${kpis.revpar.toFixed(0)}`, desc: t('revenue.kpi.revparDesc'), icon: <BarChart2 className="w-5 h-5 text-blue-400" />, color: 'blue' },
-          { label: t('revenue.kpi.adr'), value: `€${kpis.adr.toFixed(0)}`, desc: t('revenue.kpi.adrDesc'), icon: <DollarSign className="w-5 h-5 text-emerald-400" />, color: 'emerald' },
+          { label: t('revenue.kpi.revpar'), value: format(kpis.revpar), desc: t('revenue.kpi.revparDesc'), icon: <BarChart2 className="w-5 h-5 text-blue-400" />, color: 'blue' },
+          { label: t('revenue.kpi.adr'), value: format(kpis.adr), desc: t('revenue.kpi.adrDesc'), icon: <DollarSign className="w-5 h-5 text-emerald-400" />, color: 'emerald' },
           { label: t('revenue.kpi.occupancy'), value: `${(kpis.avgOccupancy * 100).toFixed(0)}%`, desc: t('revenue.kpi.occupancyDesc'), icon: <Calendar className="w-5 h-5 text-violet-400" />, color: 'violet' },
-          { label: t('revenue.kpi.potential'), value: `€${kpis.potentialRevenue.toFixed(0)}`, desc: t('revenue.kpi.potentialDesc'), icon: <TrendingUp className="w-5 h-5 text-orange-400" />, color: 'orange' },
+          { label: t('revenue.kpi.potential'), value: format(kpis.potentialRevenue), desc: t('revenue.kpi.potentialDesc'), icon: <TrendingUp className="w-5 h-5 text-orange-400" />, color: 'orange' },
         ].map((kpi, i) => (
           <motion.div key={i} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }}
             className="bg-slate-800/60 border border-slate-700 rounded-xl p-4"
@@ -341,15 +343,15 @@ export default function RevenueManagement() {
                   <div className="flex-1 min-w-0">
                     <p className="text-white text-sm font-medium truncate">{s.property.name}</p>
                     <div className="flex items-center gap-2 mt-1 flex-wrap">
-                      <span className="text-slate-400 text-xs">€{s.currentPrice}/night</span>
+                      <span className="text-slate-400 text-xs">{format(s.currentPrice)}/night</span>
                       <span className="text-slate-600">→</span>
                       <span className={`text-sm font-bold ${s.change > 0 ? 'text-emerald-400' : s.change < 0 ? 'text-red-400' : 'text-slate-300'}`}>
-                        €{s.suggestedPrice}
+                        {format(s.suggestedPrice)}
                       </span>
                       {s.change !== 0 && (
                         <span className={`flex items-center gap-0.5 text-xs ${s.change > 0 ? 'text-emerald-400' : 'text-red-400'}`}>
                           {s.change > 0 ? <TrendingUp className="w-3 h-3" /> : <TrendingDown className="w-3 h-3" />}
-                          {s.change > 0 ? '+' : ''}{s.change}€
+                          {s.change > 0 ? '+' : ''}{format(Math.abs(s.change))}
                         </span>
                       )}
                     </div>
@@ -477,7 +479,7 @@ export default function RevenueManagement() {
                 <span className={`text-xs font-medium ${isToday ? 'text-blue-400' : 'text-slate-400'}`}>{day}</span>
                 {data && (
                   <span className={`text-xs font-bold mt-auto ${data.booked ? 'text-slate-400' : 'text-white'}`}>
-                    €{data.price}
+                    {format(data.price)}
                   </span>
                 )}
               </div>

@@ -48,11 +48,20 @@ const LANGUAGES = [
 ];
 
 const CURRENCIES = [
-    { code: 'EUR', symbol: '€', label: 'Euro (€)' },
-    { code: 'USD', symbol: '$', label: 'US Dollar ($)' },
-    { code: 'GBP', symbol: '£', label: 'British Pound (£)' },
-    { code: 'CHF', symbol: 'CHF', label: 'Swiss Franc (CHF)' },
-    { code: 'MXN', symbol: '$', label: 'Mexican Peso (MXN)' },
+    { code: 'EUR', symbol: '€',   label: 'Euro (€)' },
+    { code: 'USD', symbol: '$',   label: 'US Dollar ($)' },
+    { code: 'GBP', symbol: '£',   label: 'British Pound (£)' },
+    { code: 'CHF', symbol: 'Fr',  label: 'Swiss Franc (Fr)' },
+    { code: 'CAD', symbol: 'C$',  label: 'Canadian Dollar (C$)' },
+    { code: 'AUD', symbol: 'A$',  label: 'Australian Dollar (A$)' },
+    { code: 'MXN', symbol: '$',   label: 'Mexican Peso (MXN)' },
+    { code: 'BRL', symbol: 'R$',  label: 'Brazilian Real (R$)' },
+    { code: 'JPY', symbol: '¥',   label: 'Japanese Yen (¥)' },
+    { code: 'SEK', symbol: 'kr',  label: 'Swedish Krona (kr)' },
+    { code: 'NOK', symbol: 'kr',  label: 'Norwegian Krone (kr)' },
+    { code: 'DKK', symbol: 'kr',  label: 'Danish Krone (kr)' },
+    { code: 'AED', symbol: 'د.إ', label: 'UAE Dirham (AED)' },
+    { code: 'THB', symbol: '฿',   label: 'Thai Baht (฿)' },
 ];
 
 // ─── Main Settings Component ─────────────────────────
