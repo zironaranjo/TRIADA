@@ -923,6 +923,7 @@
     "ago": "vor",
     "notConnected": "Twilio nicht konfiguriert",
     "notConnectedDesc": "Fügen Sie TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_PHONE_NUMBER und TWILIO_WHATSAPP_NUMBER zu den Backend-Umgebungsvariablen hinzu.",
+    "connected": "Nachrichten verbunden",
     "twilioConnected": "Twilio verbunden",
     "modeTemplate": "Vorlage",
     "modeCustom": "Benutzerdefiniert",

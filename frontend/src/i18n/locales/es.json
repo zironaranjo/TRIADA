@@ -964,6 +964,7 @@
     "ago": "hace",
     "notConnected": "Twilio no configurado",
     "notConnectedDesc": "Agrega TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_PHONE_NUMBER y TWILIO_WHATSAPP_NUMBER a las variables de entorno del backend para habilitar la mensajería.",
+    "connected": "Mensajería conectada",
     "twilioConnected": "Twilio conectado",
     "modeTemplate": "Plantilla",
     "modeCustom": "Personalizado",

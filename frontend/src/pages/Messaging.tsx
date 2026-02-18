@@ -261,10 +261,10 @@ export default function Messaging() {
         >
           <Wifi className="w-5 h-5 text-emerald-400" />
           <div className="flex-1">
-            <p className="text-emerald-300 font-medium">{t('messaging.twilioConnected')}</p>
+            <p className="text-emerald-300 font-medium">{t('messaging.connected')}</p>
             <p className="text-emerald-400/60 text-sm">
-              {connectionStatus.whatsapp && `WhatsApp: ${connectionStatus.whatsapp}`}
-              {connectionStatus.phone && ` · SMS: ${connectionStatus.phone}`}
+              {(connectionStatus as any).whatsapp?.provider && `WhatsApp: ${(connectionStatus as any).whatsapp.provider}`}
+              {(connectionStatus as any).sms?.provider && ` · SMS: ${(connectionStatus as any).sms.provider}`}
             </p>
           </div>
         </motion.div>

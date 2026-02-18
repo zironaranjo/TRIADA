@@ -41,8 +41,12 @@ interface TemplateData {
 export class MessagingService {
   private twilioClient: Twilio.Twilio | null = null;
   private twilioPhone: string;
-  private twilioWhatsApp: string;
   private frontendUrl: string;
+
+  // Meta WhatsApp Cloud API
+  private metaPhoneNumberId: string;
+  private metaAccessToken: string;
+  private metaApiVersion = 'v22.0';
 
   constructor(
     private configService: ConfigService,
@@ -53,14 +57,82 @@ export class MessagingService {
     @InjectRepository(Property)
     private propertiesRepo: Repository<Property>,
   ) {
+    // Twilio for SMS
     const accountSid = this.configService.get<string>('TWILIO_ACCOUNT_SID');
     const authToken = this.configService.get<string>('TWILIO_AUTH_TOKEN');
     this.twilioPhone = this.configService.get<string>('TWILIO_PHONE_NUMBER') || '';
-    this.twilioWhatsApp = this.configService.get<string>('TWILIO_WHATSAPP_NUMBER') || '';
     this.frontendUrl = this.configService.get<string>('FRONTEND_URL') || 'https://triadak.io';
 
     if (accountSid && authToken) {
       this.twilioClient = Twilio.default(accountSid, authToken);
+    }
+
+    // Meta WhatsApp Cloud API
+    this.metaPhoneNumberId = this.configService.get<string>('META_WHATSAPP_PHONE_ID') || '';
+    this.metaAccessToken = this.configService.get<string>('META_WHATSAPP_TOKEN') || '';
+  }
+
+  private get isMetaConfigured(): boolean {
+    return !!(this.metaPhoneNumberId && this.metaAccessToken);
+  }
+
+  private get isTwilioConfigured(): boolean {
+    return !!this.twilioClient;
+  }
+
+  // ─── Send WhatsApp via Meta Cloud API ───
+  private async sendWhatsAppMeta(to: string, message: string): Promise<{ success: boolean; messageId?: string; error?: string }> {
+    const phone = to.replace(/[^0-9]/g, '');
+
+    const url = `https://graph.facebook.com/${this.metaApiVersion}/${this.metaPhoneNumberId}/messages`;
+
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${this.metaAccessToken}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          messaging_product: 'whatsapp',
+          recipient_type: 'individual',
+          to: phone,
+          type: 'text',
+          text: {
+            preview_url: true,
+            body: message,
+          },
+        }),
+      });
+
+      const data = await response.json() as any;
+
+      if (!response.ok) {
+        const errMsg = data?.error?.message || `HTTP ${response.status}`;
+        return { success: false, error: errMsg };
+      }
+
+      const messageId = data?.messages?.[0]?.id || '';
+      return { success: true, messageId };
+    } catch (err: any) {
+      return { success: false, error: err.message || 'Meta API request failed' };
+    }
+  }
+
+  // ─── Send SMS via Twilio ───
+  private async sendSmsTwilio(to: string, message: string): Promise<{ success: boolean; sid?: string; error?: string }> {
+    if (!this.twilioClient) {
+      return { success: false, error: 'Twilio not configured for SMS' };
+    }
+    try {
+      const result = await this.twilioClient.messages.create({
+        body: message,
+        from: this.twilioPhone,
+        to,
+      });
+      return { success: true, sid: result.sid };
+    } catch (err: any) {
+      return { success: false, error: err.message };
     }
   }
 
@@ -78,35 +150,38 @@ export class MessagingService {
       status: 'queued',
     });
 
-    if (!this.twilioClient) {
-      log.status = 'failed';
-      log.errorMessage = 'Twilio not configured. Set TWILIO_ACCOUNT_SID and TWILIO_AUTH_TOKEN.';
-      await this.messageLogRepo.save(log);
-      return log;
-    }
+    if (options.channel === 'whatsapp') {
+      if (!this.isMetaConfigured) {
+        log.status = 'failed';
+        log.errorMessage = 'Meta WhatsApp not configured. Set META_WHATSAPP_PHONE_ID and META_WHATSAPP_TOKEN.';
+        await this.messageLogRepo.save(log);
+        return log;
+      }
 
-    try {
-      const from =
-        options.channel === 'whatsapp'
-          ? `whatsapp:${this.twilioWhatsApp}`
-          : this.twilioPhone;
+      const result = await this.sendWhatsAppMeta(options.to, options.message);
+      if (result.success) {
+        log.status = 'sent';
+        log.externalSid = result.messageId ?? '';
+      } else {
+        log.status = 'failed';
+        log.errorMessage = result.error || 'Unknown Meta API error';
+      }
+    } else {
+      if (!this.isTwilioConfigured) {
+        log.status = 'failed';
+        log.errorMessage = 'Twilio not configured for SMS. Set TWILIO_ACCOUNT_SID and TWILIO_AUTH_TOKEN.';
+        await this.messageLogRepo.save(log);
+        return log;
+      }
 
-      const to =
-        options.channel === 'whatsapp'
-          ? `whatsapp:${options.to}`
-          : options.to;
-
-      const result = await this.twilioClient.messages.create({
-        body: options.message,
-        from,
-        to,
-      });
-
-      log.status = 'sent';
-      log.externalSid = result.sid;
-    } catch (err: any) {
-      log.status = 'failed';
-      log.errorMessage = err.message || 'Unknown Twilio error';
+      const result = await this.sendSmsTwilio(options.to, options.message);
+      if (result.success) {
+        log.status = 'sent';
+        log.externalSid = result.sid ?? '';
+      } else {
+        log.status = 'failed';
+        log.errorMessage = result.error || 'Unknown Twilio error';
+      }
     }
 
     await this.messageLogRepo.save(log);
@@ -278,24 +353,39 @@ export class MessagingService {
     ];
   }
 
-  // ─── Test Twilio connection ───
-  async testConnection(): Promise<{ connected: boolean; phone?: string; whatsapp?: string; error?: string }> {
-    if (!this.twilioClient) {
-      return { connected: false, error: 'Twilio not configured' };
+  // ─── Test connection ───
+  async testConnection(): Promise<{
+    connected: boolean;
+    whatsapp?: { provider: string; phoneId?: string };
+    sms?: { provider: string; phone?: string };
+    error?: string;
+  }> {
+    const result: any = { connected: false };
+
+    // Test Meta WhatsApp
+    if (this.isMetaConfigured) {
+      result.whatsapp = { provider: 'Meta Cloud API', phoneId: this.metaPhoneNumberId };
+      result.connected = true;
     }
-    try {
-      const account = await this.twilioClient.api.accounts(
-        this.configService.get<string>('TWILIO_ACCOUNT_SID')!,
-      ).fetch();
-      return {
-        connected: true,
-        phone: this.twilioPhone || undefined,
-        whatsapp: this.twilioWhatsApp || undefined,
-        error: account.status !== 'active' ? `Account status: ${account.status}` : undefined,
-      };
-    } catch (err: any) {
-      return { connected: false, error: err.message };
+
+    // Test Twilio SMS
+    if (this.isTwilioConfigured) {
+      try {
+        const account = await this.twilioClient!.api.accounts(
+          this.configService.get<string>('TWILIO_ACCOUNT_SID')!,
+        ).fetch();
+        result.sms = { provider: 'Twilio', phone: this.twilioPhone };
+        if (account.status === 'active') result.connected = true;
+      } catch (err: any) {
+        result.sms = { provider: 'Twilio', error: err.message };
+      }
     }
+
+    if (!this.isMetaConfigured && !this.isTwilioConfigured) {
+      result.error = 'No messaging provider configured';
+    }
+
+    return result;
   }
 
   // ─── Private helpers ───

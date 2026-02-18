@@ -964,6 +964,7 @@
     "ago": "ago",
     "notConnected": "Twilio not configured",
     "notConnectedDesc": "Add TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_PHONE_NUMBER, and TWILIO_WHATSAPP_NUMBER to your backend environment variables to enable messaging.",
+    "connected": "Messaging connected",
     "twilioConnected": "Twilio connected",
     "modeTemplate": "Template",
     "modeCustom": "Custom",
