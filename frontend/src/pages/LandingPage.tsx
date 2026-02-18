@@ -247,10 +247,10 @@ function Hero() {
                 >
                     <Link
                         to="/login"
-                        className="w-full sm:w-auto bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-semibold px-7 sm:px-9 py-3.5 sm:py-4 rounded-xl text-sm sm:text-base shadow-xl shadow-indigo-600/30 hover:shadow-indigo-500/50 hover:scale-105 transition-all flex items-center justify-center gap-2 group"
+                        className="w-full sm:w-auto bg-white text-slate-900 font-semibold px-7 sm:px-9 py-3.5 sm:py-4 rounded-xl text-sm sm:text-base shadow-xl shadow-black/30 hover:bg-white/90 hover:scale-105 transition-all flex items-center justify-center gap-2 group"
                     >
                         {t('landing.hero.cta')}
-                        <ArrowRight className="h-4 w-4 sm:h-5 sm:w-5 group-hover:translate-x-1 transition-transform" />
+                        <ArrowRight className="h-4 w-4 sm:h-5 sm:w-5 text-slate-700 group-hover:translate-x-1 transition-transform" />
                     </Link>
                     <a
                         href="#features"
