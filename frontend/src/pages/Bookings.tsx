@@ -18,7 +18,9 @@ import {
     Mail,
     Phone,
     DollarSign,
-    CreditCard
+    CreditCard,
+    Pencil,
+    Save
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
@@ -377,10 +379,46 @@ const PlatformBadge = ({ platform }: { platform: string }) => {
 };
 
 // --- Booking Detail Modal ---
-const BookingDetailModal = ({ booking, onClose, onUpdate }: { booking: Booking; onClose: () => void; onUpdate: () => void }) => {
+const BookingDetailModal = ({ booking, onClose, onUpdate, properties }: { booking: Booking; onClose: () => void; onUpdate: () => void; properties: PropertyOption[] }) => {
     const { t } = useTranslation();
     const [actionLoading, setActionLoading] = useState('');
     const [copied, setCopied] = useState(false);
+    const [isEditing, setIsEditing] = useState(false);
+    const [editData, setEditData] = useState({
+        guest_name: booking.guest_name,
+        guest_email: booking.guest_email || '',
+        guest_phone: booking.guest_phone || '',
+        start_date: booking.start_date,
+        end_date: booking.end_date,
+        total_price: String(booking.total_price),
+        platform: booking.platform,
+        property_id: booking.property_id,
+    });
+    const [saveLoading, setSaveLoading] = useState(false);
+
+    const handleSave = async () => {
+        setSaveLoading(true);
+        try {
+            const { error } = await supabase.from('bookings').update({
+                guest_name: editData.guest_name,
+                guest_email: editData.guest_email,
+                guest_phone: editData.guest_phone,
+                start_date: editData.start_date,
+                end_date: editData.end_date,
+                total_price: parseFloat(editData.total_price) || 0,
+                platform: editData.platform,
+                property_id: editData.property_id,
+            }).eq('id', booking.id);
+            if (error) throw error;
+            setIsEditing(false);
+            onUpdate();
+            onClose();
+        } catch (err: any) {
+            alert(`Error: ${err?.message || 'Could not update'}`);
+        } finally {
+            setSaveLoading(false);
+        }
+    };
 
     const nights = Math.ceil(
         (new Date(booking.end_date).getTime() - new Date(booking.start_date).getTime()) / (1000 * 60 * 60 * 24)
@@ -503,19 +541,143 @@ const BookingDetailModal = ({ booking, onClose, onUpdate }: { booking: Booking; 
                 {/* Header */}
                 <div className="p-5 border-b border-slate-700/50 flex items-center justify-between sticky top-0 bg-slate-800 z-10">
                     <div>
-                        <h2 className="text-lg font-bold text-white">{booking.guest_name}</h2>
+                        <h2 className="text-lg font-bold text-white">{isEditing ? t('bookings.editBooking') : booking.guest_name}</h2>
                         <div className="flex items-center gap-2 mt-1">
                             <p className="text-xs text-slate-400 font-mono">#{booking.id.slice(0, 8)}</p>
-                            <PlatformBadge platform={booking.platform} />
+                            {!isEditing && <PlatformBadge platform={booking.platform} />}
                         </div>
                     </div>
-                    <button onClick={onClose} className="p-2 hover:bg-slate-700/50 rounded-lg text-slate-400 hover:text-white transition-colors">
-                        <X className="h-5 w-5" />
-                    </button>
+                    <div className="flex items-center gap-2">
+                        {!isEditing ? (
+                            <button
+                                onClick={() => setIsEditing(true)}
+                                className="p-2 hover:bg-slate-700/50 rounded-lg text-slate-400 hover:text-blue-400 transition-colors"
+                                title={t('common.edit')}
+                            >
+                                <Pencil className="h-4 w-4" />
+                            </button>
+                        ) : (
+                            <>
+                                <button
+                                    onClick={handleSave}
+                                    disabled={saveLoading}
+                                    className="flex items-center gap-1.5 px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-white text-sm rounded-lg font-medium transition-colors disabled:opacity-50"
+                                >
+                                    {saveLoading ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Save className="h-3.5 w-3.5" />}
+                                    {t('common.save')}
+                                </button>
+                                <button
+                                    onClick={() => setIsEditing(false)}
+                                    className="p-2 hover:bg-slate-700/50 rounded-lg text-slate-400 hover:text-white transition-colors"
+                                >
+                                    <X className="h-4 w-4" />
+                                </button>
+                            </>
+                        )}
+                        {!isEditing && (
+                            <button onClick={onClose} className="p-2 hover:bg-slate-700/50 rounded-lg text-slate-400 hover:text-white transition-colors">
+                                <X className="h-5 w-5" />
+                            </button>
+                        )}
+                    </div>
                 </div>
 
                 {/* Body */}
                 <div className="p-5 space-y-4">
+
+                    {/* ─── Edit Form ─── */}
+                    {isEditing && (
+                        <div className="space-y-3">
+                            <div className="grid grid-cols-2 gap-3">
+                                <div className="col-span-2">
+                                    <label className="text-xs text-slate-400 mb-1 block">{t('bookings.labelGuestName')}</label>
+                                    <input
+                                        type="text"
+                                        value={editData.guest_name}
+                                        onChange={(e) => setEditData({ ...editData, guest_name: e.target.value })}
+                                        className="w-full bg-slate-900/50 border border-slate-700 rounded-xl px-3 py-2 text-white text-sm focus:ring-2 focus:ring-blue-500/50 outline-none"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="text-xs text-slate-400 mb-1 block">{t('bookings.labelGuestEmail')}</label>
+                                    <input
+                                        type="email"
+                                        value={editData.guest_email}
+                                        onChange={(e) => setEditData({ ...editData, guest_email: e.target.value })}
+                                        className="w-full bg-slate-900/50 border border-slate-700 rounded-xl px-3 py-2 text-white text-sm focus:ring-2 focus:ring-blue-500/50 outline-none"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="text-xs text-slate-400 mb-1 block">{t('bookings.labelPhone')}</label>
+                                    <input
+                                        type="tel"
+                                        value={editData.guest_phone}
+                                        onChange={(e) => setEditData({ ...editData, guest_phone: e.target.value })}
+                                        className="w-full bg-slate-900/50 border border-slate-700 rounded-xl px-3 py-2 text-white text-sm focus:ring-2 focus:ring-blue-500/50 outline-none"
+                                        placeholder="+34..."
+                                    />
+                                </div>
+                                <div>
+                                    <label className="text-xs text-slate-400 mb-1 block">{t('bookings.checkIn')}</label>
+                                    <input
+                                        type="date"
+                                        value={editData.start_date}
+                                        onChange={(e) => setEditData({ ...editData, start_date: e.target.value })}
+                                        className="w-full bg-slate-900/50 border border-slate-700 rounded-xl px-3 py-2 text-white text-sm focus:ring-2 focus:ring-blue-500/50 outline-none [color-scheme:dark]"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="text-xs text-slate-400 mb-1 block">{t('bookings.checkOut')}</label>
+                                    <input
+                                        type="date"
+                                        value={editData.end_date}
+                                        onChange={(e) => setEditData({ ...editData, end_date: e.target.value })}
+                                        className="w-full bg-slate-900/50 border border-slate-700 rounded-xl px-3 py-2 text-white text-sm focus:ring-2 focus:ring-blue-500/50 outline-none [color-scheme:dark]"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="text-xs text-slate-400 mb-1 block">{t('bookings.labelTotalPrice')}</label>
+                                    <input
+                                        type="number"
+                                        min="0"
+                                        step="0.01"
+                                        value={editData.total_price}
+                                        onChange={(e) => setEditData({ ...editData, total_price: e.target.value })}
+                                        className="w-full bg-slate-900/50 border border-slate-700 rounded-xl px-3 py-2 text-white text-sm focus:ring-2 focus:ring-blue-500/50 outline-none"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="text-xs text-slate-400 mb-1 block">{t('bookings.labelPlatform')}</label>
+                                    <select
+                                        value={editData.platform}
+                                        onChange={(e) => setEditData({ ...editData, platform: e.target.value })}
+                                        className="w-full bg-slate-900/50 border border-slate-700 rounded-xl px-3 py-2 text-white text-sm focus:ring-2 focus:ring-blue-500/50 outline-none"
+                                    >
+                                        <option value="DIRECT">{t('bookings.optionDirect')}</option>
+                                        <option value="AIRBNB">{t('bookings.optionAirbnb')}</option>
+                                        <option value="BOOKING_COM">{t('bookings.optionBookingCom')}</option>
+                                        <option value="VRBO">{t('bookings.optionVrbo')}</option>
+                                        <option value="OTHER">{t('bookings.optionOther')}</option>
+                                    </select>
+                                </div>
+                                <div className="col-span-2">
+                                    <label className="text-xs text-slate-400 mb-1 block">{t('bookings.labelSelectProperty')}</label>
+                                    <select
+                                        value={editData.property_id}
+                                        onChange={(e) => setEditData({ ...editData, property_id: e.target.value })}
+                                        className="w-full bg-slate-900/50 border border-slate-700 rounded-xl px-3 py-2 text-white text-sm focus:ring-2 focus:ring-blue-500/50 outline-none"
+                                    >
+                                        {properties.map(p => (
+                                            <option key={p.id} value={p.id}>{p.name}</option>
+                                        ))}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* ─── View Mode ─── */}
+                    {!isEditing && <>
                     {/* Status + Price Row */}
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2">
@@ -672,6 +834,7 @@ const BookingDetailModal = ({ booking, onClose, onUpdate }: { booking: Booking; 
                             ))}
                         </div>
                     </div>
+                    </>}
                 </div>
             </motion.div>
         </>
@@ -1056,6 +1219,7 @@ const Bookings = () => {
                         booking={selectedBooking}
                         onClose={() => setSelectedBooking(null)}
                         onUpdate={fetchData}
+                        properties={properties}
                     />
                 )}
             </AnimatePresence>
