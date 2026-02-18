@@ -36,6 +36,7 @@ interface Contract {
   sent_at: string | null;
   created_at: string;
   content: string | null;
+  signature: string | null;
 }
 
 interface BookingOption {
