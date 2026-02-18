@@ -188,121 +188,98 @@ function Navbar() {
 function Hero() {
     const { t } = useTranslation();
     return (
-        <section className="relative pt-28 pb-12 sm:pt-32 sm:pb-20 lg:pt-40 lg:pb-32 overflow-hidden">
-            {/* Background effects — smaller on mobile for perf */}
-            <div className="absolute inset-0 pointer-events-none">
-                <div className="absolute top-20 left-1/4 w-[300px] sm:w-[600px] h-[300px] sm:h-[600px] bg-indigo-500/15 rounded-full blur-[100px] sm:blur-[150px]" />
-                <div className="absolute bottom-0 right-1/4 w-[250px] sm:w-[500px] h-[250px] sm:h-[500px] bg-purple-500/10 rounded-full blur-[80px] sm:blur-[120px]" />
+        <section className="relative min-h-screen flex flex-col justify-center overflow-hidden">
+            {/* Background image */}
+            <div className="absolute inset-0 z-0">
+                <img
+                    src="https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=1600&q=80"
+                    alt="Vacation rental property"
+                    className="w-full h-full object-cover"
+                />
+                {/* Layered overlay: dark bottom + brand tint top */}
+                <div className="absolute inset-0 bg-gradient-to-b from-[#0f172a]/80 via-[#0f172a]/60 to-[#0f172a]/95" />
+                {/* Subtle brand glow */}
+                <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[400px] bg-indigo-600/20 rounded-full blur-[120px] pointer-events-none" />
             </div>
 
-            <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="text-center max-w-4xl mx-auto">
-                    {/* Badge */}
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        className="inline-flex items-center gap-1.5 sm:gap-2 bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 text-xs sm:text-sm font-medium px-3 sm:px-4 py-1.5 rounded-full mb-6 sm:mb-8"
-                    >
-                        <Zap className="h-3.5 w-3.5 sm:h-4 sm:w-4 flex-shrink-0" />
-                        <span>{t('landing.hero.badge')}</span>
-                    </motion.div>
-
-                    {/* Headline */}
-                    <motion.h1
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.1 }}
-                        className="text-3xl sm:text-5xl lg:text-7xl font-extrabold text-white leading-[1.15] tracking-tight"
-                    >
-                        {t('landing.hero.title1')}{' '}
-                        <span className="bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
-                            {t('landing.hero.titleHighlight')}
-                        </span>
-                    </motion.h1>
-
-                    {/* Subtitle */}
-                    <motion.p
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.2 }}
-                        className="mt-4 sm:mt-6 text-base sm:text-lg lg:text-xl text-slate-400 max-w-2xl mx-auto leading-relaxed px-2"
-                    >
-                        {t('landing.hero.subtitle')}
-                    </motion.p>
-
-                    {/* CTA Buttons */}
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.3 }}
-                        className="mt-8 sm:mt-10 flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 px-2"
-                    >
-                        <Link
-                            to="/login"
-                            className="w-full sm:w-auto bg-gradient-to-r from-indigo-500 to-purple-500 text-white font-semibold px-6 sm:px-8 py-3.5 sm:py-4 rounded-xl text-sm sm:text-base hover:shadow-xl hover:shadow-indigo-500/25 transition-all flex items-center justify-center gap-2 group"
-                        >
-                            {t('landing.hero.cta')}
-                            <ArrowRight className="h-4 w-4 sm:h-5 sm:w-5 group-hover:translate-x-1 transition-transform" />
-                        </Link>
-                        <a
-                            href="#features"
-                            className="w-full sm:w-auto text-slate-300 hover:text-white font-medium px-6 sm:px-8 py-3.5 sm:py-4 rounded-xl border border-white/10 hover:border-white/20 transition-all text-sm sm:text-base text-center"
-                        >
-                            {t('landing.hero.secondary')}
-                        </a>
-                    </motion.div>
-
-                    {/* Social Proof */}
-                    <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ delay: 0.5 }}
-                        className="mt-8 sm:mt-12 flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-6 text-xs sm:text-sm text-slate-500"
-                    >
-                        <div className="flex items-center gap-1">
-                            {[...Array(5)].map((_, i) => (
-                                <Star key={i} className="h-3.5 w-3.5 sm:h-4 sm:w-4 fill-amber-400 text-amber-400" />
-                            ))}
-                            <span className="ml-1.5 sm:ml-2 text-slate-400">{t('landing.hero.rating')}</span>
-                        </div>
-                        <span className="hidden sm:block text-slate-700">|</span>
-                        <span className="text-slate-400">{t('landing.hero.freePlan')}</span>
-                    </motion.div>
-                </div>
-
-                {/* Hero Screenshot / Mockup */}
+            {/* Content */}
+            <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-32 pb-20 sm:pt-40 sm:pb-28 text-center">
+                {/* Badge */}
                 <motion.div
-                    initial={{ opacity: 0, y: 40 }}
+                    initial={{ opacity: 0, y: 16 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.4, duration: 0.7 }}
-                    className="mt-10 sm:mt-16 lg:mt-20 relative px-1"
+                    transition={{ duration: 0.5 }}
+                    className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/20 text-white/90 text-xs sm:text-sm font-medium px-4 py-1.5 rounded-full mb-6 sm:mb-8"
                 >
-                    <div className="relative rounded-xl sm:rounded-2xl border border-white/10 bg-[#1e293b]/80 backdrop-blur-xl shadow-2xl shadow-indigo-500/10 overflow-hidden mx-auto max-w-5xl">
-                        {/* Browser chrome */}
-                        <div className="flex items-center gap-2 px-3 sm:px-4 py-2 sm:py-3 bg-[#0f172a] border-b border-white/5">
-                            <div className="flex gap-1 sm:gap-1.5">
-                                <div className="w-2 h-2 sm:w-3 sm:h-3 rounded-full bg-red-500/60" />
-                                <div className="w-2 h-2 sm:w-3 sm:h-3 rounded-full bg-amber-500/60" />
-                                <div className="w-2 h-2 sm:w-3 sm:h-3 rounded-full bg-green-500/60" />
-                            </div>
-                            <div className="flex-1 mx-2 sm:mx-4">
-                                <div className="bg-white/5 rounded-md sm:rounded-lg px-2 sm:px-4 py-1 sm:py-1.5 text-[10px] sm:text-xs text-slate-500 max-w-md mx-auto text-center truncate">
-                                    app.triadak.io/dashboard
-                                </div>
-                            </div>
-                        </div>
-                        {/* Real Dashboard Screenshot */}
-                        <img
-                            src="/dashboard-preview.png"
-                            alt="Triadak Dashboard"
-                            className="w-full h-auto"
-                            loading="lazy"
-                        />
+                    <Zap className="h-3.5 w-3.5 text-indigo-400 flex-shrink-0" />
+                    <span>{t('landing.hero.badge')}</span>
+                </motion.div>
+
+                {/* Headline */}
+                <motion.h1
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.1, duration: 0.55 }}
+                    className="text-4xl sm:text-6xl lg:text-7xl font-extrabold text-white leading-[1.1] tracking-tight drop-shadow-lg"
+                >
+                    {t('landing.hero.title1')}{' '}
+                    <span className="bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+                        {t('landing.hero.titleHighlight')}
+                    </span>
+                </motion.h1>
+
+                {/* Subtitle */}
+                <motion.p
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.2, duration: 0.5 }}
+                    className="mt-5 sm:mt-6 text-base sm:text-lg lg:text-xl text-white/70 max-w-2xl mx-auto leading-relaxed px-2"
+                >
+                    {t('landing.hero.subtitle')}
+                </motion.p>
+
+                {/* CTA Buttons */}
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.3, duration: 0.5 }}
+                    className="mt-8 sm:mt-10 flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 px-4"
+                >
+                    <Link
+                        to="/login"
+                        className="w-full sm:w-auto bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-semibold px-7 sm:px-9 py-3.5 sm:py-4 rounded-xl text-sm sm:text-base shadow-xl shadow-indigo-600/30 hover:shadow-indigo-500/50 hover:scale-105 transition-all flex items-center justify-center gap-2 group"
+                    >
+                        {t('landing.hero.cta')}
+                        <ArrowRight className="h-4 w-4 sm:h-5 sm:w-5 group-hover:translate-x-1 transition-transform" />
+                    </Link>
+                    <a
+                        href="#features"
+                        className="w-full sm:w-auto text-white/80 hover:text-white font-medium px-7 sm:px-9 py-3.5 sm:py-4 rounded-xl border border-white/20 hover:border-white/40 backdrop-blur-sm bg-white/5 hover:bg-white/10 transition-all text-sm sm:text-base text-center"
+                    >
+                        {t('landing.hero.secondary')}
+                    </a>
+                </motion.div>
+
+                {/* Social proof */}
+                <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.5 }}
+                    className="mt-10 sm:mt-14 flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-8 text-xs sm:text-sm text-white/50"
+                >
+                    <div className="flex items-center gap-1.5">
+                        {[...Array(5)].map((_, i) => (
+                            <Star key={i} className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />
+                        ))}
+                        <span className="ml-1 text-white/70">{t('landing.hero.rating')}</span>
                     </div>
-                    {/* Glow under mockup */}
-                    <div className="absolute -bottom-8 sm:-bottom-10 left-1/2 -translate-x-1/2 w-3/4 h-16 sm:h-20 bg-indigo-500/20 blur-3xl rounded-full" />
+                    <span className="hidden sm:block text-white/20">|</span>
+                    <span className="text-white/70">{t('landing.hero.freePlan')}</span>
                 </motion.div>
             </div>
+
+            {/* Bottom fade into next section */}
+            <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-[#0f172a] to-transparent pointer-events-none z-10" />
         </section>
     );
 }
