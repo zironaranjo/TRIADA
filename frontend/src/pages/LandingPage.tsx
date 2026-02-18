@@ -422,14 +422,14 @@ const oldTools = [
 ];
 
 const integrations = [
-    { name: 'Airbnb', bg: 'bg-rose-500/10 border-rose-500/20', text: 'text-rose-400', icon: Building2 },
-    { name: 'Booking.com', bg: 'bg-blue-500/10 border-blue-500/20', text: 'text-blue-400', icon: Globe },
-    { name: 'VRBO', bg: 'bg-cyan-500/10 border-cyan-500/20', text: 'text-cyan-400', icon: Building2 },
-    { name: 'Lodgify', bg: 'bg-emerald-500/10 border-emerald-500/20', text: 'text-emerald-400', icon: Zap },
-    { name: 'Stripe', bg: 'bg-indigo-500/10 border-indigo-500/20', text: 'text-indigo-400', icon: CreditCard },
-    { name: 'WhatsApp', bg: 'bg-green-500/10 border-green-500/20', text: 'text-green-400', icon: MessageCircle },
-    { name: 'iCal Sync', bg: 'bg-amber-500/10 border-amber-500/20', text: 'text-amber-400', icon: CalendarDays },
-    { name: 'SMS', bg: 'bg-purple-500/10 border-purple-500/20', text: 'text-purple-400', icon: Smartphone },
+    { name: 'Airbnb', icon: Building2 },
+    { name: 'Booking.com', icon: Globe },
+    { name: 'VRBO', icon: Building2 },
+    { name: 'Lodgify', icon: Zap },
+    { name: 'Stripe', icon: CreditCard },
+    { name: 'WhatsApp', icon: MessageCircle },
+    { name: 'iCal Sync', icon: CalendarDays },
+    { name: 'SMS', icon: Smartphone },
 ];
 
 function ReplaceStack() {
@@ -520,10 +520,10 @@ function ReplaceStack() {
                                     whileInView={{ opacity: 1, scale: 1 }}
                                     viewport={{ once: true }}
                                     transition={{ delay: i * 0.07, duration: 0.35 }}
-                                    className={`flex flex-col items-center gap-1.5 px-3 py-3 rounded-xl border ${int.bg} transition-all hover:scale-105`}
+                                    className="flex flex-col items-center gap-1.5 px-3 py-3 rounded-xl border bg-emerald-500/10 border-emerald-500/20 transition-all hover:scale-105 hover:bg-emerald-500/15"
                                 >
-                                    <int.icon className={`h-5 w-5 ${int.text}`} />
-                                    <span className={`text-xs font-medium ${int.text}`}>{int.name}</span>
+                                    <int.icon className="h-5 w-5 text-emerald-400" />
+                                    <span className="text-xs font-medium text-emerald-400">{int.name}</span>
                                 </motion.div>
                             ))}
                         </div>
