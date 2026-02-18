@@ -19,6 +19,13 @@ import {
     Globe,
     Clock,
     Smartphone,
+    CreditCard,
+    MessageCircle,
+    FileSignature,
+    TrendingUp,
+    Trophy,
+    UserCog,
+    RefreshCw,
 } from 'lucide-react';
 
 // ─── Animation Variants ───────────────────────────────
@@ -364,6 +371,168 @@ function Features() {
                         </motion.div>
                     ))}
                 </motion.div>
+            </div>
+        </section>
+    );
+}
+
+// ─── Stats Bar ────────────────────────────────────────
+function StatsBar() {
+    const stats = [
+        { value: '40+', label: 'Funcionalidades incluidas' },
+        { value: '6', label: 'Canales conectados' },
+        { value: '4', label: 'Idiomas disponibles' },
+        { value: '100%', label: 'En la nube — sin instalar nada' },
+    ];
+
+    return (
+        <section className="py-12 sm:py-16 border-y border-white/[0.06] bg-white/[0.02]">
+            <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-10 text-center">
+                    {stats.map((s, i) => (
+                        <motion.div
+                            key={i}
+                            initial={{ opacity: 0, y: 16 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ delay: i * 0.1, duration: 0.45 }}
+                        >
+                            <p className="text-4xl sm:text-5xl font-extrabold bg-gradient-to-b from-white to-slate-400 bg-clip-text text-transparent tracking-tight">
+                                {s.value}
+                            </p>
+                            <p className="mt-2 text-xs sm:text-sm text-slate-500 leading-snug">{s.label}</p>
+                        </motion.div>
+                    ))}
+                </div>
+            </div>
+        </section>
+    );
+}
+
+// ─── Replace Your Stack ────────────────────────────────
+const oldTools = [
+    { name: 'Channel Manager', icon: RefreshCw, color: 'text-rose-400' },
+    { name: 'Software de reservas', icon: CalendarDays, color: 'text-orange-400' },
+    { name: 'Contabilidad', icon: PiggyBank, color: 'text-amber-400' },
+    { name: 'CRM de huéspedes', icon: Users, color: 'text-yellow-400' },
+    { name: 'WhatsApp Business', icon: MessageCircle, color: 'text-green-400' },
+    { name: 'Portal de propietarios', icon: UserCog, color: 'text-cyan-400' },
+    { name: 'Contratos digitales', icon: FileSignature, color: 'text-blue-400' },
+    { name: 'Revenue management', icon: TrendingUp, color: 'text-violet-400' },
+];
+
+const integrations = [
+    { name: 'Airbnb', bg: 'bg-rose-500/10 border-rose-500/20', text: 'text-rose-400', icon: Building2 },
+    { name: 'Booking.com', bg: 'bg-blue-500/10 border-blue-500/20', text: 'text-blue-400', icon: Globe },
+    { name: 'VRBO', bg: 'bg-cyan-500/10 border-cyan-500/20', text: 'text-cyan-400', icon: Building2 },
+    { name: 'Lodgify', bg: 'bg-emerald-500/10 border-emerald-500/20', text: 'text-emerald-400', icon: Zap },
+    { name: 'Stripe', bg: 'bg-indigo-500/10 border-indigo-500/20', text: 'text-indigo-400', icon: CreditCard },
+    { name: 'WhatsApp', bg: 'bg-green-500/10 border-green-500/20', text: 'text-green-400', icon: MessageCircle },
+    { name: 'iCal Sync', bg: 'bg-amber-500/10 border-amber-500/20', text: 'text-amber-400', icon: CalendarDays },
+    { name: 'SMS', bg: 'bg-purple-500/10 border-purple-500/20', text: 'text-purple-400', icon: Smartphone },
+];
+
+function ReplaceStack() {
+    return (
+        <section className="py-16 sm:py-24 lg:py-32 relative overflow-hidden">
+            {/* Background glow */}
+            <div className="absolute inset-0 pointer-events-none">
+                <div className="absolute top-1/2 right-0 w-[400px] h-[400px] bg-indigo-500/8 rounded-full blur-[120px]" />
+                <div className="absolute bottom-0 left-1/4 w-[300px] h-[300px] bg-purple-500/6 rounded-full blur-[100px]" />
+            </div>
+
+            <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+
+                    {/* Left — Replace tools */}
+                    <motion.div
+                        initial="hidden"
+                        whileInView="visible"
+                        viewport={{ once: true, margin: '-60px' }}
+                        variants={stagger}
+                    >
+                        <motion.div variants={fadeUp} custom={0}>
+                            <p className="text-xs sm:text-sm font-semibold text-indigo-400 uppercase tracking-wider mb-3">Por qué Triadak</p>
+                            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-4 leading-tight">
+                                Deja de pagar por{' '}
+                                <span className="line-through text-slate-500">8 herramientas</span>
+                                <br />
+                                <span className="bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">
+                                    Usa solo una.
+                                </span>
+                            </h2>
+                            <p className="text-slate-400 text-sm sm:text-base leading-relaxed mb-8">
+                                La mayoría de gestores usan entre 4 y 8 herramientas distintas. Triadak las reemplaza todas con una plataforma unificada, más barata y sin fricciones.
+                            </p>
+                        </motion.div>
+
+                        <motion.div variants={fadeUp} custom={1} className="grid grid-cols-2 gap-2.5">
+                            {oldTools.map((tool) => (
+                                <div
+                                    key={tool.name}
+                                    className="flex items-center gap-2.5 px-3 py-2.5 rounded-lg border border-white/[0.06] bg-white/[0.03]"
+                                >
+                                    <tool.icon className={`h-4 w-4 flex-shrink-0 ${tool.color}`} />
+                                    <span className="text-xs sm:text-sm text-slate-400 truncate">{tool.name}</span>
+                                    <Check className="h-3.5 w-3.5 text-emerald-400 ml-auto flex-shrink-0" />
+                                </div>
+                            ))}
+                        </motion.div>
+
+                        <motion.div variants={fadeUp} custom={2} className="mt-8">
+                            <Link
+                                to="/login"
+                                className="inline-flex items-center gap-2 text-sm font-semibold text-white bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 px-5 py-3 rounded-xl transition-all group"
+                            >
+                                Empieza gratis hoy
+                                <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                            </Link>
+                        </motion.div>
+                    </motion.div>
+
+                    {/* Right — Integrations hub */}
+                    <motion.div
+                        initial={{ opacity: 0, x: 30 }}
+                        whileInView={{ opacity: 1, x: 0 }}
+                        viewport={{ once: true, margin: '-60px' }}
+                        transition={{ duration: 0.6 }}
+                        className="relative"
+                    >
+                        {/* Central Triadak node */}
+                        <div className="flex flex-col items-center mb-6">
+                            <div className="relative">
+                                <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl bg-gradient-to-br from-indigo-500/20 to-purple-500/20 border border-indigo-500/30 flex items-center justify-center shadow-xl shadow-indigo-500/10">
+                                    <Trophy className="h-9 w-9 sm:h-10 sm:w-10 text-indigo-400" />
+                                </div>
+                                {/* Pulse ring */}
+                                <div className="absolute inset-0 rounded-2xl border border-indigo-500/20 animate-ping opacity-30" />
+                            </div>
+                            <p className="mt-3 text-sm font-semibold text-white">Triadak</p>
+                            <p className="text-xs text-slate-500">Todo en uno</p>
+                        </div>
+
+                        {/* Integration badges grid */}
+                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+                            {integrations.map((int, i) => (
+                                <motion.div
+                                    key={int.name}
+                                    initial={{ opacity: 0, scale: 0.9 }}
+                                    whileInView={{ opacity: 1, scale: 1 }}
+                                    viewport={{ once: true }}
+                                    transition={{ delay: i * 0.07, duration: 0.35 }}
+                                    className={`flex flex-col items-center gap-1.5 px-3 py-3 rounded-xl border ${int.bg} transition-all hover:scale-105`}
+                                >
+                                    <int.icon className={`h-5 w-5 ${int.text}`} />
+                                    <span className={`text-xs font-medium ${int.text}`}>{int.name}</span>
+                                </motion.div>
+                            ))}
+                        </div>
+
+                        <p className="text-center text-xs text-slate-600 mt-4">
+                            Más integraciones próximamente
+                        </p>
+                    </motion.div>
+                </div>
             </div>
         </section>
     );
@@ -930,7 +1099,9 @@ export default function LandingPage() {
         <div className="min-h-screen bg-[#0f172a] text-slate-100 overflow-x-hidden scroll-smooth">
             <Navbar />
             <Hero />
+            <StatsBar />
             <Features />
+            <ReplaceStack />
             <HowItWorks />
             <Pricing />
             <Testimonials />
