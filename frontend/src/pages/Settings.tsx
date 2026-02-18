@@ -67,9 +67,10 @@ const CURRENCIES = [
 // ─── Main Settings Component ─────────────────────────
 // ─── Role config ──────────────────────────────────────
 const ROLE_CONFIG: Record<UserRole, { icon: React.ElementType; color: string; bg: string }> = {
-    admin: { icon: Crown, color: 'text-amber-400', bg: 'bg-amber-500/20' },
-    staff: { icon: UserCog, color: 'text-blue-400', bg: 'bg-blue-500/20' },
-    owner: { icon: Eye, color: 'text-emerald-400', bg: 'bg-emerald-500/20' },
+    admin:  { icon: Crown,   color: 'text-amber-400',   bg: 'bg-amber-500/20' },
+    staff:  { icon: UserCog, color: 'text-blue-400',    bg: 'bg-blue-500/20' },
+    owner:  { icon: Eye,     color: 'text-emerald-400', bg: 'bg-emerald-500/20' },
+    worker: { icon: UserCog, color: 'text-cyan-400',    bg: 'bg-cyan-500/20' },
 };
 
 interface TeamMember {

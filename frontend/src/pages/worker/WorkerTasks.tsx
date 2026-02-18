@@ -5,7 +5,6 @@ import {
   ClipboardList,
   CheckCircle2,
   Clock,
-  AlertCircle,
   RefreshCw,
   Home,
   CalendarDays,
@@ -21,11 +20,6 @@ interface StaffMember {
   id: string;
   name: string;
   email: string;
-}
-
-interface Property {
-  id: string;
-  name: string;
 }
 
 interface Task {
