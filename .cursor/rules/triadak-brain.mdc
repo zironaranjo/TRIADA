@@ -137,6 +137,28 @@ SaaS platform for **vacation rental management** (triadak.io). Combines features
     - **WhatsApp env vars**: `META_WHATSAPP_PHONE_ID` (Phone Number ID), `META_WHATSAPP_TOKEN` (access token — **expires periodically, needs renewal or permanent System User token**)
     - **SMS env vars**: `TWILIO_ACCOUNT_SID`, `TWILIO_AUTH_TOKEN`, `TWILIO_PHONE_NUMBER`
     - **i18n**: messaging.* keys in EN, ES, DE, FR
+34. **Booking Edit Modal** - Edición inline de reservas en el modal de detalle:
+    - Botón de editar (lápiz) en el header del modal de detalle de reserva
+    - Formulario inline en el mismo modal: nombre huésped, email, teléfono, fechas, precio, plataforma, propiedad, notas
+    - Botones Guardar/Cancelar. Actualiza en Supabase y recarga la lista
+    - **i18n**: bookings.editBooking en EN, ES, DE, FR
+35. **Contratos y Documentos** - Gestión de contratos de alquiler en `/contracts`:
+    - Tabla de contratos con estado (draft/sent/signed/cancelled), filtros y búsqueda
+    - Modal para generar contrato desde una reserva existente: rellena automáticamente nombre, fechas, propiedad, precio
+    - Generación de PDF con jspdf (encabezado, cláusulas, datos de reserva, firma)
+    - Link único de firma `/contract/:token` para el huésped (público, sin auth). Huésped escribe nombre como firma digital
+    - Estados del contrato: draft → sent → signed. `signed_at` se registra en Supabase
+    - Tabla `contracts` con RLS: usuario gestiona sus contratos, acceso público por `sign_token` para leer y firmar
+    - SQL migration: `007_contracts.sql`
+    - **i18n**: contracts.* keys en EN, ES, DE, FR
+36. **Revenue Management & Dynamic Pricing** - Optimización de precios en `/revenue`:
+    - KPIs: RevPAR (ingreso por noche disponible), ADR (tarifa media diaria), % ocupación, ingreso potencial
+    - Sugerencias de precio por propiedad: precio actual vs sugerido con botón "Aplicar" que actualiza `price_per_night` en Supabase
+    - Algoritmo de precios: multiplicador de temporada + ajuste por ocupación (±15%) + prima fin de semana (+10%)
+    - Reglas de temporada configurables: nombre, fechas MM-DD inicio/fin, multiplicador, tipo (alta/media/baja). Guardadas en `localStorage`
+    - Calendario de precios mensual: colores por temporada, precio sugerido por día, días reservados marcados
+    - Filtro por propiedad. Navegación por mes en el calendario
+    - **i18n**: revenue.* keys en EN, ES, DE, FR
 
 ## Pending / Roadmap (Fase 2 & 3)
 
@@ -179,7 +201,7 @@ SaaS platform for **vacation rental management** (triadak.io). Combines features
 - [x] DB fix: properties.owner_id FK changed from profiles → owner table
 
 ## Key Files
-- `frontend/src/App.tsx` - Main routing (public: /, /login; protected: /dashboard, /properties, /bookings, /owners, /crm, /accounting, /pricing, /billing, /settings, /statements, /channels)
+- `frontend/src/App.tsx` - Main routing (public: /, /login, /guest/:token, /contract/:token; protected: /dashboard, /properties, /bookings, /owners, /crm, /accounting, /pricing, /billing, /settings, /statements, /channels, /occupancy, /messaging, /contracts, /revenue, /staff)
 - `frontend/src/components/Layout.tsx` - App shell with sidebar + mobile menu + NotificationCenter + user avatar
 - `frontend/src/components/NotificationCenter.tsx` - Bell icon + portal dropdown with realtime notifications
 - `frontend/src/hooks/useUserAvatar.ts` - Reusable hook to load user avatar (localStorage + Supabase Storage fallback)
@@ -256,6 +278,8 @@ SaaS platform for **vacation rental management** (triadak.io). Combines features
 - SQL migration `004_channel_manager.sql` already executed in Supabase
 - SQL migration `005_guest_portal.sql` already executed in Supabase
 - SQL migration `006_messaging.sql` already executed in Supabase
+- SQL migration `007_contracts.sql` already executed in Supabase
+- Revenue Management rules saved in `localStorage` key `triadak_season_rules` (no DB table needed)
 - Airbnb/Booking.com full APIs require partner access — iCal sync available now, API ready when approved
 - **Meta WhatsApp Cloud API** ya configurada y funcionando. Número: `+34 643 26 77 97`. Phone ID: `942271912297397`. Env vars: `META_WHATSAPP_PHONE_ID`, `META_WHATSAPP_TOKEN`
 - **IMPORTANTE**: El `META_WHATSAPP_TOKEN` es un token temporal que caduca (~1h en desarrollo). Para producción estable hay que crear un **System User token permanente** en Meta Business Manager → Configuración → Usuarios del sistema → Generar token sin fecha de expiración con permisos `whatsapp_business_messaging` + `whatsapp_business_management`
