@@ -992,6 +992,47 @@
       "poweredBy": "Powered by Triadak"
     }
   },
+  "worker": {
+    "portal": "Mitarbeiterportal",
+    "role": "Operatives Personal",
+    "hello": "Hallo",
+    "myTasks": "Meine Aufgaben",
+    "myEarnings": "Meine Einnahmen",
+    "today": "Heute",
+    "tomorrow": "Morgen",
+    "overdue": "Überfällig",
+    "tasksToday": "Aufgaben heute",
+    "noTasks": "Keine Aufgaben für diesen Filter",
+    "checklist": "Checkliste",
+    "startTask": "Aufgabe starten",
+    "markDone": "Als erledigt markieren",
+    "awaitingVerification": "Warte auf Bestätigung",
+    "rating": "Qualitätsbewertung",
+    "baseSalary": "Grundgehalt",
+    "taskIncome": "Aufgabeneinkommen",
+    "totalMonth": "Gesamt diesen Monat",
+    "taskBreakdown": "Aufgabenübersicht",
+    "completedTasks": "abgeschlossene Aufgaben",
+    "noCompletedTasks": "Keine abgeschlossenen Aufgaben diesen Monat",
+    "allTimeTaskIncome": "Gesamtes Aufgabeneinkommen",
+    "totalCompletedTasks": "Abgeschlossene Aufgaben gesamt",
+    "status": {
+      "pending": "Ausstehend",
+      "in_progress": "In Bearbeitung",
+      "completed": "Abgeschlossen",
+      "verified": "Verifiziert"
+    },
+    "filter": {
+      "all": "Alle",
+      "today": "Heute",
+      "upcoming": "Demnächst",
+      "completed": "Erledigt"
+    },
+    "nav": {
+      "tasks": "Meine Aufgaben",
+      "earnings": "Meine Einnahmen"
+    }
+  },
   "backup": {
     "title": "Datensicherung & Export",
     "subtitle": "Exportieren Sie alle Daten für Compliance, Migration oder Sicherheit",

@@ -1033,6 +1033,47 @@
       "poweredBy": "Powered by Triadak"
     }
   },
+  "worker": {
+    "portal": "Worker Portal",
+    "role": "Operational Staff",
+    "hello": "Hello",
+    "myTasks": "My Tasks",
+    "myEarnings": "My Earnings",
+    "today": "Today",
+    "tomorrow": "Tomorrow",
+    "overdue": "Overdue",
+    "tasksToday": "Tasks Today",
+    "noTasks": "No tasks for this filter",
+    "checklist": "Checklist",
+    "startTask": "Start Task",
+    "markDone": "Mark as Done",
+    "awaitingVerification": "Awaiting verification",
+    "rating": "Quality rating",
+    "baseSalary": "Base Salary",
+    "taskIncome": "Task Income",
+    "totalMonth": "Total This Month",
+    "taskBreakdown": "Task Breakdown",
+    "completedTasks": "completed tasks",
+    "noCompletedTasks": "No completed tasks this month",
+    "allTimeTaskIncome": "All-time task income",
+    "totalCompletedTasks": "Total completed tasks",
+    "status": {
+      "pending": "Pending",
+      "in_progress": "In Progress",
+      "completed": "Completed",
+      "verified": "Verified"
+    },
+    "filter": {
+      "all": "All",
+      "today": "Today",
+      "upcoming": "Upcoming",
+      "completed": "Done"
+    },
+    "nav": {
+      "tasks": "My Tasks",
+      "earnings": "My Earnings"
+    }
+  },
   "backup": {
     "title": "Data Backup & Export",
     "subtitle": "Export all your data for compliance, migration or peace of mind",

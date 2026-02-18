@@ -2,7 +2,7 @@ import { createContext, useContext, useEffect, useState, type ReactNode } from '
 import type { User, Session } from '@supabase/supabase-js';
 import { supabase } from '../lib/supabase';
 
-export type UserRole = 'admin' | 'owner' | 'staff';
+export type UserRole = 'admin' | 'owner' | 'staff' | 'worker';
 
 interface Profile {
     id: string;
@@ -33,6 +33,7 @@ interface AuthContextType {
     isAdmin: boolean;
     isOwner: boolean;
     isStaff: boolean;
+    isWorker: boolean;
     hasActivePlan: boolean;
     signOut: () => Promise<void>;
     refreshProfile: () => Promise<void>;
@@ -97,6 +98,18 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
             if (ownerMatch) {
                 localStorage.setItem(roleKey, 'true');
                 return 'owner';
+            }
+
+            // Check if email matches a staff_member (operational worker)
+            const { data: workerMatch } = await supabase
+                .from('staff_members')
+                .select('id')
+                .eq('email', email)
+                .maybeSingle();
+
+            if (workerMatch) {
+                localStorage.setItem(roleKey, 'true');
+                return 'worker';
             }
 
             // Default: staff (mark as assigned so we don't re-check)
@@ -239,6 +252,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     const isAdmin = profile?.role === 'admin';
     const isOwner = profile?.role === 'owner';
     const isStaff = profile?.role === 'staff';
+    const isWorker = profile?.role === 'worker';
     const hasActivePlan = subscription !== null && ['active', 'trialing'].includes(subscription.status);
 
     const value = {
@@ -250,6 +264,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         isAdmin,
         isOwner,
         isStaff,
+        isWorker,
         hasActivePlan,
         signOut,
         refreshProfile,

@@ -992,6 +992,47 @@
       "poweredBy": "Powered by Triadak"
     }
   },
+  "worker": {
+    "portal": "Portail Opérationnel",
+    "role": "Personnel Opérationnel",
+    "hello": "Bonjour",
+    "myTasks": "Mes Tâches",
+    "myEarnings": "Mes Revenus",
+    "today": "Aujourd'hui",
+    "tomorrow": "Demain",
+    "overdue": "En retard",
+    "tasksToday": "Tâches aujourd'hui",
+    "noTasks": "Aucune tâche pour ce filtre",
+    "checklist": "Liste de contrôle",
+    "startTask": "Démarrer la tâche",
+    "markDone": "Marquer comme fait",
+    "awaitingVerification": "En attente de vérification",
+    "rating": "Note de qualité",
+    "baseSalary": "Salaire de base",
+    "taskIncome": "Revenus des tâches",
+    "totalMonth": "Total ce mois",
+    "taskBreakdown": "Détail des tâches",
+    "completedTasks": "tâches terminées",
+    "noCompletedTasks": "Aucune tâche terminée ce mois",
+    "allTimeTaskIncome": "Revenus totaux des tâches",
+    "totalCompletedTasks": "Total tâches terminées",
+    "status": {
+      "pending": "En attente",
+      "in_progress": "En cours",
+      "completed": "Terminée",
+      "verified": "Vérifiée"
+    },
+    "filter": {
+      "all": "Toutes",
+      "today": "Aujourd'hui",
+      "upcoming": "À venir",
+      "completed": "Faites"
+    },
+    "nav": {
+      "tasks": "Mes Tâches",
+      "earnings": "Mes Revenus"
+    }
+  },
   "backup": {
     "title": "Sauvegarde & Export des données",
     "subtitle": "Exportez toutes vos données pour la conformité, la migration ou la tranquillité d'esprit",

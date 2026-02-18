@@ -82,11 +82,12 @@ const Login = () => {
                         .eq('user_id', data.user.id)
                         .single();
 
-                    // Only redirect to portal if role is explicitly 'owner'
-                    // AND role was already assigned (not a fresh account)
+                    // Redirect based on role
                     const roleAssigned = localStorage.getItem(`triadak_role_assigned_${data.user.id}`);
                     if (profileData?.role === 'owner' && roleAssigned) {
                         window.location.href = '/portal/dashboard';
+                    } else if (profileData?.role === 'worker') {
+                        window.location.href = '/worker/tasks';
                     } else {
                         window.location.href = '/dashboard';
                     }

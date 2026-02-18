@@ -24,6 +24,9 @@ import RevenueManagement from './pages/RevenueManagement';
 import Benchmarking from './pages/Benchmarking';
 import AuditLog from './pages/AuditLog';
 import DataBackup from './pages/DataBackup';
+import WorkerLayout from './components/WorkerLayout';
+import WorkerTasks from './pages/worker/WorkerTasks';
+import WorkerEarnings from './pages/worker/WorkerEarnings';
 import Layout from './components/Layout';
 import LandingPage from './pages/LandingPage';
 
@@ -89,6 +92,18 @@ function App() {
             <Route path="portal/dashboard" element={<OwnerDashboard />} />
             <Route path="portal/properties" element={<OwnerProperties />} />
             <Route path="portal/statements" element={<OwnerMyStatements />} />
+          </Route>
+
+          {/* Worker portal (operational staff) */}
+          <Route
+            element={
+              <ProtectedRoute>
+                <WorkerLayout />
+              </ProtectedRoute>
+            }
+          >
+            <Route path="worker/tasks"    element={<WorkerTasks />} />
+            <Route path="worker/earnings" element={<WorkerEarnings />} />
           </Route>
 
           {/* Catch-all */}

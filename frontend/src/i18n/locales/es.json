@@ -1033,6 +1033,47 @@
       "poweredBy": "Powered by Triadak"
     }
   },
+  "worker": {
+    "portal": "Portal Operativo",
+    "role": "Personal Operativo",
+    "hello": "Hola",
+    "myTasks": "Mis Tareas",
+    "myEarnings": "Mis Ingresos",
+    "today": "Hoy",
+    "tomorrow": "Mañana",
+    "overdue": "Atrasadas",
+    "tasksToday": "Tareas Hoy",
+    "noTasks": "No hay tareas para este filtro",
+    "checklist": "Lista de verificación",
+    "startTask": "Iniciar Tarea",
+    "markDone": "Marcar como Hecha",
+    "awaitingVerification": "Esperando verificación",
+    "rating": "Valoración de calidad",
+    "baseSalary": "Salario Base",
+    "taskIncome": "Ingresos por Tareas",
+    "totalMonth": "Total Este Mes",
+    "taskBreakdown": "Desglose de Tareas",
+    "completedTasks": "tareas completadas",
+    "noCompletedTasks": "Sin tareas completadas este mes",
+    "allTimeTaskIncome": "Ingresos por tareas (total)",
+    "totalCompletedTasks": "Tareas completadas totales",
+    "status": {
+      "pending": "Pendiente",
+      "in_progress": "En curso",
+      "completed": "Completada",
+      "verified": "Verificada"
+    },
+    "filter": {
+      "all": "Todas",
+      "today": "Hoy",
+      "upcoming": "Próximas",
+      "completed": "Hechas"
+    },
+    "nav": {
+      "tasks": "Mis Tareas",
+      "earnings": "Mis Ingresos"
+    }
+  },
   "backup": {
     "title": "Backup y Exportación de Datos",
     "subtitle": "Exporta todos tus datos para cumplimiento legal, migración o tranquilidad",

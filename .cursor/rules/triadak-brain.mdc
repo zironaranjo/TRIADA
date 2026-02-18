@@ -76,11 +76,12 @@ SaaS platform for **vacation rental management** (triadak.io). Combines features
 19. **Owner Portal** - Separate `/owner/*` routes with dedicated layout (emerald theme), dashboard (revenue charts, occupancy, upcoming bookings), read-only properties view, and personal statements with PDF/CSV export. Owners with role `owner` are auto-redirected. Admins can access via sidebar link. Links owner record to user via email match (profiles.email = owner.email)
 20. **Responsive Login** - Mobile-optimized login page with adaptive logo sizes, compact padding, and scroll support
 21. **Developer Credit** - "Developed by zirox.io" in Login and Landing Page footers
-22. **Role-Based Access System** - Three roles (admin/staff/owner) with auto-assignment:
+22. **Role-Based Access System** - Four roles (admin/staff/owner/worker) with auto-assignment:
     - First user = admin automatically
     - Email matching owner table = owner role
     - Default = staff
-    - Login redirects owners to `/portal/dashboard`, admin/staff to `/dashboard`
+    - Login redirects owners to `/portal/dashboard`, workers to `/worker/tasks`, admin/staff to `/dashboard`
+    - **worker** role: email matching `staff_members` table → operational worker (cleaner/maintenance)
     - Team management panel in Settings (admin only): view members, change roles, remove members
     - Owner portal at `/portal/*` uses separate OwnerLayout; admin accesses owner pages via `/owner/*` within main Layout
 23. **Advanced Finance Engine** - Profit & Loss statement, expense reconciliation system (localStorage persisted), category filtering, reconciliation progress bar + status panel
@@ -217,7 +218,7 @@ SaaS platform for **vacation rental management** (triadak.io). Combines features
 - [x] **Auditoría y logs** — Timeline por día con filtros, diff de cambios campo a campo, triggers automáticos en tablas clave, export CSV. Implementado en `/audit`
 - [x] **Backup/Export de datos** — ZIP completo + exportación individual CSV/JSON por sección (7 tablas). Contador de registros, última fecha de backup en localStorage. Implementado en `/backup`
 - [x] **KPI Benchmarking** — Pódium, gráficos comparativos (revenue/ocupación/ADR/RevPAR), tabla detallada con vs media, selector de período, export CSV. Implementado en `/benchmarking`
-- [ ] **Rol Operativo (future)** — Dar acceso limitado a cleaners/mantenimiento: ver tareas asignadas del día, marcar completadas, subir fotos de verificación, ver historial de pagos
+- [x] **Rol Operativo** — Portal dedicado `/worker/*` para limpiadores/mantenimiento: ver tareas del día/próximas/completadas, marcar in_progress/done, checklist interactivo, ver ingresos por mes (salario base + tareas). WorkerLayout (cyan theme). Rol `worker` detectado por email en `staff_members`. Redirect automático al login. 4 idiomas
 
 ### Completed
 - [x] Finance dashboard (improved with responsive layout, filters, export buttons)
@@ -275,7 +276,10 @@ SaaS platform for **vacation rental management** (triadak.io). Combines features
 - `frontend/src/pages/Benchmarking.tsx` - KPI Benchmarking page at /benchmarking (podium, switchable bar charts, detailed metrics table, period selector, CSV export)
 - `frontend/src/pages/AuditLog.tsx` - Audit log page at /audit (timeline by day, action badges, diff viewer, filters, CSV export, load more)
 - `frontend/src/pages/DataBackup.tsx` - Data backup page at /backup (full ZIP export, per-section CSV/JSON, record counts, jszip)
-- `frontend/src/hooks/useCurrency.ts` - Multi-currency hook: 14 currencies, EUR-based static rates, format()/convert()/convertFrom(), reads preferred currency from localStorage
+- `frontend/src/hooks/useCurrency.ts` - Multi-currency hook
+- `frontend/src/components/WorkerLayout.tsx` - Worker portal shell (cyan theme, minimal nav: tasks + earnings)
+- `frontend/src/pages/worker/WorkerTasks.tsx` - Worker tasks page (today/upcoming/completed filter, checklist, status workflow)
+- `frontend/src/pages/worker/WorkerEarnings.tsx` - Worker earnings page (base salary + task income by month): 14 currencies, EUR-based static rates, format()/convert()/convertFrom(), reads preferred currency from localStorage
 - `supabase/migrations/009_property_currency.sql` - Adds currency column to properties table (default EUR)
 - `frontend/src/lib/auditLog.ts` - logAudit() utility for manual audit logging from frontend
 - `supabase/migrations/008_audit_logs.sql` - SQL setup for audit_logs table + triggers on bookings/properties/contacts/expenses
