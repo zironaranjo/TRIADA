@@ -98,7 +98,7 @@ export default function DataBackup() {
     const query = supabase.from(section.table).select(section.columns || '*');
     const { data, error } = await query;
     if (error) throw error;
-    return (data || []) as Record<string, unknown>[];
+    return (data as unknown as Record<string, unknown>[]) || [];
   }
 
   async function exportSectionCsv(section: Section) {
