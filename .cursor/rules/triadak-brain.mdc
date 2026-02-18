@@ -152,15 +152,23 @@ SaaS platform for **vacation rental management** (triadak.io). Combines features
     - Tabla `contracts` con RLS: usuario gestiona sus contratos, acceso público por `sign_token` para leer y firmar
     - SQL migration: `007_contracts.sql`
     - **i18n**: contracts.* keys en EN, ES, DE, FR
-39. **Backup & Export de Datos** - Exportación completa en `/backup`:
-    - Tarjeta principal: "Exportar ZIP Completo" — genera ZIP con CSV + JSON de cada sección + README.txt
-    - 7 secciones individuales: propiedades, reservas, contactos, gastos, propietarios, contratos, personal
-    - Cada sección muestra: icono, descripción, contador de registros, botones CSV y JSON independientes
-    - Función `toCSV()` con escape correcto de comas, comillas y saltos de línea
-    - Fecha del último backup guardada en `localStorage` key `triadak_last_backup`
-    - Nota de privacidad: datos exportados directamente desde Supabase, sin servidores externos
-    - Librería: `jszip` (instalada en frontend)
-    - **i18n**: backup.* keys en EN, ES, DE, FR
+36. **Revenue Management & Dynamic Pricing** - Optimización de precios en `/revenue`:
+    - KPIs: RevPAR (ingreso por noche disponible), ADR (tarifa media diaria), % ocupación, ingreso potencial
+    - Sugerencias de precio por propiedad: precio actual vs sugerido con botón "Aplicar" que actualiza `price_per_night` en Supabase
+    - Algoritmo de precios: multiplicador de temporada + ajuste por ocupación (±15%) + prima fin de semana (+10%)
+    - Reglas de temporada configurables: nombre, fechas MM-DD inicio/fin, multiplicador, tipo (alta/media/baja). Guardadas en `localStorage`
+    - Calendario de precios mensual: colores por temporada, precio sugerido por día, días reservados marcados
+    - Filtro por propiedad. Navegación por mes en el calendario
+    - **i18n**: revenue.* keys en EN, ES, DE, FR
+37. **KPI Benchmarking** - Comparativa de rendimiento entre propiedades en `/benchmarking`:
+    - Pódium visual (1º/2º/3º) con barras de altura proporcional y trofeo
+    - Gráficos de barras horizontales switcheables: Ingresos, Ocupación %, ADR, RevPAR. Colores únicos por propiedad
+    - Tabla de métricas detallada: posición, ingresos, reservas, ocupación (badge verde/amarillo/rojo), ADR, RevPAR, estancia media, vs media (±%)
+    - Selector de período: este mes, mes anterior, últimos 3/6 meses, este año
+    - Tarjetas de resumen: total propiedades, ingresos totales, total reservas, ocupación media
+    - Exportar CSV con todas las métricas por propiedad
+    - Todo calculado desde Supabase (sin backend)
+    - **i18n**: benchmarking.* keys en EN, ES, DE, FR
 38. **Auditoría y Logs** - Registro de actividad del equipo en `/audit`:
     - Timeline agrupado por día con badges de color por acción (creado=verde, actualizado=azul, eliminado=rojo, login=violeta, etc.)
     - Filtros: búsqueda por usuario/entidad, tipo de acción, tipo de entidad, rango de fechas
@@ -171,23 +179,29 @@ SaaS platform for **vacation rental management** (triadak.io). Combines features
     - Utility `logAudit()` en `frontend/src/lib/auditLog.ts` para registrar acciones manuales desde frontend
     - SQL migration: `008_audit_logs.sql`
     - **i18n**: audit.* keys en EN, ES, DE, FR
-37. **KPI Benchmarking** - Comparativa de rendimiento entre propiedades en `/benchmarking`:
-    - Pódium visual (1º/2º/3º) con barras de altura proporcional y trofeo
-    - Gráficos de barras horizontales switcheables: Ingresos, Ocupación %, ADR, RevPAR. Colores únicos por propiedad
-    - Tabla de métricas detallada: posición, ingresos, reservas, ocupación (badge verde/amarillo/rojo), ADR, RevPAR, estancia media, vs media (±%)
-    - Selector de período: este mes, mes anterior, últimos 3/6 meses, este año
-    - Tarjetas de resumen: total propiedades, ingresos totales, total reservas, ocupación media
-    - Exportar CSV con todas las métricas por propiedad
-    - Todo calculado desde Supabase (sin backend)
-    - **i18n**: benchmarking.* keys en EN, ES, DE, FR
-36. **Revenue Management & Dynamic Pricing** - Optimización de precios en `/revenue`:
-    - KPIs: RevPAR (ingreso por noche disponible), ADR (tarifa media diaria), % ocupación, ingreso potencial
-    - Sugerencias de precio por propiedad: precio actual vs sugerido con botón "Aplicar" que actualiza `price_per_night` en Supabase
-    - Algoritmo de precios: multiplicador de temporada + ajuste por ocupación (±15%) + prima fin de semana (+10%)
-    - Reglas de temporada configurables: nombre, fechas MM-DD inicio/fin, multiplicador, tipo (alta/media/baja). Guardadas en `localStorage`
-    - Calendario de precios mensual: colores por temporada, precio sugerido por día, días reservados marcados
-    - Filtro por propiedad. Navegación por mes en el calendario
-    - **i18n**: revenue.* keys en EN, ES, DE, FR
+39. **Backup & Export de Datos** - Exportación completa en `/backup`:
+    - Tarjeta principal: "Exportar ZIP Completo" — genera ZIP con CSV + JSON de cada sección + README.txt
+    - 7 secciones individuales: propiedades, reservas, contactos, gastos, propietarios, contratos, personal
+    - Cada sección muestra: icono, descripción, contador de registros, botones CSV y JSON independientes
+    - Función `toCSV()` con escape correcto de comas, comillas y saltos de línea
+    - Fecha del último backup guardada en `localStorage` key `triadak_last_backup`
+    - Nota de privacidad: datos exportados directamente desde Supabase, sin servidores externos
+    - Librería: `jszip` (instalada en frontend)
+    - **i18n**: backup.* keys en EN, ES, DE, FR
+40. **Multi-currency Support** - Soporte para múltiples monedas:
+    - Hook `useCurrency` con 14 monedas (EUR base): EUR, USD, GBP, CHF, CAD, AUD, MXN, BRL, JPY, SEK, NOK, DKK, AED, THB
+    - Tasas de cambio estáticas (Feb 2026) — sin API externa. Actualizable manualmente en `useCurrency.ts`
+    - `format(amount)` convierte de EUR a moneda preferida + formatea con `Intl.NumberFormat`
+    - Lee moneda preferida de `localStorage` key `triadak_preferences.currency` (Settings → Preferencias)
+    - Aplicado en: Revenue Management (KPIs, sugerencias, calendario) y Benchmarking (gráficos, tabla, resumen)
+    - Columna `currency` en `properties` (migration 009). Settings ampliado a 14 opciones con símbolos correctos
+41. **Rol Operativo (Worker Portal)** - Portal dedicado para limpiadores/mantenimiento en `/worker/*`:
+    - Rol `worker` detectado automáticamente: email del usuario coincide con `staff_members.email`
+    - Login redirige a `/worker/tasks` (igual que owners van a `/portal/dashboard`)
+    - **WorkerLayout**: sidebar mínimo (cyan theme) con Mis Tareas + Mis Ingresos
+    - **WorkerTasks** (`/worker/tasks`): filtros Hoy/Próximas/Completadas/Todas, expandir tarea muestra checklist interactivo, flujo pending → in_progress → completed, badge de calificación si verified
+    - **WorkerEarnings** (`/worker/earnings`): salario base + ingresos por tareas por mes, selector de mes, desglose de tareas completadas, estadísticas de todos los tiempos
+    - **i18n**: worker.* keys en EN, ES, DE, FR
 
 ## Pending / Roadmap (Fase 2 & 3)
 
