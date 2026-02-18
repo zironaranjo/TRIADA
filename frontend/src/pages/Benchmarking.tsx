@@ -322,10 +322,10 @@ export default function Benchmarking() {
                 <Tooltip
                   contentStyle={{ backgroundColor: '#1e293b', border: '1px solid #334155', borderRadius: 12 }}
                   labelStyle={{ color: '#e2e8f0', fontWeight: 600 }}
-                  formatter={(value: number, _name: string, props) => [
-                    chartConfig[activeChart].formatter(value),
-                    props.payload.fullName,
-                  ]}
+                  formatter={(value: number, _name: string, props: { payload?: { fullName?: string } }) => [
+                    chartConfig[activeChart].formatter(value as number),
+                    props?.payload?.fullName ?? '',
+                  ] as [string, string]}
                 />
                 <Bar dataKey={chartConfig[activeChart].key} radius={[0, 6, 6, 0]}>
                   {chartData.map((entry, i) => (
