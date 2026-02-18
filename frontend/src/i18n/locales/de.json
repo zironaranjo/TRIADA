@@ -251,6 +251,7 @@
     "generatePaymentLink": "Zahlungslink generieren",
     "changeStatus": "Status ändern",
     "createModalTitle": "Neue Reservierung",
+    "editBooking": "Reservierung bearbeiten",
     "labelSelectProperty": "Objekt auswählen",
     "labelGuestName": "Gastname",
     "labelGuestEmail": "Gast-E-Mail",

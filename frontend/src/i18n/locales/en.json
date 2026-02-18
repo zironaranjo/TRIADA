@@ -251,6 +251,7 @@
     "generatePaymentLink": "Generate Payment Link",
     "changeStatus": "Change Status",
     "createModalTitle": "New Reservation",
+    "editBooking": "Edit Reservation",
     "labelSelectProperty": "Select Property",
     "labelGuestName": "Guest Name",
     "labelGuestEmail": "Guest Email",

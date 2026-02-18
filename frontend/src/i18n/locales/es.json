@@ -251,6 +251,7 @@
     "generatePaymentLink": "Generar Enlace de Pago",
     "changeStatus": "Cambiar Estado",
     "createModalTitle": "Nueva Reserva",
+    "editBooking": "Editar Reserva",
     "labelSelectProperty": "Seleccionar Propiedad",
     "labelGuestName": "Nombre del Huésped",
     "labelGuestEmail": "Email del Huésped",
