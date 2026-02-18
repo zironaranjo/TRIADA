@@ -80,31 +80,59 @@ export class MessagingService {
     return !!this.twilioClient;
   }
 
-  // ─── Meta template name mapping ───
-  private readonly metaTemplateMap: Record<string, { name: string; paramBuilder: (data: TemplateData) => string[] }> = {
+  // ─── Meta template name mapping (named parameters for Meta Cloud API) ───
+  private readonly metaTemplateMap: Record<string, { name: string; paramBuilder: (data: TemplateData) => Array<{ name: string; value: string }> }> = {
     booking_confirmation: {
       name: 'triadak_booking_confirm',
-      paramBuilder: (d) => [d.guestName, d.propertyName, d.checkIn, d.checkOut, String(d.nights), `${d.currency} ${d.totalPrice}`],
+      paramBuilder: (d) => [
+        { name: 'guest_name', value: d.guestName },
+        { name: 'property_name', value: d.propertyName },
+        { name: 'checkin_date', value: d.checkIn },
+        { name: 'checkout_date', value: d.checkOut },
+        { name: 'nights', value: String(d.nights) },
+        { name: 'total_price', value: `${d.currency} ${d.totalPrice}` },
+      ],
     },
     checkin_reminder: {
       name: 'triadak_checkin_reminder',
-      paramBuilder: (d) => [d.guestName, d.propertyName, d.checkinTime || '15:00', d.address || ''],
+      paramBuilder: (d) => [
+        { name: 'guest_name', value: d.guestName },
+        { name: 'property_name', value: d.propertyName },
+        { name: 'checkin_time', value: d.checkinTime || '15:00' },
+        { name: 'address', value: d.address || '' },
+      ],
     },
     checkin_instructions: {
       name: 'triadak_stay_details',
-      paramBuilder: (d) => [d.propertyName, d.wifiName || '', d.wifiPassword || '', d.guestPortalUrl || ''],
+      paramBuilder: (d) => [
+        { name: 'property_name', value: d.propertyName },
+        { name: 'wifi_name', value: d.wifiName || '' },
+        { name: 'wifi_password', value: d.wifiPassword || '' },
+        { name: 'guest_portal_url', value: d.guestPortalUrl || '' },
+      ],
     },
     checkout_reminder: {
       name: 'triadak_checkout_reminder',
-      paramBuilder: (d) => [d.guestName, d.propertyName, d.checkoutTime || '11:00'],
+      paramBuilder: (d) => [
+        { name: 'guest_name', value: d.guestName },
+        { name: 'property_name', value: d.propertyName },
+        { name: 'checkout_time', value: d.checkoutTime || '11:00' },
+      ],
     },
     guest_portal: {
       name: 'triadak_guest_portal',
-      paramBuilder: (d) => [d.guestName, d.propertyName, d.guestPortalUrl || ''],
+      paramBuilder: (d) => [
+        { name: 'guest_name', value: d.guestName },
+        { name: 'property_name', value: d.propertyName },
+        { name: 'guest_portal_url', value: d.guestPortalUrl || '' },
+      ],
     },
     thank_you: {
       name: 'triadak_thank_you',
-      paramBuilder: (d) => [d.guestName, d.propertyName],
+      paramBuilder: (d) => [
+        { name: 'guest_name', value: d.guestName },
+        { name: 'property_name', value: d.propertyName },
+      ],
     },
   };
 
@@ -139,11 +167,11 @@ export class MessagingService {
     }
   }
 
-  // ─── Send WhatsApp via Meta Cloud API (template message) ───
+  // ─── Send WhatsApp via Meta Cloud API (template message with named params) ───
   private async sendWhatsAppTemplate(
     to: string,
     templateName: string,
-    params: string[],
+    params: Array<{ name: string; value: string }>,
     lang = 'en',
   ): Promise<{ success: boolean; messageId?: string; error?: string }> {
     const phone = to.replace(/[^0-9]/g, '');
@@ -153,7 +181,7 @@ export class MessagingService {
     if (params.length > 0) {
       components.push({
         type: 'body',
-        parameters: params.map((p) => ({ type: 'text', text: p })),
+        parameters: params.map((p) => ({ type: 'text', parameter_name: p.name, text: p.value })),
       });
     }
 
@@ -205,7 +233,7 @@ export class MessagingService {
   }
 
   // ─── Send a message (WhatsApp or SMS) ───
-  async sendMessage(options: SendMessageOptions & { metaTemplateName?: string; metaTemplateParams?: string[] }): Promise<MessageLog> {
+  async sendMessage(options: SendMessageOptions & { metaTemplateName?: string; metaTemplateParams?: Array<{ name: string; value: string }> }): Promise<MessageLog> {
     const log = this.messageLogRepo.create({
       bookingId: options.bookingId,
       propertyId: options.propertyId,
