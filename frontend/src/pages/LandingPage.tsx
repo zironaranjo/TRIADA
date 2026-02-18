@@ -290,37 +290,31 @@ const features = [
         icon: Building2,
         title: 'Property Management',
         description: 'Add unlimited properties with details, photos, pricing, and availability. Track everything in one place.',
-        color: 'from-blue-500 to-cyan-500',
     },
     {
         icon: CalendarDays,
         title: 'Smart Bookings',
         description: 'Manage reservations, check-ins, check-outs, and calendar availability. Never double-book again.',
-        color: 'from-indigo-500 to-purple-500',
     },
     {
         icon: Users,
         title: 'Guest CRM',
         description: 'Build guest profiles automatically. Track preferences, history, and communication in one view.',
-        color: 'from-violet-500 to-fuchsia-500',
     },
     {
         icon: PiggyBank,
         title: 'Finance Engine',
         description: 'Track income, expenses, and profitability per property. Real-time financial overview.',
-        color: 'from-emerald-500 to-green-500',
     },
     {
         icon: BarChart3,
         title: 'Analytics Dashboard',
         description: 'Occupancy rates, revenue trends, and performance metrics at a glance. Data-driven decisions.',
-        color: 'from-amber-500 to-orange-500',
     },
     {
         icon: Shield,
         title: 'Secure & Private',
         description: 'Enterprise-grade security with row-level isolation. Your data is yours — always encrypted, always safe.',
-        color: 'from-red-500 to-rose-500',
     },
 ];
 
@@ -360,13 +354,13 @@ function Features() {
                             key={f.title}
                             variants={fadeUp}
                             custom={i}
-                            className="group p-5 sm:p-6 lg:p-8 rounded-xl sm:rounded-2xl border border-white/5 bg-[#1e293b]/50 hover:bg-[#1e293b] hover:border-white/10 transition-all duration-300"
+                            className="group p-5 sm:p-6 lg:p-8 rounded-xl sm:rounded-2xl border border-white/[0.06] bg-white/[0.03] hover:bg-white/[0.06] hover:border-white/[0.12] transition-all duration-300"
                         >
-                            <div className={`inline-flex items-center justify-center p-2.5 sm:p-3 rounded-lg sm:rounded-xl bg-gradient-to-br ${f.color} shadow-lg mb-4 sm:mb-5`}>
-                                <f.icon className="h-5 w-5 sm:h-6 sm:w-6 text-white" />
+                            <div className="inline-flex items-center justify-center p-2.5 sm:p-3 rounded-xl border border-white/10 bg-white/5 mb-4 sm:mb-5 group-hover:border-indigo-500/30 group-hover:bg-indigo-500/10 transition-all duration-300">
+                                <f.icon className="h-5 w-5 sm:h-6 sm:w-6 text-slate-300 group-hover:text-indigo-300 transition-colors duration-300" />
                             </div>
                             <h3 className="text-base sm:text-lg font-semibold text-white mb-1.5 sm:mb-2">{t(`landing.features.items.${i}.title`)}</h3>
-                            <p className="text-slate-400 text-sm leading-relaxed">{t(`landing.features.items.${i}.description`)}</p>
+                            <p className="text-slate-500 text-sm leading-relaxed">{t(`landing.features.items.${i}.description`)}</p>
                         </motion.div>
                     ))}
                 </motion.div>
