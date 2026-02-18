@@ -639,19 +639,19 @@ const testimonials = [
         quote: 'Triadak completely transformed how we manage our 8 properties. The automation saves us hours every week.',
         name: 'Maria Rodriguez',
         role: 'Property Manager, Malaga',
-        avatar: 'MR',
+        avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=80&q=80',
     },
     {
         quote: "The financial tracking alone is worth it. I finally have a clear picture of profitability per property.",
         name: 'James Mitchell',
         role: 'Rental Owner, Barcelona',
-        avatar: 'JM',
+        avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=80&q=80',
     },
     {
         quote: 'We switched from spreadsheets to Triadak and never looked back. The CRM is incredibly useful.',
         name: 'Sofia Andersson',
         role: 'Co-host, Lisbon',
-        avatar: 'SA',
+        avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=80&q=80',
     },
 ];
 
@@ -701,9 +701,11 @@ function Testimonials() {
                             </div>
                             <p className="text-slate-300 text-sm leading-relaxed mb-4 sm:mb-6">"{t(`landing.testimonials.items.${i}.quote`)}"</p>
                             <div className="flex items-center gap-3">
-                                <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center flex-shrink-0">
-                                    <span className="text-[10px] sm:text-xs font-bold text-white">{testimonial.avatar}</span>
-                                </div>
+                                <img
+                                    src={testimonial.avatar}
+                                    alt={testimonial.name}
+                                    className="w-10 h-10 sm:w-11 sm:h-11 rounded-full object-cover flex-shrink-0 ring-2 ring-white/10"
+                                />
                                 <div>
                                     <p className="text-sm font-medium text-white">{testimonial.name}</p>
                                     <p className="text-xs text-slate-500">{testimonial.role}</p>
