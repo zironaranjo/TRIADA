@@ -79,7 +79,8 @@
       "channels": "Channel Manager",
       "occupancy": "Occupation",
       "messaging": "Messagerie",
-      "contracts": "Contrats"
+      "contracts": "Contrats",
+      "revenue": "Revenus & Tarifs"
     },
     "signOut": "Déconnexion"
   },
@@ -987,5 +988,57 @@
       "invalidToken": "Lien de contrat invalide ou expiré",
       "poweredBy": "Powered by Triadak"
     }
+  },
+  "revenue": {
+    "title": "Revenus & Tarifs",
+    "subtitle": "Optimisez vos tarifs de location selon l'occupation et la saisonnalité",
+    "allProperties": "Tous les Biens",
+    "kpi": {
+      "revpar": "RevPAR",
+      "revparDesc": "Revenu par nuit disponible",
+      "adr": "ADR",
+      "adrDesc": "Tarif journalier moyen",
+      "occupancy": "Occupation",
+      "occupancyDesc": "Taux d'occupation ce mois",
+      "potential": "Revenu Potentiel",
+      "potentialDesc": "Revenu estimé aux tarifs suggérés"
+    },
+    "suggestions": "Suggestions de Prix",
+    "property": "Bien",
+    "currentPrice": "Prix Actuel",
+    "suggestedPrice": "Prix Suggéré",
+    "change": "Variation",
+    "occupancyRate": "Occupation",
+    "reason": "Raison",
+    "applyPrice": "Appliquer",
+    "priceApplied": "Prix mis à jour",
+    "reasons": {
+      "highSeason": "Haute saison",
+      "lowSeason": "Basse saison",
+      "midSeason": "Mi-saison",
+      "highOccupancy": "Forte demande",
+      "lowOccupancy": "Faible occupation — attirer des réservations",
+      "weekend": "Supplément week-end",
+      "base": "Prix de base"
+    },
+    "rules": "Règles de Saison",
+    "addRule": "Ajouter une Règle",
+    "ruleName": "Nom de la Règle",
+    "ruleStart": "Date de Début",
+    "ruleEnd": "Date de Fin",
+    "ruleMultiplier": "Multiplicateur de Prix",
+    "ruleType": "Type de Saison",
+    "noRules": "Aucune règle de saison définie",
+    "noRulesDesc": "Ajoutez des règles pour définir les périodes de haute, mi et basse saison",
+    "deleteRule": "Supprimer la règle",
+    "seasonTypes": {
+      "high": "Haute Saison",
+      "mid": "Mi-Saison",
+      "low": "Basse Saison"
+    },
+    "calendar": "Calendrier des Prix",
+    "calendarDesc": "Prix suggérés par jour selon les règles saisonnières et l'occupation",
+    "booked": "Réservé",
+    "available": "Disponible"
   }
 }

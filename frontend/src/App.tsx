@@ -20,6 +20,7 @@ import GuestPortal from './pages/GuestPortal';
 import Messaging from './pages/Messaging';
 import Contracts from './pages/Contracts';
 import ContractSign from './pages/ContractSign';
+import RevenueManagement from './pages/RevenueManagement';
 import Layout from './components/Layout';
 import LandingPage from './pages/LandingPage';
 
@@ -64,6 +65,7 @@ function App() {
             <Route path="occupancy" element={<OccupancyDashboard />} />
             <Route path="messaging" element={<Messaging />} />
             <Route path="contracts" element={<Contracts />} />
+            <Route path="revenue" element={<RevenueManagement />} />
             {/* Owner Portal pages accessible within main layout */}
             <Route path="owner/dashboard" element={<OwnerDashboard />} />
             <Route path="owner/properties" element={<OwnerProperties />} />

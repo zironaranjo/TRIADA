@@ -79,7 +79,8 @@
       "channels": "Channel Manager",
       "occupancy": "Occupancy",
       "messaging": "Messaging",
-      "contracts": "Contracts"
+      "contracts": "Contracts",
+      "revenue": "Revenue & Pricing"
     },
     "signOut": "Sign Out"
   },
@@ -1028,5 +1029,57 @@
       "invalidToken": "Invalid or expired contract link",
       "poweredBy": "Powered by Triadak"
     }
+  },
+  "revenue": {
+    "title": "Revenue & Pricing",
+    "subtitle": "Optimize your rental prices based on occupancy and seasonality",
+    "allProperties": "All Properties",
+    "kpi": {
+      "revpar": "RevPAR",
+      "revparDesc": "Revenue per available room/night",
+      "adr": "ADR",
+      "adrDesc": "Average daily rate",
+      "occupancy": "Occupancy",
+      "occupancyDesc": "Occupancy rate this month",
+      "potential": "Potential Revenue",
+      "potentialDesc": "Estimated revenue at suggested prices"
+    },
+    "suggestions": "Price Suggestions",
+    "property": "Property",
+    "currentPrice": "Current Price",
+    "suggestedPrice": "Suggested Price",
+    "change": "Change",
+    "occupancyRate": "Occupancy",
+    "reason": "Reason",
+    "applyPrice": "Apply",
+    "priceApplied": "Price updated",
+    "reasons": {
+      "highSeason": "High season",
+      "lowSeason": "Low season",
+      "midSeason": "Mid season",
+      "highOccupancy": "High occupancy demand",
+      "lowOccupancy": "Low occupancy — attract bookings",
+      "weekend": "Weekend premium",
+      "base": "Base price"
+    },
+    "rules": "Season Rules",
+    "addRule": "Add Rule",
+    "ruleName": "Rule Name",
+    "ruleStart": "Start Date",
+    "ruleEnd": "End Date",
+    "ruleMultiplier": "Price Multiplier",
+    "ruleType": "Season Type",
+    "noRules": "No season rules defined",
+    "noRulesDesc": "Add rules to define high, mid and low season periods",
+    "deleteRule": "Delete rule",
+    "seasonTypes": {
+      "high": "High Season",
+      "mid": "Mid Season",
+      "low": "Low Season"
+    },
+    "calendar": "Price Calendar",
+    "calendarDesc": "Suggested prices by day based on season rules and occupancy",
+    "booked": "Booked",
+    "available": "Available"
   }
 }

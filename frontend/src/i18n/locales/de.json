@@ -79,7 +79,8 @@
       "channels": "Channel Manager",
       "occupancy": "Auslastung",
       "messaging": "Nachrichten",
-      "contracts": "Verträge"
+      "contracts": "Verträge",
+      "revenue": "Einnahmen & Preise"
     },
     "signOut": "Abmelden"
   },
@@ -987,5 +988,57 @@
       "invalidToken": "Ungültiger oder abgelaufener Vertragslink",
       "poweredBy": "Powered by Triadak"
     }
+  },
+  "revenue": {
+    "title": "Einnahmen & Preise",
+    "subtitle": "Optimieren Sie Ihre Mietpreise basierend auf Belegung und Saison",
+    "allProperties": "Alle Objekte",
+    "kpi": {
+      "revpar": "RevPAR",
+      "revparDesc": "Einnahmen pro verfügbarer Nacht",
+      "adr": "ADR",
+      "adrDesc": "Durchschnittlicher Tagespreis",
+      "occupancy": "Belegung",
+      "occupancyDesc": "Belegungsrate diesen Monat",
+      "potential": "Potenzielle Einnahmen",
+      "potentialDesc": "Geschätzte Einnahmen zu empfohlenen Preisen"
+    },
+    "suggestions": "Preisempfehlungen",
+    "property": "Objekt",
+    "currentPrice": "Aktueller Preis",
+    "suggestedPrice": "Empfohlener Preis",
+    "change": "Änderung",
+    "occupancyRate": "Belegung",
+    "reason": "Grund",
+    "applyPrice": "Anwenden",
+    "priceApplied": "Preis aktualisiert",
+    "reasons": {
+      "highSeason": "Hochsaison",
+      "lowSeason": "Nebensaison",
+      "midSeason": "Zwischensaison",
+      "highOccupancy": "Hohe Nachfrage",
+      "lowOccupancy": "Geringe Belegung — Buchungen anziehen",
+      "weekend": "Wochenendaufschlag",
+      "base": "Basispreis"
+    },
+    "rules": "Saisonregeln",
+    "addRule": "Regel hinzufügen",
+    "ruleName": "Regelname",
+    "ruleStart": "Startdatum",
+    "ruleEnd": "Enddatum",
+    "ruleMultiplier": "Preismultiplikator",
+    "ruleType": "Saisontyp",
+    "noRules": "Keine Saisonregeln definiert",
+    "noRulesDesc": "Fügen Sie Regeln hinzu, um Hoch-, Zwischen- und Nebensaison zu definieren",
+    "deleteRule": "Regel löschen",
+    "seasonTypes": {
+      "high": "Hochsaison",
+      "mid": "Zwischensaison",
+      "low": "Nebensaison"
+    },
+    "calendar": "Preiskalender",
+    "calendarDesc": "Empfohlene Preise pro Tag basierend auf Saisonregeln und Belegung",
+    "booked": "Gebucht",
+    "available": "Verfügbar"
   }
 }

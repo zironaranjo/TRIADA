@@ -79,7 +79,8 @@
       "channels": "Channel Manager",
       "occupancy": "Ocupación",
       "messaging": "Mensajería",
-      "contracts": "Contratos"
+      "contracts": "Contratos",
+      "revenue": "Ingresos y Precios"
     },
     "signOut": "Cerrar sesión"
   },
@@ -1028,5 +1029,57 @@
       "invalidToken": "Enlace de contrato inválido o caducado",
       "poweredBy": "Powered by Triadak"
     }
+  },
+  "revenue": {
+    "title": "Ingresos y Precios",
+    "subtitle": "Optimiza tus precios de alquiler según ocupación y temporada",
+    "allProperties": "Todas las Propiedades",
+    "kpi": {
+      "revpar": "RevPAR",
+      "revparDesc": "Ingreso por noche disponible",
+      "adr": "ADR",
+      "adrDesc": "Tarifa media diaria",
+      "occupancy": "Ocupación",
+      "occupancyDesc": "Tasa de ocupación este mes",
+      "potential": "Ingreso Potencial",
+      "potentialDesc": "Ingreso estimado con precios sugeridos"
+    },
+    "suggestions": "Sugerencias de Precio",
+    "property": "Propiedad",
+    "currentPrice": "Precio Actual",
+    "suggestedPrice": "Precio Sugerido",
+    "change": "Variación",
+    "occupancyRate": "Ocupación",
+    "reason": "Motivo",
+    "applyPrice": "Aplicar",
+    "priceApplied": "Precio actualizado",
+    "reasons": {
+      "highSeason": "Temporada alta",
+      "lowSeason": "Temporada baja",
+      "midSeason": "Temporada media",
+      "highOccupancy": "Alta demanda",
+      "lowOccupancy": "Baja ocupación — atrae reservas",
+      "weekend": "Prima de fin de semana",
+      "base": "Precio base"
+    },
+    "rules": "Reglas de Temporada",
+    "addRule": "Añadir Regla",
+    "ruleName": "Nombre de la Regla",
+    "ruleStart": "Fecha Inicio",
+    "ruleEnd": "Fecha Fin",
+    "ruleMultiplier": "Multiplicador de Precio",
+    "ruleType": "Tipo de Temporada",
+    "noRules": "Sin reglas de temporada",
+    "noRulesDesc": "Añade reglas para definir períodos de temporada alta, media y baja",
+    "deleteRule": "Eliminar regla",
+    "seasonTypes": {
+      "high": "Temporada Alta",
+      "mid": "Temporada Media",
+      "low": "Temporada Baja"
+    },
+    "calendar": "Calendario de Precios",
+    "calendarDesc": "Precios sugeridos por día según reglas de temporada y ocupación",
+    "booked": "Reservado",
+    "available": "Disponible"
   }
 }
