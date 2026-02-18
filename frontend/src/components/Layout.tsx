@@ -19,6 +19,7 @@ import {
     Globe,
     BarChart3,
     MessageSquare,
+    ScrollText,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useAuth } from '../contexts/AuthContext';
@@ -79,6 +80,7 @@ const Layout = () => {
         { path: '/channels', labelKey: 'layout.nav.channels', icon: Globe },
         { path: '/occupancy', labelKey: 'layout.nav.occupancy', icon: BarChart3 },
         { path: '/messaging', labelKey: 'layout.nav.messaging', icon: MessageSquare },
+        { path: '/contracts', labelKey: 'layout.nav.contracts', icon: ScrollText },
     ];
 
     const handleNavClick = () => {

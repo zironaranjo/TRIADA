@@ -78,7 +78,8 @@
       "staffOps": "Betriebspersonal",
       "channels": "Channel Manager",
       "occupancy": "Auslastung",
-      "messaging": "Nachrichten"
+      "messaging": "Nachrichten",
+      "contracts": "Verträge"
     },
     "signOut": "Abmelden"
   },
@@ -939,5 +940,52 @@
     "messagePlaceholder": "Schreiben Sie Ihre Nachricht hier...",
     "sending": "Wird gesendet...",
     "send": "Nachricht senden"
+  },
+  "contracts": {
+    "title": "Verträge",
+    "subtitle": "Mietverträge für Ihre Buchungen erstellen und verwalten",
+    "newContract": "Neuer Vertrag",
+    "generateFromBooking": "Aus Buchung erstellen",
+    "status": {
+      "draft": "Entwurf",
+      "sent": "Gesendet",
+      "signed": "Unterzeichnet",
+      "cancelled": "Storniert"
+    },
+    "contractTitle": "Mietvertrag",
+    "noContracts": "Noch keine Verträge",
+    "noContractsDesc": "Erstellen Sie Ihren ersten Vertrag aus einer Buchung",
+    "selectBooking": "Buchung auswählen",
+    "chooseBooking": "Buchung wählen...",
+    "preview": "Vorschau",
+    "download": "PDF herunterladen",
+    "sendToGuest": "An Gast senden",
+    "copyLink": "Link kopieren",
+    "linkCopied": "Link kopiert!",
+    "signedOn": "Unterzeichnet am",
+    "sentOn": "Gesendet am",
+    "createdOn": "Erstellt am",
+    "deleteContract": "Vertrag löschen",
+    "confirmDelete": "Möchten Sie diesen Vertrag wirklich löschen?",
+    "generating": "Wird erstellt...",
+    "contractGenerated": "Vertrag erfolgreich erstellt",
+    "sendingLink": "Wird gesendet...",
+    "linkSent": "Link an Gast gesendet",
+    "noBookingPhone": "Buchung hat keine Gast-E-Mail",
+    "signPage": {
+      "title": "Mietvertrag",
+      "subtitle": "Bitte lesen und unterschreiben Sie den folgenden Vertrag",
+      "alreadySigned": "Dieser Vertrag wurde bereits unterzeichnet",
+      "signedBy": "Unterzeichnet von",
+      "signHere": "Hier unterschreiben",
+      "fullNamePlaceholder": "Geben Sie Ihren vollständigen Namen ein",
+      "iAgree": "Ich habe die Bedingungen dieses Mietvertrags gelesen und stimme zu",
+      "signButton": "Vertrag unterzeichnen",
+      "signing": "Wird unterzeichnet...",
+      "successTitle": "Vertrag unterzeichnet!",
+      "successMessage": "Vielen Dank! Ihr Mietvertrag wurde erfolgreich unterzeichnet.",
+      "invalidToken": "Ungültiger oder abgelaufener Vertragslink",
+      "poweredBy": "Powered by Triadak"
+    }
   }
 }

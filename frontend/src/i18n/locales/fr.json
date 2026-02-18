@@ -78,7 +78,8 @@
       "staffOps": "Personnel Opérationnel",
       "channels": "Channel Manager",
       "occupancy": "Occupation",
-      "messaging": "Messagerie"
+      "messaging": "Messagerie",
+      "contracts": "Contrats"
     },
     "signOut": "Déconnexion"
   },
@@ -939,5 +940,52 @@
     "messagePlaceholder": "Tapez votre message ici...",
     "sending": "Envoi en cours...",
     "send": "Envoyer le message"
+  },
+  "contracts": {
+    "title": "Contrats",
+    "subtitle": "Générez et gérez les contrats de location pour vos réservations",
+    "newContract": "Nouveau Contrat",
+    "generateFromBooking": "Générer depuis une Réservation",
+    "status": {
+      "draft": "Brouillon",
+      "sent": "Envoyé",
+      "signed": "Signé",
+      "cancelled": "Annulé"
+    },
+    "contractTitle": "Contrat de Location",
+    "noContracts": "Aucun contrat pour l'instant",
+    "noContractsDesc": "Générez votre premier contrat depuis une réservation",
+    "selectBooking": "Sélectionner une Réservation",
+    "chooseBooking": "Choisir une réservation...",
+    "preview": "Aperçu",
+    "download": "Télécharger PDF",
+    "sendToGuest": "Envoyer au Client",
+    "copyLink": "Copier le Lien",
+    "linkCopied": "Lien copié!",
+    "signedOn": "Signé le",
+    "sentOn": "Envoyé le",
+    "createdOn": "Créé le",
+    "deleteContract": "Supprimer le Contrat",
+    "confirmDelete": "Êtes-vous sûr de vouloir supprimer ce contrat?",
+    "generating": "Génération...",
+    "contractGenerated": "Contrat généré avec succès",
+    "sendingLink": "Envoi...",
+    "linkSent": "Lien envoyé au client",
+    "noBookingPhone": "La réservation n'a pas d'e-mail client",
+    "signPage": {
+      "title": "Contrat de Location",
+      "subtitle": "Veuillez lire et signer le contrat ci-dessous",
+      "alreadySigned": "Ce contrat a déjà été signé",
+      "signedBy": "Signé par",
+      "signHere": "Signer Ici",
+      "fullNamePlaceholder": "Tapez votre nom complet pour signer",
+      "iAgree": "J'ai lu et j'accepte les termes de ce contrat de location",
+      "signButton": "Signer le Contrat",
+      "signing": "Signature...",
+      "successTitle": "Contrat Signé!",
+      "successMessage": "Merci! Votre contrat de location a été signé avec succès.",
+      "invalidToken": "Lien de contrat invalide ou expiré",
+      "poweredBy": "Powered by Triadak"
+    }
   }
 }

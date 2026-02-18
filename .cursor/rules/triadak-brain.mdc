@@ -15,7 +15,7 @@ SaaS platform for **vacation rental management** (triadak.io). Combines features
 - **Charts**: Recharts
 - **Email**: Resend (via NestJS endpoint)
 - **Payments**: Stripe (Billing for subscriptions + Connect for guest payments)
-- **Messaging**: Twilio (WhatsApp + SMS)
+- **Messaging**: Meta WhatsApp Cloud API (WhatsApp) + Twilio (SMS only)
 - **Deployment**: Docker + Dokploy + CI/CD (GitHub push triggers build)
 - **Production URLs**: Frontend `https://triadak.io` | Backend `https://api.triadak.io`
 - **Language**: Always respond in Spanish to the user
@@ -128,12 +128,14 @@ SaaS platform for **vacation rental management** (triadak.io). Combines features
     - **SQL migration**: `005_guest_portal.sql` adds `guest_token` to bookings + guest-facing columns to properties
     - **Bookings page**: Shows guest portal link with copy button for each booking
     - Properties can configure: `checkin_instructions`, `checkout_instructions`, `wifi_name`, `wifi_password`, `house_rules`, `emergency_contact`, `checkin_time`, `checkout_time`, `guest_portal_enabled`
-33. **WhatsApp/SMS Messaging** - Twilio-based messaging at `/messaging`:
-    - **Backend**: `MessagingModule` with `MessagingService` (Twilio WhatsApp + SMS, template rendering, message logging). Entity: `MessageLog`. SQL migration `006_messaging.sql`
+33. **WhatsApp/SMS Messaging** - Messaging at `/messaging`:
+    - **Backend**: `MessagingModule` with `MessagingService`. WhatsApp via **Meta WhatsApp Cloud API** (`graph.facebook.com/v22.0/{phone_number_id}/messages`). SMS via Twilio. Entity: `MessageLog`. SQL migration `006_messaging.sql`
     - **Endpoints**: `POST /messaging/send-template`, `POST /messaging/send-custom`, `POST /messaging/send-direct`, `GET /messaging/logs`, `GET /messaging/templates`, `GET /messaging/stats`, `GET /messaging/test-connection`
     - **6 message templates**: Booking confirmation, Check-in reminder, Check-in instructions (WiFi/rules), Check-out reminder, Guest portal link, Thank you post-checkout. Templates auto-populate booking/property data
-    - **Frontend**: KPI cards (total messages, WhatsApp, SMS, sent today), template quick-action cards, message history with expandable details, send modal (template/custom/direct modes), channel selection (WhatsApp/SMS), booking selector, connection status banner
-    - **Environment variables**: `TWILIO_ACCOUNT_SID`, `TWILIO_AUTH_TOKEN`, `TWILIO_PHONE_NUMBER`, `TWILIO_WHATSAPP_NUMBER`
+    - **Meta templates**: Mapped in `metaTemplateMap` with named parameters (`parameter_name` field required by Meta Cloud API). Template names: `triadak_booking_confirm`, `triadak_checkin_reminder`, `triadak_stay_details`, `triadak_checkout_reminder`, `triadak_guest_portal`, `triadak_thank_you`
+    - **Frontend**: KPI cards (total messages, WhatsApp, SMS, sent today), template quick-action cards, message history with expandable details (camelCase fields from TypeORM), send modal (template/custom/direct modes), channel selection, booking selector, connection status banner
+    - **WhatsApp env vars**: `META_WHATSAPP_PHONE_ID` (Phone Number ID), `META_WHATSAPP_TOKEN` (access token — **expires periodically, needs renewal or permanent System User token**)
+    - **SMS env vars**: `TWILIO_ACCOUNT_SID`, `TWILIO_AUTH_TOKEN`, `TWILIO_PHONE_NUMBER`
     - **i18n**: messaging.* keys in EN, ES, DE, FR
 
 ## Pending / Roadmap (Fase 2 & 3)
@@ -216,7 +218,7 @@ SaaS platform for **vacation rental management** (triadak.io). Combines features
 - `supabase/functions/daily-digest/index.ts` - Edge Function: daily morning digest notification
 - `backend/src/channels/channels.service.ts` - Channel Manager: connection CRUD, iCal/API sync, Lodgify integration, auto-sync
 - `backend/src/channels/channels.controller.ts` - Channel Manager REST endpoints
-- `backend/src/messaging/messaging.service.ts` - Twilio WhatsApp/SMS service (send, templates, logs, stats)
+- `backend/src/messaging/messaging.service.ts` - Meta WhatsApp Cloud API + Twilio SMS service (send, named-param templates, logs, stats)
 - `backend/src/messaging/messaging.controller.ts` - Messaging REST endpoints
 - `supabase/migrations/001_notifications_table.sql` - SQL setup for notifications table, RLS, and cron jobs
 - `supabase/migrations/004_channel_manager.sql` - SQL setup for platform_connections and sync_logs tables
@@ -251,5 +253,10 @@ SaaS platform for **vacation rental management** (triadak.io). Combines features
 - SQL migration `005_guest_portal.sql` already executed in Supabase
 - SQL migration `006_messaging.sql` already executed in Supabase
 - Airbnb/Booking.com full APIs require partner access — iCal sync available now, API ready when approved
-- Twilio configured and working (sandbox WhatsApp tested successfully). Env vars: `TWILIO_ACCOUNT_SID`, `TWILIO_AUTH_TOKEN`, `TWILIO_PHONE_NUMBER`, `TWILIO_WHATSAPP_NUMBER`
-- **PENDING**: Migrar de Twilio WhatsApp Sandbox a **Meta WhatsApp Cloud API** directamente. El usuario ya tiene un número de WhatsApp Business registrado con Meta (usado para atender clientes). Esto evita doble costo y permite usar su perfil existente (logo, nombre). Próximo paso: obtener WhatsApp Business Account ID + Phone Number ID + Permanent Access Token desde https://developers.facebook.com → su app → WhatsApp → API Setup. Luego adaptar `MessagingService` para usar Meta Cloud API (`graph.facebook.com/v21.0/{phone_number_id}/messages`) en vez de Twilio para WhatsApp (mantener Twilio solo para SMS si se necesita)
+- **Meta WhatsApp Cloud API** ya configurada y funcionando. Número: `+34 643 26 77 97`. Phone ID: `942271912297397`. Env vars: `META_WHATSAPP_PHONE_ID`, `META_WHATSAPP_TOKEN`
+- **IMPORTANTE**: El `META_WHATSAPP_TOKEN` es un token temporal que caduca (~1h en desarrollo). Para producción estable hay que crear un **System User token permanente** en Meta Business Manager → Configuración → Usuarios del sistema → Generar token sin fecha de expiración con permisos `whatsapp_business_messaging` + `whatsapp_business_management`
+- Twilio configurado para SMS únicamente. Env vars: `TWILIO_ACCOUNT_SID`, `TWILIO_AUTH_TOKEN`, `TWILIO_PHONE_NUMBER`
+- `bookings` tabla: columna renombrada de `icalUid` (camelCase) a `ical_uid` (snake_case) para coincidir con la entidad TypeORM. Ejecutado en Supabase SQL Editor: `ALTER TABLE bookings RENAME COLUMN "icalUid" TO ical_uid`
+- `Messaging.tsx` usa campos camelCase (`recipientName`, `recipientPhone`, `templateKey`, `externalSid`, `errorMessage`, `createdAt`) para coincidir con la respuesta TypeORM del backend
+- Las plantillas Meta usan variables con nombre (`{{guest_name}}`, `{{property_name}}`, etc.) — el backend envía `parameter_name` en cada parámetro tal como requiere Meta Cloud API v22.0
+- **PENDING**: Crear token permanente de System User en Meta Business Manager para evitar renovación manual del token

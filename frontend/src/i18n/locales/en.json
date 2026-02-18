@@ -78,7 +78,8 @@
       "staffOps": "Staff Operations",
       "channels": "Channel Manager",
       "occupancy": "Occupancy",
-      "messaging": "Messaging"
+      "messaging": "Messaging",
+      "contracts": "Contracts"
     },
     "signOut": "Sign Out"
   },
@@ -980,5 +981,52 @@
     "messagePlaceholder": "Type your message here...",
     "sending": "Sending...",
     "send": "Send Message"
+  },
+  "contracts": {
+    "title": "Contracts",
+    "subtitle": "Generate and manage rental contracts for your bookings",
+    "newContract": "New Contract",
+    "generateFromBooking": "Generate from Booking",
+    "status": {
+      "draft": "Draft",
+      "sent": "Sent",
+      "signed": "Signed",
+      "cancelled": "Cancelled"
+    },
+    "contractTitle": "Rental Agreement",
+    "noContracts": "No contracts yet",
+    "noContractsDesc": "Generate your first contract from a booking",
+    "selectBooking": "Select Booking",
+    "chooseBooking": "Choose a booking...",
+    "preview": "Preview",
+    "download": "Download PDF",
+    "sendToGuest": "Send to Guest",
+    "copyLink": "Copy Link",
+    "linkCopied": "Link copied!",
+    "signedOn": "Signed on",
+    "sentOn": "Sent on",
+    "createdOn": "Created on",
+    "deleteContract": "Delete Contract",
+    "confirmDelete": "Are you sure you want to delete this contract?",
+    "generating": "Generating...",
+    "contractGenerated": "Contract generated successfully",
+    "sendingLink": "Sending...",
+    "linkSent": "Link sent to guest",
+    "noBookingPhone": "Booking has no guest email",
+    "signPage": {
+      "title": "Rental Contract",
+      "subtitle": "Please review and sign the contract below",
+      "alreadySigned": "This contract has already been signed",
+      "signedBy": "Signed by",
+      "signHere": "Sign Here",
+      "fullNamePlaceholder": "Type your full name to sign",
+      "iAgree": "I have read and agree to the terms of this rental agreement",
+      "signButton": "Sign Contract",
+      "signing": "Signing...",
+      "successTitle": "Contract Signed!",
+      "successMessage": "Thank you! Your rental contract has been signed successfully.",
+      "invalidToken": "Invalid or expired contract link",
+      "poweredBy": "Powered by Triadak"
+    }
   }
 }

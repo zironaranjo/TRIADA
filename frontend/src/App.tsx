@@ -18,6 +18,8 @@ import ChannelManager from './pages/ChannelManager';
 import OccupancyDashboard from './pages/OccupancyDashboard';
 import GuestPortal from './pages/GuestPortal';
 import Messaging from './pages/Messaging';
+import Contracts from './pages/Contracts';
+import ContractSign from './pages/ContractSign';
 import Layout from './components/Layout';
 import LandingPage from './pages/LandingPage';
 
@@ -36,6 +38,7 @@ function App() {
           <Route path="/" element={<LandingPage />} />
           <Route path="/login" element={<Login />} />
           <Route path="/guest/:token" element={<GuestPortal />} />
+          <Route path="/contract/:token" element={<ContractSign />} />
 
           {/* Admin/Staff protected routes (includes owner portal pages) */}
           <Route
@@ -60,6 +63,7 @@ function App() {
             <Route path="channels" element={<ChannelManager />} />
             <Route path="occupancy" element={<OccupancyDashboard />} />
             <Route path="messaging" element={<Messaging />} />
+            <Route path="contracts" element={<Contracts />} />
             {/* Owner Portal pages accessible within main layout */}
             <Route path="owner/dashboard" element={<OwnerDashboard />} />
             <Route path="owner/properties" element={<OwnerProperties />} />

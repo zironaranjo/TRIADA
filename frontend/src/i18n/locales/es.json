@@ -78,7 +78,8 @@
       "staffOps": "Personal Operativo",
       "channels": "Channel Manager",
       "occupancy": "Ocupación",
-      "messaging": "Mensajería"
+      "messaging": "Mensajería",
+      "contracts": "Contratos"
     },
     "signOut": "Cerrar sesión"
   },
@@ -980,5 +981,52 @@
     "messagePlaceholder": "Escribe tu mensaje aquí...",
     "sending": "Enviando...",
     "send": "Enviar Mensaje"
+  },
+  "contracts": {
+    "title": "Contratos",
+    "subtitle": "Genera y gestiona contratos de alquiler para tus reservas",
+    "newContract": "Nuevo Contrato",
+    "generateFromBooking": "Generar desde Reserva",
+    "status": {
+      "draft": "Borrador",
+      "sent": "Enviado",
+      "signed": "Firmado",
+      "cancelled": "Cancelado"
+    },
+    "contractTitle": "Contrato de Arrendamiento",
+    "noContracts": "Sin contratos todavía",
+    "noContractsDesc": "Genera tu primer contrato desde una reserva",
+    "selectBooking": "Seleccionar Reserva",
+    "chooseBooking": "Elige una reserva...",
+    "preview": "Vista Previa",
+    "download": "Descargar PDF",
+    "sendToGuest": "Enviar al Huésped",
+    "copyLink": "Copiar Enlace",
+    "linkCopied": "¡Enlace copiado!",
+    "signedOn": "Firmado el",
+    "sentOn": "Enviado el",
+    "createdOn": "Creado el",
+    "deleteContract": "Eliminar Contrato",
+    "confirmDelete": "¿Estás seguro de que quieres eliminar este contrato?",
+    "generating": "Generando...",
+    "contractGenerated": "Contrato generado correctamente",
+    "sendingLink": "Enviando...",
+    "linkSent": "Enlace enviado al huésped",
+    "noBookingPhone": "La reserva no tiene email del huésped",
+    "signPage": {
+      "title": "Contrato de Alquiler",
+      "subtitle": "Por favor revisa y firma el contrato a continuación",
+      "alreadySigned": "Este contrato ya ha sido firmado",
+      "signedBy": "Firmado por",
+      "signHere": "Firmar Aquí",
+      "fullNamePlaceholder": "Escribe tu nombre completo para firmar",
+      "iAgree": "He leído y acepto los términos de este contrato de alquiler",
+      "signButton": "Firmar Contrato",
+      "signing": "Firmando...",
+      "successTitle": "¡Contrato Firmado!",
+      "successMessage": "¡Gracias! Tu contrato de alquiler ha sido firmado correctamente.",
+      "invalidToken": "Enlace de contrato inválido o caducado",
+      "poweredBy": "Powered by Triadak"
+    }
   }
 }
