@@ -161,7 +161,7 @@ SaaS platform for **vacation rental management** (triadak.io). Combines features
 - [x] **Guest App / Portal de huéspedes** — Portal público con instrucciones de check-in, WiFi, reglas de la casa, contacto de emergencia. Acceso por link único. Implementado en `/guest/:token`
 - [x] **WhatsApp/SMS integration** — Mensajes automáticos a huéspedes via Twilio (WhatsApp + SMS). 6 plantillas predefinidas + mensajes personalizados. Implementado en `/messaging`
 - [ ] **Gestión de tareas/limpieza** — Sistema de tareas automáticas post-checkout (limpieza, lavandería, inspección). Asignar a miembros del staff con checklist y foto de verificación
-- [ ] **Contratos y documentos** — Generación automática de contratos de alquiler en PDF con datos de la reserva. Firma digital integrada
+- [x] **Contratos y documentos** — Generación automática de contratos PDF desde reservas. Firma digital simple: link único `/contract/:token` para que el huésped revise y firme. Estado: draft → sent → signed. Implementado en `/contracts`
 - [ ] **Revenue Management / Dynamic Pricing** — Sugerencias de precios basadas en temporada, ocupación y demanda. Reglas de precios mínimos/máximos por propiedad
 - [ ] **Multi-currency support** — Soporte para propiedades en distintos países con conversión automática de divisas
 - [ ] **Auditoría y logs** — Registro de todas las acciones (quién cambió qué, cuándo). Importante para empresas con varios empleados
@@ -219,6 +219,9 @@ SaaS platform for **vacation rental management** (triadak.io). Combines features
 - `backend/src/channels/channels.service.ts` - Channel Manager: connection CRUD, iCal/API sync, Lodgify integration, auto-sync
 - `backend/src/channels/channels.controller.ts` - Channel Manager REST endpoints
 - `backend/src/messaging/messaging.service.ts` - Meta WhatsApp Cloud API + Twilio SMS service (send, named-param templates, logs, stats)
+- `frontend/src/pages/Contracts.tsx` - Contracts page (list, generate PDF from booking, copy sign link, preview, download)
+- `frontend/src/pages/ContractSign.tsx` - Public guest signing page at /contract/:token (no auth required)
+- `supabase/migrations/007_contracts.sql` - SQL setup for contracts table with RLS
 - `backend/src/messaging/messaging.controller.ts` - Messaging REST endpoints
 - `supabase/migrations/001_notifications_table.sql` - SQL setup for notifications table, RLS, and cron jobs
 - `supabase/migrations/004_channel_manager.sql` - SQL setup for platform_connections and sync_logs tables
