@@ -111,13 +111,13 @@ function Navbar() {
                         <select
                             value={i18n.language}
                             onChange={(e) => i18n.changeLanguage(e.target.value)}
-                            className="text-xs bg-white/5 border border-white/10 rounded-lg px-2 py-1.5 text-slate-300 hover:text-white focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                            className="text-xs bg-[#1e293b] border border-white/10 rounded-lg px-2 py-1.5 text-slate-300 hover:text-white focus:outline-none focus:ring-1 focus:ring-indigo-500 cursor-pointer"
                             aria-label="Language"
                         >
-                            <option value="en">EN</option>
-                            <option value="de">DE</option>
-                            <option value="es">ES</option>
-                            <option value="fr">FR</option>
+                            <option value="en" className="bg-[#1e293b] text-slate-300">EN</option>
+                            <option value="de" className="bg-[#1e293b] text-slate-300">DE</option>
+                            <option value="es" className="bg-[#1e293b] text-slate-300">ES</option>
+                            <option value="fr" className="bg-[#1e293b] text-slate-300">FR</option>
                         </select>
                         <Link
                             to="/login"
@@ -160,13 +160,13 @@ function Navbar() {
                                 <select
                                     value={i18n.language}
                                     onChange={(e) => i18n.changeLanguage(e.target.value)}
-                                    className="w-full text-sm bg-white/5 border border-white/10 rounded-lg px-3 py-2.5 text-slate-300 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                                    className="w-full text-sm bg-[#1e293b] border border-white/10 rounded-lg px-3 py-2.5 text-slate-300 focus:outline-none focus:ring-1 focus:ring-indigo-500 cursor-pointer"
                                     aria-label="Language"
                                 >
-                                    <option value="en">English</option>
-                                    <option value="de">Deutsch</option>
-                                    <option value="es">Español</option>
-                                    <option value="fr">Français</option>
+                                    <option value="en" className="bg-[#1e293b] text-slate-300">English</option>
+                                    <option value="de" className="bg-[#1e293b] text-slate-300">Deutsch</option>
+                                    <option value="es" className="bg-[#1e293b] text-slate-300">Español</option>
+                                    <option value="fr" className="bg-[#1e293b] text-slate-300">Français</option>
                                 </select>
                                 <Link
                                     to="/login"
