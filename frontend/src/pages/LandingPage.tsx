@@ -508,24 +508,24 @@ function ReplaceStack() {
                             <p className="text-xs text-slate-500">Todo en uno</p>
                         </div>
 
-                        {/* Integration badges grid */}
-                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+                        {/* Integration icons */}
+                        <div className="grid grid-cols-4 gap-x-4 gap-y-6">
                             {integrations.map((int, i) => (
                                 <motion.div
                                     key={int.name}
-                                    initial={{ opacity: 0, scale: 0.9 }}
-                                    whileInView={{ opacity: 1, scale: 1 }}
+                                    initial={{ opacity: 0, y: 10 }}
+                                    whileInView={{ opacity: 1, y: 0 }}
                                     viewport={{ once: true }}
                                     transition={{ delay: i * 0.07, duration: 0.35 }}
-                                    className="flex flex-col items-center gap-1.5 px-3 py-3 rounded-xl border bg-emerald-500/10 border-emerald-500/20 transition-all hover:scale-105 hover:bg-emerald-500/15"
+                                    className="flex flex-col items-center gap-2 group cursor-default"
                                 >
-                                    <int.icon className="h-5 w-5 text-emerald-400" />
-                                    <span className="text-xs font-medium text-emerald-400">{int.name}</span>
+                                    <int.icon className="h-6 w-6 text-emerald-400/70 group-hover:text-emerald-400 transition-colors duration-200" />
+                                    <span className="text-xs text-slate-500 group-hover:text-slate-300 transition-colors duration-200">{int.name}</span>
                                 </motion.div>
                             ))}
                         </div>
 
-                        <p className="text-center text-xs text-slate-600 mt-4">
+                        <p className="text-center text-xs text-slate-700 mt-6">
                             Más integraciones próximamente
                         </p>
                     </motion.div>
