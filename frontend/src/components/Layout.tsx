@@ -228,7 +228,7 @@ const Layout = () => {
                 >
                     <Menu className="h-6 w-6" />
                 </button>
-                <img src="/logotriadak.png" alt="TRIADAK" className="h-10 object-contain" />
+                <img src="/logotriadak.png" alt="TRIADAK" className="h-20 object-contain" />
                 <div className="flex items-center gap-2">
                     <NotificationCenter />
                     <div className="h-8 w-8 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center overflow-hidden">
