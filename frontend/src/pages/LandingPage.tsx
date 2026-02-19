@@ -201,9 +201,10 @@ function Hero() {
                 <img
                     src="/hero-bg.jpg"
                     alt="Vacation rental property"
-                    className="w-full h-full object-cover object-center"
+                    className="w-full h-full object-cover object-[60%_40%] sm:object-center"
                 />
-                <div className="absolute inset-0 bg-gradient-to-b from-[#0f172a]/75 via-[#0f172a]/55 to-[#0f172a]/95" />
+                {/* Mobile overlay — menos opacidad para ver mejor la imagen */}
+                <div className="absolute inset-0 bg-gradient-to-b from-[#0f172a]/60 via-[#0f172a]/40 to-[#0f172a]/90 sm:from-[#0f172a]/75 sm:via-[#0f172a]/55 sm:to-[#0f172a]/95" />
             </div>
 
             {/* Content */}
