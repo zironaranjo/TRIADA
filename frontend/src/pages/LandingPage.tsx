@@ -199,30 +199,27 @@ function Hero() {
             {/* Background image */}
             <div className="absolute inset-0 z-0">
                 <img
-                    src="https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=1600&q=80"
+                    src="/hero-bg.jpg"
                     alt="Vacation rental property"
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-cover object-center"
                 />
-                {/* Layered overlay: dark bottom + brand tint top */}
-                <div className="absolute inset-0 bg-gradient-to-b from-[#0f172a]/80 via-[#0f172a]/60 to-[#0f172a]/95" />
-                {/* Subtle brand glow */}
-                <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[400px] bg-indigo-600/20 rounded-full blur-[120px] pointer-events-none" />
+                <div className="absolute inset-0 bg-gradient-to-b from-[#0f172a]/75 via-[#0f172a]/55 to-[#0f172a]/95" />
             </div>
 
             {/* Content */}
             <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-32 pb-20 sm:pt-40 sm:pb-28 text-center">
-                {/* Badge */}
+                {/* Badge — oculto en móvil */}
                 <motion.div
                     initial={{ opacity: 0, y: 16 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5 }}
-                    className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/20 text-white/90 text-xs sm:text-sm font-medium px-4 py-1.5 rounded-full mb-6 sm:mb-8"
+                    className="hidden sm:inline-flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/20 text-white/90 text-sm font-medium px-4 py-1.5 rounded-full mb-8"
                 >
                     <Zap className="h-3.5 w-3.5 text-indigo-400 flex-shrink-0" />
                     <span>{t('landing.hero.badge')}</span>
                 </motion.div>
 
-                {/* Headline */}
+                {/* Headline — todo blanco */}
                 <motion.h1
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -230,7 +227,7 @@ function Hero() {
                     className="text-4xl sm:text-6xl lg:text-7xl font-extrabold text-white leading-[1.1] tracking-tight drop-shadow-lg"
                 >
                     {t('landing.hero.title1')}{' '}
-                    <span className="bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+                    <span className="text-white">
                         {t('landing.hero.titleHighlight')}
                     </span>
                 </motion.h1>
@@ -245,7 +242,7 @@ function Hero() {
                     {t('landing.hero.subtitle')}
                 </motion.p>
 
-                {/* CTA Buttons */}
+                {/* CTA Buttons — ambos con el mismo estilo ghost */}
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -254,14 +251,14 @@ function Hero() {
                 >
                     <Link
                         to="/login"
-                        className="w-full sm:w-auto bg-white text-slate-900 font-semibold px-7 sm:px-9 py-3.5 sm:py-4 rounded-xl text-sm sm:text-base shadow-xl shadow-black/30 hover:bg-white/90 hover:scale-105 transition-all flex items-center justify-center gap-2 group"
+                        className="w-full sm:w-auto text-white/90 hover:text-white font-semibold px-7 sm:px-9 py-3.5 sm:py-4 rounded-xl border border-white/25 hover:border-white/50 backdrop-blur-sm bg-white/8 hover:bg-white/15 transition-all text-sm sm:text-base flex items-center justify-center gap-2 group"
                     >
                         {t('landing.hero.cta')}
-                        <ArrowRight className="h-4 w-4 sm:h-5 sm:w-5 text-slate-700 group-hover:translate-x-1 transition-transform" />
+                        <ArrowRight className="h-4 w-4 sm:h-5 sm:w-5 group-hover:translate-x-1 transition-transform" />
                     </Link>
                     <a
                         href="#features"
-                        className="w-full sm:w-auto text-white/80 hover:text-white font-medium px-7 sm:px-9 py-3.5 sm:py-4 rounded-xl border border-white/20 hover:border-white/40 backdrop-blur-sm bg-white/5 hover:bg-white/10 transition-all text-sm sm:text-base text-center"
+                        className="w-full sm:w-auto text-white/90 hover:text-white font-medium px-7 sm:px-9 py-3.5 sm:py-4 rounded-xl border border-white/25 hover:border-white/50 backdrop-blur-sm bg-white/8 hover:bg-white/15 transition-all text-sm sm:text-base text-center"
                     >
                         {t('landing.hero.secondary')}
                     </a>
