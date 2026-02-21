@@ -131,8 +131,9 @@ export default function PropertyDetail() {
                     <button onClick={() => navigate('/explore')} className="flex items-center gap-2 text-slate-400 hover:text-white transition-colors text-sm">
                         <ArrowLeft className="h-4 w-4" /> Volver
                     </button>
-                    <Link to="/">
-                        <img src="/logotriadak.png" alt="Triadak" className="h-16 object-contain" />
+                    <Link to="/" className="flex items-center gap-2">
+                        <img src="/logotriadak.png" alt="Triadak" className="h-16 w-auto object-contain" />
+                        <span className="hidden sm:block text-xs font-bold text-slate-500 tracking-[0.25em] uppercase">Alquiler Vacacional</span>
                     </Link>
                     <button
                         onClick={() => navigator.clipboard.writeText(window.location.href)}

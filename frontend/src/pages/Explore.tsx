@@ -98,8 +98,9 @@ export default function Explore() {
             <div className="sticky top-0 z-40 bg-[#0f172a]/95 backdrop-blur-xl border-b border-white/5">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
                     <div className="flex items-center justify-between gap-4">
-                        <Link to="/" className="flex-shrink-0">
-                            <img src="/logotriadak.png" alt="Triadak" className="h-16 object-contain" />
+                        <Link to="/" className="flex items-center gap-2 flex-shrink-0">
+                            <img src="/logotriadak.png" alt="Triadak" className="h-16 w-auto object-contain" />
+                            <span className="hidden sm:block text-xs font-bold text-slate-500 tracking-[0.25em] uppercase">Alquiler Vacacional</span>
                         </Link>
 
                         {/* Search bar */}
