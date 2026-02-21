@@ -26,6 +26,7 @@ import {
     Trophy,
     UserCog,
     RefreshCw,
+    Home,
 } from 'lucide-react';
 
 // ─── Animation Variants ───────────────────────────────
@@ -120,6 +121,13 @@ function Navbar() {
                             <option value="fr" className="bg-[#1e293b] text-slate-300">FR</option>
                         </select>
                         <Link
+                            to="/explore"
+                            className="text-sm text-emerald-400 hover:text-emerald-300 transition-colors px-4 py-2 flex items-center gap-1.5"
+                        >
+                            <Home className="h-3.5 w-3.5" />
+                            Explorar alojamientos
+                        </Link>
+                        <Link
                             to="/login"
                             className="text-sm text-slate-300 hover:text-white transition-colors px-4 py-2"
                         >
@@ -156,6 +164,14 @@ function Navbar() {
                                     {l.label}
                                 </a>
                             ))}
+                            <Link
+                                to="/explore"
+                                onClick={() => setOpen(false)}
+                                className="flex items-center gap-2 text-base text-emerald-400 hover:text-emerald-300 transition-colors py-3 px-2 rounded-lg hover:bg-white/5"
+                            >
+                                <Home className="h-4 w-4" />
+                                Explorar alojamientos
+                            </Link>
                             <div className="pt-3 mt-2 border-t border-white/5 space-y-2">
                                 <select
                                     value={i18n.language}
@@ -263,6 +279,26 @@ function Hero() {
                     >
                         {t('landing.hero.secondary')}
                     </a>
+                </motion.div>
+
+                {/* Tourist explore banner */}
+                <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.45, duration: 0.4 }}
+                    className="mt-5 sm:mt-6"
+                >
+                    <Link
+                        to="/explore"
+                        className="inline-flex items-center gap-2 text-sm text-white/50 hover:text-emerald-400 transition-colors group"
+                    >
+                        <Home className="h-3.5 w-3.5 text-emerald-500/60 group-hover:text-emerald-400 transition-colors" />
+                        <span>¿Buscas alojamiento?</span>
+                        <span className="text-emerald-500/80 group-hover:text-emerald-400 font-medium transition-colors">
+                            Explorar propiedades
+                        </span>
+                        <ArrowRight className="h-3.5 w-3.5 text-emerald-500/60 group-hover:text-emerald-400 group-hover:translate-x-1 transition-all" />
+                    </Link>
                 </motion.div>
 
                 {/* Social proof */}
