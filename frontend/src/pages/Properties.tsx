@@ -474,9 +474,13 @@ const Properties = () => {
                                         onClick={async (e) => {
                                             e.stopPropagation();
                                             const newVal = !property.published;
-                                            // Optimistic update — sin recargar toda la lista
                                             setProperties(prev => prev.map(p => p.id === property.id ? { ...p, published: newVal } : p));
-                                            await supabase.from('properties').update({ published: newVal }).eq('id', property.id);
+                                            const { error } = await supabase.from('properties').update({ published: newVal }).eq('id', property.id);
+                                            if (error) {
+                                                // Revertir si falla
+                                                setProperties(prev => prev.map(p => p.id === property.id ? { ...p, published: !newVal } : p));
+                                                console.error('Error updating published:', error);
+                                            }
                                         }}
                                         className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors ${property.published ? 'bg-emerald-500' : 'bg-slate-600'}`}
                                     >
