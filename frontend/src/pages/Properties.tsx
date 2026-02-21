@@ -177,6 +177,7 @@ const Properties = () => {
 
     const handleCreateProperty = async (e: React.FormEvent) => {
         e.preventDefault();
+        if (uploadingImage) return; // safety guard
         setCreateLoading(true);
 
         try {
@@ -194,6 +195,7 @@ const Properties = () => {
                     status: 'active',
                     image_url: newProperty.image_url || null,
                     ical_url: newProperty.ical_url || null,
+                    published: false,
                 },
             ]);
 
@@ -201,7 +203,7 @@ const Properties = () => {
 
             setIsCreateModalOpen(false);
             setNewProperty({ name: '', address: '', city: '', price_per_night: '', rooms: 1, max_guests: 2, image_url: '', ical_url: '' });
-            fetchProperties(); // Refresh list
+            fetchProperties();
         } catch (error: any) {
             console.error('Error creating property:', error);
             alert(t('properties.alertGenericError', { message: error.message || 'Unknown error' }));
@@ -589,11 +591,11 @@ const Properties = () => {
                                     </button>
                                     <button
                                         type="submit"
-                                        disabled={createLoading}
+                                        disabled={createLoading || uploadingImage}
                                         className="bg-blue-600 hover:bg-blue-500 text-white px-6 py-2.5 rounded-xl font-medium shadow-lg shadow-blue-500/20 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
                                     >
-                                        {createLoading && <Loader2 className="h-4 w-4 animate-spin" />}
-                                        {t('properties.createProperty')}
+                                        {(createLoading || uploadingImage) && <Loader2 className="h-4 w-4 animate-spin" />}
+                                        {uploadingImage ? 'Subiendo imagen...' : createLoading ? 'Creando...' : t('properties.createProperty')}
                                     </button>
                                 </div>
                             </form>
