@@ -132,7 +132,7 @@ export default function PropertyDetail() {
                         <ArrowLeft className="h-4 w-4" /> Volver
                     </button>
                     <Link to="/">
-                        <img src="/logotriadak.png" alt="Triadak" className="h-8 object-contain" />
+                        <img src="/logotriadak.png" alt="Triadak" className="h-16 object-contain" />
                     </Link>
                     <button
                         onClick={() => navigator.clipboard.writeText(window.location.href)}

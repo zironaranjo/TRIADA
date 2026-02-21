@@ -99,7 +99,7 @@ export default function Explore() {
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
                     <div className="flex items-center justify-between gap-4">
                         <Link to="/" className="flex-shrink-0">
-                            <img src="/logotriadak.png" alt="Triadak" className="h-10 object-contain" />
+                            <img src="/logotriadak.png" alt="Triadak" className="h-16 object-contain" />
                         </Link>
 
                         {/* Search bar */}
