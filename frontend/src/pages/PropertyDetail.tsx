@@ -20,7 +20,7 @@ interface Property {
     bedrooms: number;
     bathrooms: number;
     property_type: string;
-    images: string[] | null;
+    image_url: string | null;
     amenities: string[] | null;
     checkin_time: string | null;
     checkout_time: string | null;
@@ -120,7 +120,7 @@ export default function PropertyDetail() {
         </div>
     );
 
-    const images = property.images?.length ? property.images : [];
+        const images = property.image_url ? [property.image_url] : [];
     const TypeIcon = property.property_type === 'apartment' ? Building2 : property.property_type === 'cabin' ? TreePine : Home;
 
     return (

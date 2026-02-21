@@ -19,7 +19,7 @@ interface Property {
     bedrooms: number;
     bathrooms: number;
     property_type: string;
-    images: string[] | null;
+    image_url: string | null;
     amenities: string[] | null;
 }
 
@@ -63,7 +63,7 @@ export default function Explore() {
         setLoading(true);
         const { data } = await supabase
             .from('properties')
-            .select('id,name,description,address,city,country,price_per_night,max_guests,bedrooms,bathrooms,property_type,images,amenities')
+            .select('id,name,description,address,city,country,price_per_night,max_guests,bedrooms,bathrooms,property_type,image_url,amenities')
             .eq('published', true)
             .order('created_at', { ascending: false });
         setProperties((data as Property[]) || []);
@@ -227,7 +227,7 @@ export default function Explore() {
 }
 
 function PropertyCard({ property, index }: { property: Property; index: number }) {
-    const image = property.images?.[0] || null;
+    const image = property.image_url || null;
     const TypeIcon = TYPE_ICONS[property.property_type] || Home;
 
     return (
