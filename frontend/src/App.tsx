@@ -29,6 +29,8 @@ import WorkerTasks from './pages/worker/WorkerTasks';
 import WorkerEarnings from './pages/worker/WorkerEarnings';
 import Layout from './components/Layout';
 import LandingPage from './pages/LandingPage';
+import Explore from './pages/Explore';
+import PropertyDetail from './pages/PropertyDetail';
 
 // Owner Portal
 import OwnerLayout from './components/OwnerLayout';
@@ -46,6 +48,8 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/guest/:token" element={<GuestPortal />} />
           <Route path="/contract/:token" element={<ContractSign />} />
+          <Route path="/explore" element={<Explore />} />
+          <Route path="/property/:id" element={<PropertyDetail />} />
 
           {/* Admin/Staff protected routes (includes owner portal pages) */}
           <Route

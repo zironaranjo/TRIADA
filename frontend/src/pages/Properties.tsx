@@ -17,6 +17,7 @@ import {
     XCircle,
     Copy,
     ExternalLink,
+    Globe,
 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { bookingsApi } from '../api/client';
@@ -39,6 +40,7 @@ interface Property {
     max_guests: number;
     owner_id: string;
     ical_url: string | null;
+    published: boolean;
 }
 
 // --- Status Badge Component ---
@@ -385,6 +387,24 @@ const Properties = () => {
                                         ${property.price_per_night}
                                         <span className="text-slate-500 text-sm font-normal ml-1">{t('properties.perNight')}</span>
                                     </div>
+                                </div>
+
+                                {/* Publish toggle */}
+                                <div className="mt-3 pt-3 border-t border-slate-700/50 flex items-center justify-between">
+                                    <div className="flex items-center gap-1.5 text-xs text-slate-400">
+                                        <Globe className="h-3.5 w-3.5" />
+                                        <span>Portal público</span>
+                                    </div>
+                                    <button
+                                        onClick={async (e) => {
+                                            e.stopPropagation();
+                                            await supabase.from('properties').update({ published: !property.published }).eq('id', property.id);
+                                            fetchProperties();
+                                        }}
+                                        className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors ${property.published ? 'bg-emerald-500' : 'bg-slate-600'}`}
+                                    >
+                                        <span className={`inline-block h-3.5 w-3.5 transform rounded-full bg-white transition-transform ${property.published ? 'translate-x-4.5' : 'translate-x-0.5'}`} />
+                                    </button>
                                 </div>
 
                                 {/* iCal Section */}
