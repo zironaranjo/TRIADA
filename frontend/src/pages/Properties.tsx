@@ -41,6 +41,11 @@ interface Property {
     owner_id: string;
     ical_url: string | null;
     published: boolean;
+    description: string | null;
+    property_type: string | null;
+    bedrooms: number | null;
+    bathrooms: number | null;
+    amenities: string[] | null;
 }
 
 // --- Status Badge Component ---
@@ -136,7 +141,7 @@ const Properties = () => {
 
     // --- Edit Property State ---
     const [editingProperty, setEditingProperty] = useState<Property | null>(null);
-    const [editData, setEditData] = useState<Partial<Property & { description: string; property_type: string; bathrooms: number; amenities: string[] }>>({});
+    const [editData, setEditData] = useState<Partial<Property>>({});
     const [editLoading, setEditLoading] = useState(false);
 
     const AMENITY_OPTIONS = ['WiFi', 'Piscina', 'Aire acondicionado', 'Parking', 'Cocina', 'Lavadora', 'Terraza', 'Barbacoa'];
@@ -158,11 +163,11 @@ const Properties = () => {
             price_per_night: p.price_per_night,
             rooms: p.rooms,
             max_guests: p.max_guests,
-            description: (p as any).description || '',
-            property_type: (p as any).property_type || 'apartment',
-            bedrooms: (p as any).bedrooms || p.rooms || 1,
-            bathrooms: (p as any).bathrooms || 1,
-            amenities: (p as any).amenities || [],
+            description: p.description || '',
+            property_type: p.property_type || 'apartment',
+            bedrooms: p.bedrooms || p.rooms || 1,
+            bathrooms: p.bathrooms || 1,
+            amenities: p.amenities || [],
         });
     };
 
