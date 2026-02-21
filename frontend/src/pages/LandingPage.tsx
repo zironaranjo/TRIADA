@@ -413,71 +413,119 @@ function Features() {
 // ─── Tourist / Host Dual CTA ──────────────────────────
 function DualCTA() {
     return (
-        <section className="relative z-10 -mt-10 pb-8 sm:pb-0 sm:-mt-16 px-4 sm:px-6 lg:px-8">
-            <div className="max-w-5xl mx-auto grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {/* Card Gestor */}
-                <motion.div
-                    initial={{ opacity: 0, y: 24 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.45 }}
-                    className="relative overflow-hidden rounded-2xl border border-indigo-500/20 bg-gradient-to-br from-indigo-900/60 to-[#0f172a]/80 backdrop-blur-xl p-6 sm:p-8 flex flex-col gap-4"
-                >
-                    <div className="flex items-center gap-3">
-                        <div className="p-2.5 rounded-xl bg-indigo-500/15 border border-indigo-500/20">
-                            <Building2 className="h-5 w-5 text-indigo-400" />
+        <>
+            {/* Mobile: cards apiladas */}
+            <section className="md:hidden relative z-10 -mt-6 pb-6 px-4">
+                <div className="max-w-lg mx-auto flex flex-col gap-3">
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.4 }}
+                        className="rounded-2xl border border-indigo-500/20 bg-gradient-to-br from-indigo-900/60 to-[#0f172a]/80 backdrop-blur-xl p-5 flex flex-col gap-3"
+                    >
+                        <div className="flex items-center gap-2">
+                            <div className="p-2 rounded-lg bg-indigo-500/15 border border-indigo-500/20">
+                                <Building2 className="h-4 w-4 text-indigo-400" />
+                            </div>
+                            <span className="text-xs font-semibold text-indigo-400 uppercase tracking-widest">Para gestores</span>
                         </div>
-                        <span className="text-xs font-semibold text-indigo-400 uppercase tracking-widest">Para gestores</span>
-                    </div>
-                    <div>
-                        <h3 className="text-xl sm:text-2xl font-bold text-white leading-tight">
+                        <h3 className="text-lg font-bold text-white leading-tight">Gestiona tus propiedades en un solo lugar</h3>
+                        <Link to="/login" className="inline-flex items-center gap-2 self-start text-white/90 hover:text-white font-medium text-sm px-4 py-2 rounded-xl border border-white/25 hover:border-white/50 bg-white/8 hover:bg-white/15 transition-all group">
+                            Empezar gratis <ArrowRight className="h-3.5 w-3.5 group-hover:translate-x-1 transition-transform" />
+                        </Link>
+                    </motion.div>
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.4, delay: 0.1 }}
+                        className="rounded-2xl border border-emerald-500/20 bg-gradient-to-br from-emerald-900/50 to-[#0f172a]/80 backdrop-blur-xl p-5 flex flex-col gap-3"
+                    >
+                        <div className="flex items-center gap-2">
+                            <div className="p-2 rounded-lg bg-emerald-500/15 border border-emerald-500/20">
+                                <Globe className="h-4 w-4 text-emerald-400" />
+                            </div>
+                            <span className="text-xs font-semibold text-emerald-400 uppercase tracking-widest">Para viajeros</span>
+                        </div>
+                        <h3 className="text-lg font-bold text-white leading-tight">Encuentra tu alojamiento perfecto</h3>
+                        <Link to="/explore" className="inline-flex items-center gap-2 self-start text-white/90 hover:text-white font-medium text-sm px-4 py-2 rounded-xl border border-white/25 hover:border-white/50 bg-white/8 hover:bg-white/15 transition-all group">
+                            Ver alojamientos <ArrowRight className="h-3.5 w-3.5 group-hover:translate-x-1 transition-transform" />
+                        </Link>
+                    </motion.div>
+                </div>
+            </section>
+
+            {/* Desktop: split-screen full width */}
+            <section className="hidden md:flex relative z-10 w-full overflow-hidden" style={{ minHeight: '260px' }}>
+                {/* Mitad izquierda — Gestores */}
+                <motion.div
+                    initial={{ opacity: 0, x: -30 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.5 }}
+                    className="relative flex-1 flex flex-col justify-center px-12 lg:px-20 py-16 bg-gradient-to-r from-indigo-950/80 to-[#0f172a]/60 border-r border-white/5 group hover:from-indigo-950/90 transition-all duration-500"
+                >
+                    <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,_rgba(99,102,241,0.08)_0%,_transparent_60%)] pointer-events-none" />
+                    <div className="relative z-10 max-w-md">
+                        <div className="flex items-center gap-3 mb-5">
+                            <div className="p-2.5 rounded-xl bg-indigo-500/15 border border-indigo-500/20">
+                                <Building2 className="h-5 w-5 text-indigo-400" />
+                            </div>
+                            <span className="text-xs font-semibold text-indigo-400 uppercase tracking-widest">Para gestores</span>
+                        </div>
+                        <h3 className="text-2xl lg:text-3xl font-bold text-white leading-tight mb-3">
                             Gestiona tus propiedades en un solo lugar
                         </h3>
-                        <p className="mt-2 text-sm text-slate-400 leading-relaxed">
+                        <p className="text-sm text-slate-400 leading-relaxed mb-6">
                             Reservas, contabilidad, propietarios, mensajería y más. Todo integrado.
                         </p>
+                        <Link
+                            to="/login"
+                            className="inline-flex items-center gap-2 text-white/90 hover:text-white font-medium text-sm px-6 py-3 rounded-xl border border-white/25 hover:border-white/50 backdrop-blur-sm bg-white/8 hover:bg-white/15 transition-all group/btn"
+                        >
+                            Empezar gratis
+                            <ArrowRight className="h-4 w-4 group-hover/btn:translate-x-1 transition-transform" />
+                        </Link>
                     </div>
-                    <Link
-                        to="/login"
-                        className="inline-flex items-center gap-2 self-start text-white/90 hover:text-white font-medium text-sm px-5 py-2.5 rounded-xl border border-white/25 hover:border-white/50 backdrop-blur-sm bg-white/8 hover:bg-white/15 transition-all group"
-                    >
-                        Empezar gratis
-                        <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
-                    </Link>
                 </motion.div>
 
-                {/* Card Turista */}
+                {/* Divisor central */}
+                <div className="w-px bg-gradient-to-b from-transparent via-white/10 to-transparent flex-shrink-0" />
+
+                {/* Mitad derecha — Viajeros */}
                 <motion.div
-                    initial={{ opacity: 0, y: 24 }}
-                    whileInView={{ opacity: 1, y: 0 }}
+                    initial={{ opacity: 0, x: 30 }}
+                    whileInView={{ opacity: 1, x: 0 }}
                     viewport={{ once: true }}
-                    transition={{ duration: 0.45, delay: 0.1 }}
-                    className="relative overflow-hidden rounded-2xl border border-emerald-500/20 bg-gradient-to-br from-emerald-900/50 to-[#0f172a]/80 backdrop-blur-xl p-6 sm:p-8 flex flex-col gap-4"
+                    transition={{ duration: 0.5, delay: 0.1 }}
+                    className="relative flex-1 flex flex-col justify-center px-12 lg:px-20 py-16 bg-gradient-to-l from-emerald-950/70 to-[#0f172a]/60 group hover:from-emerald-950/90 transition-all duration-500"
                 >
-                    <div className="flex items-center gap-3">
-                        <div className="p-2.5 rounded-xl bg-emerald-500/15 border border-emerald-500/20">
-                            <Globe className="h-5 w-5 text-emerald-400" />
+                    <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_rgba(16,185,129,0.07)_0%,_transparent_60%)] pointer-events-none" />
+                    <div className="relative z-10 max-w-md ml-auto">
+                        <div className="flex items-center gap-3 mb-5">
+                            <div className="p-2.5 rounded-xl bg-emerald-500/15 border border-emerald-500/20">
+                                <Globe className="h-5 w-5 text-emerald-400" />
+                            </div>
+                            <span className="text-xs font-semibold text-emerald-400 uppercase tracking-widest">Para viajeros</span>
                         </div>
-                        <span className="text-xs font-semibold text-emerald-400 uppercase tracking-widest">Para viajeros</span>
-                    </div>
-                    <div>
-                        <h3 className="text-xl sm:text-2xl font-bold text-white leading-tight">
+                        <h3 className="text-2xl lg:text-3xl font-bold text-white leading-tight mb-3">
                             Encuentra tu alojamiento perfecto
                         </h3>
-                        <p className="mt-2 text-sm text-slate-400 leading-relaxed">
+                        <p className="text-sm text-slate-400 leading-relaxed mb-6">
                             Explora apartamentos y casas rurales disponibles. Reserva directo sin intermediarios.
                         </p>
+                        <Link
+                            to="/explore"
+                            className="inline-flex items-center gap-2 text-white/90 hover:text-white font-medium text-sm px-6 py-3 rounded-xl border border-white/25 hover:border-white/50 backdrop-blur-sm bg-white/8 hover:bg-white/15 transition-all group/btn"
+                        >
+                            Ver alojamientos
+                            <ArrowRight className="h-4 w-4 group-hover/btn:translate-x-1 transition-transform" />
+                        </Link>
                     </div>
-                    <Link
-                        to="/explore"
-                        className="inline-flex items-center gap-2 self-start text-white/90 hover:text-white font-medium text-sm px-5 py-2.5 rounded-xl border border-white/25 hover:border-white/50 backdrop-blur-sm bg-white/8 hover:bg-white/15 transition-all group"
-                    >
-                        Ver alojamientos
-                        <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
-                    </Link>
                 </motion.div>
-            </div>
-        </section>
+            </section>
+        </>
     );
 }
 
