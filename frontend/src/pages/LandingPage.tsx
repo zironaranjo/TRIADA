@@ -464,11 +464,11 @@ function DualCTA() {
                     whileInView={{ opacity: 1, x: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.5 }}
-                    className="relative flex-1 flex flex-col justify-center px-12 lg:px-20 py-16 bg-gradient-to-r from-indigo-950/80 to-[#0f172a]/60 border-r border-white/5 group hover:from-indigo-950/90 transition-all duration-500"
+                    className="relative flex-1 flex flex-col items-center justify-center px-12 lg:px-20 py-16 bg-gradient-to-r from-indigo-950/80 to-[#0f172a]/60 border-r border-white/5 group hover:from-indigo-950/90 transition-all duration-500"
                 >
                     <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,_rgba(99,102,241,0.08)_0%,_transparent_60%)] pointer-events-none" />
-                    <div className="relative z-10 max-w-md">
-                        <div className="flex items-center gap-3 mb-5">
+                    <div className="relative z-10 max-w-md text-center mx-auto">
+                        <div className="flex items-center justify-center gap-3 mb-5">
                             <div className="p-2.5 rounded-xl bg-indigo-500/15 border border-indigo-500/20">
                                 <Building2 className="h-5 w-5 text-indigo-400" />
                             </div>
@@ -482,7 +482,7 @@ function DualCTA() {
                         </p>
                         <Link
                             to="/login"
-                            className="inline-flex items-center gap-2 text-white/90 hover:text-white font-medium text-sm px-6 py-3 rounded-xl border border-white/25 hover:border-white/50 backdrop-blur-sm bg-white/8 hover:bg-white/15 transition-all group/btn"
+                            className="inline-flex items-center gap-2 mx-auto text-white/90 hover:text-white font-medium text-sm px-6 py-3 rounded-xl border border-white/25 hover:border-white/50 backdrop-blur-sm bg-white/8 hover:bg-white/15 transition-all group/btn"
                         >
                             Empezar gratis
                             <ArrowRight className="h-4 w-4 group-hover/btn:translate-x-1 transition-transform" />
@@ -499,11 +499,11 @@ function DualCTA() {
                     whileInView={{ opacity: 1, x: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.5, delay: 0.1 }}
-                    className="relative flex-1 flex flex-col justify-center px-12 lg:px-20 py-16 bg-gradient-to-l from-emerald-950/70 to-[#0f172a]/60 group hover:from-emerald-950/90 transition-all duration-500"
+                    className="relative flex-1 flex flex-col items-center justify-center px-12 lg:px-20 py-16 bg-gradient-to-l from-emerald-950/70 to-[#0f172a]/60 group hover:from-emerald-950/90 transition-all duration-500"
                 >
                     <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_rgba(16,185,129,0.07)_0%,_transparent_60%)] pointer-events-none" />
-                    <div className="relative z-10 max-w-md ml-auto">
-                        <div className="flex items-center gap-3 mb-5">
+                    <div className="relative z-10 max-w-md text-center mx-auto">
+                        <div className="flex items-center justify-center gap-3 mb-5">
                             <div className="p-2.5 rounded-xl bg-emerald-500/15 border border-emerald-500/20">
                                 <Globe className="h-5 w-5 text-emerald-400" />
                             </div>
@@ -517,7 +517,7 @@ function DualCTA() {
                         </p>
                         <Link
                             to="/explore"
-                            className="inline-flex items-center gap-2 text-white/90 hover:text-white font-medium text-sm px-6 py-3 rounded-xl border border-white/25 hover:border-white/50 backdrop-blur-sm bg-white/8 hover:bg-white/15 transition-all group/btn"
+                            className="inline-flex items-center gap-2 mx-auto text-white/90 hover:text-white font-medium text-sm px-6 py-3 rounded-xl border border-white/25 hover:border-white/50 backdrop-blur-sm bg-white/8 hover:bg-white/15 transition-all group/btn"
                         >
                             Ver alojamientos
                             <ArrowRight className="h-4 w-4 group-hover/btn:translate-x-1 transition-transform" />
