@@ -43,7 +43,7 @@ SaaS platform for **vacation rental management** (triadak.io). Combines features
 - `notifications` - In-app notifications (user_id, type, title, message, read, metadata) + DB trigger on booking insert
 - `owner` - Property owners (firstName, lastName, email, phone, avatar_url) — camelCase columns (UNRESTRICTED RLS - needs review)
 - `profiles` - User profiles (user_id, email, full_name, role)
-- `properties` - Vacation rental properties (name, status, images, owner_id FK → owner.id, price_per_night, checkin_instructions, checkout_instructions, wifi_name, wifi_password, house_rules, emergency_contact, checkin_time, checkout_time, guest_portal_enabled, etc.)
+- `properties` - Vacation rental properties (name, status, images, owner_id FK → owner.id, price_per_night, checkin_instructions, checkout_instructions, wifi_name, wifi_password, house_rules, emergency_contact, checkin_time, checkout_time, guest_portal_enabled, **published** BOOLEAN default false, address, city, country, max_guests, bedrooms, bathrooms, description, property_type, amenities TEXT[], image_url). RLS: anon can SELECT where published=true, authenticated can UPDATE own rows
 - `settlements` - Owner settlement records (UNRESTRICTED RLS - needs review)
 - `stripe_connect_accounts` - Stripe Express connected accounts (user_id, stripe_account_id, status, charges_enabled, payouts_enabled) with RLS
 - `subscriptions` - User subscription plans (plan_id, status, interval, stripe_subscription_id, stripe_customer_id)
@@ -195,6 +195,30 @@ SaaS platform for **vacation rental management** (triadak.io). Combines features
     - Lee moneda preferida de `localStorage` key `triadak_preferences.currency` (Settings → Preferencias)
     - Aplicado en: Revenue Management (KPIs, sugerencias, calendario) y Benchmarking (gráficos, tabla, resumen)
     - Columna `currency` en `properties` (migration 009). Settings ampliado a 14 opciones con símbolos correctos
+42. **Public Explore Portal** - Portal público para turistas en `/explore` y `/property/:id`:
+    - `/explore`: búsqueda por ciudad/destino, filtros (huéspedes, precio máximo, tipo de propiedad), PropertyCard con imagen/precio/ubicación/specs, skeleton loading. Sin autenticación
+    - `/property/:id`: galería de imágenes, specs (huéspedes, habitaciones, baños), descripción, amenities, reglas de casa, widget de reserva sticky. Crea bookings con `platform: 'direct'` y `status: 'pending'`
+    - Usa `supabasePublic` (cliente sin persistencia de sesión) para evitar errores de auth en páginas públicas
+    - SQL migration: `010_explore_portal.sql` — añade columnas a `properties` + RLS policy pública + GRANT SELECT TO anon
+    - **Toggle "Portal público"** en Properties.tsx con actualización optimista (UI actualiza inmediato, revierte si falla Supabase)
+    - **Edit Modal** en Properties.tsx con todos los campos: descripción, tipo, habitaciones, baños, amenities, dirección, ciudad, país, huéspedes máx, precio
+    - Enlace "Explorar alojamientos" en navbar de landing (verde esmeralda) + banner turista en hero + sección DualCTA
+43. **Landing Page DualCTA Section** - Sección split-screen para diferenciar audiencias:
+    - **Desktop**: dos mitades full-width (izquierda índigo=gestores, derecha esmeralda=viajeros), texto centrado, glow radial, hover effect, divisor central
+    - **Mobile**: cards apiladas compactas
+    - Gestores → `/login` (Empezar gratis). Viajeros → `/explore` (Ver alojamientos)
+    - Botones estilo ghost (igual que "Ver funciones" en el hero)
+44. **Landing Page Redesign** - Mejoras visuales completas:
+    - Hero con imagen de fondo (`/hero-bg.jpg`), overlay multicapa, título todo blanco, badge oculto en móvil
+    - Botones CTA unificados al estilo ghost (`bg-white/8 border border-white/25 backdrop-blur-sm`)
+    - Navbar botón "Empezar": fondo negro, texto blanco, sin gradiente
+    - Testimonios con fotos reales (Unsplash). Iconos features monocromáticos glassmorphic
+    - Secciones nuevas: StatsBar (40+ funciones, 6 canales, 4 idiomas, 100% nube) + ReplaceStack (tools replaced + integrations como solo iconos en verde)
+    - Enlace "Explorar alojamientos" en navbar desktop y menú móvil. Banner turista en hero "¿Buscas alojamiento? →"
+45. **Crisp Live Chat** - Chat de soporte integrado en `frontend/index.html`:
+    - Website ID: `90a1d1ee-f60a-43c9-bc44-b45b31ec8663`
+    - Tema: indigo. Mensaje de bienvenida automático en español
+    - Logo de Triadak subido manualmente en panel de Crisp
 41. **Rol Operativo (Worker Portal)** - Portal dedicado para limpiadores/mantenimiento en `/worker/*`:
     - Rol `worker` detectado automáticamente: email del usuario coincide con `staff_members.email`
     - Login redirige a `/worker/tasks` (igual que owners van a `/portal/dashboard`)
@@ -244,15 +268,17 @@ SaaS platform for **vacation rental management** (triadak.io). Combines features
 - [x] DB fix: properties.owner_id FK changed from profiles → owner table
 
 ## Key Files
-- `frontend/src/App.tsx` - Main routing (public: /, /login, /guest/:token, /contract/:token; protected: /dashboard, /properties, /bookings, /owners, /crm, /accounting, /pricing, /billing, /settings, /statements, /channels, /occupancy, /messaging, /contracts, /revenue, /staff)
+- `frontend/src/App.tsx` - Main routing (public: /, /login, /guest/:token, /contract/:token, **/explore**, **/property/:id**; protected: /dashboard, /properties, /bookings, /owners, /crm, /accounting, /pricing, /billing, /settings, /statements, /channels, /occupancy, /messaging, /contracts, /revenue, /staff)
 - `frontend/src/components/Layout.tsx` - App shell with sidebar + mobile menu + NotificationCenter + user avatar
 - `frontend/src/components/NotificationCenter.tsx` - Bell icon + portal dropdown with realtime notifications
 - `frontend/src/hooks/useUserAvatar.ts` - Reusable hook to load user avatar (localStorage + Supabase Storage fallback)
 - `frontend/src/pages/Dashboard.tsx` - Analytics dashboard with real Recharts graphs
 - `frontend/src/pages/Bookings.tsx` - Bookings list + calendar tab view
-- `frontend/src/pages/Properties.tsx` - Property CRUD + image upload to properties/ subfolder
+- `frontend/src/pages/Properties.tsx` - Property CRUD + image upload + toggle "Portal público" (optimistic UI) + Edit Modal completo (descripción, tipo, habitaciones, baños, amenities, dirección, ciudad, país, huéspedes, precio)
 - `frontend/src/pages/Settings.tsx` - User settings (profile, preferences, notifications, danger zone)
-- `frontend/src/pages/LandingPage.tsx` - Public landing page with real dashboard screenshot
+- `frontend/src/pages/LandingPage.tsx` - Public landing page: Hero con imagen de fondo, DualCTA split-screen, StatsBar, ReplaceStack, testimonios con fotos, iconos monocromáticos, Crisp chat
+- `frontend/src/pages/Explore.tsx` - Portal público para turistas: listado de propiedades publicadas con búsqueda y filtros (sin auth, usa supabasePublic)
+- `frontend/src/pages/PropertyDetail.tsx` - Detalle público de propiedad: galería, specs, descripción, amenities, widget de reserva (sin auth, usa supabasePublic)
 - `frontend/src/pages/Owners.tsx` - Owner management (uses NestJS API via ownersApi)
 - `frontend/src/pages/OwnerStatements.tsx` - Monthly owner settlement reports (queries Supabase directly, table: `owner`)
 - `frontend/src/components/OwnerLayout.tsx` - Owner portal shell with emerald-themed sidebar, avatar, back-to-admin link
@@ -267,7 +293,7 @@ SaaS platform for **vacation rental management** (triadak.io). Combines features
 - `frontend/src/pages/Messaging.tsx` - WhatsApp/SMS messaging page (templates, history, send modal)
 - `frontend/src/pages/Pricing.tsx` - Plan selection with Stripe Checkout integration and commission rates
 - `frontend/src/pages/Billing.tsx` - Subscription management, Stripe Customer Portal, Stripe Connect onboarding
-- `frontend/src/lib/supabase.ts` - Supabase client config
+- `frontend/src/lib/supabase.ts` - Supabase client config. Exporta `supabase` (cliente estándar con auth) y `supabasePublic` (sin persistSession/autoRefresh/detectSessionInUrl — para páginas públicas)
 - `frontend/src/lib/exportUtils.ts` - PDF/CSV export utilities (jspdf + jspdf-autotable)
 - `frontend/src/pages/OwnerProfile.tsx` - Owner full profile page with tabs (properties, statements, payments)
 - `frontend/src/pages/StaffOperations.tsx` - Staff operations management (personnel, tasks, payroll)
@@ -298,6 +324,7 @@ SaaS platform for **vacation rental management** (triadak.io). Combines features
 - `frontend/src/lib/auditLog.ts` - logAudit() utility for manual audit logging from frontend
 - `supabase/migrations/008_audit_logs.sql` - SQL setup for audit_logs table + triggers on bookings/properties/contacts/expenses
 - `supabase/migrations/007_contracts.sql` - SQL setup for contracts table with RLS
+- `supabase/migrations/010_explore_portal.sql` - Añade columnas de portal público a properties + RLS anon SELECT + GRANT anon
 - `backend/src/messaging/messaging.controller.ts` - Messaging REST endpoints
 - `supabase/migrations/001_notifications_table.sql` - SQL setup for notifications table, RLS, and cron jobs
 - `supabase/migrations/004_channel_manager.sql` - SQL setup for platform_connections and sync_logs tables
@@ -331,6 +358,9 @@ SaaS platform for **vacation rental management** (triadak.io). Combines features
 - SQL migration `004_channel_manager.sql` already executed in Supabase
 - SQL migration `005_guest_portal.sql` already executed in Supabase
 - SQL migration `006_messaging.sql` already executed in Supabase
+- SQL migration `010_explore_portal.sql` already executed in Supabase
+- `supabasePublic` client: usar siempre en páginas públicas (`/explore`, `/property/:id`, `/guest/:token`, `/contract/:token`) para evitar errores `_initSupabaseAuthClient` / `The operation was aborted`
+- **Explore Portal**: propiedades solo visibles si `published = true`. Toggle en Properties.tsx con update optimista. La columna `image_url` (no `images[]`) es la que se usa en Explore y PropertyDetail
 - SQL migration `007_contracts.sql` already executed in Supabase
 - Revenue Management rules saved in `localStorage` key `triadak_season_rules` (no DB table needed)
 - Benchmarking page calculates all KPIs client-side from Supabase `properties` + `bookings` (no backend needed)
