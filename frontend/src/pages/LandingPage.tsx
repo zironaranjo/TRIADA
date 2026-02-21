@@ -410,6 +410,77 @@ function Features() {
     );
 }
 
+// ─── Tourist / Host Dual CTA ──────────────────────────
+function DualCTA() {
+    return (
+        <section className="relative z-10 -mt-10 pb-8 sm:pb-0 sm:-mt-16 px-4 sm:px-6 lg:px-8">
+            <div className="max-w-5xl mx-auto grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {/* Card Gestor */}
+                <motion.div
+                    initial={{ opacity: 0, y: 24 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.45 }}
+                    className="relative overflow-hidden rounded-2xl border border-indigo-500/20 bg-gradient-to-br from-indigo-900/60 to-[#0f172a]/80 backdrop-blur-xl p-6 sm:p-8 flex flex-col gap-4"
+                >
+                    <div className="flex items-center gap-3">
+                        <div className="p-2.5 rounded-xl bg-indigo-500/15 border border-indigo-500/20">
+                            <Building2 className="h-5 w-5 text-indigo-400" />
+                        </div>
+                        <span className="text-xs font-semibold text-indigo-400 uppercase tracking-widest">Para gestores</span>
+                    </div>
+                    <div>
+                        <h3 className="text-xl sm:text-2xl font-bold text-white leading-tight">
+                            Gestiona tus propiedades en un solo lugar
+                        </h3>
+                        <p className="mt-2 text-sm text-slate-400 leading-relaxed">
+                            Reservas, contabilidad, propietarios, mensajería y más. Todo integrado.
+                        </p>
+                    </div>
+                    <Link
+                        to="/login"
+                        className="inline-flex items-center gap-2 self-start bg-indigo-500 hover:bg-indigo-400 text-white font-semibold text-sm px-5 py-2.5 rounded-xl transition-all group"
+                    >
+                        Empezar gratis
+                        <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                    </Link>
+                </motion.div>
+
+                {/* Card Turista */}
+                <motion.div
+                    initial={{ opacity: 0, y: 24 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.45, delay: 0.1 }}
+                    className="relative overflow-hidden rounded-2xl border border-emerald-500/20 bg-gradient-to-br from-emerald-900/50 to-[#0f172a]/80 backdrop-blur-xl p-6 sm:p-8 flex flex-col gap-4"
+                >
+                    <div className="flex items-center gap-3">
+                        <div className="p-2.5 rounded-xl bg-emerald-500/15 border border-emerald-500/20">
+                            <Globe className="h-5 w-5 text-emerald-400" />
+                        </div>
+                        <span className="text-xs font-semibold text-emerald-400 uppercase tracking-widest">Para viajeros</span>
+                    </div>
+                    <div>
+                        <h3 className="text-xl sm:text-2xl font-bold text-white leading-tight">
+                            Encuentra tu alojamiento perfecto
+                        </h3>
+                        <p className="mt-2 text-sm text-slate-400 leading-relaxed">
+                            Explora apartamentos y casas rurales disponibles. Reserva directo sin intermediarios.
+                        </p>
+                    </div>
+                    <Link
+                        to="/explore"
+                        className="inline-flex items-center gap-2 self-start bg-emerald-500 hover:bg-emerald-400 text-white font-semibold text-sm px-5 py-2.5 rounded-xl transition-all group"
+                    >
+                        Ver alojamientos
+                        <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                    </Link>
+                </motion.div>
+            </div>
+        </section>
+    );
+}
+
 // ─── Stats Bar ────────────────────────────────────────
 function StatsBar() {
     const stats = [
@@ -1133,6 +1204,7 @@ export default function LandingPage() {
         <div className="min-h-screen bg-[#0f172a] text-slate-100 overflow-x-hidden scroll-smooth">
             <Navbar />
             <Hero />
+            <DualCTA />
             <StatsBar />
             <Features />
             <ReplaceStack />
