@@ -127,12 +127,12 @@ export default function PropertyDetail() {
         <div className="min-h-screen bg-[#0f172a] text-white">
             {/* ── Top nav ── */}
             <div className="sticky top-0 z-40 bg-[#0f172a]/95 backdrop-blur-xl border-b border-white/5">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-36">
                     <button onClick={() => navigate('/explore')} className="flex items-center gap-2 text-slate-400 hover:text-white transition-colors text-sm">
                         <ArrowLeft className="h-4 w-4" /> Volver
                     </button>
                     <Link to="/" className="flex items-center gap-2">
-                        <img src="/logotriadak.png" alt="Triadak" className="h-16 w-auto object-contain" />
+                        <img src="/logotriadak.png" alt="Triadak" className="h-48 w-auto object-contain" />
                         <span className="hidden sm:block text-xs font-bold text-slate-500 tracking-[0.25em] uppercase">Alquiler Vacacional</span>
                     </Link>
                     <button
