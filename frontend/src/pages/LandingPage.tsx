@@ -135,9 +135,9 @@ function Navbar() {
                         </Link>
                         <Link
                             to="/login"
-                            className="text-sm font-semibold bg-gradient-to-r from-indigo-500 to-purple-500 text-white px-5 py-2.5 rounded-xl hover:shadow-lg hover:shadow-indigo-500/25 transition-all"
+                            className="text-sm font-semibold bg-black text-white px-5 py-2.5 rounded-xl border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all"
                         >
-                            {t('landing.nav.startFree')}
+                            Empezar
                         </Link>
                     </div>
                 </div>
@@ -439,7 +439,7 @@ function DualCTA() {
                     </div>
                     <Link
                         to="/login"
-                        className="inline-flex items-center gap-2 self-start bg-indigo-500 hover:bg-indigo-400 text-white font-semibold text-sm px-5 py-2.5 rounded-xl transition-all group"
+                        className="inline-flex items-center gap-2 self-start text-white/90 hover:text-white font-medium text-sm px-5 py-2.5 rounded-xl border border-white/25 hover:border-white/50 backdrop-blur-sm bg-white/8 hover:bg-white/15 transition-all group"
                     >
                         Empezar gratis
                         <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
@@ -470,7 +470,7 @@ function DualCTA() {
                     </div>
                     <Link
                         to="/explore"
-                        className="inline-flex items-center gap-2 self-start bg-emerald-500 hover:bg-emerald-400 text-white font-semibold text-sm px-5 py-2.5 rounded-xl transition-all group"
+                        className="inline-flex items-center gap-2 self-start text-white/90 hover:text-white font-medium text-sm px-5 py-2.5 rounded-xl border border-white/25 hover:border-white/50 backdrop-blur-sm bg-white/8 hover:bg-white/15 transition-all group"
                     >
                         Ver alojamientos
                         <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
