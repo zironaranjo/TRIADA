@@ -9,4 +9,14 @@ if (!import.meta.env.VITE_SUPABASE_URL) {
     console.error('⚠️ CRITICAL: VITE_SUPABASE_URL is missing!');
 }
 
+// Standard client (authenticated pages)
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+
+// Public client — sin auth session para páginas públicas (/explore, /property/:id)
+export const supabasePublic = createClient(supabaseUrl, supabaseAnonKey, {
+    auth: {
+        persistSession: false,
+        autoRefreshToken: false,
+        detectSessionInUrl: false,
+    },
+});

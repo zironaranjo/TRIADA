@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { supabase } from '../lib/supabase';
+import { supabasePublic as supabase } from '../lib/supabase';
 import {
     MapPin, Users, BedDouble, Bath, Wifi, Car, Waves, Wind,
     UtensilsCrossed, WashingMachine, ArrowLeft, ChevronLeft, ChevronRight,

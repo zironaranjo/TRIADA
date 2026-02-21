@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { supabase } from '../lib/supabase';
+import { supabasePublic as supabase } from '../lib/supabase';
 import {
     Search, MapPin, Users, BedDouble, Bath,
     Star, SlidersHorizontal, X, Home, Building2, TreePine, Waves,
