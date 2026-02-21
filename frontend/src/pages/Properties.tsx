@@ -473,8 +473,10 @@ const Properties = () => {
                                     <button
                                         onClick={async (e) => {
                                             e.stopPropagation();
-                                            await supabase.from('properties').update({ published: !property.published }).eq('id', property.id);
-                                            fetchProperties();
+                                            const newVal = !property.published;
+                                            // Optimistic update — sin recargar toda la lista
+                                            setProperties(prev => prev.map(p => p.id === property.id ? { ...p, published: newVal } : p));
+                                            await supabase.from('properties').update({ published: newVal }).eq('id', property.id);
                                         }}
                                         className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors ${property.published ? 'bg-emerald-500' : 'bg-slate-600'}`}
                                     >
