@@ -215,7 +215,7 @@ function Hero() {
             {/* Background image */}
             <div className="absolute inset-0 z-0">
                 <img
-                    src="/cabañamobile.webp"
+                    src="/cabana-mobile.webp"
                     alt="Vacation rental property"
                     className="w-full h-full object-cover object-center"
                 />
