@@ -214,11 +214,14 @@ function Hero() {
         <section className="relative min-h-screen flex flex-col justify-center overflow-hidden">
             {/* Background image */}
             <div className="absolute inset-0 z-0">
-                <img
-                    src="/hero-bg.jpg"
-                    alt="Vacation rental property"
-                    className="w-full h-full object-cover object-[60%_40%] sm:object-center"
-                />
+                <picture>
+                    <source media="(max-width: 639px)" srcSet="/cabañamobile.webp" />
+                    <img
+                        src="/hero-bg.jpg"
+                        alt="Vacation rental property"
+                        className="w-full h-full object-cover object-center"
+                    />
+                </picture>
                 {/* Mobile overlay — ligero para ver bien la imagen */}
                 <div className="absolute inset-0 bg-gradient-to-b from-[#0f172a]/40 via-[#0f172a]/20 to-[#0f172a]/85 sm:from-[#0f172a]/50 sm:via-[#0f172a]/30 sm:to-[#0f172a]/90" />
             </div>
