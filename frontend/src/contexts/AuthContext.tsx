@@ -135,8 +135,30 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
             const profileData = data as Profile;
 
+            // Guard: the oldest profile in the system is always the original admin.
+            // If their role was accidentally changed to owner/staff (e.g. email matched
+            // the owner table), restore it to admin automatically.
+            try {
+                const { data: oldest } = await supabase
+                    .from('profiles')
+                    .select('user_id')
+                    .order('created_at', { ascending: true })
+                    .limit(1)
+                    .single();
+
+                if (oldest?.user_id === userId && profileData.role !== 'admin') {
+                    await supabase
+                        .from('profiles')
+                        .update({ role: 'admin' })
+                        .eq('user_id', userId);
+                    profileData.role = 'admin';
+                    // Clear the role-assigned flag so future checks still work
+                    localStorage.removeItem(`triadak_role_assigned_${userId}`);
+                }
+            } catch { /* ignore — non-critical */ }
+
             // Auto-assign role only on first login (never re-assigned after that)
-            if (userEmail) {
+            if (userEmail && profileData.role !== 'admin') {
                 const newRole = await determineRoleForNewUser(userId, userEmail);
                 if (newRole && newRole !== profileData.role) {
                     await supabase
