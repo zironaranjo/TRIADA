@@ -77,13 +77,14 @@ SaaS platform for **vacation rental management** (triadak.io). Combines features
 20. **Responsive Login** - Mobile-optimized login page with adaptive logo sizes, compact padding, and scroll support
 21. **Developer Credit** - "Developed by zirox.io" in Login and Landing Page footers
 22. **Role-Based Access System** - Four roles (admin/staff/owner/worker) with auto-assignment:
-    - First user = admin automatically
-    - Email matching owner table = owner role
+    - First user = admin automatically (**protected**: el usuario con `created_at` más antiguo en `profiles` siempre conserva rol `admin`, incluso si su email coincide con la tabla `owner`)
+    - Email matching owner table = owner role (solo si no es el primer usuario)
     - Default = staff
     - Login redirects owners to `/portal/dashboard`, workers to `/worker/tasks`, admin/staff to `/dashboard`
     - **worker** role: email matching `staff_members` table → operational worker (cleaner/maintenance)
     - Team management panel in Settings (admin only): view members, change roles, remove members
     - Owner portal at `/portal/*` uses separate OwnerLayout; admin accesses owner pages via `/owner/*` within main Layout
+    - **OwnerLayout**: botón "Volver al Admin" / "Ir al Dashboard" visible para TODOS los usuarios (no solo admins). Admins → amber, owners → gris. Disponible en sidebar desktop y header mobile
 23. **Advanced Finance Engine** - Profit & Loss statement, expense reconciliation system (localStorage persisted), category filtering, reconciliation progress bar + status panel
 24. **Scheduled Notifications System** - Supabase Edge Functions for automated check-in/check-out reminders (hourly cron) and daily digest (08:00 UTC cron). Configurable timing (6/12/24/48h) in Settings. SQL migration with notifications table schema
 25. **Owner Detail System** - Click on owner opens modal with KPIs (properties, revenue, bookings, this month). "View Full Profile" navigates to `/owners/:id` with full page: header with edit, KPIs, tabs (Properties cards with per-property revenue, Statements link, Payment history). Working search filter on owners list
@@ -183,6 +184,7 @@ SaaS platform for **vacation rental management** (triadak.io). Combines features
     - Tarjeta principal: "Exportar ZIP Completo" — genera ZIP con CSV + JSON de cada sección + README.txt
     - 7 secciones individuales: propiedades, reservas, contactos, gastos, propietarios, contratos, personal
     - Cada sección muestra: icono, descripción, contador de registros, botones CSV y JSON independientes
+    - **Importar CSV desde Notion**: botón "Importar CSV" por sección. Parsea el CSV, mapea cabeceras Notion (ES/EN) a columnas Supabase, filtra columnas inválidas (`VALID_COLUMNS` por tabla), preview primeras 5 filas, modal de confirmación, inserta en lotes de 20. Muestra resultado (insertados/errores)
     - Función `toCSV()` con escape correcto de comas, comillas y saltos de línea
     - Fecha del último backup guardada en `localStorage` key `triadak_last_backup`
     - Nota de privacidad: datos exportados directamente desde Supabase, sin servidores externos
@@ -359,6 +361,7 @@ SaaS platform for **vacation rental management** (triadak.io). Combines features
 - SQL migration `005_guest_portal.sql` already executed in Supabase
 - SQL migration `006_messaging.sql` already executed in Supabase
 - SQL migration `010_explore_portal.sql` already executed in Supabase
+- **PENDING**: SQL migration `011_recurring_tasks.sql` — añade `recurrence`, `recurrence_day`, `recurrence_time`, `parent_task_id` a `staff_tasks`. Ejecutar en Supabase SQL Editor si aún no se ha hecho
 - `supabasePublic` client: usar siempre en páginas públicas (`/explore`, `/property/:id`, `/guest/:token`, `/contract/:token`) para evitar errores `_initSupabaseAuthClient` / `The operation was aborted`
 - **Explore Portal**: propiedades solo visibles si `published = true`. Toggle en Properties.tsx con update optimista. La columna `image_url` (no `images[]`) es la que se usa en Explore y PropertyDetail
 - SQL migration `007_contracts.sql` already executed in Supabase
@@ -376,3 +379,5 @@ SaaS platform for **vacation rental management** (triadak.io). Combines features
 - `Messaging.tsx` usa campos camelCase (`recipientName`, `recipientPhone`, `templateKey`, `externalSid`, `errorMessage`, `createdAt`) para coincidir con la respuesta TypeORM del backend
 - Las plantillas Meta usan variables con nombre (`{{guest_name}}`, `{{property_name}}`, etc.) — el backend envía `parameter_name` en cada parámetro tal como requiere Meta Cloud API v22.0
 - **PENDING**: Crear token permanente de System User en Meta Business Manager para evitar renovación manual del token
+- **Bug corregido (rol admin)**: `AuthContext.tsx` ahora protege al primer usuario registrado (`created_at` más antiguo en `profiles`) — su rol siempre se restaura a `admin` automáticamente aunque su email coincida con la tabla `owner`. Esto evita que el admin quede atrapado en el portal de propietarios
+- **DataBackup import fix**: `DataBackup.tsx` usa `VALID_COLUMNS` por tabla para filtrar columnas extra de Notion antes de insertar en Supabase. `loadCounts()` envuelve cada query en try/catch individual para que un fallo no deje la sección en estado `loading` indefinidamente. Batch de inserción reducido a 20 filas
