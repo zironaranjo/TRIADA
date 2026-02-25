@@ -47,6 +47,10 @@ interface StaffTask {
     rating: number | null;
     cost: number;
     notes: string | null;
+    recurrence: 'none' | 'daily' | 'weekly' | 'monthly';
+    recurrence_day: number | null;
+    recurrence_time: string | null;
+    parent_task_id: string | null;
     created_at: string;
     staff_members?: { full_name: string } | null;
     properties?: { name: string } | null;
@@ -99,7 +103,39 @@ export default function StaffOperations() {
     const [selectedMember, setSelectedMember] = useState<StaffMember | null>(null);
     const [searchQuery, setSearchQuery] = useState('');
 
-    useEffect(() => { fetchAll(true); }, []);
+    useEffect(() => {
+        fetchAll(true);
+        checkMaintenanceReminders();
+    }, []);
+
+    const checkMaintenanceReminders = async () => {
+        try {
+            const { data: { user } } = await supabase.auth.getUser();
+            if (!user) return;
+            const tomorrow = new Date();
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            const tomorrowStr = tomorrow.toISOString().split('T')[0];
+            const { data: dueTasks } = await supabase
+                .from('staff_tasks')
+                .select('*, properties(name), staff_members(full_name)')
+                .eq('task_type', 'maintenance')
+                .eq('scheduled_date', tomorrowStr)
+                .in('status', ['pending', 'in_progress']);
+            if (!dueTasks?.length) return;
+            for (const task of dueTasks) {
+                const propName = (task.properties as { name: string } | null)?.name || 'propiedad';
+                const staffName = (task.staff_members as { full_name: string } | null)?.full_name || 'Sin asignar';
+                await supabase.from('notifications').insert({
+                    user_id: user.id,
+                    type: 'maintenance_reminder',
+                    title: `🔧 Mantenimiento mañana — ${propName}`,
+                    message: `Tarea asignada a ${staffName} programada para mañana.`,
+                    read: false,
+                    metadata: { task_id: task.id, property_name: propName },
+                });
+            }
+        } catch { /* silent */ }
+    };
 
     const fetchAll = async (isInitial = false) => {
         if (isInitial) setLoading(true);
@@ -134,6 +170,42 @@ export default function StaffOperations() {
     const updateTaskStatus = async (taskId: string, status: string) => {
         await supabase.from('staff_tasks').update({ status }).eq('id', taskId);
         setTasks(prev => prev.map(t => t.id === taskId ? { ...t, status: status as StaffTask['status'] } : t));
+
+        // Auto-generate next occurrence for recurring tasks
+        if (status === 'completed') {
+            const task = tasks.find(t => t.id === taskId);
+            if (task && task.recurrence && task.recurrence !== 'none') {
+                const base = new Date(task.scheduled_date);
+                let nextDate: Date | null = null;
+                if (task.recurrence === 'daily') {
+                    nextDate = new Date(base);
+                    nextDate.setDate(nextDate.getDate() + 1);
+                } else if (task.recurrence === 'weekly') {
+                    nextDate = new Date(base);
+                    nextDate.setDate(nextDate.getDate() + 7);
+                } else if (task.recurrence === 'monthly') {
+                    nextDate = new Date(base);
+                    nextDate.setMonth(nextDate.getMonth() + 1);
+                }
+                if (nextDate) {
+                    await supabase.from('staff_tasks').insert({
+                        staff_member_id: task.staff_member_id,
+                        property_id: task.property_id,
+                        task_type: task.task_type,
+                        scheduled_date: nextDate.toISOString().split('T')[0],
+                        cost: task.cost,
+                        notes: task.notes,
+                        checklist: task.checklist.map(c => ({ ...c, completed: false })),
+                        status: 'pending',
+                        recurrence: task.recurrence,
+                        recurrence_day: task.recurrence_day,
+                        recurrence_time: task.recurrence_time,
+                        parent_task_id: task.id,
+                    });
+                    fetchAll();
+                }
+            }
+        }
 
         // Auto-create expense when task is completed
         if (status === 'completed') {
@@ -672,6 +744,9 @@ function TaskModal({ members, properties, onClose, onSuccess }: {
         scheduled_date: new Date().toISOString().split('T')[0],
         cost: '0',
         notes: '',
+        recurrence: 'none' as 'none' | 'daily' | 'weekly' | 'monthly',
+        recurrence_day: 1 as number,
+        recurrence_time: '09:00',
         checklist: [
             { item: t('staffOps.checklistBedrooms'), completed: false },
             { item: t('staffOps.checklistBathrooms'), completed: false },
@@ -680,6 +755,8 @@ function TaskModal({ members, properties, onClose, onSuccess }: {
             { item: t('staffOps.checklistTrash'), completed: false },
         ] as ChecklistItem[],
     });
+
+    const DAY_NAMES = ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -695,6 +772,9 @@ function TaskModal({ members, properties, onClose, onSuccess }: {
                 notes: form.notes || null,
                 checklist: form.checklist,
                 status: 'pending',
+                recurrence: form.recurrence,
+                recurrence_day: form.recurrence === 'weekly' ? form.recurrence_day : null,
+                recurrence_time: form.recurrence !== 'none' ? form.recurrence_time : null,
             });
             if (error) {
                 console.error('Supabase error:', error);
@@ -751,6 +831,53 @@ function TaskModal({ members, properties, onClose, onSuccess }: {
                             <input type="number" step="0.01" value={form.cost} onChange={e => setForm({ ...form, cost: e.target.value })}
                                 className="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-sm text-white focus:border-indigo-500 focus:outline-none" />
                         </div>
+                    </div>
+
+                    {/* Recurrencia */}
+                    <div className="space-y-3 p-3 bg-amber-500/5 border border-amber-500/20 rounded-xl">
+                        <div className="flex items-center gap-2">
+                            <Bell className="h-4 w-4 text-amber-400" />
+                            <label className="text-xs font-semibold text-amber-400 uppercase tracking-wider">Recordatorio / Recurrencia</label>
+                        </div>
+                        <div className="grid grid-cols-2 gap-3">
+                            <div className="space-y-1">
+                                <label className="text-xs font-medium text-slate-400">Frecuencia</label>
+                                <select value={form.recurrence} onChange={e => setForm({ ...form, recurrence: e.target.value as typeof form.recurrence })}
+                                    className="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-sm text-white focus:border-amber-500 focus:outline-none">
+                                    <option value="none" className="bg-slate-800">Sin repetición</option>
+                                    <option value="daily" className="bg-slate-800">Diariamente</option>
+                                    <option value="weekly" className="bg-slate-800">Semanalmente</option>
+                                    <option value="monthly" className="bg-slate-800">Mensualmente</option>
+                                </select>
+                            </div>
+                            <div className="space-y-1">
+                                <label className="text-xs font-medium text-slate-400">Hora del recordatorio</label>
+                                <input type="time" value={form.recurrence_time}
+                                    onChange={e => setForm({ ...form, recurrence_time: e.target.value })}
+                                    disabled={form.recurrence === 'none'}
+                                    className="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-sm text-white focus:border-amber-500 focus:outline-none disabled:opacity-40" />
+                            </div>
+                            {form.recurrence === 'weekly' && (
+                                <div className="col-span-2 space-y-1">
+                                    <label className="text-xs font-medium text-slate-400">Día de la semana</label>
+                                    <div className="flex gap-1.5 flex-wrap">
+                                        {DAY_NAMES.map((day, i) => (
+                                            <button key={i} type="button"
+                                                onClick={() => setForm({ ...form, recurrence_day: i })}
+                                                className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${form.recurrence_day === i ? 'bg-amber-500 text-white' : 'bg-slate-800 text-slate-400 hover:bg-slate-700'}`}>
+                                                {day.slice(0, 3)}
+                                            </button>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                        {form.recurrence !== 'none' && (
+                            <p className="text-xs text-amber-300/70">
+                                ✓ Se creará automáticamente la siguiente tarea al completar esta.
+                                {form.recurrence_time && ` Recordatorio a las ${form.recurrence_time}.`}
+                            </p>
+                        )}
                     </div>
 
                     {/* Checklist */}
