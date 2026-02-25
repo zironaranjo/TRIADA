@@ -19,6 +19,9 @@ import {
   CheckCircle2,
   AlertCircle,
   Archive,
+  Upload,
+  X,
+  Eye,
 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 
@@ -61,6 +64,43 @@ function toCSV(rows: Record<string, unknown>[]): string {
   return [headers.join(','), ...rows.map(r => headers.map(h => escape(r[h])).join(','))].join('\n');
 }
 
+// ─── CSV parser ──────────────────────────────────────
+function parseCSV(text: string): Record<string, string>[] {
+  const lines = text.trim().split('\n');
+  if (lines.length < 2) return [];
+  const headers = lines[0].split(',').map(h => h.trim().replace(/^"|"$/g, ''));
+  return lines.slice(1).map(line => {
+    const values: string[] = [];
+    let current = '';
+    let inQuotes = false;
+    for (let i = 0; i < line.length; i++) {
+      if (line[i] === '"') { inQuotes = !inQuotes; continue; }
+      if (line[i] === ',' && !inQuotes) { values.push(current.trim()); current = ''; continue; }
+      current += line[i];
+    }
+    values.push(current.trim());
+    return Object.fromEntries(headers.map((h, i) => [h, values[i] ?? '']));
+  });
+}
+
+// Column mappings: Notion export headers → Supabase columns
+const IMPORT_MAPPINGS: Record<string, Record<string, string>> = {
+  properties: { 'Nombre': 'name', 'Name': 'name', 'Estado': 'status', 'Status': 'status', 'Precio': 'price_per_night', 'Price': 'price_per_night', 'Dirección': 'address', 'Address': 'address', 'Ciudad': 'city', 'City': 'city' },
+  bookings: { 'Huésped': 'guest_name', 'Guest': 'guest_name', 'Email': 'guest_email', 'Teléfono': 'guest_phone', 'Phone': 'guest_phone', 'Entrada': 'start_date', 'Check-in': 'start_date', 'Salida': 'end_date', 'Check-out': 'end_date', 'Total': 'total_price', 'Price': 'total_price', 'Plataforma': 'platform', 'Platform': 'platform', 'Estado': 'status', 'Status': 'status' },
+  contacts: { 'Nombre': 'name', 'Name': 'name', 'Email': 'email', 'Teléfono': 'phone', 'Phone': 'phone', 'Empresa': 'company', 'Company': 'company', 'Notas': 'notes', 'Notes': 'notes' },
+  owners: { 'Nombre': 'firstName', 'Name': 'firstName', 'Apellido': 'lastName', 'Last Name': 'lastName', 'Email': 'email', 'Teléfono': 'phone', 'Phone': 'phone' },
+  expenses: { 'Categoría': 'category', 'Category': 'category', 'Descripción': 'description', 'Description': 'description', 'Importe': 'amount', 'Amount': 'amount', 'Fecha': 'date', 'Date': 'date' },
+  staff: { 'Nombre': 'full_name', 'Name': 'full_name', 'Email': 'email', 'Teléfono': 'phone', 'Phone': 'phone', 'Contrato': 'contract_type', 'Contract': 'contract_type', 'Salario': 'salary', 'Salary': 'salary' },
+};
+
+interface ImportState {
+  sectionKey: string;
+  table: string;
+  rows: Record<string, string>[];
+  importing: boolean;
+  result: { inserted: number; errors: number } | null;
+}
+
 export default function DataBackup() {
   const { t } = useTranslation();
   const [sections, setSections] = useState<Record<string, SectionData>>(
@@ -70,6 +110,7 @@ export default function DataBackup() {
   const [lastBackup, setLastBackup] = useState<string | null>(
     () => localStorage.getItem(STORAGE_KEY)
   );
+  const [importState, setImportState] = useState<ImportState | null>(null);
 
   useEffect(() => { loadCounts(); }, []);
 
@@ -182,6 +223,43 @@ export default function DataBackup() {
 
   function today() {
     return new Date().toISOString().split('T')[0];
+  }
+
+  function handleImportFile(section: Section, file: File) {
+    const reader = new FileReader();
+    reader.onload = e => {
+      const text = e.target?.result as string;
+      const rows = parseCSV(text);
+      const mapping = IMPORT_MAPPINGS[section.key] || {};
+      // Auto-map columns: if header matches a mapping key, rename it
+      const mappedRows = rows.map(row => {
+        const mapped: Record<string, string> = {};
+        Object.entries(row).forEach(([k, v]) => {
+          const target = mapping[k] || k;
+          mapped[target] = v;
+        });
+        return mapped;
+      });
+      setImportState({ sectionKey: section.key, table: section.table, rows: mappedRows, importing: false, result: null });
+    };
+    reader.readAsText(file);
+  }
+
+  async function confirmImport() {
+    if (!importState) return;
+    setImportState(prev => prev ? { ...prev, importing: true } : null);
+    let inserted = 0;
+    let errors = 0;
+    // Insert in batches of 50
+    const batches = [];
+    for (let i = 0; i < importState.rows.length; i += 50) batches.push(importState.rows.slice(i, i + 50));
+    for (const batch of batches) {
+      const { error } = await supabase.from(importState.table).insert(batch);
+      if (error) errors += batch.length;
+      else inserted += batch.length;
+    }
+    setImportState(prev => prev ? { ...prev, importing: false, result: { inserted, errors } } : null);
+    loadCounts();
   }
 
   const totalRecords = Object.values(sections).reduce((sum, s) => sum + s.count, 0);
@@ -310,10 +388,114 @@ export default function DataBackup() {
                   {t('backup.exportJson')}
                 </button>
               </div>
+
+              {/* Import button */}
+              <label className="flex items-center justify-center gap-1.5 py-2 rounded-xl border border-emerald-500/30 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 text-sm font-medium transition cursor-pointer">
+                <Upload className="w-3.5 h-3.5" />
+                Importar CSV
+                <input type="file" accept=".csv" className="hidden" onChange={e => {
+                  const file = e.target.files?.[0];
+                  if (file) handleImportFile(section, file);
+                  e.target.value = '';
+                }} />
+              </label>
             </motion.div>
           );
         })}
       </div>
+
+      {/* ─── Import Modal ─────────────────────────── */}
+      {importState && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+          <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }}
+            className="bg-[#1e293b] border border-white/10 rounded-2xl w-full max-w-3xl max-h-[90vh] flex flex-col shadow-2xl">
+
+            {/* Header */}
+            <div className="flex items-center justify-between p-5 border-b border-white/10">
+              <div className="flex items-center gap-3">
+                <div className="p-2 rounded-xl bg-emerald-500/15 border border-emerald-500/20">
+                  <Upload className="h-5 w-5 text-emerald-400" />
+                </div>
+                <div>
+                  <h2 className="font-bold text-white">Importar CSV — {importState.sectionKey}</h2>
+                  <p className="text-xs text-slate-400">{importState.rows.length} filas detectadas</p>
+                </div>
+              </div>
+              <button onClick={() => setImportState(null)} className="p-2 text-slate-400 hover:text-white hover:bg-white/10 rounded-lg transition-colors">
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+
+            {/* Result */}
+            {importState.result ? (
+              <div className="flex-1 flex flex-col items-center justify-center gap-4 p-8 text-center">
+                <CheckCircle2 className="h-14 w-14 text-emerald-400" />
+                <div>
+                  <p className="text-xl font-bold text-white">{importState.result.inserted} registros importados</p>
+                  {importState.result.errors > 0 && (
+                    <p className="text-sm text-red-400 mt-1">{importState.result.errors} filas con error (duplicados o datos inválidos)</p>
+                  )}
+                </div>
+                <button onClick={() => setImportState(null)}
+                  className="px-6 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl font-semibold transition-colors">
+                  Cerrar
+                </button>
+              </div>
+            ) : (
+              <>
+                {/* Preview */}
+                <div className="flex-1 overflow-auto p-5">
+                  <div className="flex items-center gap-2 mb-3">
+                    <Eye className="h-4 w-4 text-slate-400" />
+                    <p className="text-sm font-semibold text-white">Vista previa (primeras 5 filas)</p>
+                  </div>
+                  <div className="overflow-x-auto rounded-xl border border-white/10">
+                    <table className="w-full text-xs text-left">
+                      <thead className="bg-white/5 text-slate-400 uppercase tracking-wider">
+                        <tr>
+                          {Object.keys(importState.rows[0] || {}).map(col => (
+                            <th key={col} className="px-3 py-2 font-semibold whitespace-nowrap">{col}</th>
+                          ))}
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-white/5">
+                        {importState.rows.slice(0, 5).map((row, i) => (
+                          <tr key={i} className="hover:bg-white/[0.02]">
+                            {Object.values(row).map((val, j) => (
+                              <td key={j} className="px-3 py-2 text-slate-300 whitespace-nowrap max-w-[160px] truncate">{val || '—'}</td>
+                            ))}
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                  {importState.rows.length > 5 && (
+                    <p className="text-xs text-slate-500 mt-2 text-center">...y {importState.rows.length - 5} filas más</p>
+                  )}
+                  <div className="mt-4 p-3 bg-amber-500/10 border border-amber-500/20 rounded-xl text-xs text-amber-300">
+                    ⚠️ Los registros existentes no se sobrescribirán. Solo se añadirán filas nuevas.
+                  </div>
+                </div>
+
+                {/* Footer */}
+                <div className="p-4 border-t border-white/10 flex items-center justify-between gap-3">
+                  <button onClick={() => setImportState(null)}
+                    className="px-4 py-2 text-sm text-slate-400 hover:text-white transition-colors">
+                    Cancelar
+                  </button>
+                  <button onClick={confirmImport} disabled={importState.importing}
+                    className="flex items-center gap-2 px-6 py-2.5 bg-emerald-600 hover:bg-emerald-500 disabled:opacity-60 text-white rounded-xl font-semibold text-sm transition-colors">
+                    {importState.importing
+                      ? <><RefreshCw className="h-4 w-4 animate-spin" /> Importando...</>
+                      : <><Upload className="h-4 w-4" /> Confirmar importación ({importState.rows.length} filas)</>
+                    }
+                  </button>
+                </div>
+              </>
+            )}
+          </motion.div>
+        </div>
+      )}
     </div>
   );
 }
