@@ -93,6 +93,17 @@ const IMPORT_MAPPINGS: Record<string, Record<string, string>> = {
   staff: { 'Nombre': 'full_name', 'Name': 'full_name', 'Email': 'email', 'Teléfono': 'phone', 'Phone': 'phone', 'Contrato': 'contract_type', 'Contract': 'contract_type', 'Salario': 'salary', 'Salary': 'salary' },
 };
 
+// Valid columns per table — strip extra CSV columns before insert
+const VALID_COLUMNS: Record<string, string[]> = {
+  properties: ['name', 'status', 'price_per_night', 'address', 'city', 'country', 'description', 'property_type', 'bedrooms', 'bathrooms', 'max_guests'],
+  bookings: ['guest_name', 'guest_email', 'guest_phone', 'start_date', 'end_date', 'total_price', 'platform', 'status', 'notes'],
+  contacts: ['name', 'email', 'phone', 'company', 'notes'],
+  owner: ['firstName', 'lastName', 'email', 'phone'],
+  expenses: ['category', 'description', 'amount', 'date', 'notes'],
+  staff_members: ['full_name', 'email', 'phone', 'contract_type', 'salary', 'status', 'notes'],
+  contracts: ['title', 'status', 'guest_name', 'guest_email'],
+};
+
 interface ImportState {
   sectionKey: string;
   table: string;
@@ -120,18 +131,25 @@ export default function DataBackup() {
     ));
 
     await Promise.all(SECTIONS.map(async section => {
-      const { count, error } = await supabase
-        .from(section.table)
-        .select('*', { count: 'exact', head: true });
+      try {
+        const { count, error } = await supabase
+          .from(section.table)
+          .select('*', { count: 'exact', head: true });
 
-      setSections(prev => ({
-        ...prev,
-        [section.key]: {
-          ...prev[section.key],
-          status: error ? 'error' : 'ready',
-          count: count ?? 0,
-        },
-      }));
+        setSections(prev => ({
+          ...prev,
+          [section.key]: {
+            ...prev[section.key],
+            status: error ? 'error' : 'ready',
+            count: count ?? 0,
+          },
+        }));
+      } catch {
+        setSections(prev => ({
+          ...prev,
+          [section.key]: { ...prev[section.key], status: 'error', count: 0 },
+        }));
+      }
     }));
   }
 
@@ -250,14 +268,37 @@ export default function DataBackup() {
     setImportState(prev => prev ? { ...prev, importing: true } : null);
     let inserted = 0;
     let errors = 0;
-    // Insert in batches of 50
-    const batches = [];
-    for (let i = 0; i < importState.rows.length; i += 50) batches.push(importState.rows.slice(i, i + 50));
-    for (const batch of batches) {
-      const { error } = await supabase.from(importState.table).insert(batch);
-      if (error) errors += batch.length;
-      else inserted += batch.length;
+
+    try {
+      const validCols = VALID_COLUMNS[importState.table] || null;
+      // Strip unknown columns and empty values
+      const cleanRows = importState.rows.map(row => {
+        const clean: Record<string, string> = {};
+        Object.entries(row).forEach(([k, v]) => {
+          if (v === '' || v === undefined) return;
+          if (!validCols || validCols.includes(k)) clean[k] = v;
+        });
+        return clean;
+      }).filter(row => Object.keys(row).length > 0);
+
+      // Insert in batches of 20
+      const batches = [];
+      for (let i = 0; i < cleanRows.length; i += 20) batches.push(cleanRows.slice(i, i + 20));
+
+      for (const batch of batches) {
+        const { error } = await supabase.from(importState.table).insert(batch);
+        if (error) {
+          console.error('Import batch error:', error.message);
+          errors += batch.length;
+        } else {
+          inserted += batch.length;
+        }
+      }
+    } catch (err) {
+      console.error('Import error:', err);
+      errors = importState.rows.length;
     }
+
     setImportState(prev => prev ? { ...prev, importing: false, result: { inserted, errors } } : null);
     loadCounts();
   }
