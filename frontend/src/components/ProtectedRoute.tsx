@@ -37,10 +37,10 @@ const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
         return <Navigate to="/portal/dashboard" replace />;
     }
 
-    // If user has no active plan and is not on a plan-free or portal route, redirect to pricing
-    if (!hasActivePlan && !PLAN_FREE_ROUTES.includes(location.pathname) && !isPortalRoute) {
-        return <Navigate to="/pricing" replace />;
-    }
+    // Subscription check temporarily disabled — uncomment to re-enable
+    // if (!hasActivePlan && !PLAN_FREE_ROUTES.includes(location.pathname) && !isPortalRoute) {
+    //     return <Navigate to="/pricing" replace />;
+    // }
 
     return <>{children}</>;
 };
