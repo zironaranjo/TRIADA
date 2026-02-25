@@ -8,6 +8,7 @@ import {
     Phone, Mail, MapPin, FileText, Clock,
     CheckCircle2, Circle, Trash2, Edit3,
     DollarSign, Camera, Briefcase, Calendar, Home,
+    Wrench, Bell, ChevronLeft, ChevronRight, AlertTriangle, Building2,
 } from 'lucide-react';
 
 // ─── Types ────────────────────────────────────────────
@@ -82,7 +83,7 @@ const STATUS_CONFIG: Record<string, { color: string; bg: string }> = {
     cancelled: { color: 'text-red-400', bg: 'bg-red-500/10' },
 };
 
-type TabId = 'staff' | 'tasks' | 'payroll';
+type TabId = 'staff' | 'tasks' | 'payroll' | 'maintenance';
 
 // ─── Main Component ──────────────────────────────────
 export default function StaffOperations() {
@@ -162,10 +163,11 @@ export default function StaffOperations() {
     const completedTasks = tasks.filter(t => t.status === 'completed' || t.status === 'verified');
     const totalLabourCost = tasks.reduce((s, t) => s + Number(t.cost || 0), 0);
 
-    const TABS: { id: TabId; icon: React.ElementType; labelKey: string }[] = [
-        { id: 'staff', icon: Users, labelKey: 'staffOps.tabStaff' },
-        { id: 'tasks', icon: ClipboardCheck, labelKey: 'staffOps.tabTasks' },
-        { id: 'payroll', icon: DollarSign, labelKey: 'staffOps.tabPayroll' },
+    const TABS: { id: TabId; icon: React.ElementType; label: string }[] = [
+        { id: 'staff', icon: Users, label: t('staffOps.tabStaff') },
+        { id: 'tasks', icon: ClipboardCheck, label: t('staffOps.tabTasks') },
+        { id: 'payroll', icon: DollarSign, label: t('staffOps.tabPayroll') },
+        { id: 'maintenance', icon: Wrench, label: 'Mantenimiento' },
     ];
 
     if (loading) return (
@@ -212,12 +214,12 @@ export default function StaffOperations() {
                 </div>
 
                 {/* Tabs */}
-                <div className="flex gap-1 p-1 bg-white/5 rounded-xl border border-white/5 w-fit">
+                <div className="flex gap-1 p-1 bg-white/5 rounded-xl border border-white/5 w-fit flex-wrap">
                     {TABS.map(tab => (
                         <button key={tab.id} onClick={() => setActiveTab(tab.id)}
-                            className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all ${activeTab === tab.id ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-500/20' : 'text-slate-400 hover:text-white hover:bg-white/5'}`}>
+                            className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all ${activeTab === tab.id ? (tab.id === 'maintenance' ? 'bg-amber-600 text-white shadow-lg shadow-amber-500/20' : 'bg-indigo-600 text-white shadow-lg shadow-indigo-500/20') : 'text-slate-400 hover:text-white hover:bg-white/5'}`}>
                             <tab.icon className="h-4 w-4" />
-                            {t(tab.labelKey)}
+                            {tab.label}
                         </button>
                     ))}
                 </div>
@@ -413,6 +415,18 @@ export default function StaffOperations() {
                             </div>
                         </GlassCard>
                     </div>
+                )}
+
+                {/* ─── Mantenimiento Tab ───────────────── */}
+                {activeTab === 'maintenance' && (
+                    <MaintenanceTab
+                        tasks={tasks}
+                        properties={properties}
+                        members={members}
+                        onAddTask={() => setShowTaskModal(true)}
+                        onUpdateStatus={updateTaskStatus}
+                        fmt={fmt}
+                    />
                 )}
             </div>
 
@@ -963,6 +977,282 @@ function StaffDetailModal({ member, tasks, properties, onClose, onEdit }: {
                     </button>
                 </div>
             </motion.div>
+        </div>
+    );
+}
+
+// ─── Maintenance Tab ─────────────────────────────────
+interface MaintenanceTabProps {
+    tasks: StaffTask[];
+    properties: Property[];
+    members: StaffMember[];
+    onAddTask: () => void;
+    onUpdateStatus: (id: string, status: string) => void;
+    fmt: (v: number) => string;
+}
+
+function MaintenanceTab({ tasks, properties, onAddTask, onUpdateStatus, fmt }: MaintenanceTabProps) {
+    const [calendarDate, setCalendarDate] = useState(new Date());
+    const [selectedProperty, setSelectedProperty] = useState<string>('all');
+    const [selectedDay, setSelectedDay] = useState<number | null>(null);
+
+    const maintenanceTasks = tasks.filter(t => t.task_type === 'maintenance');
+    const filteredTasks = selectedProperty === 'all'
+        ? maintenanceTasks
+        : maintenanceTasks.filter(t => t.property_id === selectedProperty);
+
+    const today = new Date();
+    const year = calendarDate.getFullYear();
+    const month = calendarDate.getMonth();
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+    const firstDayOfMonth = new Date(year, month, 1).getDay();
+    const monthNames = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+    const dayNames = ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
+
+    const getTasksForDay = (day: number) => {
+        const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+        return filteredTasks.filter(t => t.scheduled_date?.startsWith(dateStr));
+    };
+
+    const upcoming = maintenanceTasks
+        .filter(t => {
+            if (!t.scheduled_date || t.status === 'completed' || t.status === 'verified' || t.status === 'cancelled') return false;
+            const d = new Date(t.scheduled_date);
+            const diff = (d.getTime() - today.getTime()) / (1000 * 60 * 60 * 24);
+            return diff >= -1 && diff <= 7;
+        })
+        .sort((a, b) => a.scheduled_date.localeCompare(b.scheduled_date));
+
+    const pendingCount = filteredTasks.filter(t => t.status === 'pending').length;
+    const inProgressCount = filteredTasks.filter(t => t.status === 'in_progress').length;
+    const completedMonth = filteredTasks.filter(t => {
+        if (t.status !== 'completed' && t.status !== 'verified') return false;
+        const d = new Date(t.scheduled_date);
+        return d.getMonth() === today.getMonth() && d.getFullYear() === today.getFullYear();
+    }).length;
+    const totalCost = filteredTasks.filter(t => t.status === 'completed' || t.status === 'verified').reduce((s, t) => s + Number(t.cost || 0), 0);
+    const selectedDayTasks = selectedDay ? getTasksForDay(selectedDay) : [];
+
+    return (
+        <div className="space-y-6">
+            {/* KPIs */}
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+                {[
+                    { label: 'Pendientes', value: pendingCount, color: 'text-amber-400', border: 'border-amber-500/20' },
+                    { label: 'En progreso', value: inProgressCount, color: 'text-blue-400', border: 'border-blue-500/20' },
+                    { label: 'Completadas (mes)', value: completedMonth, color: 'text-emerald-400', border: 'border-emerald-500/20' },
+                    { label: 'Coste total', value: fmt(totalCost), color: 'text-indigo-400', border: 'border-indigo-500/20' },
+                ].map((k, i) => (
+                    <GlassCard key={i} className={`p-4 border ${k.border}`}>
+                        <p className="text-xs text-slate-500 mb-1">{k.label}</p>
+                        <p className={`text-2xl font-bold ${k.color}`}>{k.value}</p>
+                    </GlassCard>
+                ))}
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                {/* Calendario */}
+                <div className="lg:col-span-2">
+                    <GlassCard className="p-4 sm:p-5">
+                        <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
+                            <div className="flex items-center gap-3">
+                                <Calendar className="h-5 w-5 text-amber-400" />
+                                <h3 className="font-semibold text-white">{monthNames[month]} {year}</h3>
+                            </div>
+                            <div className="flex items-center gap-2 flex-wrap">
+                                <select
+                                    value={selectedProperty}
+                                    onChange={e => { setSelectedProperty(e.target.value); setSelectedDay(null); }}
+                                    className="text-xs bg-white/5 border border-white/10 rounded-lg px-2 py-1.5 text-slate-300 focus:outline-none focus:border-amber-500 max-w-[140px]"
+                                >
+                                    <option value="all" className="bg-[#1e293b]">Todas las propiedades</option>
+                                    {properties.map(p => (
+                                        <option key={p.id} value={p.id} className="bg-[#1e293b]">{p.name}</option>
+                                    ))}
+                                </select>
+                                <div className="flex items-center gap-1">
+                                    <button onClick={() => { setCalendarDate(new Date(year, month - 1, 1)); setSelectedDay(null); }}
+                                        className="p-1.5 text-slate-400 hover:text-white hover:bg-white/10 rounded-lg transition-all">
+                                        <ChevronLeft className="h-4 w-4" />
+                                    </button>
+                                    <button onClick={() => { setCalendarDate(new Date(year, month + 1, 1)); setSelectedDay(null); }}
+                                        className="p-1.5 text-slate-400 hover:text-white hover:bg-white/10 rounded-lg transition-all">
+                                        <ChevronRight className="h-4 w-4" />
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="grid grid-cols-7 mb-2">
+                            {dayNames.map(d => (
+                                <div key={d} className="text-center text-[10px] font-semibold text-slate-500 uppercase py-1">{d}</div>
+                            ))}
+                        </div>
+
+                        <div className="grid grid-cols-7 gap-1">
+                            {Array.from({ length: firstDayOfMonth }).map((_, i) => <div key={`e-${i}`} />)}
+                            {Array.from({ length: daysInMonth }).map((_, i) => {
+                                const day = i + 1;
+                                const dayTasks = getTasksForDay(day);
+                                const isToday = day === today.getDate() && month === today.getMonth() && year === today.getFullYear();
+                                const isSelected = selectedDay === day;
+                                const hasPending = dayTasks.some(t => t.status === 'pending');
+                                const hasInProgress = dayTasks.some(t => t.status === 'in_progress');
+                                const hasCompleted = dayTasks.some(t => t.status === 'completed' || t.status === 'verified');
+                                return (
+                                    <button key={day} onClick={() => setSelectedDay(isSelected ? null : day)}
+                                        className={`relative aspect-square flex flex-col items-center justify-start pt-1 rounded-lg text-xs font-medium transition-all ${
+                                            isSelected ? 'bg-amber-500/30 border border-amber-500/50 text-amber-300' :
+                                            isToday ? 'bg-amber-500/15 border border-amber-500/30 text-amber-400' :
+                                            dayTasks.length > 0 ? 'bg-white/5 hover:bg-white/10 text-white border border-white/10' :
+                                            'hover:bg-white/5 text-slate-400 border border-transparent'
+                                        }`}>
+                                        {day}
+                                        {dayTasks.length > 0 && (
+                                            <div className="flex gap-0.5 mt-0.5 flex-wrap justify-center">
+                                                {hasPending && <span className="w-1.5 h-1.5 rounded-full bg-amber-400" />}
+                                                {hasInProgress && <span className="w-1.5 h-1.5 rounded-full bg-blue-400" />}
+                                                {hasCompleted && <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />}
+                                            </div>
+                                        )}
+                                    </button>
+                                );
+                            })}
+                        </div>
+
+                        <div className="flex items-center gap-4 mt-3 pt-3 border-t border-white/5 flex-wrap">
+                            <span className="flex items-center gap-1.5 text-xs text-slate-500"><span className="w-2 h-2 rounded-full bg-amber-400" />Pendiente</span>
+                            <span className="flex items-center gap-1.5 text-xs text-slate-500"><span className="w-2 h-2 rounded-full bg-blue-400" />En progreso</span>
+                            <span className="flex items-center gap-1.5 text-xs text-slate-500"><span className="w-2 h-2 rounded-full bg-emerald-400" />Completada</span>
+                        </div>
+
+                        {selectedDay && (
+                            <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="mt-4 pt-4 border-t border-white/10">
+                                <h4 className="text-sm font-semibold text-white mb-3">
+                                    Tareas del {selectedDay} de {monthNames[month]}
+                                </h4>
+                                {selectedDayTasks.length === 0 ? (
+                                    <p className="text-xs text-slate-500 italic">Sin tareas programadas este día</p>
+                                ) : (
+                                    <div className="space-y-2">
+                                        {selectedDayTasks.map(task => (
+                                            <div key={task.id} className="flex items-center justify-between p-3 bg-white/5 rounded-xl border border-white/10 gap-3">
+                                                <div className="flex items-center gap-3 min-w-0">
+                                                    <Wrench className="h-4 w-4 text-amber-400 flex-shrink-0" />
+                                                    <div className="min-w-0">
+                                                        <p className="text-sm text-white font-medium truncate">{task.properties?.name || 'Sin propiedad'}</p>
+                                                        <p className="text-xs text-slate-500">{task.staff_members?.full_name || 'Sin asignar'} · {fmt(task.cost)}</p>
+                                                        {task.notes && <p className="text-xs text-slate-400 mt-0.5 italic truncate">{task.notes}</p>}
+                                                    </div>
+                                                </div>
+                                                <div className="flex items-center gap-2 flex-shrink-0">
+                                                    <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full ${STATUS_CONFIG[task.status]?.bg} ${STATUS_CONFIG[task.status]?.color}`}>
+                                                        {task.status.replace('_', ' ')}
+                                                    </span>
+                                                    {task.status === 'pending' && (
+                                                        <button onClick={() => onUpdateStatus(task.id, 'in_progress')}
+                                                            className="text-[10px] px-2 py-0.5 bg-blue-500/20 text-blue-400 rounded-full hover:bg-blue-500/30 transition-colors">
+                                                            Iniciar
+                                                        </button>
+                                                    )}
+                                                    {task.status === 'in_progress' && (
+                                                        <button onClick={() => onUpdateStatus(task.id, 'completed')}
+                                                            className="text-[10px] px-2 py-0.5 bg-emerald-500/20 text-emerald-400 rounded-full hover:bg-emerald-500/30 transition-colors">
+                                                            Completar
+                                                        </button>
+                                                    )}
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
+                            </motion.div>
+                        )}
+                    </GlassCard>
+                </div>
+
+                {/* Panel lateral */}
+                <div className="space-y-4">
+                    {/* Recordatorios */}
+                    <GlassCard className="p-4">
+                        <div className="flex items-center justify-between mb-3">
+                            <div className="flex items-center gap-2">
+                                <Bell className="h-4 w-4 text-amber-400" />
+                                <h3 className="font-semibold text-white text-sm">Recordatorios</h3>
+                            </div>
+                            <span className="text-xs text-slate-500">Próximos 7 días</span>
+                        </div>
+                        {upcoming.length === 0 ? (
+                            <p className="text-xs text-slate-500 italic">Sin mantenimientos próximos</p>
+                        ) : (
+                            <div className="space-y-2">
+                                {upcoming.map(task => {
+                                    const d = new Date(task.scheduled_date);
+                                    const diff = Math.ceil((d.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+                                    const isOverdue = diff < 0;
+                                    const isUrgent = diff === 0 || diff === 1;
+                                    return (
+                                        <div key={task.id} className={`p-2.5 rounded-lg border ${isOverdue ? 'bg-red-500/10 border-red-500/20' : isUrgent ? 'bg-amber-500/10 border-amber-500/20' : 'bg-white/5 border-white/10'}`}>
+                                            <div className="flex items-start justify-between gap-2">
+                                                <div className="flex items-center gap-2 min-w-0">
+                                                    <AlertTriangle className={`h-3.5 w-3.5 flex-shrink-0 ${isOverdue ? 'text-red-400' : isUrgent ? 'text-amber-400' : 'text-slate-500'}`} />
+                                                    <div className="min-w-0">
+                                                        <p className="text-xs font-medium text-white truncate">{task.properties?.name || 'Sin propiedad'}</p>
+                                                        <p className="text-[10px] text-slate-500">{task.staff_members?.full_name || 'Sin asignar'}</p>
+                                                    </div>
+                                                </div>
+                                                <span className={`text-[10px] font-bold flex-shrink-0 ${isOverdue ? 'text-red-400' : isUrgent ? 'text-amber-400' : 'text-slate-400'}`}>
+                                                    {isOverdue ? `Vencido +${Math.abs(diff)}d` : diff === 0 ? 'Hoy' : `En ${diff}d`}
+                                                </span>
+                                            </div>
+                                            {task.notes && <p className="text-[10px] text-slate-400 mt-1 ml-5 italic truncate">{task.notes}</p>}
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        )}
+                    </GlassCard>
+
+                    {/* Por propiedad */}
+                    <GlassCard className="p-4">
+                        <div className="flex items-center gap-2 mb-3">
+                            <Building2 className="h-4 w-4 text-indigo-400" />
+                            <h3 className="font-semibold text-white text-sm">Por propiedad</h3>
+                        </div>
+                        <div className="space-y-2">
+                            {properties.map(property => {
+                                const propTasks = maintenanceTasks.filter(t => t.property_id === property.id);
+                                if (propTasks.length === 0) return null;
+                                const pending = propTasks.filter(t => t.status === 'pending').length;
+                                const inProg = propTasks.filter(t => t.status === 'in_progress').length;
+                                return (
+                                    <div key={property.id}
+                                        onClick={() => setSelectedProperty(property.id === selectedProperty ? 'all' : property.id)}
+                                        className={`flex items-center justify-between p-2.5 rounded-lg border cursor-pointer transition-colors ${selectedProperty === property.id ? 'bg-amber-500/10 border-amber-500/30' : 'bg-white/5 border-white/10 hover:border-amber-500/20'}`}>
+                                        <div className="flex items-center gap-2 min-w-0">
+                                            <Home className="h-3.5 w-3.5 text-slate-400 flex-shrink-0" />
+                                            <span className="text-xs text-white font-medium truncate">{property.name}</span>
+                                        </div>
+                                        <div className="flex items-center gap-1.5 flex-shrink-0">
+                                            {pending > 0 && <span className="text-[10px] font-bold px-1.5 py-0.5 bg-amber-500/20 text-amber-400 rounded-full">{pending}</span>}
+                                            {inProg > 0 && <span className="text-[10px] font-bold px-1.5 py-0.5 bg-blue-500/20 text-blue-400 rounded-full">{inProg}</span>}
+                                        </div>
+                                    </div>
+                                );
+                            }).filter(Boolean)}
+                            {properties.every(p => maintenanceTasks.filter(t => t.property_id === p.id).length === 0) && (
+                                <p className="text-xs text-slate-500 italic">Sin tareas de mantenimiento</p>
+                            )}
+                        </div>
+                    </GlassCard>
+
+                    <button onClick={onAddTask}
+                        className="w-full flex items-center justify-center gap-2 py-3 bg-amber-600 hover:bg-amber-500 text-white rounded-xl font-semibold text-sm transition-all shadow-lg shadow-amber-500/20 active:scale-95">
+                        <Plus className="h-4 w-4" />
+                        Nueva tarea de mantenimiento
+                    </button>
+                </div>
+            </div>
         </div>
     );
 }
