@@ -9,7 +9,8 @@ import {
     LogOut,
     ChevronRight,
     Menu,
-    X
+    X,
+    ArrowLeft
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useAuth } from '../contexts/AuthContext';
@@ -115,15 +116,15 @@ const OwnerLayout = () => {
 
                 {/* Back to Admin (only for admins) */}
                 {isAdmin && (
-                    <div className="mt-8">
-                        <p className="px-3 text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">{t('ownerPortal.nav.admin')}</p>
+                    <div className="mt-6 pt-4 border-t border-white/5">
                         <Link
                             to="/dashboard"
                             onClick={handleNavClick}
-                            className="group flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-lg transition-all duration-200 text-amber-400/80 hover:text-amber-300 hover:bg-white/5"
+                            className="group flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-xl transition-all duration-200 text-amber-400 hover:text-amber-300 bg-amber-500/10 hover:bg-amber-500/15 border border-amber-500/20"
                         >
-                            <Settings className="h-5 w-5 text-amber-500/60" />
+                            <ArrowLeft className="h-4 w-4 text-amber-400 group-hover:-translate-x-0.5 transition-transform" />
                             {t('ownerPortal.nav.backToAdmin')}
+                            <Settings className="h-3.5 w-3.5 text-amber-500/60 ml-auto" />
                         </Link>
                     </div>
                 )}
@@ -178,14 +179,25 @@ const OwnerLayout = () => {
                     <img src="/logotriadak.png" alt="TRIADAK" className="h-10 object-contain" />
                     <span className="text-[9px] font-bold text-emerald-400/70 tracking-wider uppercase">OWNER</span>
                 </div>
-                <div className="h-8 w-8 rounded-full bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center overflow-hidden">
-                    {avatarUrl ? (
-                        <img src={avatarUrl} alt="Avatar" className="h-full w-full object-cover" />
-                    ) : (
-                        <span className="text-xs font-bold text-white">
-                            {profile?.email?.charAt(0).toUpperCase() || 'O'}
-                        </span>
+                <div className="flex items-center gap-2">
+                    {isAdmin && (
+                        <Link
+                            to="/dashboard"
+                            className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-amber-500/15 border border-amber-500/25 text-amber-400 text-xs font-medium hover:bg-amber-500/25 transition-colors"
+                        >
+                            <ArrowLeft className="h-3.5 w-3.5" />
+                            Admin
+                        </Link>
                     )}
+                    <div className="h-8 w-8 rounded-full bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center overflow-hidden">
+                        {avatarUrl ? (
+                            <img src={avatarUrl} alt="Avatar" className="h-full w-full object-cover" />
+                        ) : (
+                            <span className="text-xs font-bold text-white">
+                                {profile?.email?.charAt(0).toUpperCase() || 'O'}
+                            </span>
+                        )}
+                    </div>
                 </div>
             </div>
 
