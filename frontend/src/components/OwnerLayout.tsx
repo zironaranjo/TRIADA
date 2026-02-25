@@ -114,9 +114,9 @@ const OwnerLayout = () => {
                     );
                 })}
 
-                {/* Back to Admin (only for admins) */}
-                {isAdmin && (
-                    <div className="mt-6 pt-4 border-t border-white/5">
+                {/* Back to main app */}
+                <div className="mt-6 pt-4 border-t border-white/5">
+                    {isAdmin ? (
                         <Link
                             to="/dashboard"
                             onClick={handleNavClick}
@@ -126,8 +126,17 @@ const OwnerLayout = () => {
                             {t('ownerPortal.nav.backToAdmin')}
                             <Settings className="h-3.5 w-3.5 text-amber-500/60 ml-auto" />
                         </Link>
-                    </div>
-                )}
+                    ) : (
+                        <Link
+                            to="/dashboard"
+                            onClick={handleNavClick}
+                            className="group flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-xl transition-all duration-200 text-slate-400 hover:text-white bg-white/5 hover:bg-white/8 border border-white/10"
+                        >
+                            <ArrowLeft className="h-4 w-4 group-hover:-translate-x-0.5 transition-transform" />
+                            Ir al Dashboard
+                        </Link>
+                    )}
+                </div>
             </nav>
 
             {/* User Profile Footer */}
@@ -180,15 +189,17 @@ const OwnerLayout = () => {
                     <span className="text-[9px] font-bold text-emerald-400/70 tracking-wider uppercase">OWNER</span>
                 </div>
                 <div className="flex items-center gap-2">
-                    {isAdmin && (
-                        <Link
-                            to="/dashboard"
-                            className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-amber-500/15 border border-amber-500/25 text-amber-400 text-xs font-medium hover:bg-amber-500/25 transition-colors"
-                        >
-                            <ArrowLeft className="h-3.5 w-3.5" />
-                            Admin
-                        </Link>
-                    )}
+                    <Link
+                        to="/dashboard"
+                        className={`flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-medium transition-colors ${
+                            isAdmin
+                                ? 'bg-amber-500/15 border border-amber-500/25 text-amber-400 hover:bg-amber-500/25'
+                                : 'bg-white/8 border border-white/15 text-slate-300 hover:bg-white/15'
+                        }`}
+                    >
+                        <ArrowLeft className="h-3.5 w-3.5" />
+                        {isAdmin ? 'Admin' : 'Dashboard'}
+                    </Link>
                     <div className="h-8 w-8 rounded-full bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center overflow-hidden">
                         {avatarUrl ? (
                             <img src={avatarUrl} alt="Avatar" className="h-full w-full object-cover" />
