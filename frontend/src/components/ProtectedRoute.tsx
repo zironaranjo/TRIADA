@@ -12,7 +12,7 @@ const PLAN_FREE_ROUTES = ['/pricing', '/billing'];
 const PORTAL_PREFIX = '/portal';
 
 const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
-    const { user, loading, hasActivePlan, isOwner, isAdmin } = useAuth();
+    const { user, loading, isOwner, isAdmin } = useAuth();
     const location = useLocation();
 
     if (loading) {
