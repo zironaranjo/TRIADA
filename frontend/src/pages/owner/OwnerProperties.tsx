@@ -47,37 +47,40 @@ export default function OwnerProperties() {
     useEffect(() => {
         const fetchData = async () => {
             if (!user) return;
+            try {
+                const { data: profile } = await supabase.from('profiles').select('email').eq('user_id', user.id).single();
+                if (!profile) return;
 
-            const { data: profile } = await supabase.from('profiles').select('email').eq('user_id', user.id).single();
-            if (!profile) { setLoading(false); return; }
+                const { data: owner } = await supabase.from('owner').select('id').eq('email', profile.email).single();
+                if (!owner) return;
 
-            const { data: owner } = await supabase.from('owner').select('id').eq('email', profile.email).single();
-            if (!owner) { setLoading(false); return; }
+                const { data: props } = await supabase.from('properties').select('*').eq('owner_id', owner.id);
+                const ownerProps = props || [];
+                setProperties(ownerProps);
 
-            const { data: props } = await supabase.from('properties').select('*').eq('owner_id', owner.id);
-            const ownerProps = props || [];
-            setProperties(ownerProps);
+                if (ownerProps.length > 0) {
+                    const propIds = ownerProps.map(p => p.id);
+                    const { data: bks } = await supabase
+                        .from('bookings')
+                        .select('property_id, total_price, status')
+                        .in('property_id', propIds);
 
-            if (ownerProps.length > 0) {
-                const propIds = ownerProps.map(p => p.id);
-                const { data: bks } = await supabase
-                    .from('bookings')
-                    .select('property_id, total_price, status')
-                    .in('property_id', propIds);
-
-                const summaries: Record<string, BookingSummary> = {};
-                (bks || []).forEach(b => {
-                    if (b.status?.toLowerCase() === 'cancelled') return;
-                    if (!summaries[b.property_id]) {
-                        summaries[b.property_id] = { property_id: b.property_id, total_bookings: 0, total_revenue: 0 };
-                    }
-                    summaries[b.property_id].total_bookings++;
-                    summaries[b.property_id].total_revenue += b.total_price || 0;
-                });
-                setBookingSummaries(Object.values(summaries));
+                    const summaries: Record<string, BookingSummary> = {};
+                    (bks || []).forEach(b => {
+                        if (b.status?.toLowerCase() === 'cancelled') return;
+                        if (!summaries[b.property_id]) {
+                            summaries[b.property_id] = { property_id: b.property_id, total_bookings: 0, total_revenue: 0 };
+                        }
+                        summaries[b.property_id].total_bookings++;
+                        summaries[b.property_id].total_revenue += b.total_price || 0;
+                    });
+                    setBookingSummaries(Object.values(summaries));
+                }
+            } catch (err) {
+                console.error('Error loading owner properties:', err);
+            } finally {
+                setLoading(false);
             }
-
-            setLoading(false);
         };
         fetchData();
     }, [user]);

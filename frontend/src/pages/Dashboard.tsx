@@ -85,9 +85,9 @@ export default function Dashboard() {
                     supabase.from('contacts').select('id'),
                 ]);
 
-                if (bRes.status === 'fulfilled' && bRes.value.data) setBookings(bRes.value.data);
-                if (pRes.status === 'fulfilled' && pRes.value.data) setProperties(pRes.value.data);
-                if (cRes.status === 'fulfilled' && cRes.value.data) setContacts(cRes.value.data);
+                if (bRes.status === 'fulfilled' && !bRes.value.error && bRes.value.data) setBookings(bRes.value.data);
+                if (pRes.status === 'fulfilled' && !pRes.value.error && pRes.value.data) setProperties(pRes.value.data);
+                if (cRes.status === 'fulfilled' && !cRes.value.error && cRes.value.data) setContacts(cRes.value.data);
             } catch (err) {
                 console.error('Error fetching dashboard data:', err);
             } finally {

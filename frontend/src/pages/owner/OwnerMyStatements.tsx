@@ -110,8 +110,8 @@ export default function OwnerMyStatements() {
                     supabase.from('expenses').select('*').in('property_id', propIds).gte('date', startDate).lte('date', endDate),
                 ]);
 
-                if (bkRes.status === 'fulfilled') setBookings(bkRes.value.data || []);
-                if (expRes.status === 'fulfilled') setExpenses(expRes.value.data || []);
+                if (bkRes.status === 'fulfilled' && !bkRes.value.error) setBookings(bkRes.value.data || []);
+                if (expRes.status === 'fulfilled' && !expRes.value.error) setExpenses(expRes.value.data || []);
             } else {
                 setBookings([]);
                 setExpenses([]);

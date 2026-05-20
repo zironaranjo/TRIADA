@@ -102,39 +102,42 @@ export default function OwnerDashboard() {
     useEffect(() => {
         const fetchData = async () => {
             if (!user) return;
+            try {
+                // First find the owner record linked to this user's email
+                const { data: profile } = await supabase.from('profiles').select('email').eq('user_id', user.id).single();
+                if (!profile) return;
 
-            // First find the owner record linked to this user's email
-            const { data: profile } = await supabase.from('profiles').select('email').eq('user_id', user.id).single();
-            if (!profile) { setLoading(false); return; }
+                const { data: owner } = await supabase.from('owner').select('*').eq('email', profile.email).single();
+                if (!owner) return;
+                setOwnerRecord(owner);
 
-            const { data: owner } = await supabase.from('owner').select('*').eq('email', profile.email).single();
-            if (!owner) { setLoading(false); return; }
-            setOwnerRecord(owner);
+                // Now get properties for this owner
+                const { data: props } = await supabase.from('properties').select('*').eq('owner_id', owner.id);
+                const ownerProperties = props || [];
+                setProperties(ownerProperties);
 
-            // Now get properties for this owner
-            const { data: props } = await supabase.from('properties').select('*').eq('owner_id', owner.id);
-            const ownerProperties = props || [];
-            setProperties(ownerProperties);
+                if (ownerProperties.length > 0) {
+                    const propIds = ownerProperties.map(p => p.id);
 
-            if (ownerProperties.length > 0) {
-                const propIds = ownerProperties.map(p => p.id);
+                    // Get bookings for these properties
+                    const { data: bks } = await supabase
+                        .from('bookings')
+                        .select('*')
+                        .in('property_id', propIds);
+                    setBookings(bks || []);
 
-                // Get bookings for these properties
-                const { data: bks } = await supabase
-                    .from('bookings')
-                    .select('*')
-                    .in('property_id', propIds);
-                setBookings(bks || []);
-
-                // Get expenses for these properties
-                const { data: exps } = await supabase
-                    .from('expenses')
-                    .select('*')
-                    .in('property_id', propIds);
-                setExpenses(exps || []);
+                    // Get expenses for these properties
+                    const { data: exps } = await supabase
+                        .from('expenses')
+                        .select('*')
+                        .in('property_id', propIds);
+                    setExpenses(exps || []);
+                }
+            } catch (err) {
+                console.error('Error loading owner data:', err);
+            } finally {
+                setLoading(false);
             }
-
-            setLoading(false);
         };
         fetchData();
     }, [user]);
