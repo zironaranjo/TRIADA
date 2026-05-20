@@ -83,6 +83,7 @@ export default function OwnerMyStatements() {
     const fetchData = async () => {
         if (!user) return;
         setLoading(true);
+        const safetyTimer = setTimeout(() => setLoading(false), 10000);
 
         try {
             // Find owner record by email
@@ -119,6 +120,7 @@ export default function OwnerMyStatements() {
         } catch (err) {
             console.error('Error fetching statement data:', err);
         } finally {
+            clearTimeout(safetyTimer);
             setLoading(false);
         }
     };

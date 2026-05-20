@@ -94,7 +94,8 @@ export default function Dashboard() {
                 setLoading(false);
             }
         };
-        fetchData();
+        const safetyTimer = setTimeout(() => setLoading(false), 10000);
+        fetchData().finally(() => clearTimeout(safetyTimer));
     }, []);
 
     // ─── Computed Stats ───────────────────────────────

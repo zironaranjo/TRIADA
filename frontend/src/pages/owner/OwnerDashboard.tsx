@@ -100,8 +100,9 @@ export default function OwnerDashboard() {
     const [ownerRecord, setOwnerRecord] = useState<{ id: string; firstName: string; lastName: string } | null>(null);
 
     useEffect(() => {
+        const safetyTimer = setTimeout(() => setLoading(false), 10000);
         const fetchData = async () => {
-            if (!user) return;
+            if (!user) { clearTimeout(safetyTimer); return; }
             try {
                 // First find the owner record linked to this user's email
                 const { data: profile } = await supabase.from('profiles').select('email').eq('user_id', user.id).single();
@@ -136,6 +137,7 @@ export default function OwnerDashboard() {
             } catch (err) {
                 console.error('Error loading owner data:', err);
             } finally {
+                clearTimeout(safetyTimer);
                 setLoading(false);
             }
         };
