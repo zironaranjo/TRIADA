@@ -65,8 +65,7 @@ function Navbar() {
     const links = [
         { label: t('landing.nav.features'), href: '#features' },
         { label: t('landing.nav.howItWorks'), href: '#how-it-works' },
-        { label: t('landing.nav.pricing'), href: '#pricing' },
-        { label: t('landing.nav.faq'), href: '#faq' },
+{ label: t('landing.nav.faq'), href: '#faq' },
     ];
 
     return (
@@ -1191,8 +1190,7 @@ function Footer() {
                         <h4 className="text-sm font-semibold text-white mb-3 sm:mb-4">{t('landing.footer.product')}</h4>
                         <ul className="space-y-2 sm:space-y-2.5">
                             <li><a href="#features" className="text-sm text-slate-500 hover:text-slate-300 transition-colors">{t('landing.nav.features')}</a></li>
-                            <li><a href="#pricing" className="text-sm text-slate-500 hover:text-slate-300 transition-colors">{t('landing.nav.pricing')}</a></li>
-                            <li><a href="#faq" className="text-sm text-slate-500 hover:text-slate-300 transition-colors">{t('landing.nav.faq')}</a></li>
+<li><a href="#faq" className="text-sm text-slate-500 hover:text-slate-300 transition-colors">{t('landing.nav.faq')}</a></li>
                         </ul>
                     </div>
 
@@ -1257,8 +1255,7 @@ export default function LandingPage() {
             <Features />
             <ReplaceStack />
             <HowItWorks />
-            <Pricing />
-            <Testimonials />
+<Testimonials />
             <FAQ />
             <CTASection />
             <Footer />
