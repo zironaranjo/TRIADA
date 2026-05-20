@@ -4,7 +4,7 @@ import { MessageSquare, X, Send, Bot } from 'lucide-react';
 const AGENT_URL = 'https://ziro.zirox.io/api/chat';
 
 const TRIADAK_CONTEXT = `Eres el asistente de soporte de Triadak (triadak.io), una plataforma SaaS de gestión de alojamientos vacacionales desarrollada por Ziro (zirox.io).
-INSTRUCCIÓN IMPORTANTE: Antes de responder, usa la herramienta obsidian_read para leer la nota "triadak/Triadak - Contexto Agente" del vault ObsidianZiro. Esa nota contiene toda la información actualizada del producto, funcionalidades, roles, propiedades reales de clientes y FAQs. Úsala como base para tus respuestas.
+INSTRUCCIÓN IMPORTANTE: Antes de responder, usa la herramienta obsidian_read con path "triadak/Triadak - Contexto Agente.md" para leer el contexto completo del producto. Esa nota contiene toda la información actualizada del producto, funcionalidades, roles, propiedades reales de clientes y FAQs. Úsala como base para tus respuestas.
 Responde siempre en el idioma del usuario. Sé conciso y útil. Si no sabes algo específico de la cuenta del usuario, indícale que contacte a Ziro en ziro@zirox.io.`;
 
 type Msg = { text: string; from: 'user' | 'bot' };
