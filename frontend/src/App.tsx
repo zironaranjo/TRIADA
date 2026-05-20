@@ -28,6 +28,7 @@ import WorkerLayout from './components/WorkerLayout';
 import WorkerTasks from './pages/worker/WorkerTasks';
 import WorkerEarnings from './pages/worker/WorkerEarnings';
 import Layout from './components/Layout';
+import ChatWidget from './components/ChatWidget';
 import LandingPage from './pages/LandingPage';
 import Explore from './pages/Explore';
 import PropertyDetail from './pages/PropertyDetail';
@@ -42,6 +43,7 @@ function App() {
   return (
     <AuthProvider>
       <BrowserRouter>
+        <ChatWidget />
         <Routes>
           {/* Public routes */}
           <Route path="/" element={<LandingPage />} />
