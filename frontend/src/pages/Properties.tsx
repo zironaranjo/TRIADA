@@ -20,13 +20,20 @@ import {
     Globe,
     GripVertical,
 } from 'lucide-react';
-import { supabase } from '../lib/supabase';
+import { supabase, supabaseUrl, supabaseAnonKey } from '../lib/supabase';
 import { bookingsApi } from '../api/client';
 import { useAuth } from '../contexts/AuthContext';
 import { usePlanLimits } from '../hooks/usePlanLimits';
 import { Link } from 'react-router-dom';
 
 // --- Type Definitions ---
+interface OwnerOption {
+    id: string;
+    firstName: string;
+    lastName: string;
+    email: string;
+}
+
 interface Property {
     id: string;
     name: string;
@@ -125,7 +132,65 @@ const Properties = () => {
 
     useEffect(() => {
         fetchProperties();
+        fetchOwners();
     }, []);
+
+    const [owners, setOwners] = useState<OwnerOption[]>([]);
+
+    const fetchOwners = async (): Promise<OwnerOption[]> => {
+        try {
+            const { data, error } = await supabase
+                .from('owner')
+                .select('id, firstName, lastName, email')
+                .order('firstName', { ascending: true });
+            if (!error && data?.length) {
+                const list = data as OwnerOption[];
+                setOwners(list);
+                return list;
+            }
+        } catch {
+            /* fallback REST below */
+        }
+        try {
+            const token = await supabase.auth.getSession().then((s) => s.data.session?.access_token);
+            if (!token) return [];
+            const res = await fetch(
+                `${supabaseUrl}/rest/v1/owner?select=id,firstName,lastName,email&order=firstName.asc`,
+                {
+                    headers: {
+                        apikey: supabaseAnonKey,
+                        Authorization: `Bearer ${token}`,
+                    },
+                },
+            );
+            if (res.ok) {
+                const list = (await res.json()) as OwnerOption[];
+                setOwners(list);
+                return list;
+            }
+        } catch (e) {
+            console.error('Error fetching owners:', e);
+        }
+        return [];
+    };
+
+    const emptyNewProperty = (ownerId = '') => ({
+        name: '',
+        address: '',
+        city: '',
+        price_per_night: '',
+        rooms: 1,
+        max_guests: 2,
+        image_url: '',
+        ical_url: '',
+        owner_id: ownerId,
+    });
+
+    const openCreateModal = async () => {
+        const list = await fetchOwners();
+        setNewProperty(emptyNewProperty(list[0]?.id ?? ''));
+        setIsCreateModalOpen(true);
+    };
 
     // --- Create Property Logic ---
     const [newProperty, setNewProperty] = useState({
@@ -136,7 +201,8 @@ const Properties = () => {
         rooms: 1,
         max_guests: 2,
         image_url: '',
-        ical_url: '' // Added for sync
+        ical_url: '',
+        owner_id: '',
     });
     const [createLoading, setCreateLoading] = useState(false);
     const [uploadingImage, setUploadingImage] = useState(false);
@@ -156,6 +222,7 @@ const Properties = () => {
     ];
 
     const openEdit = (p: Property) => {
+        void fetchOwners();
         setEditingProperty(p);
         setEditData({
             name: p.name,
@@ -170,8 +237,11 @@ const Properties = () => {
             bedrooms: p.bedrooms || p.rooms || 1,
             bathrooms: p.bathrooms || 1,
             amenities: p.amenities || [],
+            owner_id: p.owner_id || '',
         });
     };
+
+    const ownerLabel = (o: OwnerOption) => `${o.firstName} ${o.lastName} (${o.email})`;
 
     const handleSaveEdit = async () => {
         if (!editingProperty) return;
@@ -190,6 +260,7 @@ const Properties = () => {
                 bedrooms: editData.bedrooms,
                 bathrooms: editData.bathrooms,
                 amenities: editData.amenities,
+                owner_id: editData.owner_id || null,
             }).eq('id', editingProperty.id);
             if (error) throw error;
             setEditingProperty(null);
@@ -249,10 +320,14 @@ const Properties = () => {
 
         try {
             if (!user) throw new Error('No user logged in');
+            if (!newProperty.owner_id) {
+                alert(t('properties.alertOwnerRequired'));
+                return;
+            }
 
             const { error } = await supabase.from('properties').insert([
                 {
-                    owner_id: user.id,
+                    owner_id: newProperty.owner_id,
                     name: newProperty.name,
                     address: newProperty.address,
                     city: newProperty.city,
@@ -269,7 +344,7 @@ const Properties = () => {
             if (error) throw error;
 
             setIsCreateModalOpen(false);
-            setNewProperty({ name: '', address: '', city: '', price_per_night: '', rooms: 1, max_guests: 2, image_url: '', ical_url: '' });
+            setNewProperty(emptyNewProperty());
             fetchProperties();
         } catch (error: any) {
             console.error('Error creating property:', error);
@@ -304,7 +379,7 @@ const Properties = () => {
                             return;
                         }
                         setLimitMessage('');
-                        setIsCreateModalOpen(true);
+                        openCreateModal();
                     }}
                     className="bg-blue-600 hover:bg-blue-500 text-white px-4 py-2.5 rounded-xl font-medium flex items-center gap-2 transition-all shadow-lg shadow-blue-500/20"
                 >
@@ -363,7 +438,7 @@ const Properties = () => {
                     </div>
                     <h3 className="text-xl font-semibold text-white mb-2">{t('properties.emptyTitle')}</h3>
                     <p className="text-slate-400 text-sm max-w-md mb-6">{t('properties.emptyDescription')}</p>
-                    <button onClick={() => setIsCreateModalOpen(true)} className="bg-blue-600 hover:bg-blue-500 text-white px-6 py-2.5 rounded-xl font-medium flex items-center gap-2 transition-all">
+                    <button onClick={openCreateModal} className="bg-blue-600 hover:bg-blue-500 text-white px-6 py-2.5 rounded-xl font-medium flex items-center gap-2 transition-all">
                         <Plus className="h-4 w-4" /> {t('properties.addFirstProperty')}
                     </button>
                 </div>
@@ -564,6 +639,30 @@ const Properties = () => {
                             <div className="p-6 overflow-y-auto flex-1 min-h-0">
 
                             <div className="space-y-4">
+                                <div>
+                                    <label className="text-xs font-medium text-slate-400 mb-1 block">{t('properties.labelOwner')}</label>
+                                    {owners.length === 0 ? (
+                                        <p className="text-sm text-amber-400/90">
+                                            {t('properties.noOwnersHint')}{' '}
+                                            <Link to="/owners" className="underline text-amber-300 hover:text-amber-200">
+                                                {t('layout.nav.owners')}
+                                            </Link>
+                                        </p>
+                                    ) : (
+                                        <select
+                                            value={editData.owner_id || ''}
+                                            onChange={(e) => setEditData({ ...editData, owner_id: e.target.value })}
+                                            className="w-full bg-[#1e293b] border border-slate-700 rounded-xl px-4 py-2.5 text-white text-sm focus:ring-2 focus:ring-indigo-500/50 focus:outline-none"
+                                        >
+                                            <option value="">{t('properties.placeholderOwner')}</option>
+                                            {owners.map((o) => (
+                                                <option key={o.id} value={o.id} className="bg-[#1e293b]">
+                                                    {ownerLabel(o)}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    )}
+                                </div>
                                 {/* Nombre */}
                                 <div className="grid grid-cols-2 gap-4">
                                     <div className="col-span-2">
@@ -707,6 +806,31 @@ const Properties = () => {
 
                             <form onSubmit={handleCreateProperty} className="space-y-4 p-6 overflow-y-auto flex-1 min-h-0">
                                 <div className="space-y-2">
+                                    <label className="text-sm font-medium text-slate-300">{t('properties.labelOwner')}</label>
+                                    {owners.length === 0 ? (
+                                        <p className="text-sm text-amber-400/90">
+                                            {t('properties.noOwnersHint')}{' '}
+                                            <Link to="/owners" className="underline text-amber-300 hover:text-amber-200">
+                                                {t('layout.nav.owners')}
+                                            </Link>
+                                        </p>
+                                    ) : (
+                                        <select
+                                            required
+                                            value={newProperty.owner_id}
+                                            onChange={(e) => setNewProperty({ ...newProperty, owner_id: e.target.value })}
+                                            className="w-full bg-slate-900/50 border border-slate-700 rounded-xl px-4 py-2.5 text-white focus:ring-2 focus:ring-blue-500/50 outline-none"
+                                        >
+                                            <option value="">{t('properties.placeholderOwner')}</option>
+                                            {owners.map((o) => (
+                                                <option key={o.id} value={o.id}>
+                                                    {ownerLabel(o)}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    )}
+                                </div>
+                                <div className="space-y-2">
                                     <label className="text-sm font-medium text-slate-300">{t('properties.labelName')}</label>
                                     <input
                                         type="text"
@@ -826,7 +950,7 @@ const Properties = () => {
                                     </button>
                                     <button
                                         type="submit"
-                                        disabled={createLoading || uploadingImage}
+                                        disabled={createLoading || uploadingImage || owners.length === 0 || !newProperty.owner_id}
                                         className="bg-blue-600 hover:bg-blue-500 text-white px-6 py-2.5 rounded-xl font-medium shadow-lg shadow-blue-500/20 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
                                     >
                                         {(createLoading || uploadingImage) && <Loader2 className="h-4 w-4 animate-spin" />}

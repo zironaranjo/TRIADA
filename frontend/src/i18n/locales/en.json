@@ -216,6 +216,10 @@
     "placeholderIcal": "https://www.airbnb.com/calendar/ical/...",
     "icalHint": "Paste the iCal link from Airbnb or Booking.com to auto-sync reservations.",
     "createProperty": "Create Property",
+    "labelOwner": "Owner",
+    "placeholderOwner": "Select an owner",
+    "noOwnersHint": "Create an owner first in",
+    "alertOwnerRequired": "Select an owner before creating the property.",
     "alertImageTooLarge": "Image too large. Max 5MB allowed.",
     "alertUploadError": "Error uploading image: {{message}}",
     "alertGenericError": "Error: {{message}}"
