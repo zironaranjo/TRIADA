@@ -9,7 +9,14 @@ import {
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
 import type { UserRole } from '../contexts/AuthContext';
-import { createTeamInvite, fetchPendingInvites, revokeInvite, type PendingInvite } from '../lib/invites';
+import {
+    createTeamInvite,
+    fetchPendingInvites,
+    revokeInvite,
+    revokePendingInvitesByEmail,
+    sendTeamInviteOtp,
+    type PendingInvite,
+} from '../lib/invites';
 
 // ─── Types ────────────────────────────────────────────
 interface ProfileForm {
@@ -203,8 +210,9 @@ export default function Settings() {
         setInviteSuccess(false);
         setInviteError('');
 
+        const email = inviteEmail.trim().toLowerCase();
+
         try {
-            const email = inviteEmail.trim().toLowerCase();
             if (email === user.email?.toLowerCase()) {
                 setInviteError(t('settings.team.inviteSelf'));
                 return;
@@ -237,9 +245,14 @@ export default function Settings() {
                             .eq('user_id', existingProfile.user_id)
                             .eq('account_id', accountId),
                     ]);
+                    await revokePendingInvitesByEmail(accountId, email);
                     await fetchTeam();
                     setInviteSuccess(true);
                     setInviteEmail('');
+                    setTimeout(() => {
+                        setInviteSuccess(false);
+                        setShowInviteForm(false);
+                    }, 4000);
                     return;
                 }
             }
@@ -250,25 +263,35 @@ export default function Settings() {
                 inviteRole,
                 user.id,
             );
-            if (!ok) throw new Error(invErr || 'invite failed');
+            if (!ok) {
+                const msg = invErr || '';
+                if (msg.includes('duplicate') || msg.includes('unique')) {
+                    setInviteError(t('settings.team.inviteDuplicate'));
+                } else {
+                    setInviteError(t('settings.team.inviteError'));
+                }
+                return;
+            }
 
-            const { error: otpErr } = await supabase.auth.signInWithOtp({
-                email,
-                options: {
-                    shouldCreateUser: true,
-                    emailRedirectTo: `${window.location.origin}/login`,
-                    data: { invited_role: inviteRole, invited_account_id: accountId },
-                },
-            });
-            if (otpErr) throw otpErr;
-
+            await fetchTeam();
             setInviteSuccess(true);
             setInviteEmail('');
-            await fetchTeam();
+
+            let otpFailed = false;
+            const otp = await sendTeamInviteOtp(email, inviteRole, accountId);
+            if (!otp.ok) {
+                otpFailed = true;
+                setInviteError(
+                    otp.timedOut
+                        ? t('settings.team.inviteOtpTimeout')
+                        : t('settings.team.inviteOtpWarning'),
+                );
+            }
+
             setTimeout(() => {
                 setInviteSuccess(false);
-                setShowInviteForm(false);
-            }, 4000);
+                if (!otpFailed) setShowInviteForm(false);
+            }, 5000);
         } catch (err) {
             console.error('Error inviting member:', err);
             setInviteError(t('settings.team.inviteError'));
@@ -862,7 +885,7 @@ export default function Settings() {
                                                 ) : (
                                                     <Send className="h-4 w-4" />
                                                 )}
-                                                {t('settings.team.sendInvite')}
+                                                {inviting ? t('settings.team.sendingInvite') : t('settings.team.sendInvite')}
                                             </button>
                                         </div>
                                         {inviteSuccess && (

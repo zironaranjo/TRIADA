@@ -143,3 +143,55 @@ export async function fetchPendingInvites(accountId: string): Promise<PendingInv
 export async function revokeInvite(inviteId: string): Promise<void> {
     await supabase.from('account_invites').update({ status: 'revoked' }).eq('id', inviteId);
 }
+
+/** Revoca todas las invitaciones pendientes de un email en la agencia. */
+export async function revokePendingInvitesByEmail(
+    accountId: string,
+    email: string,
+): Promise<void> {
+    await supabase
+        .from('account_invites')
+        .update({ status: 'revoked' })
+        .eq('account_id', accountId)
+        .ilike('email', normalizeEmail(email))
+        .eq('status', 'pending');
+}
+
+const OTP_TIMEOUT_MS = 18_000;
+
+/**
+ * Magic link de acceso; con timeout para no dejar el botón en "enviando" indefinidamente.
+ */
+export async function sendTeamInviteOtp(
+    email: string,
+    inviteRole: UserRole,
+    accountId: string,
+): Promise<{ ok: boolean; error?: string; timedOut?: boolean }> {
+    const normalized = normalizeEmail(email);
+    const redirectTo = `${window.location.origin}/login`;
+
+    const otpPromise = supabase.auth.signInWithOtp({
+        email: normalized,
+        options: {
+            shouldCreateUser: true,
+            emailRedirectTo: redirectTo,
+            data: { invited_role: inviteRole, invited_account_id: accountId },
+        },
+    });
+
+    const timeoutPromise = new Promise<never>((_, reject) => {
+        setTimeout(() => reject(new Error('otp_timeout')), OTP_TIMEOUT_MS);
+    });
+
+    try {
+        const { error } = await Promise.race([otpPromise, timeoutPromise]);
+        if (error) return { ok: false, error: error.message };
+        return { ok: true };
+    } catch (e) {
+        const msg = e instanceof Error ? e.message : String(e);
+        if (msg === 'otp_timeout') {
+            return { ok: false, error: msg, timedOut: true };
+        }
+        return { ok: false, error: msg };
+    }
+}
