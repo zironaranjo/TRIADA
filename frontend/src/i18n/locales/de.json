@@ -1045,7 +1045,10 @@
   "teamChat": {
     "title": "Team-Chat",
     "subtitle": "Admin, Staff und Operative Ihrer Agentur — Echtzeit-Nachrichten",
-    "empty": "Noch keine Nachrichten. Schreiben Sie die erste.",
+    "empty": "Noch keine Nachrichten in diesem Chat.",
+    "emptyHint": "Unten tippen und senden — das ganze Team sieht es.",
+    "loadError": "Team-Chat konnte nicht geladen werden.",
+    "migrationHint": "Migrationen 016 und 017 in Supabase ausführen, falls neu deployt.",
     "placeholder": "Nachricht an das Team…",
     "noAccount": "Kein aktives Agenturkonto.",
     "unknownUser": "Benutzer",

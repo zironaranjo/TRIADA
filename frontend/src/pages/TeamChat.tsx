@@ -28,6 +28,8 @@ export default function TeamChat() {
     const [input, setInput] = useState('');
     const [loading, setLoading] = useState(true);
     const [sending, setSending] = useState(false);
+    const [loadError, setLoadError] = useState<string | null>(null);
+    const [sendError, setSendError] = useState<string | null>(null);
     const bottomRef = useRef<HTMLDivElement>(null);
 
     const loadProfiles = useCallback(async () => {
@@ -51,12 +53,19 @@ export default function TeamChat() {
 
     const loadMessages = useCallback(async () => {
         if (!accountId) return;
-        const { data } = await supabase
+        const { data, error } = await supabase
             .from('team_messages')
             .select('id, sender_user_id, body, message_type, created_at')
             .eq('account_id', accountId)
             .order('created_at', { ascending: true })
             .limit(200);
+        if (error) {
+            console.error('team_messages load:', error);
+            setLoadError(error.message);
+            setMessages([]);
+            return;
+        }
+        setLoadError(null);
         setMessages((data as TeamMessage[]) || []);
     }, [accountId]);
 
@@ -112,17 +121,32 @@ export default function TeamChat() {
         const text = input.trim();
         if (!text || !user?.id || !accountId || sending) return;
         setSending(true);
+        setSendError(null);
         setInput('');
         try {
-            const { error } = await supabase.from('team_messages').insert({
-                account_id: accountId,
-                sender_user_id: user.id,
-                body: text,
-                message_type: 'chat',
-            });
+            const { data, error } = await supabase
+                .from('team_messages')
+                .insert({
+                    account_id: accountId,
+                    sender_user_id: user.id,
+                    body: text,
+                    message_type: 'chat',
+                })
+                .select('id, sender_user_id, body, message_type, created_at')
+                .single();
+
             if (error) {
-                console.error(error);
+                console.error('team_messages insert:', error);
+                setSendError(error.message);
                 setInput(text);
+                return;
+            }
+
+            if (data) {
+                const row = data as TeamMessage;
+                setMessages(prev => (prev.some(m => m.id === row.id) ? prev : [...prev, row]));
+            } else {
+                await loadMessages();
             }
         } finally {
             setSending(false);
@@ -154,10 +178,19 @@ export default function TeamChat() {
                 </div>
 
                 <div className="flex-1 overflow-y-auto p-4 space-y-3 min-h-0">
-                    {loading ? (
+                    {loadError ? (
+                        <div className="text-center py-6 px-4">
+                            <p className="text-red-400 text-sm">{t('teamChat.loadError')}</p>
+                            <p className="text-slate-500 text-xs mt-2 font-mono break-all">{loadError}</p>
+                            <p className="text-slate-500 text-xs mt-2">{t('teamChat.migrationHint')}</p>
+                        </div>
+                    ) : loading ? (
                         <p className="text-slate-500 text-sm text-center py-8">{t('common.loading')}</p>
                     ) : messages.length === 0 ? (
-                        <p className="text-slate-500 text-sm text-center py-8">{t('teamChat.empty')}</p>
+                        <div className="text-center py-8 px-4">
+                            <p className="text-slate-400 text-sm">{t('teamChat.empty')}</p>
+                            <p className="text-slate-600 text-xs mt-2">{t('teamChat.emptyHint')}</p>
+                        </div>
                     ) : (
                         messages.map(msg => {
                             const mine = msg.sender_user_id === user?.id;
@@ -202,6 +235,9 @@ export default function TeamChat() {
                     <div ref={bottomRef} />
                 </div>
 
+                {sendError ? (
+                    <p className="px-4 py-2 text-xs text-red-400 border-t border-white/10">{sendError}</p>
+                ) : null}
                 <div className="p-3 border-t border-white/10 flex gap-2">
                     <input
                         type="text"

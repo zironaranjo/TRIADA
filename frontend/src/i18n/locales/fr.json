@@ -1055,7 +1055,10 @@
   "teamChat": {
     "title": "Chat d'équipe",
     "subtitle": "Admin, staff et opérationnels de votre agence — messages en temps réel",
-    "empty": "Pas encore de messages. Envoyez le premier.",
+    "empty": "Pas encore de messages dans ce chat.",
+    "emptyHint": "Écrivez ci-dessous et envoyez — toute l'agence le verra.",
+    "loadError": "Impossible de charger le chat d'équipe.",
+    "migrationHint": "Exécutez les migrations 016 et 017 dans Supabase si le chat vient d'être déployé.",
     "placeholder": "Message pour l'équipe…",
     "noAccount": "Aucun compte agence actif.",
     "unknownUser": "Utilisateur",

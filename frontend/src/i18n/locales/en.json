@@ -1096,7 +1096,10 @@
   "teamChat": {
     "title": "Team chat",
     "subtitle": "Admin, staff and field workers in your agency — real-time messages",
-    "empty": "No messages yet. Send the first one.",
+    "empty": "No messages in this team chat yet.",
+    "emptyHint": "Type below and send — everyone in your agency will see it.",
+    "loadError": "Could not load team chat.",
+    "migrationHint": "If you just deployed: run migrations 016_team_chat.sql and 017_team_chat_grants.sql in Supabase.",
     "placeholder": "Message the team…",
     "noAccount": "No active agency account.",
     "unknownUser": "User",
