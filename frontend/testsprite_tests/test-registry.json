@@ -1,7 +1,7 @@
 {
   "$schema": "./test-registry.schema.json",
   "version": 1,
-  "updatedAt": "2026-05-20",
+  "updatedAt": "2026-05-21",
   "description": "Registro único de tests E2E. El agente actualiza status aquí; no repetir tests con status passed.",
   "tests": {
     "TC019": {
@@ -27,6 +27,192 @@
       "verifiedAt": "2026-05-20",
       "verifiedIn": "local-playwright",
       "notes": "POST REST + reload lista"
+    },
+    "TC001": {
+      "script": "TC001_Admin_signs_in_and_reaches_the_main_dashboard.py",
+      "status": "passed",
+      "verifiedAt": "2026-05-21",
+      "verifiedIn": "batch-local"
+    },
+    "TC011": {
+      "script": "TC011_Admin_lands_on_the_correct_dashboard_after_login.py",
+      "status": "passed",
+      "verifiedAt": "2026-05-21",
+      "verifiedIn": "batch-local"
+    },
+    "TC028": {
+      "script": "TC028_Admin_opens_the_properties_section_from_the_dashboard.py",
+      "status": "passed",
+      "verifiedAt": "2026-05-21",
+      "verifiedIn": "batch-local"
+    },
+    "TC004": {
+      "script": "TC004_Owner_signs_in_and_reaches_the_owner_portal.py",
+      "status": "passed",
+      "verifiedAt": "2026-05-21",
+      "verifiedIn": "batch-local",
+      "notes": "Auto-registrado tras run_pending_tests (TC004_Owner_signs_in_and_reaches_the_owner_portal.py)"
+    },
+    "TC005": {
+      "script": "TC005_Worker_signs_in_and_reaches_the_worker_tasks_portal.py",
+      "status": "passed",
+      "verifiedAt": "2026-05-21",
+      "verifiedIn": "batch-local",
+      "notes": "Auto-registrado tras run_pending_tests (TC005_Worker_signs_in_and_reaches_the_worker_tasks_portal.py)"
+    },
+    "TC006": {
+      "script": "TC006_Access_the_bookings_workspace_and_view_existing_reservations.py",
+      "status": "passed",
+      "verifiedAt": "2026-05-21",
+      "verifiedIn": "batch-local",
+      "notes": "Auto-registrado tras run_pending_tests (TC006_Access_the_bookings_workspace_and_view_existing_reservations.py)"
+    },
+    "TC007": {
+      "script": "TC007_Guest_views_check_in_details_from_a_valid_token_link.py",
+      "status": "passed",
+      "verifiedAt": "2026-05-21",
+      "verifiedIn": "batch-local",
+      "notes": "Auto-registrado tras run_pending_tests (TC007_Guest_views_check_in_details_from_a_valid_token_link.py)"
+    },
+    "TC009": {
+      "script": "TC009_Worker_completes_a_task_checklist_item.py",
+      "status": "passed",
+      "verifiedAt": "2026-05-21",
+      "verifiedIn": "batch-local",
+      "notes": "Auto-registrado tras run_pending_tests (TC009_Worker_completes_a_task_checklist_item.py)"
+    },
+    "TC010": {
+      "script": "TC010_Owner_accesses_their_dashboard_and_views_owned_property_activity.py",
+      "status": "passed",
+      "verifiedAt": "2026-05-21",
+      "verifiedIn": "batch-local",
+      "notes": "Auto-registrado tras run_pending_tests (TC010_Owner_accesses_their_dashboard_and_views_owned_property_activity.py)"
+    },
+    "TC013": {
+      "script": "TC013_Worker_reports_property_damage_from_a_task.py",
+      "status": "passed",
+      "verifiedAt": "2026-05-21",
+      "verifiedIn": "batch-local",
+      "notes": "Auto-registrado tras run_pending_tests (TC013_Worker_reports_property_damage_from_a_task.py)"
+    },
+    "TC014": {
+      "script": "TC014_Owner_uses_the_owner_portal_and_views_statements.py",
+      "status": "passed",
+      "verifiedAt": "2026-05-21",
+      "verifiedIn": "batch-local",
+      "notes": "Auto-registrado tras run_pending_tests (TC014_Owner_uses_the_owner_portal_and_views_statements.py)"
+    },
+    "TC016": {
+      "script": "TC016_Worker_views_daily_tasks_and_monthly_earnings.py",
+      "status": "passed",
+      "verifiedAt": "2026-05-21",
+      "verifiedIn": "batch-local",
+      "notes": "Auto-registrado tras run_pending_tests (TC016_Worker_views_daily_tasks_and_monthly_earnings.py)"
+    },
+    "TC017": {
+      "script": "TC017_Worker_completes_assigned_tasks_and_reports_damage.py",
+      "status": "passed",
+      "verifiedAt": "2026-05-21",
+      "verifiedIn": "batch-local",
+      "notes": "Auto-registrado tras run_pending_tests (TC017_Worker_completes_assigned_tasks_and_reports_damage.py)"
+    },
+    "TC022": {
+      "script": "TC022_Admin_reviews_dashboard_analytics_after_sign_in.py",
+      "status": "passed",
+      "verifiedAt": "2026-05-21",
+      "verifiedIn": "batch-local",
+      "notes": "Auto-registrado tras run_pending_tests (TC022_Admin_reviews_dashboard_analytics_after_sign_in.py)"
+    },
+    "TC025": {
+      "script": "TC025_Admin_reviews_analytics_and_navigates_into_bookings_and_properties.py",
+      "status": "passed",
+      "verifiedAt": "2026-05-21",
+      "verifiedIn": "batch-local",
+      "notes": "Auto-registrado tras run_pending_tests (TC025_Admin_reviews_analytics_and_navigates_into_bookings_and_properties.py)"
+    },
+    "TC030": {
+      "script": "TC030_Open_an_owner_profile_and_review_linked_properties.py",
+      "status": "passed",
+      "verifiedAt": "2026-05-21",
+      "verifiedIn": "batch-local",
+      "notes": "Auto-registrado tras run_pending_tests (TC030_Open_an_owner_profile_and_review_linked_properties.py)"
+    },
+    "TC020": {
+      "script": "TC020_View_finance_totals_and_add_an_expense.py",
+      "status": "passed",
+      "verifiedAt": "2026-05-21",
+      "verifiedIn": "batch-local",
+      "notes": "Auto-registrado tras run_pending_tests (TC020_View_finance_totals_and_add_an_expense.py)"
+    },
+    "TC003": {
+      "script": "TC003_Guest_signs_a_shared_contract_link.py",
+      "status": "passed",
+      "verifiedAt": "2026-05-21",
+      "verifiedIn": "batch-local",
+      "notes": "Auto-registrado tras run_pending_tests (TC003_Guest_signs_a_shared_contract_link.py)"
+    },
+    "TC012": {
+      "script": "TC012_Update_a_booking_status_from_the_bookings_workspace.py",
+      "status": "passed",
+      "verifiedAt": "2026-05-21",
+      "verifiedIn": "batch-local",
+      "notes": "Auto-registrado tras run_pending_tests (TC012_Update_a_booking_status_from_the_bookings_workspace.py)"
+    },
+    "TC015": {
+      "script": "TC015_Cancel_a_booking_from_the_bookings_workspace.py",
+      "status": "passed",
+      "verifiedAt": "2026-05-21",
+      "verifiedIn": "batch-local",
+      "notes": "Auto-registrado tras run_pending_tests (TC015_Cancel_a_booking_from_the_bookings_workspace.py)"
+    },
+    "TC008": {
+      "script": "TC008_Create_and_send_a_contract_for_a_booking.py",
+      "status": "passed",
+      "verifiedAt": "2026-05-21",
+      "verifiedIn": "batch-local",
+      "notes": "Auto-registrado tras run_pending_tests (TC008_Create_and_send_a_contract_for_a_booking.py)"
+    },
+    "TC021": {
+      "script": "TC021_Edit_booking_details_and_keep_changes_saved.py",
+      "status": "passed",
+      "verifiedAt": "2026-05-21",
+      "verifiedIn": "batch-local",
+      "notes": "Auto-registrado tras run_pending_tests (TC021_Edit_booking_details_and_keep_changes_saved.py)"
+    },
+    "TC002": {
+      "script": "TC002_Create_a_new_booking_and_see_it_appear_in_the_schedule.py",
+      "status": "passed",
+      "verifiedAt": "2026-05-21",
+      "verifiedIn": "batch-local",
+      "notes": "Auto-registrado tras run_pending_tests (TC002_Create_a_new_booking_and_see_it_appear_in_the_schedule.py)"
+    },
+    "TC026": {
+      "script": "TC026_Add_a_staff_member.py",
+      "status": "passed",
+      "verifiedAt": "2026-05-21",
+      "verifiedIn": "batch-local",
+      "notes": "Auto-registrado tras run_pending_tests (TC026_Add_a_staff_member.py)"
+    },
+    "TC029": {
+      "script": "TC029_Assign_a_task_to_a_staff_member.py",
+      "status": "passed",
+      "verifiedAt": "2026-05-21",
+      "verifiedIn": "batch-local",
+      "notes": "Auto-registrado tras run_pending_tests (TC029_Assign_a_task_to_a_staff_member.py)"
+    },
+    "TC018": {
+      "script": "TC018_Admin_creates_a_property_with_operational_details.py",
+      "status": "passed",
+      "verifiedAt": "2026-05-21",
+      "verifiedIn": "batch-local",
+      "notes": "Auto-registrado tras run_pending_tests (TC018_Admin_creates_a_property_with_operational_details.py)"
+    },
+    "TC024": {
+      "script": "TC024_Admin_updates_an_existing_property.py",
+      "status": "passed",
+      "verifiedAt": "2026-05-21",
+      "verifiedIn": "batch-local",
+      "notes": "Propiedad API + perfil owner"
     }
   }
 }

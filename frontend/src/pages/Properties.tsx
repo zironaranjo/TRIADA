@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, useDragControls } from 'framer-motion';
 import {
     Plus,
     Search,
@@ -18,6 +18,7 @@ import {
     Copy,
     ExternalLink,
     Globe,
+    GripVertical,
 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { bookingsApi } from '../api/client';
@@ -67,6 +68,9 @@ const Properties = () => {
     const { t } = useTranslation();
     const { user } = useAuth();
     const { canCreate } = usePlanLimits();
+    const modalDragControls = useDragControls();
+    const editModalOverlayRef = useRef<HTMLDivElement>(null);
+    const createModalOverlayRef = useRef<HTMLDivElement>(null);
     const [properties, setProperties] = useState<Property[]>([]);
     const [loading, setLoading] = useState(true);
     const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
@@ -527,6 +531,7 @@ const Properties = () => {
             <AnimatePresence>
                 {editingProperty && (
                     <motion.div
+                        ref={editModalOverlayRef}
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
@@ -534,16 +539,29 @@ const Properties = () => {
                         onClick={() => setEditingProperty(null)}
                     >
                         <motion.div
+                            drag
+                            dragControls={modalDragControls}
+                            dragListener={false}
+                            dragMomentum={false}
+                            dragElastic={0}
+                            dragConstraints={editModalOverlayRef}
                             initial={{ opacity: 0, scale: 0.95 }}
                             animate={{ opacity: 1, scale: 1 }}
                             exit={{ opacity: 0, scale: 0.95 }}
                             onClick={(e) => e.stopPropagation()}
-                            className="relative w-full max-w-2xl bg-slate-800 border border-slate-700 rounded-2xl shadow-2xl p-6 max-h-[90vh] overflow-y-auto"
+                            className="relative w-full max-w-2xl bg-slate-800 border border-slate-700 rounded-2xl shadow-2xl max-h-[90vh] flex flex-col overflow-hidden"
                         >
-                            <h2 className="text-xl font-bold text-white mb-6 flex items-center gap-2">
-                                <Home className="h-5 w-5 text-indigo-400" />
-                                Editar propiedad
-                            </h2>
+                            <div
+                                className="flex items-center gap-2 px-6 pt-6 pb-4 border-b border-slate-700/50 cursor-grab active:cursor-grabbing select-none shrink-0"
+                                onPointerDown={(e) => modalDragControls.start(e)}
+                            >
+                                <GripVertical className="h-5 w-5 text-slate-500 shrink-0" aria-hidden />
+                                <h2 className="text-xl font-bold text-white flex items-center gap-2 flex-1">
+                                    <Home className="h-5 w-5 text-indigo-400" />
+                                    Editar propiedad
+                                </h2>
+                            </div>
+                            <div className="p-6 overflow-y-auto flex-1 min-h-0">
 
                             <div className="space-y-4">
                                 {/* Nombre */}
@@ -646,6 +664,7 @@ const Properties = () => {
                                     {editLoading ? 'Guardando...' : 'Guardar cambios'}
                                 </button>
                             </div>
+                            </div>
                         </motion.div>
                     </motion.div>
                 )}
@@ -655,6 +674,7 @@ const Properties = () => {
             <AnimatePresence>
                 {isCreateModalOpen && (
                     <motion.div
+                        ref={createModalOverlayRef}
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
@@ -662,18 +682,30 @@ const Properties = () => {
                         onClick={() => setIsCreateModalOpen(false)}
                     >
                         <motion.div
+                            drag
+                            dragControls={modalDragControls}
+                            dragListener={false}
+                            dragMomentum={false}
+                            dragElastic={0}
+                            dragConstraints={createModalOverlayRef}
                             initial={{ opacity: 0, scale: 0.95 }}
                             animate={{ opacity: 1, scale: 1 }}
                             exit={{ opacity: 0, scale: 0.95 }}
                             onClick={(e) => e.stopPropagation()}
-                            className="relative w-full max-w-lg bg-slate-800 border border-slate-700 rounded-2xl shadow-2xl p-6 max-h-[90vh] overflow-y-auto"
+                            className="relative w-full max-w-lg bg-slate-800 border border-slate-700 rounded-2xl shadow-2xl max-h-[90vh] flex flex-col overflow-hidden"
                         >
-                            <h2 className="text-xl font-bold text-white mb-6 flex items-center gap-2">
-                                <Home className="h-6 w-6 text-blue-500" />
-                                {t('properties.modalTitle')}
-                            </h2>
+                            <div
+                                className="flex items-center gap-2 px-6 pt-6 pb-4 border-b border-slate-700/50 cursor-grab active:cursor-grabbing select-none shrink-0"
+                                onPointerDown={(e) => modalDragControls.start(e)}
+                            >
+                                <GripVertical className="h-5 w-5 text-slate-500 shrink-0" aria-hidden />
+                                <h2 className="text-xl font-bold text-white flex items-center gap-2 flex-1">
+                                    <Home className="h-6 w-6 text-blue-500" />
+                                    {t('properties.modalTitle')}
+                                </h2>
+                            </div>
 
-                            <form onSubmit={handleCreateProperty} className="space-y-4">
+                            <form onSubmit={handleCreateProperty} className="space-y-4 p-6 overflow-y-auto flex-1 min-h-0">
                                 <div className="space-y-2">
                                     <label className="text-sm font-medium text-slate-300">{t('properties.labelName')}</label>
                                     <input

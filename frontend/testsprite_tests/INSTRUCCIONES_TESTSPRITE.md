@@ -31,6 +31,17 @@ python mark_test.py list      # todo
 python mark_test.py pending   # cola (no passed)
 ```
 
+## Ejecutar TODOS los pendientes (excepto los ya OK)
+
+Siempre omitidos: **TC019, TC023, TC027** + cualquier `passed` en el registro.
+
+```powershell
+cd frontend\testsprite_tests
+python run_pending_tests.py
+```
+
+Cada test que pase se guarda solo en `test-registry.json`. Resumen: `test-runs/latest.json`.
+
 ## TestSprite
 
 - Leer `test-registry.json` y **SKIP** todos con `"status": "passed"`.
