@@ -76,6 +76,7 @@
       "billing": "Abrechnung",
       "ownerPortal": "Eigentümerportal",
       "staffOps": "Betriebspersonal",
+      "teamChat": "Team-Chat",
       "channels": "Channel Manager",
       "occupancy": "Auslastung",
       "messaging": "Nachrichten",
@@ -1030,8 +1031,19 @@
     },
     "nav": {
       "tasks": "Meine Aufgaben",
+      "team": "Team-Chat",
       "earnings": "Meine Einnahmen"
     }
+  },
+  "teamChat": {
+    "title": "Team-Chat",
+    "subtitle": "Admin, Staff und Operative Ihrer Agentur — Echtzeit-Nachrichten",
+    "empty": "Noch keine Nachrichten. Schreiben Sie die erste.",
+    "placeholder": "Nachricht an das Team…",
+    "noAccount": "Kein aktives Agenturkonto.",
+    "unknownUser": "Benutzer",
+    "membersOnline": "Mitglieder in der Agentur",
+    "hintAssign": "Bei Aufgabenzuweisung werden E-Mail, WhatsApp und ein Hinweis hier gesendet."
   },
   "backup": {
     "title": "Datensicherung & Export",

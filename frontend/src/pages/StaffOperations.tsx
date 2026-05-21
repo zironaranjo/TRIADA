@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { supabase } from '@/lib/supabase';
+import { notifyTaskAssigned } from '@/lib/taskNotify';
+import { useAuth } from '@/contexts/AuthContext';
 import { motion, AnimatePresence } from 'framer-motion';
 import { GlassCard } from '@/components/GlassCard';
 import {
@@ -92,6 +94,7 @@ type TabId = 'staff' | 'tasks' | 'payroll' | 'maintenance';
 // ─── Main Component ──────────────────────────────────
 export default function StaffOperations() {
     const { t } = useTranslation();
+    const { user, profile, accountId } = useAuth();
     const [activeTab, setActiveTab] = useState<TabId>('staff');
     const [members, setMembers] = useState<StaffMember[]>([]);
     const [tasks, setTasks] = useState<StaffTask[]>([]);
@@ -188,11 +191,12 @@ export default function StaffOperations() {
                     nextDate.setMonth(nextDate.getMonth() + 1);
                 }
                 if (nextDate) {
-                    await supabase.from('staff_tasks').insert({
+                    const scheduled = nextDate.toISOString().split('T')[0];
+                    const { error: recErr } = await supabase.from('staff_tasks').insert({
                         staff_member_id: task.staff_member_id,
                         property_id: task.property_id,
                         task_type: task.task_type,
-                        scheduled_date: nextDate.toISOString().split('T')[0],
+                        scheduled_date: scheduled,
                         cost: task.cost,
                         notes: task.notes,
                         checklist: task.checklist.map(c => ({ ...c, completed: false })),
@@ -202,6 +206,22 @@ export default function StaffOperations() {
                         recurrence_time: task.recurrence_time,
                         parent_task_id: task.id,
                     });
+                    if (!recErr) {
+                        const member = members.find(m => m.id === task.staff_member_id);
+                        const prop = properties.find(p => p.id === task.property_id);
+                        if (member) {
+                            void notifyTaskAssigned({
+                                staffMember: member,
+                                taskType: task.task_type,
+                                scheduledDate: scheduled,
+                                propertyName: prop?.name || task.properties?.name || '—',
+                                notes: task.notes,
+                                assignedByUserId: user?.id,
+                                assignedByName: profile?.full_name || profile?.email,
+                                accountId,
+                            });
+                        }
+                    }
                     fetchAll();
                 }
             }
@@ -736,6 +756,7 @@ function TaskModal({ members, properties, onClose, onSuccess }: {
     members: StaffMember[]; properties: Property[]; onClose: () => void; onSuccess: () => void;
 }) {
     const { t } = useTranslation();
+    const { user, profile, accountId } = useAuth();
     const [saving, setSaving] = useState(false);
     const [form, setForm] = useState({
         staff_member_id: members[0]?.id || '',
@@ -780,6 +801,20 @@ function TaskModal({ members, properties, onClose, onSuccess }: {
                 console.error('Supabase error:', error);
                 alert(error.message);
                 return;
+            }
+            const member = members.find(m => m.id === form.staff_member_id);
+            const prop = properties.find(p => p.id === form.property_id);
+            if (member) {
+                void notifyTaskAssigned({
+                    staffMember: member,
+                    taskType: form.task_type,
+                    scheduledDate: form.scheduled_date,
+                    propertyName: prop?.name || t('staffOps.noProperty'),
+                    notes: form.notes,
+                    assignedByUserId: user?.id,
+                    assignedByName: profile?.full_name || profile?.email,
+                    accountId,
+                });
             }
             onSuccess();
         } catch (err) {

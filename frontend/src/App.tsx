@@ -14,6 +14,7 @@ import Billing from './pages/Billing';
 import Settings from './pages/Settings';
 import OwnerStatements from './pages/OwnerStatements';
 import StaffOperations from './pages/StaffOperations';
+import TeamChat from './pages/TeamChat';
 import ChannelManager from './pages/ChannelManager';
 import OccupancyDashboard from './pages/OccupancyDashboard';
 import GuestPortal from './pages/GuestPortal';
@@ -73,6 +74,7 @@ function App() {
             <Route path="settings" element={<Settings />} />
             <Route path="statements" element={<OwnerStatements />} />
             <Route path="staff" element={<StaffOperations />} />
+            <Route path="team" element={<TeamChat />} />
             <Route path="channels" element={<ChannelManager />} />
             <Route path="occupancy" element={<OccupancyDashboard />} />
             <Route path="messaging" element={<Messaging />} />
@@ -110,6 +112,7 @@ function App() {
           >
             <Route path="worker/tasks"    element={<WorkerTasks />} />
             <Route path="worker/earnings" element={<WorkerEarnings />} />
+            <Route path="worker/team" element={<TeamChat />} />
           </Route>
 
           {/* Catch-all */}

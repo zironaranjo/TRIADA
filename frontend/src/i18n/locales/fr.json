@@ -76,6 +76,7 @@
       "billing": "Facturation",
       "ownerPortal": "Portail Propriétaire",
       "staffOps": "Personnel Opérationnel",
+      "teamChat": "Chat d'équipe",
       "channels": "Channel Manager",
       "occupancy": "Occupation",
       "messaging": "Messagerie",
@@ -1040,8 +1041,19 @@
     },
     "nav": {
       "tasks": "Mes Tâches",
+      "team": "Chat d'équipe",
       "earnings": "Mes Revenus"
     }
+  },
+  "teamChat": {
+    "title": "Chat d'équipe",
+    "subtitle": "Admin, staff et opérationnels de votre agence — messages en temps réel",
+    "empty": "Pas encore de messages. Envoyez le premier.",
+    "placeholder": "Message pour l'équipe…",
+    "noAccount": "Aucun compte agence actif.",
+    "unknownUser": "Utilisateur",
+    "membersOnline": "membres dans l'agence",
+    "hintAssign": "L'assignation de tâches envoie un e-mail, WhatsApp et un avis ici."
   },
   "backup": {
     "title": "Sauvegarde & Export des données",

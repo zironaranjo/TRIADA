@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {
   ClipboardList,
   DollarSign,
+  UsersRound,
   LogOut,
   Menu,
   X,
@@ -22,6 +23,7 @@ export default function WorkerLayout() {
 
   const navItems = [
     { path: '/worker/tasks',    labelKey: 'worker.nav.tasks',    icon: ClipboardList },
+    { path: '/worker/team',     labelKey: 'worker.nav.team',     icon: UsersRound },
     { path: '/worker/earnings', labelKey: 'worker.nav.earnings', icon: DollarSign },
   ];
 

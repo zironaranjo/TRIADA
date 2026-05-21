@@ -76,6 +76,7 @@
       "billing": "Billing",
       "ownerPortal": "Owner Portal",
       "staffOps": "Staff Operations",
+      "teamChat": "Team chat",
       "channels": "Channel Manager",
       "occupancy": "Occupancy",
       "messaging": "Messaging",
@@ -1081,8 +1082,19 @@
     },
     "nav": {
       "tasks": "My Tasks",
+      "team": "Team chat",
       "earnings": "My Earnings"
     }
+  },
+  "teamChat": {
+    "title": "Team chat",
+    "subtitle": "Admin, staff and field workers in your agency — real-time messages",
+    "empty": "No messages yet. Send the first one.",
+    "placeholder": "Message the team…",
+    "noAccount": "No active agency account.",
+    "unknownUser": "User",
+    "membersOnline": "members in agency",
+    "hintAssign": "Assigning tasks in Staff Operations sends email, WhatsApp and a notice here."
   },
   "backup": {
     "title": "Data Backup & Export",

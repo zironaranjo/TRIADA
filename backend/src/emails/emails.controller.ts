@@ -46,4 +46,28 @@ export class EmailsController {
       };
     }
   }
+
+  @Post('task-assigned')
+  async sendTaskAssigned(
+    @Body()
+    body: {
+      to: string;
+      staffName: string;
+      taskType: string;
+      propertyName: string;
+      scheduledDate: string;
+      notes?: string | null;
+      portalUrl?: string;
+    },
+  ) {
+    const portalUrl = body.portalUrl || 'https://triadak.io/worker/tasks';
+    return this.emailsService.sendTaskAssigned(body.to, {
+      staffName: body.staffName,
+      taskType: body.taskType,
+      propertyName: body.propertyName,
+      scheduledDate: body.scheduledDate,
+      notes: body.notes,
+      portalUrl,
+    });
+  }
 }

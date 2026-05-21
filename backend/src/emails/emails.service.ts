@@ -241,4 +241,63 @@ export class EmailsService {
       return { success: false, error: err };
     }
   }
+
+  async sendTaskAssigned(
+    to: string,
+    payload: {
+      staffName: string;
+      taskType: string;
+      propertyName: string;
+      scheduledDate: string;
+      notes?: string | null;
+      portalUrl: string;
+    },
+  ) {
+    if (!to) {
+      return { success: false, message: 'No email' };
+    }
+
+    const html = `
+<!DOCTYPE html>
+<html lang="es">
+<body style="margin:0;padding:0;background:#0f172a;font-family:Segoe UI,sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="padding:32px 16px;">
+    <tr><td align="center">
+      <table width="560" style="background:#1e293b;border-radius:16px;border:1px solid #334155;">
+        <tr><td style="padding:28px 32px;text-align:center;background:linear-gradient(135deg,#4f46e5,#7c3aed);border-radius:16px 16px 0 0;">
+          <h1 style="margin:0;color:#fff;font-size:20px;">Nueva tarea asignada</h1>
+        </td></tr>
+        <tr><td style="padding:28px 32px;color:#e2e8f0;font-size:15px;line-height:1.6;">
+          <p>Hola <strong style="color:#fff;">${payload.staffName}</strong>,</p>
+          <p>Te han asignado una nueva tarea en Triadak:</p>
+          <ul style="color:#94a3b8;">
+            <li><strong style="color:#cbd5e1;">Tipo:</strong> ${payload.taskType}</li>
+            <li><strong style="color:#cbd5e1;">Propiedad:</strong> ${payload.propertyName}</li>
+            <li><strong style="color:#cbd5e1;">Fecha:</strong> ${payload.scheduledDate}</li>
+            ${payload.notes ? `<li><strong style="color:#cbd5e1;">Notas:</strong> ${payload.notes}</li>` : ''}
+          </ul>
+          <p style="text-align:center;margin:28px 0 8px;">
+            <a href="${payload.portalUrl}" style="display:inline-block;background:#4f46e5;color:#fff;text-decoration:none;padding:12px 24px;border-radius:10px;font-weight:600;">Ver mis tareas</a>
+          </p>
+        </td></tr>
+      </table>
+      <p style="color:#64748b;font-size:11px;margin-top:16px;">© Triadak · triadak.io</p>
+    </td></tr>
+  </table>
+</body>
+</html>`;
+
+    try {
+      const { data, error } = await this.resend.emails.send({
+        from: 'Triadak Operaciones <operaciones@triadak.io>',
+        to: [to],
+        subject: `Nueva tarea: ${payload.taskType} — ${payload.propertyName}`,
+        html,
+      });
+      if (error) return { success: false, error };
+      return { success: true, data };
+    } catch (err) {
+      return { success: false, error: err };
+    }
+  }
 }
