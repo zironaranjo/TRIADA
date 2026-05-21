@@ -39,27 +39,31 @@ const statusConfig: Record<string, { icon: any; color: string; bg: string }> = {
 
 export default function OwnerProperties() {
     const { t } = useTranslation();
-    const { user } = useAuth();
+    const { user, isAdmin } = useAuth();
     const [properties, setProperties] = useState<Property[]>([]);
     const [bookingSummaries, setBookingSummaries] = useState<BookingSummary[]>([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const fetchData = async () => {
-            if (!user) return;
+            if (!user) { setLoading(false); return; }
             try {
                 const { data: profile } = await supabase.from('profiles').select('email').eq('user_id', user.id).single();
-                if (!profile) return;
+                if (!profile) { if (isAdmin) { const { data: all } = await supabase.from('properties').select('*'); setProperties(all || []); } return; }
 
                 const { data: owner } = await supabase.from('owner').select('id').eq('email', profile.email).single();
-                if (!owner) return;
+                if (!owner) { if (isAdmin) { const { data: all } = await supabase.from('properties').select('*'); setProperties(all || []); } return; }
 
                 const { data: props } = await supabase.from('properties').select('*').eq('owner_id', owner.id);
                 const ownerProps = props || [];
-                setProperties(ownerProps);
+                // Admin fallback: if owner has no properties, show all
+                const finalProps = ownerProps.length === 0 && isAdmin
+                    ? ((await supabase.from('properties').select('*')).data || [])
+                    : ownerProps;
+                setProperties(finalProps);
 
-                if (ownerProps.length > 0) {
-                    const propIds = ownerProps.map(p => p.id);
+                if (finalProps.length > 0) {
+                    const propIds = finalProps.map(p => p.id);
                     const { data: bks } = await supabase
                         .from('bookings')
                         .select('property_id, total_price, status')

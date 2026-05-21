@@ -1,0 +1,5 @@
+{
+  "passed": ["TC019", "TC023", "TC027"],
+  "verifiedAt": "2026-05-20",
+  "note": "Generado desde test-registry.json. Preferir test-registry.json como fuente única."
+}

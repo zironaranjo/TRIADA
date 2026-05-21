@@ -9,6 +9,8 @@ if (!import.meta.env.VITE_SUPABASE_URL) {
     console.error('⚠️ CRITICAL: VITE_SUPABASE_URL is missing!');
 }
 
+export { supabaseUrl, supabaseAnonKey };
+
 // Standard client (authenticated pages)
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
@@ -18,5 +20,6 @@ export const supabasePublic = createClient(supabaseUrl, supabaseAnonKey, {
         persistSession: false,
         autoRefreshToken: false,
         detectSessionInUrl: false,
+        storageKey: 'sb-dknhrstvlajlktahxeqs-public',
     },
 });

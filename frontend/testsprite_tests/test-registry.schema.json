@@ -1,0 +1,28 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "TRIADAK E2E Test Registry",
+  "type": "object",
+  "required": ["version", "tests"],
+  "properties": {
+    "version": { "type": "integer" },
+    "updatedAt": { "type": "string" },
+    "description": { "type": "string" },
+    "tests": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["status", "script"],
+        "properties": {
+          "status": {
+            "enum": ["passed", "failed", "pending", "skipped", "flaky"]
+          },
+          "title": { "type": "string" },
+          "script": { "type": "string" },
+          "verifiedAt": { "type": "string" },
+          "verifiedIn": { "type": "string" },
+          "notes": { "type": "string" }
+        }
+      }
+    }
+  }
+}

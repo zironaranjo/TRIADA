@@ -1,0 +1,63 @@
+---
+description: Registro de tests E2E TestSprite — marcar passed/failed sin repetir
+globs:
+  - frontend/testsprite_tests/**
+---
+
+# Registro E2E (test-registry.json)
+
+## Archivo canónico
+
+`frontend/testsprite_tests/test-registry.json`
+
+- **passed** → no volver a ejecutar ese test (local ni TestSprite) salvo regresión.
+- **failed** / **pending** → sí está en cola.
+- Resumen humano auto-generado: `TEST_REGISTRY.md`.
+
+## Cuando un test PASA
+
+Tras verificar (Playwright local o TestSprite estable):
+
+```bash
+cd frontend/testsprite_tests
+python mark_test.py pass TC023 --note "breve descripción"
+```
+
+Actualiza `test-registry.json`, `passed_tests.json` (legacy) y `TEST_REGISTRY.md`.
+
+## Cuando un test FALLA de nuevo
+
+```bash
+python mark_test.py fail TC023
+```
+
+Quita el test de la lista de omitidos; vuelve a `run_pending_tests.py`.
+
+## Antes de lanzar tests
+
+1. Leer `test-registry.json` o `python mark_test.py pending`.
+2. **No** incluir IDs con `status: passed` en `testIds` de TestSprite.
+3. En `additionalInstruction`: listar IDs a SKIP (todos los passed).
+
+## TestSprite MCP
+
+- `testIds`: solo IDs **no passed** (o `[]` si no hay pendientes).
+- `additionalInstruction` debe incluir: `SKIP passed tests from test-registry.json: TC019, TC023, ...`
+
+## Scripts
+
+| Comando | Acción |
+|---------|--------|
+| `python mark_test.py list` | Ver registro |
+| `python mark_test.py pending` | Ver cola |
+| `python run_pending_tests.py` | Ejecutar solo no-passed |
+| `python mark_test.py pass TC0XX` | Registrar OK |
+| `python mark_test.py fail TC0XX` | Quitar de OK |
+
+## Nuevo test
+
+Al crear `TC0XX_nombre.py`:
+
+```bash
+python mark_test.py register TC0XX --script TC0XX_nombre.py --title "Descripción"
+```

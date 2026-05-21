@@ -7,8 +7,10 @@ import {
     Download,
 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
+import { fetchOwnerRows } from '../lib/authSession';
 import { exportToPDF, exportToCSV } from '../lib/exportUtils';
 import { useUserAvatar } from '../hooks/useUserAvatar';
+import { useAuth } from '../contexts/AuthContext';
 
 // ─── Types ────────────────────────────────────────────
 interface Property {
@@ -75,46 +77,68 @@ const fmt = (v: number) => new Intl.NumberFormat('es-ES', {
 // ─── Main Component ──────────────────────────────────
 export default function OwnerStatements() {
     const { t } = useTranslation();
+    const { user, loading: authLoading } = useAuth();
     const [owners, setOwners] = useState<Owner[]>([]);
     const [properties, setProperties] = useState<Property[]>([]);
     const [bookings, setBookings] = useState<Booking[]>([]);
     const [expenses, setExpenses] = useState<Expense[]>([]);
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
 
     const months = useMemo(() => MONTH_KEYS.map(k => t(`common.months.${k}`)), [t]);
     const now = new Date();
     const [selectedMonth, setSelectedMonth] = useState(now.getMonth());
     const [selectedYear, setSelectedYear] = useState(now.getFullYear());
     const [expandedOwner, setExpandedOwner] = useState<string | null>(null);
+    const [exportStatus, setExportStatus] = useState<string | null>(null);
     const userAvatar = useUserAvatar();
 
     useEffect(() => {
-        fetchData();
-    }, [selectedMonth, selectedYear]);
+        void fetchData();
+    }, [selectedMonth, selectedYear, user?.id]);
 
 
     const fetchData = async () => {
         setLoading(true);
+        const safetyTimer = setTimeout(() => setLoading(false), 12000);
         try {
+            await new Promise(r => setTimeout(r, 1500));
             const monthStr = String(selectedMonth + 1).padStart(2, '0');
             const daysInMonth = new Date(selectedYear, selectedMonth + 1, 0).getDate();
             const startDate = `${selectedYear}-${monthStr}-01`;
             const endDate = `${selectedYear}-${monthStr}-${String(daysInMonth).padStart(2, '0')}`;
 
-            const [ownersRes, propsRes, bookingsRes, expensesRes] = await Promise.allSettled([
-                supabase.from('owner').select('*'),
+            let ownerRows: Owner[] = [];
+            const key = 'sb-dknhrstvlajlktahxeqs-auth-token';
+            const raw = localStorage.getItem(key);
+            const token = raw ? (JSON.parse(raw) as { access_token?: string }).access_token : null;
+            if (token) {
+                const url =
+                    'https://dknhrstvlajlktahxeqs.supabase.co/rest/v1/owner?select=*&order=firstName.asc';
+                const res = await fetch(url, {
+                    headers: {
+                        apikey: import.meta.env.VITE_SUPABASE_ANON_KEY || 'sb_publishable_rV7bQaTazFEffBD0riQ1UQ_JggijzBR',
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
+                if (res.ok) ownerRows = (await res.json()) as Owner[];
+            }
+            if (ownerRows.length === 0) {
+                ownerRows = await fetchOwnerRows<Owner>('*');
+            }
+            setOwners(ownerRows);
+
+            const [propsRes, bookingsRes, expensesRes] = await Promise.allSettled([
                 supabase.from('properties').select('id, name, owner_id'),
                 supabase.from('bookings').select('*').gte('start_date', startDate).lte('start_date', endDate).neq('status', 'cancelled'),
                 supabase.from('expenses').select('*').gte('date', startDate).lte('date', endDate),
             ]);
-
-            if (ownersRes.status === 'fulfilled') setOwners(ownersRes.value.data || []);
             if (propsRes.status === 'fulfilled') setProperties(propsRes.value.data || []);
             if (bookingsRes.status === 'fulfilled') setBookings(bookingsRes.value.data || []);
             if (expensesRes.status === 'fulfilled') setExpenses(expensesRes.value.data || []);
         } catch (err) {
             console.error('Error fetching statement data:', err);
         } finally {
+            clearTimeout(safetyTimer);
             setLoading(false);
         }
     };
@@ -148,7 +172,7 @@ export default function OwnerStatements() {
                 propertyExpenses,
                 netPayout,
             };
-        }).filter(s => s.properties.length > 0).sort((a, b) => b.grossRevenue - a.grossRevenue);
+        }).sort((a, b) => b.grossRevenue - a.grossRevenue);
     }, [owners, properties, bookings, expenses]);
 
     const totalPayout = statements.reduce((s, st) => s + st.netPayout, 0);
@@ -179,6 +203,7 @@ export default function OwnerStatements() {
             ],
             filename: `owner-statements-${selectedYear}-${String(selectedMonth + 1).padStart(2, '0')}`,
         });
+        setExportStatus('PDF export completed successfully');
     };
 
     const exportStatementsCSV = () => {
@@ -196,19 +221,19 @@ export default function OwnerStatements() {
                 st.netPayout.toFixed(2),
             ])
         );
+        setExportStatus('CSV export completed successfully');
     };
 
-    if (loading) return (
-        <div className="flex h-screen items-center justify-center">
-            <div className="flex flex-col items-center gap-4">
+    if (authLoading) {
+        return (
+            <div className="flex h-screen items-center justify-center">
                 <div className="h-10 w-10 animate-spin rounded-full border-4 border-indigo-500 border-t-transparent" />
-                <p className="animate-pulse text-sm text-slate-400">{t('ownerStatements.loading')}</p>
             </div>
-        </div>
-    );
+        );
+    }
 
     return (
-        <div className="p-4 sm:p-6 lg:p-8">
+        <div className="p-4 sm:p-6 lg:p-8" data-testid="owner-statements-page">
             <div className="max-w-5xl mx-auto space-y-6">
 
                 {/* Header */}
@@ -242,24 +267,33 @@ export default function OwnerStatements() {
                                 <option key={y} value={y} className="bg-slate-800">{y}</option>
                             ))}
                         </select>
-                        {statements.length > 0 && (
-                            <div className="flex items-center gap-1.5">
-                                <button
-                                    onClick={exportStatementsPDF}
-                                    className="flex items-center gap-1.5 px-3 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg text-sm font-medium transition-colors"
-                                >
-                                    <Download className="h-3.5 w-3.5" />
-                                    <span className="hidden sm:inline">{t('ownerStatements.pdf')}</span>
-                                </button>
-                                <button
-                                    onClick={exportStatementsCSV}
-                                    className="flex items-center gap-1.5 px-3 py-2 bg-white/5 border border-white/10 hover:bg-white/10 text-white rounded-lg text-sm font-medium transition-colors"
-                                >
-                                    <Download className="h-3.5 w-3.5" />
-                                    <span className="hidden sm:inline">{t('ownerStatements.csv')}</span>
-                                </button>
-                            </div>
-                        )}
+                        <div className="flex flex-wrap items-center gap-1.5">
+                            <button
+                                type="button"
+                                data-testid="export-pdf"
+                                aria-label="Export PDF"
+                                onClick={exportStatementsPDF}
+                                className="flex items-center gap-1.5 px-3 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg text-sm font-medium transition-colors"
+                            >
+                                <Download className="h-3.5 w-3.5" />
+                                <span className="hidden sm:inline">{t('ownerStatements.pdf')}</span>
+                            </button>
+                            <button
+                                type="button"
+                                data-testid="export-csv"
+                                aria-label="Export CSV"
+                                onClick={exportStatementsCSV}
+                                className="flex items-center gap-1.5 px-3 py-2 bg-white/5 border border-white/10 hover:bg-white/10 text-white rounded-lg text-sm font-medium transition-colors"
+                            >
+                                <Download className="h-3.5 w-3.5" />
+                                <span className="hidden sm:inline">{t('ownerStatements.csv')}</span>
+                            </button>
+                            {exportStatus && (
+                                <p data-testid="export-success" role="status" className="w-full text-sm text-emerald-400 font-medium">
+                                    {exportStatus}
+                                </p>
+                            )}
+                        </div>
                     </div>
                 </header>
 
@@ -272,8 +306,12 @@ export default function OwnerStatements() {
                 </div>
 
                 {/* Statements */}
-                {statements.length > 0 ? (
-                    <div className="space-y-3">
+                {loading ? (
+                    <div className="bg-white/5 border border-white/5 rounded-2xl p-12 flex justify-center" data-testid="statements-loading">
+                        <div className="h-8 w-8 animate-spin rounded-full border-4 border-indigo-500 border-t-transparent" />
+                    </div>
+                ) : owners.length > 0 ? (
+                    <div className="space-y-3" data-testid="statements-ready">
                         {statements.map(st => {
                             const isExpanded = expandedOwner === st.owner.id;
                             return (

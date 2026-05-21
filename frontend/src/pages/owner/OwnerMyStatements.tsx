@@ -81,7 +81,7 @@ export default function OwnerMyStatements() {
     }, [selectedMonth, selectedYear, user]);
 
     const fetchData = async () => {
-        if (!user) return;
+        if (!user) { setLoading(false); return; }
         setLoading(true);
         const safetyTimer = setTimeout(() => setLoading(false), 10000);
 

@@ -104,7 +104,6 @@ const Properties = () => {
     // --- Fetch Properties ---
     const fetchProperties = async () => {
         setLoading(true);
-        const timeout = setTimeout(() => setLoading(false), 5000);
         try {
             const { data, error } = await supabase
                 .from('properties')
@@ -116,7 +115,6 @@ const Properties = () => {
         } catch (error) {
             console.error('Error fetching properties:', error);
         } finally {
-            clearTimeout(timeout);
             setLoading(false);
         }
     };

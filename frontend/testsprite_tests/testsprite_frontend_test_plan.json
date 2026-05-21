@@ -1,0 +1,1688 @@
+[
+  {
+    "id": "TC001",
+    "title": "Admin signs in and reaches the main dashboard",
+    "description": "This verifies that an admin can log in and is redirected to the main dashboard with analytics visible.",
+    "category": "User Login",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the main dashboard is displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify KPI analytics are visible"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC002",
+    "title": "Create a new booking and see it appear in the schedule",
+    "description": "This test verifies that an authenticated admin can create a booking from the bookings workspace and see the new reservation reflected in the schedule.",
+    "category": "Booking Management",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in {{LOGIN_USER}} into the email field"
+      },
+      {
+        "type": "action",
+        "description": "Fill in {{LOGIN_PASSWORD}} into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Click the bookings section"
+      },
+      {
+        "type": "action",
+        "description": "Start creating a new booking"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the required booking details with valid values"
+      },
+      {
+        "type": "action",
+        "description": "Save the booking"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the new booking appears in the bookings schedule"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the bookings list includes the new reservation"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC003",
+    "title": "Guest signs a shared contract link",
+    "description": "A guest can open a public contract link, review the contract, and complete signing with a confirmation shown afterward.",
+    "category": "Contract Management",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /contract/{{CONTRACT_TOKEN}}"
+      },
+      {
+        "type": "action",
+        "description": "Review the contract details"
+      },
+      {
+        "type": "action",
+        "description": "Sign the contract"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify a signed confirmation is visible"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC004",
+    "title": "Owner signs in and reaches the owner portal",
+    "description": "This verifies that an owner can log in and is redirected to the owner portal dashboard.",
+    "category": "User Login",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the owner portal dashboard is displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify owned property information is visible"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC005",
+    "title": "Worker signs in and reaches the worker tasks portal",
+    "description": "This verifies that a worker can log in and is redirected to the worker tasks page.",
+    "category": "User Login",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the worker tasks page is displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify assigned tasks are visible"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC006",
+    "title": "Access the bookings workspace and view existing reservations",
+    "description": "This test verifies that an authenticated admin can open the bookings workspace and see the current booking list and calendar views.",
+    "category": "Booking Management",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in {{LOGIN_USER}} into the email field"
+      },
+      {
+        "type": "action",
+        "description": "Fill in {{LOGIN_PASSWORD}} into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Click the bookings section"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify bookings are displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify a calendar view is displayed"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC007",
+    "title": "Guest views check-in details from a valid token link",
+    "description": "This test verifies that a guest can open a valid public portal link and see the check-in information for their stay.",
+    "category": "Guest Portal",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /guest/valid-token"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify check-in instructions are displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify WiFi credentials are displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify house rules are displayed"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC008",
+    "title": "Create and send a contract for a booking",
+    "description": "An admin can create a contract from an existing booking, generate the document, and open the guest signature link for sharing.",
+    "category": "Contract Management",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Open the contract management page"
+      },
+      {
+        "type": "action",
+        "description": "Create a new contract for an existing booking"
+      },
+      {
+        "type": "action",
+        "description": "Generate the contract PDF"
+      },
+      {
+        "type": "action",
+        "description": "Open the guest signature link"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the generated contract is available and a signature link is shown"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC009",
+    "title": "Worker completes a task checklist item",
+    "description": "This test verifies that a worker can open an assigned task and mark a checklist item complete, resulting in updated task progress.",
+    "category": "Worker Portal",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the login credentials with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Click the worker tasks link"
+      },
+      {
+        "type": "action",
+        "description": "Open an assigned task"
+      },
+      {
+        "type": "action",
+        "description": "Mark a checklist item as complete"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the task progress is updated"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC010",
+    "title": "Owner accesses their dashboard and views owned property activity",
+    "description": "This test verifies that an owner can log in, reach the owner dashboard, and review owned properties and reservations.",
+    "category": "Owner Portal",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the login credentials with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Click the owner portal dashboard link"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify owned properties are displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify reservations are displayed"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC011",
+    "title": "Admin lands on the correct dashboard after login",
+    "description": "An admin can log in and reach the role-appropriate dashboard with analytics visible.",
+    "category": "Contract Management",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the main dashboard is displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify KPI analytics are displayed"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC012",
+    "title": "Update a booking status from the bookings workspace",
+    "description": "This test verifies that an authenticated admin can change a booking status and see the new status reflected immediately in the booking view.",
+    "category": "Booking Management",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in {{LOGIN_USER}} into the email field"
+      },
+      {
+        "type": "action",
+        "description": "Fill in {{LOGIN_PASSWORD}} into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Click the bookings section"
+      },
+      {
+        "type": "action",
+        "description": "Select an existing booking"
+      },
+      {
+        "type": "action",
+        "description": "Change the booking status"
+      },
+      {
+        "type": "action",
+        "description": "Save the status update"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the updated booking status is displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the booking still appears in the list"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC013",
+    "title": "Worker reports property damage from a task",
+    "description": "This test verifies that a worker can open an assigned task and report damage, resulting in a maintenance issue being created in the UI.",
+    "category": "Worker Portal",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the login credentials with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Click the worker tasks link"
+      },
+      {
+        "type": "action",
+        "description": "Open an assigned task"
+      },
+      {
+        "type": "action",
+        "description": "Report property damage"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify a maintenance issue is displayed"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC014",
+    "title": "Owner uses the owner portal and views statements",
+    "description": "An owner can access the owner portal, review owned properties and reservations, and open monthly statements.",
+    "category": "Contract Management",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Open the owner portal dashboard"
+      },
+      {
+        "type": "action",
+        "description": "Open the owner portal properties view"
+      },
+      {
+        "type": "action",
+        "description": "Open the owner portal statements view"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify owned properties and statement records are displayed"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC015",
+    "title": "Cancel a booking from the bookings workspace",
+    "description": "This test verifies that an authenticated admin can cancel a booking and see it marked as cancelled in the interface.",
+    "category": "Booking Management",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in {{LOGIN_USER}} into the email field"
+      },
+      {
+        "type": "action",
+        "description": "Fill in {{LOGIN_PASSWORD}} into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Click the bookings section"
+      },
+      {
+        "type": "action",
+        "description": "Select an existing booking"
+      },
+      {
+        "type": "action",
+        "description": "Cancel the booking"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the booking is marked as cancelled"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the booking remains visible in the bookings view"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC016",
+    "title": "Worker views daily tasks and monthly earnings",
+    "description": "This test verifies that a worker can log in, open the worker portal, and view both assigned tasks and earnings.",
+    "category": "Worker Portal",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the login credentials with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Click the worker tasks link"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the daily task list is displayed"
+      },
+      {
+        "type": "action",
+        "description": "Click the worker earnings link"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify monthly earnings are displayed"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC017",
+    "title": "Worker completes assigned tasks and reports damage",
+    "description": "A worker can open the worker portal, complete checklist items on a task, report damage, and see the action reflected in the portal.",
+    "category": "Contract Management",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Open the worker tasks page"
+      },
+      {
+        "type": "action",
+        "description": "Complete a checklist item on an assigned task"
+      },
+      {
+        "type": "action",
+        "description": "Report damage from the task"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the task update and damage report are visible"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC018",
+    "title": "Admin creates a property with operational details",
+    "description": "This verifies that an admin can add a new property and see it appear in the property list.",
+    "category": "Property Management",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Click the properties navigation entry"
+      },
+      {
+        "type": "action",
+        "description": "Start creating a new property"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the property name field with a unique property name"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the property address field with a valid address"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the WiFi details field with operational access information"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the access code field with a valid access code"
+      },
+      {
+        "type": "action",
+        "description": "Save the property"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the new property appears in the property list"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC019",
+    "title": "Owner downloads a monthly statement",
+    "description": "This test verifies that an owner can view monthly statements in the portal and download a statement in an export format.",
+    "category": "Owner Portal",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the login credentials with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Click the owner statements link"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify monthly statements are displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify export actions are available"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC020",
+    "title": "View finance totals and add an expense",
+    "description": "This test verifies that an authenticated admin can open the finance dashboard, review property P&L totals, add an expense, and see the financial totals update.",
+    "category": "Finance Dashboard",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in {{LOGIN_USER}} into the email field"
+      },
+      {
+        "type": "action",
+        "description": "Fill in {{LOGIN_PASSWORD}} into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Click the accounting section"
+      },
+      {
+        "type": "action",
+        "description": "Review the property P&L summary"
+      },
+      {
+        "type": "action",
+        "description": "Add a new expense"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the expense details with valid values"
+      },
+      {
+        "type": "action",
+        "description": "Save the expense"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify updated financial totals are displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the expense is reflected in the finance view"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC021",
+    "title": "Edit booking details and keep changes saved",
+    "description": "This test verifies that an authenticated admin can update an existing booking's details and see the updated information persist in the workspace.",
+    "category": "Booking Management",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in {{LOGIN_USER}} into the email field"
+      },
+      {
+        "type": "action",
+        "description": "Fill in {{LOGIN_PASSWORD}} into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Click the bookings section"
+      },
+      {
+        "type": "action",
+        "description": "Select an existing booking"
+      },
+      {
+        "type": "action",
+        "description": "Edit the booking details inline"
+      },
+      {
+        "type": "action",
+        "description": "Save the booking changes"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the updated booking information is displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the booking remains visible in the schedule"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC022",
+    "title": "Admin reviews dashboard analytics after sign-in",
+    "description": "This verifies that an admin can access the dashboard and see the core KPI cards and analytics view.",
+    "category": "Dashboard Analytics",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the main dashboard is displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify revenue, occupancy, and booking analytics are visible"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC023",
+    "title": "Owner reviews the property list and occupancy details",
+    "description": "This test verifies that an owner can open the owner properties view and review the properties they own with occupancy information.",
+    "category": "Owner Portal",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the login credentials with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Click the owner properties link"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify owned properties are displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify occupancy information is displayed"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC024",
+    "title": "Admin updates an existing property",
+    "description": "This verifies that an admin can edit a property and see the updated information in the list.",
+    "category": "Property Management",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Click the properties navigation entry"
+      },
+      {
+        "type": "action",
+        "description": "Open an existing property for editing"
+      },
+      {
+        "type": "action",
+        "description": "Update the property name with a unique edited name"
+      },
+      {
+        "type": "action",
+        "description": "Save the changes"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the updated property information is visible"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC025",
+    "title": "Admin reviews analytics and navigates into bookings and properties",
+    "description": "An admin can move from the dashboard into bookings and properties to continue operations after login.",
+    "category": "Contract Management",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Open the dashboard analytics page"
+      },
+      {
+        "type": "action",
+        "description": "Open the bookings page"
+      },
+      {
+        "type": "action",
+        "description": "Open the properties page"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify booking and property management views are displayed"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC026",
+    "title": "Add a staff member",
+    "description": "This test verifies that an operator can create a new staff member and see it added to the staff list.",
+    "category": "Staff Operations",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Click the link to open staff operations"
+      },
+      {
+        "type": "action",
+        "description": "Add a new staff member"
+      },
+      {
+        "type": "action",
+        "description": "Fill in staff details with a valid new staff member"
+      },
+      {
+        "type": "action",
+        "description": "Save the staff member"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the new staff member appears in the staff members list"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC027",
+    "title": "Access owner management and add a new owner",
+    "description": "This test verifies that an authenticated admin can open the owners area, create a new owner, and see the owner appear in the list.",
+    "category": "Owner Management",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in {{LOGIN_USER}} into the email field"
+      },
+      {
+        "type": "action",
+        "description": "Fill in {{LOGIN_PASSWORD}} into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Click the owners section"
+      },
+      {
+        "type": "action",
+        "description": "Start adding a new owner"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the required owner details with valid values"
+      },
+      {
+        "type": "action",
+        "description": "Save the owner"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the new owner appears in the owners list"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the owner record is available to open"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC028",
+    "title": "Admin opens the properties section from the dashboard",
+    "description": "This verifies that an admin can move from the dashboard into property management after signing in.",
+    "category": "Property Management",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Click the properties navigation entry"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the property list is displayed"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC029",
+    "title": "Assign a task to a staff member",
+    "description": "This test verifies that an operator can assign a cleaning or maintenance task and see it linked to a staff member with its checklist.",
+    "category": "Staff Operations",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Click the link to open staff operations"
+      },
+      {
+        "type": "action",
+        "description": "Assign a task to a staff member"
+      },
+      {
+        "type": "action",
+        "description": "Review the task checklist"
+      },
+      {
+        "type": "action",
+        "description": "Save the assignment"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the assigned task is linked to the selected staff member"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the task checklist is available for the assignment"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC030",
+    "title": "Open an owner profile and review linked properties",
+    "description": "This test verifies that an authenticated admin can open an owner profile and see associated properties before and after making profile edits.",
+    "category": "Owner Management",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in {{LOGIN_USER}} into the email field"
+      },
+      {
+        "type": "action",
+        "description": "Fill in {{LOGIN_PASSWORD}} into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Click the owners section"
+      },
+      {
+        "type": "action",
+        "description": "Open an owner profile"
+      },
+      {
+        "type": "action",
+        "description": "Review the linked properties"
+      },
+      {
+        "type": "action",
+        "description": "Edit the owner details"
+      },
+      {
+        "type": "action",
+        "description": "Save the owner changes"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the owner profile is displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify linked properties are displayed"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC031",
+    "title": "Add a channel connection",
+    "description": "This test verifies that an operator can add a new iCal channel URL and see the connection appear in the channel list.",
+    "category": "Channel Manager",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Click the link to open channel manager"
+      },
+      {
+        "type": "action",
+        "description": "Add an iCal URL for a channel"
+      },
+      {
+        "type": "action",
+        "description": "Save the connection"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the new channel connection appears in the connected channels list"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC032",
+    "title": "Generate an owner liquidation summary",
+    "description": "This test verifies that an authenticated admin can generate an owner liquidation from the finance dashboard and review the resulting summary.",
+    "category": "Finance Dashboard",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in {{LOGIN_USER}} into the email field"
+      },
+      {
+        "type": "action",
+        "description": "Fill in {{LOGIN_PASSWORD}} into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Click the accounting section"
+      },
+      {
+        "type": "action",
+        "description": "Generate an owner liquidation"
+      },
+      {
+        "type": "action",
+        "description": "Review the liquidation summary"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify a liquidation summary is displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify liquidation totals are visible"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC033",
+    "title": "Admin deletes a property from the list",
+    "description": "This verifies that an admin can delete a property and see it removed from the property list.",
+    "category": "Property Management",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Click the properties navigation entry"
+      },
+      {
+        "type": "action",
+        "description": "Create a new property for deletion"
+      },
+      {
+        "type": "action",
+        "description": "Delete the newly created property"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the deleted property no longer appears in the property list"
+      }
+    ],
+    "priority": "Medium"
+  },
+  {
+    "id": "TC034",
+    "title": "Export finance data from the accounting dashboard",
+    "description": "This test verifies that an authenticated admin can export finance data from the accounting dashboard and see the export action complete in the UI.",
+    "category": "Finance Dashboard",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in {{LOGIN_USER}} into the email field"
+      },
+      {
+        "type": "action",
+        "description": "Fill in {{LOGIN_PASSWORD}} into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Click the accounting section"
+      },
+      {
+        "type": "action",
+        "description": "Choose a finance export"
+      },
+      {
+        "type": "action",
+        "description": "Start the export"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the export action is completed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify export controls remain available"
+      }
+    ],
+    "priority": "Medium"
+  },
+  {
+    "id": "TC035",
+    "title": "Sync bookings from a channel",
+    "description": "This test verifies that an operator can trigger a channel sync and see imported bookings in the interface.",
+    "category": "Channel Manager",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Click the link to open channel manager"
+      },
+      {
+        "type": "action",
+        "description": "Sync bookings from a channel"
+      },
+      {
+        "type": "action",
+        "description": "Review the imported bookings"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify imported bookings are displayed after syncing"
+      }
+    ],
+    "priority": "Medium"
+  },
+  {
+    "id": "TC036",
+    "title": "Send a guest message from a template",
+    "description": "This test verifies that an operator can select a booking, choose a template, send a guest message, and see it recorded in history.",
+    "category": "Messaging",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Click the link to open messaging"
+      },
+      {
+        "type": "action",
+        "description": "Select a booking to message"
+      },
+      {
+        "type": "action",
+        "description": "Choose a template"
+      },
+      {
+        "type": "action",
+        "description": "Send the message via WhatsApp or SMS"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the message appears in sent history"
+      }
+    ],
+    "priority": "Medium"
+  },
+  {
+    "id": "TC037",
+    "title": "Review messaging templates and sent history",
+    "description": "This test verifies that an operator can view message templates and sent message history in the messaging center.",
+    "category": "Messaging",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Click the link to open messaging"
+      },
+      {
+        "type": "action",
+        "description": "View message templates"
+      },
+      {
+        "type": "action",
+        "description": "Review sent message history"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify message templates are displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify sent message history is displayed"
+      }
+    ],
+    "priority": "Medium"
+  },
+  {
+    "id": "TC038",
+    "title": "Reject an invalid booking submission",
+    "description": "This test verifies that the bookings form blocks saving when required details are missing and shows validation feedback instead of creating a booking.",
+    "category": "Booking Management",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in {{LOGIN_USER}} into the email field"
+      },
+      {
+        "type": "action",
+        "description": "Fill in {{LOGIN_PASSWORD}} into the password field"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Click the bookings section"
+      },
+      {
+        "type": "action",
+        "description": "Start creating a new booking"
+      },
+      {
+        "type": "action",
+        "description": "Leave required booking details empty"
+      },
+      {
+        "type": "action",
+        "description": "Try to save the booking"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify booking validation errors are visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify no new booking is created"
+      }
+    ],
+    "priority": "Medium"
+  },
+  {
+    "id": "TC039",
+    "title": "Review payroll tracking information",
+    "description": "This test verifies that an operator can open payroll tracking and see monthly earnings information for staff.",
+    "category": "Staff Operations",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Click the link to open staff operations"
+      },
+      {
+        "type": "action",
+        "description": "Review payroll tracking information"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify payroll tracking information is displayed"
+      }
+    ],
+    "priority": "Medium"
+  },
+  {
+    "id": "TC040",
+    "title": "Invalid credentials show a sign-in error",
+    "description": "This verifies that signing in with invalid credentials shows an error and does not enter the app.",
+    "category": "User Login",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with fake.user@example.com"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with invalid-password"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify a sign-in error is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the user remains on the login page"
+      }
+    ],
+    "priority": "Low"
+  },
+  {
+    "id": "TC041",
+    "title": "Guest link shows an empty or invalid access state",
+    "description": "This test verifies that an invalid public guest token does not expose guest information and instead shows an access-related empty state.",
+    "category": "Guest Portal",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /guest/invalid-token"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify an access-related empty state is displayed"
+      }
+    ],
+    "priority": "Low"
+  },
+  {
+    "id": "TC042",
+    "title": "Unauthorized public access is blocked from protected contract pages",
+    "description": "A public visitor who is not authenticated cannot access protected contract management pages and is redirected to sign in.",
+    "category": "Contract Management",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /contracts"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify access to the protected page is blocked and the login view is shown"
+      }
+    ],
+    "priority": "Low"
+  }
+]

@@ -209,7 +209,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         // Safety timeout: if auth takes more than 3s, stop loading anyway
         const timeout = setTimeout(() => {
             setLoading(false);
-        }, 3000);
+        }, 10000);
 
         // Get initial session
         supabase.auth.getSession().then(async ({ data: { session } }) => {

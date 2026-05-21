@@ -1,0 +1,32 @@
+{
+  "$schema": "./test-registry.schema.json",
+  "version": 1,
+  "updatedAt": "2026-05-20",
+  "description": "Registro único de tests E2E. El agente actualiza status aquí; no repetir tests con status passed.",
+  "tests": {
+    "TC019": {
+      "status": "passed",
+      "title": "Owner downloads a monthly statement",
+      "script": "TC019_Owner_downloads_a_monthly_statement.py",
+      "verifiedAt": "2026-05-20",
+      "verifiedIn": "local-playwright",
+      "notes": "Export PDF + export-success"
+    },
+    "TC023": {
+      "status": "passed",
+      "title": "Owner reviews property list and occupancy",
+      "script": "TC023_Owner_reviews_the_property_list_and_occupancy_details.py",
+      "verifiedAt": "2026-05-20",
+      "verifiedIn": "local-playwright",
+      "notes": "Al menos 1 owner-row"
+    },
+    "TC027": {
+      "status": "passed",
+      "title": "Access owner management and add a new owner",
+      "script": "TC027_Access_owner_management_and_add_a_new_owner.py",
+      "verifiedAt": "2026-05-20",
+      "verifiedIn": "local-playwright",
+      "notes": "POST REST + reload lista"
+    }
+  }
+}

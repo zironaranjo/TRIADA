@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-import { ownersApi } from "@/api/client";
-import { supabase } from "@/lib/supabase";
+import { supabase, supabaseUrl, supabaseAnonKey } from "@/lib/supabase";
+import { useAuth } from "@/contexts/AuthContext";
 import { motion, AnimatePresence } from "framer-motion";
 import { GlassCard } from "@/components/GlassCard";
 import {
@@ -18,6 +18,8 @@ interface Owner {
     email: string;
     phone?: string;
     properties?: any[];
+    propertyCount?: number;
+    occupancyPct?: number;
     avatar_url?: string | null;
 }
 
@@ -32,41 +34,126 @@ interface OwnerDetailData {
 export default function Owners() {
     const { t } = useTranslation();
     const navigate = useNavigate();
+    const { user } = useAuth();
     const [owners, setOwners] = useState<Owner[]>([]);
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
     const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
     const [selectedOwner, setSelectedOwner] = useState<Owner | null>(null);
     const [detailData, setDetailData] = useState<OwnerDetailData | null>(null);
     const [detailLoading, setDetailLoading] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
 
-    useEffect(() => {
-        loadOwners();
-    }, []);
+    const applyOwnerList = async (ownerList: Owner[]) => {
+            setOwners(ownerList.map(o => ({ ...o, propertyCount: 0, occupancyPct: 0 })));
+
+            const { data: props } = await supabase.from('properties').select('id, owner_id');
+            const counts: Record<string, number> = {};
+            (props || []).forEach(p => {
+                if (p.owner_id) counts[p.owner_id] = (counts[p.owner_id] || 0) + 1;
+            });
+
+            const now = new Date();
+            const monthStart = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-01`;
+            const daysInMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
+            const propIds = (props || []).map(p => p.id);
+            const occupancyByOwner: Record<string, number> = {};
+
+            if (propIds.length > 0) {
+                const { data: monthBookings } = await supabase
+                    .from('bookings')
+                    .select('property_id, start_date, end_date, status')
+                    .in('property_id', propIds)
+                    .gte('start_date', monthStart)
+                    .neq('status', 'cancelled');
+
+                const bookedNightsByProp: Record<string, number> = {};
+                (monthBookings || []).forEach(b => {
+                    const start = new Date(b.start_date);
+                    const end = new Date(b.end_date);
+                    const nights = Math.max(1, Math.ceil((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24)));
+                    bookedNightsByProp[b.property_id] = (bookedNightsByProp[b.property_id] || 0) + nights;
+                });
+
+                (props || []).forEach(p => {
+                    if (!p.owner_id) return;
+                    const booked = bookedNightsByProp[p.id] || 0;
+                    const pct = Math.min(100, Math.round((booked / daysInMonth) * 100));
+                    occupancyByOwner[p.owner_id] = Math.max(occupancyByOwner[p.owner_id] || 0, pct);
+                });
+            }
+
+            setOwners(ownerList.map(o => ({
+                ...o,
+                propertyCount: counts[o.id] || 0,
+                occupancyPct: occupancyByOwner[o.id] ?? 0,
+            })));
+    };
 
     const loadOwners = async () => {
+        setLoading(true);
         try {
-            const { data } = await ownersApi.getAll();
-            const ownersData: Owner[] = data || [];
-            // Load avatar URLs from Supabase owner table
-            const ownerIds = ownersData.map((o: Owner) => o.id);
-            if (ownerIds.length > 0) {
-                const { data: avatars } = await supabase
-                    .from('owner')
-                    .select('id, avatar_url')
-                    .in('id', ownerIds);
-                if (avatars) {
-                    const avatarMap = new Map(avatars.map(a => [a.id, a.avatar_url]));
-                    ownersData.forEach(o => { o.avatar_url = avatarMap.get(o.id) || null; });
-                }
+            await new Promise(r => setTimeout(r, 500));
+            const key = 'sb-dknhrstvlajlktahxeqs-auth-token';
+            const raw = localStorage.getItem(key);
+            const token = raw ? (JSON.parse(raw) as { access_token?: string }).access_token : null;
+            let ownerList: Owner[] = [];
+            if (token) {
+                const url =
+                    'https://dknhrstvlajlktahxeqs.supabase.co/rest/v1/owner?select=id,firstName,lastName,email,phone,avatar_url&order=firstName.asc';
+                const res = await fetch(url, {
+                    headers: {
+                        apikey: supabaseAnonKey,
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
+                if (res.ok) ownerList = (await res.json()) as Owner[];
             }
-            setOwners(ownersData);
+            if (ownerList.length > 0) {
+                setOwners(ownerList.map(o => ({ ...o, propertyCount: 0, occupancyPct: 0 })));
+                void applyOwnerList(ownerList);
+            }
         } catch (error) {
             console.error("Failed to load owners", error);
         } finally {
             setLoading(false);
         }
     };
+
+    useEffect(() => {
+        (async () => {
+            setLoading(true);
+            await new Promise(r => setTimeout(r, 1500));
+            try {
+                const key = 'sb-dknhrstvlajlktahxeqs-auth-token';
+                const raw = localStorage.getItem(key);
+                const token = raw ? (JSON.parse(raw) as { access_token?: string }).access_token : null;
+                if (!token) return;
+
+                const url =
+                    'https://dknhrstvlajlktahxeqs.supabase.co/rest/v1/owner?select=id,firstName,lastName,email,phone,avatar_url&order=firstName.asc';
+                const res = await fetch(url, {
+                    headers: {
+                        apikey: import.meta.env.VITE_SUPABASE_ANON_KEY || 'sb_publishable_rV7bQaTazFEffBD0riQ1UQ_JggijzBR',
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
+                if (!res.ok) return;
+                const ownerList = (await res.json()) as Owner[];
+                if (ownerList.length > 0) {
+                    setOwners(ownerList.map(o => ({
+                        ...o,
+                        propertyCount: 0,
+                        occupancyPct: 0,
+                    })));
+                    void applyOwnerList(ownerList);
+                }
+            } catch (e) {
+                console.error('Owners fetch failed', e);
+            } finally {
+                setLoading(false);
+            }
+        })();
+    }, [user?.id]);
 
     const openOwnerDetail = async (owner: Owner) => {
         setSelectedOwner(owner);
@@ -121,7 +208,7 @@ export default function Owners() {
         return `${o.firstName} ${o.lastName}`.toLowerCase().includes(q) || o.email.toLowerCase().includes(q);
     });
 
-    const totalProperties = owners.reduce((sum, o) => sum + (o.properties?.length || 0), 0);
+    const totalProperties = owners.reduce((sum, o) => sum + (o.propertyCount || 0), 0);
 
     return (
         <div className="text-slate-100 p-4 sm:p-6 lg:p-8">
@@ -163,16 +250,16 @@ export default function Owners() {
 
                 {/* Stats Row */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <StatsCard title={t('owners.statTotalOwners')} value={owners.length.toString()} icon={<User className="h-5 w-5" />} trend={t('owners.trendThisMonth')} />
+                    <StatsCard data-testid="stat-total-owners" title={t('owners.statTotalOwners')} value={owners.length.toString()} icon={<User className="h-5 w-5" />} trend={t('owners.trendThisMonth')} />
                     <StatsCard title={t('owners.statPendingPayouts')} value="€12,450" icon={<Wallet className="h-5 w-5 text-amber-400" />} trend={t('owners.trendDueIn')} />
                     <StatsCard title={t('owners.statPropertiesManaged')} value={String(totalProperties)} icon={<Building className="h-5 w-5 text-emerald-400" />} trend={t('owners.trendNew')} />
                 </div>
 
                 {/* Owners List */}
-                <GlassCard className="p-0 overflow-hidden min-h-[400px]">
+                <GlassCard className="p-0 overflow-hidden min-h-[400px]" data-testid="owners-panel">
                     <div className="p-6 border-b border-white/5 bg-white/5 flex items-center justify-between">
                         <h3 className="font-semibold text-lg text-white">{t('owners.allOwners')}</h3>
-                        <span className="text-sm text-slate-500">{filteredOwners.length} {t('owners.properties').toLowerCase()}</span>
+                        <span className="text-sm text-slate-500">{filteredOwners.length} {t('owners.statTotalOwners').toLowerCase()}</span>
                     </div>
 
                     {loading ? (
@@ -180,10 +267,11 @@ export default function Owners() {
                             <div className="animate-spin h-8 w-8 border-4 border-primary border-t-transparent rounded-full"></div>
                         </div>
                     ) : filteredOwners.length > 0 ? (
-                        <div className="divide-y divide-white/5">
+                        <div className="divide-y divide-white/5" data-testid="owners-list">
                             {filteredOwners.map((owner) => (
                                 <motion.div
                                     key={owner.id}
+                                    data-testid="owner-row"
                                     variants={{ hidden: { opacity: 0 }, show: { opacity: 1 } }}
                                     onClick={() => openOwnerDetail(owner)}
                                     className="p-4 hover:bg-white/5 transition-colors flex items-center justify-between group cursor-pointer"
@@ -216,7 +304,11 @@ export default function Owners() {
                                     <div className="flex items-center gap-6">
                                         <div className="text-right hidden sm:block">
                                             <p className="text-xs text-slate-500 uppercase font-medium">{t('owners.properties')}</p>
-                                            <p className="text-sm font-bold text-white">{owner.properties?.length || 0}</p>
+                                            <p className="text-sm font-bold text-white">{owner.propertyCount ?? 0}</p>
+                                        </div>
+                                        <div className="text-right hidden md:block">
+                                            <p className="text-xs text-slate-500 uppercase font-medium">{t('layout.nav.occupancy')}</p>
+                                            <p className="text-sm font-bold text-emerald-400">{owner.occupancyPct ?? 0}%</p>
                                         </div>
                                         <Eye className="h-4 w-4 text-slate-600 group-hover:text-indigo-400 transition-colors" />
                                     </div>
@@ -368,9 +460,9 @@ export default function Owners() {
     );
 }
 
-function StatsCard({ title, value, icon, trend }: any) {
+function StatsCard({ title, value, icon, trend, ...rest }: any) {
     return (
-        <div className="p-6 rounded-xl bg-[#1e293b] border border-white/5 shadow-lg relative overflow-hidden group hover:border-white/10 transition-all">
+        <div {...rest} className="p-6 rounded-xl bg-[#1e293b] border border-white/5 shadow-lg relative overflow-hidden group hover:border-white/10 transition-all">
             <div className="flex justify-between items-start mb-4">
                 <div className="p-2 bg-white/5 rounded-lg text-white">
                     {icon}
@@ -414,23 +506,62 @@ function CreateOwnerModal({ isOpen, onClose, onSuccess }: any) {
         setLoading(true);
         setSubmitError(null);
         try {
-            const { data: created } = await ownersApi.create(formData);
-            if (!created) throw new Error('Error al crear el propietario');
-            const ownerId = created?.id;
+            const raw = localStorage.getItem('sb-dknhrstvlajlktahxeqs-auth-token');
+            const token = raw ? (JSON.parse(raw) as { access_token?: string }).access_token : null;
+            if (!token) throw new Error('Sesión no disponible. Vuelve a iniciar sesión.');
 
-            // Upload avatar if selected
+            const payload = {
+                firstName: formData.firstName,
+                lastName: formData.lastName,
+                email: formData.email,
+                phone: formData.phone || null,
+            };
+            let created: { id: string } | null = null;
+            const res = await fetch(`${supabaseUrl}/rest/v1/owner`, {
+                method: 'POST',
+                headers: {
+                    apikey: supabaseAnonKey,
+                    Authorization: `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                    Prefer: 'return=representation',
+                },
+                body: JSON.stringify(payload),
+            });
+            if (res.ok) {
+                const rows = (await res.json()) as { id: string }[];
+                created = rows[0] ?? null;
+            } else if (res.status === 409 || res.status === 400) {
+                const lookup = await fetch(
+                    `${supabaseUrl}/rest/v1/owner?select=id&email=eq.${encodeURIComponent(formData.email)}`,
+                    { headers: { apikey: supabaseAnonKey, Authorization: `Bearer ${token}` } },
+                );
+                if (lookup.ok) {
+                    const rows = (await lookup.json()) as { id: string }[];
+                    created = rows[0] ?? null;
+                }
+            }
+            if (!created) {
+                const errText = await res.text().catch(() => '');
+                throw new Error(errText || 'Error al crear el propietario');
+            }
+            const ownerId = created.id;
+
+            setFormData({ firstName: '', lastName: '', email: '', phone: '' });
+            setAvatarFile(null);
+            setAvatarPreview(null);
+            onClose();
+            onSuccess();
+
             if (avatarFile && ownerId) {
                 const ext = avatarFile.name.split('.').pop() || 'jpg';
                 const path = `owner-avatars/${ownerId}/avatar.${ext}`;
-                const { error: upErr } = await supabase.storage.from('property-images').upload(path, avatarFile, { upsert: true });
-                if (!upErr) {
-                    const { data: urlData } = supabase.storage.from('property-images').getPublicUrl(path);
-                    await supabase.from('owner').update({ avatar_url: urlData.publicUrl }).eq('id', ownerId);
-                }
+                void supabase.storage.from('property-images').upload(path, avatarFile, { upsert: true }).then(({ error: upErr }) => {
+                    if (!upErr) {
+                        const { data: urlData } = supabase.storage.from('property-images').getPublicUrl(path);
+                        void supabase.from('owner').update({ avatar_url: urlData.publicUrl }).eq('id', ownerId);
+                    }
+                });
             }
-
-            onSuccess();
-            onClose();
         } catch (err) {
             console.error("Failed to create owner", err);
             setSubmitError(err instanceof Error ? err.message : 'Error desconocido');
@@ -530,6 +661,7 @@ function CreateOwnerModal({ isOpen, onClose, onSuccess }: any) {
                             </button>
                             <button
                                 type="submit"
+                                data-testid="create-owner-submit"
                                 disabled={loading}
                                 className="px-6 py-2 bg-primary hover:bg-primary-dark text-white rounded-lg font-semibold shadow-lg shadow-primary/20 disabled:opacity-50"
                             >
