@@ -295,7 +295,11 @@ export default function Settings() {
             setInviteEmail('');
 
             if (!resend.ok) {
-                setInviteError(t('settings.team.inviteOtpWarning'));
+                if (resend.error === 'api_not_deployed') {
+                    setInviteError(t('settings.team.inviteApiNotDeployed'));
+                } else {
+                    setInviteError(t('settings.team.inviteResendFailed'));
+                }
             } else if (!otp.ok) {
                 setInviteError(t('settings.team.inviteResendOnly'));
             }

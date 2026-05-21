@@ -176,9 +176,16 @@ export async function sendTeamInviteEmail(params: {
             loginUrl: `${window.location.origin}/login`,
         });
         if (res.data?.success) return { ok: true };
-        return { ok: false, error: res.data?.message || 'resend failed' };
-    } catch (e) {
-        const msg = e instanceof Error ? e.message : String(e);
+        return { ok: false, error: res.data?.message || res.data?.error || 'resend_failed' };
+    } catch (e: unknown) {
+        const ax = e as { response?: { status?: number; data?: { message?: string } }; message?: string };
+        if (ax.response?.status === 404) {
+            return { ok: false, error: 'api_not_deployed' };
+        }
+        const msg =
+            ax.response?.data?.message ||
+            ax.message ||
+            (e instanceof Error ? e.message : String(e));
         return { ok: false, error: msg };
     }
 }
