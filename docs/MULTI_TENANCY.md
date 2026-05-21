@@ -31,6 +31,10 @@ Cada **agencia** es una fila en `accounts`. Los usuarios se vinculan con `accoun
 
 RLS: `account_id = current_account_id()` para usuarios `authenticated`.
 
-## Invitar usuarios a la misma agencia (futuro)
+## Invitar equipo (Settings → Equipo)
 
-Hoy no hay UI de invitación: un segundo admin debe crearse vía SQL en `account_members` con el mismo `account_id`, o implementar invitaciones en Settings.
+1. Admin invita email → fila en `account_invites` + enlace mágico Supabase.
+2. La persona entra → `acceptPendingInvite` crea `account_members` en **tu** `account_id`.
+3. RLS impide ver datos de otras agencias.
+
+Ejecutar también: `supabase/migrations/015_account_invites.sql`

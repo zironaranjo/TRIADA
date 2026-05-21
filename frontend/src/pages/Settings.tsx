@@ -9,6 +9,7 @@ import {
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
 import type { UserRole } from '../contexts/AuthContext';
+import { createTeamInvite, fetchPendingInvites, revokeInvite, type PendingInvite } from '../lib/invites';
 
 // ─── Types ────────────────────────────────────────────
 interface ProfileForm {
@@ -84,7 +85,7 @@ interface TeamMember {
 
 export default function Settings() {
     const { t, i18n } = useTranslation();
-    const { user, profile, refreshProfile, signOut, isAdmin } = useAuth();
+    const { user, profile, refreshProfile, signOut, isAdmin, accountId } = useAuth();
     const [activeTab, setActiveTab] = useState<TabId>('profile');
     const [saving, setSaving] = useState(false);
     const [saved, setSaved] = useState(false);
@@ -99,6 +100,8 @@ export default function Settings() {
     const [inviteRole, setInviteRole] = useState<UserRole>('staff');
     const [inviting, setInviting] = useState(false);
     const [inviteSuccess, setInviteSuccess] = useState(false);
+    const [pendingInvites, setPendingInvites] = useState<PendingInvite[]>([]);
+    const [inviteError, setInviteError] = useState('');
 
     // Only show team tab for admins
     const TAB_IDS: TabId[] = isAdmin
@@ -125,13 +128,33 @@ export default function Settings() {
 
     // ─── Team Functions ──────────────────────────────────
     const fetchTeam = async () => {
+        if (!accountId) return;
         setLoadingTeam(true);
         try {
-            const { data } = await supabase
-                .from('profiles')
-                .select('id, user_id, email, full_name, role, created_at')
+            const { data: rows } = await supabase
+                .from('account_members')
+                .select('user_id, role, created_at')
+                .eq('account_id', accountId)
                 .order('created_at', { ascending: true });
-            setTeamMembers((data as TeamMember[]) || []);
+
+            const userIds = (rows || []).map(r => r.user_id);
+            let members: TeamMember[] = [];
+            if (userIds.length > 0) {
+                const { data: profiles } = await supabase
+                    .from('profiles')
+                    .select('id, user_id, email, full_name, role, created_at')
+                    .in('user_id', userIds);
+                const roleByUser = new Map(
+                    (rows || []).map(r => [r.user_id, r.role as UserRole]),
+                );
+                members = (profiles || []).map(p => ({
+                    ...p,
+                    role: roleByUser.get(p.user_id) || (p.role as UserRole),
+                })) as TeamMember[];
+            }
+
+            setTeamMembers(members);
+            setPendingInvites(await fetchPendingInvites(accountId));
         } catch (err) {
             console.error('Error fetching team:', err);
         } finally {
@@ -139,73 +162,116 @@ export default function Settings() {
         }
     };
 
-    const changeRole = async (memberId: string, newRole: UserRole) => {
+    const changeRole = async (memberUserId: string, memberProfileId: string, newRole: UserRole) => {
+        if (!accountId) return;
         try {
-            await supabase
-                .from('profiles')
-                .update({ role: newRole })
-                .eq('id', memberId);
+            await Promise.all([
+                supabase.from('profiles').update({ role: newRole }).eq('id', memberProfileId),
+                supabase
+                    .from('account_members')
+                    .update({ role: newRole })
+                    .eq('account_id', accountId)
+                    .eq('user_id', memberUserId),
+            ]);
             setTeamMembers(prev =>
-                prev.map(m => m.id === memberId ? { ...m, role: newRole } : m)
+                prev.map(m => (m.user_id === memberUserId ? { ...m, role: newRole } : m)),
             );
         } catch (err) {
             console.error('Error changing role:', err);
         }
     };
 
-    const removeMember = async (memberId: string, memberUserId: string) => {
-        if (memberUserId === user?.id) return; // Can't remove yourself
+    const removeMember = async (memberUserId: string) => {
+        if (memberUserId === user?.id || !accountId) return;
         if (!confirm(t('settings.team.confirmRemove'))) return;
         try {
-            await supabase.from('profiles').delete().eq('id', memberId);
-            setTeamMembers(prev => prev.filter(m => m.id !== memberId));
+            await supabase
+                .from('account_members')
+                .delete()
+                .eq('account_id', accountId)
+                .eq('user_id', memberUserId);
+            setTeamMembers(prev => prev.filter(m => m.user_id !== memberUserId));
         } catch (err) {
             console.error('Error removing member:', err);
+            alert(t('settings.team.removeError'));
         }
     };
 
     const inviteMember = async () => {
-        if (!inviteEmail.trim()) return;
+        if (!inviteEmail.trim() || !accountId || !user?.id) return;
         setInviting(true);
         setInviteSuccess(false);
+        setInviteError('');
 
         try {
-            // Check if user already exists in profiles
-            const { data: existing } = await supabase
+            const email = inviteEmail.trim().toLowerCase();
+            if (email === user.email?.toLowerCase()) {
+                setInviteError(t('settings.team.inviteSelf'));
+                return;
+            }
+
+            const { data: existingProfile } = await supabase
                 .from('profiles')
-                .select('id')
-                .eq('email', inviteEmail.trim())
+                .select('user_id')
+                .ilike('email', email)
                 .maybeSingle();
 
-            if (existing) {
-                // User already registered, just update role
-                await supabase
-                    .from('profiles')
-                    .update({ role: inviteRole })
-                    .eq('email', inviteEmail.trim());
-                await fetchTeam();
-            } else {
-                // Create a pre-registration entry so when they sign up, the role is ready
-                // For now we use Supabase Auth admin invite (sends magic link)
-                const { error } = await supabase.auth.signInWithOtp({
-                    email: inviteEmail.trim(),
-                    options: {
-                        shouldCreateUser: true,
-                        data: { invited_role: inviteRole },
-                    },
-                });
-                if (error) throw error;
+            if (existingProfile?.user_id) {
+                const { data: theirMember } = await supabase
+                    .from('account_members')
+                    .select('account_id')
+                    .eq('user_id', existingProfile.user_id)
+                    .maybeSingle();
+
+                if (theirMember?.account_id && theirMember.account_id !== accountId) {
+                    setInviteError(t('settings.team.inviteOtherOrg'));
+                    return;
+                }
+
+                if (theirMember?.account_id === accountId) {
+                    await Promise.all([
+                        supabase.from('profiles').update({ role: inviteRole }).eq('user_id', existingProfile.user_id),
+                        supabase
+                            .from('account_members')
+                            .update({ role: inviteRole })
+                            .eq('user_id', existingProfile.user_id)
+                            .eq('account_id', accountId),
+                    ]);
+                    await fetchTeam();
+                    setInviteSuccess(true);
+                    setInviteEmail('');
+                    return;
+                }
             }
+
+            const { ok, error: invErr } = await createTeamInvite(
+                accountId,
+                email,
+                inviteRole,
+                user.id,
+            );
+            if (!ok) throw new Error(invErr || 'invite failed');
+
+            const { error: otpErr } = await supabase.auth.signInWithOtp({
+                email,
+                options: {
+                    shouldCreateUser: true,
+                    emailRedirectTo: `${window.location.origin}/login`,
+                    data: { invited_role: inviteRole, invited_account_id: accountId },
+                },
+            });
+            if (otpErr) throw otpErr;
 
             setInviteSuccess(true);
             setInviteEmail('');
+            await fetchTeam();
             setTimeout(() => {
                 setInviteSuccess(false);
                 setShowInviteForm(false);
-            }, 3000);
+            }, 4000);
         } catch (err) {
             console.error('Error inviting member:', err);
-            alert(t('settings.team.inviteError'));
+            setInviteError(t('settings.team.inviteError'));
         } finally {
             setInviting(false);
         }
@@ -213,10 +279,10 @@ export default function Settings() {
 
     // Load team when tab is active
     useEffect(() => {
-        if (activeTab === 'team' && isAdmin && teamMembers.length === 0) {
+        if (activeTab === 'team' && isAdmin && accountId) {
             fetchTeam();
         }
-    }, [activeTab]);
+    }, [activeTab, accountId, isAdmin]);
 
     // Load profile data
     useEffect(() => {
@@ -805,6 +871,9 @@ export default function Settings() {
                                                 {t('settings.team.inviteSent')}
                                             </p>
                                         )}
+                                        {inviteError && (
+                                            <p className="mt-3 text-sm text-red-400">{inviteError}</p>
+                                        )}
                                         <p className="mt-2 text-[10px] text-slate-600">{t('settings.team.inviteHint')}</p>
                                     </motion.div>
                                 )}
@@ -815,6 +884,36 @@ export default function Settings() {
                                     </div>
                                 ) : (
                                     <div className="space-y-3">
+                                        {pendingInvites.length > 0 && (
+                                            <div className="mb-4 p-4 rounded-xl bg-amber-500/5 border border-amber-500/20">
+                                                <p className="text-xs font-semibold text-amber-400 mb-2 flex items-center gap-2">
+                                                    <Clock className="h-3.5 w-3.5" />
+                                                    {t('settings.team.pendingTitle')}
+                                                </p>
+                                                <ul className="space-y-2">
+                                                    {pendingInvites.map(inv => (
+                                                        <li
+                                                            key={inv.id}
+                                                            className="flex items-center justify-between text-xs text-slate-400"
+                                                        >
+                                                            <span>
+                                                                {inv.email}{' '}
+                                                                <span className="text-slate-500">
+                                                                    ({t(`settings.team.role.${inv.role as 'admin' | 'staff' | 'owner'}`)})
+                                                                </span>
+                                                            </span>
+                                                            <button
+                                                                type="button"
+                                                                onClick={() => revokeInvite(inv.id).then(fetchTeam)}
+                                                                className="text-slate-500 hover:text-red-400"
+                                                            >
+                                                                {t('settings.team.revokeInvite')}
+                                                            </button>
+                                                        </li>
+                                                    ))}
+                                                </ul>
+                                            </div>
+                                        )}
                                         {teamMembers.map(member => {
                                             const cfg = ROLE_CONFIG[member.role] || ROLE_CONFIG.staff;
                                             const RoleIcon = cfg.icon;
@@ -846,7 +945,7 @@ export default function Settings() {
                                                             <>
                                                                 <select
                                                                     value={member.role}
-                                                                    onChange={e => changeRole(member.id, e.target.value as UserRole)}
+                                                                    onChange={e => changeRole(member.user_id, member.id, e.target.value as UserRole)}
                                                                     className="bg-white/5 border border-white/10 rounded-lg px-3 py-1.5 text-xs text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/50 appearance-none cursor-pointer"
                                                                 >
                                                                     <option value="admin" className="bg-slate-900">Admin</option>
@@ -854,7 +953,7 @@ export default function Settings() {
                                                                     <option value="owner" className="bg-slate-900">Owner</option>
                                                                 </select>
                                                                 <button
-                                                                    onClick={() => removeMember(member.id, member.user_id)}
+                                                                    onClick={() => removeMember(member.user_id)}
                                                                     className="p-1.5 text-slate-500 hover:text-red-400 transition-colors"
                                                                     title={t('settings.team.remove')}
                                                                 >
@@ -880,7 +979,7 @@ export default function Settings() {
                                 <ul className="space-y-2 text-xs text-slate-400">
                                     <li className="flex items-start gap-2">
                                         <Crown className="h-3.5 w-3.5 text-amber-400 mt-0.5 flex-shrink-0" />
-                                        {t('settings.team.howAdmin')}
+                                        {t('settings.team.howInvite')}
                                     </li>
                                     <li className="flex items-start gap-2">
                                         <UserCog className="h-3.5 w-3.5 text-blue-400 mt-0.5 flex-shrink-0" />

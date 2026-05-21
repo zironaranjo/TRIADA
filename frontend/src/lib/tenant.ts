@@ -1,4 +1,5 @@
 import { supabase } from './supabase';
+import { acceptPendingInvite } from './invites';
 
 export interface AccountMembership {
     account_id: string;
@@ -6,7 +7,7 @@ export interface AccountMembership {
     account_name?: string | null;
 }
 
-function parseMembership(row: {
+export function parseMembership(row: {
     account_id: string;
     role: string;
     accounts?: { id: string; name: string } | { id: string; name: string }[] | null;
@@ -40,6 +41,11 @@ export async function ensureAccountMembership(
     }
 
     const normalizedEmail = email.trim().toLowerCase();
+
+    const fromInvite = await acceptPendingInvite(userId, email);
+    if (fromInvite?.account_id) {
+        return fromInvite;
+    }
 
     const { data: ownerRow } = await supabase
         .from('owner')
