@@ -14,6 +14,7 @@ import {
     fetchPendingInvites,
     revokeInvite,
     revokePendingInvitesByEmail,
+    sendTeamInviteEmail,
     sendTeamInviteOtp,
     type PendingInvite,
 } from '../lib/invites';
@@ -92,7 +93,7 @@ interface TeamMember {
 
 export default function Settings() {
     const { t, i18n } = useTranslation();
-    const { user, profile, refreshProfile, signOut, isAdmin, accountId } = useAuth();
+    const { user, profile, refreshProfile, signOut, isAdmin, accountId, accountName } = useAuth();
     const [activeTab, setActiveTab] = useState<TabId>('profile');
     const [saving, setSaving] = useState(false);
     const [saved, setSaved] = useState(false);
@@ -274,24 +275,35 @@ export default function Settings() {
             }
 
             await fetchTeam();
+
+            const [resend, otp] = await Promise.all([
+                sendTeamInviteEmail({
+                    to: email,
+                    role: inviteRole,
+                    accountName,
+                    inviterName: profile?.full_name || profile?.email,
+                }),
+                sendTeamInviteOtp(email, inviteRole, accountId),
+            ]);
+
+            if (!resend.ok && !otp.ok) {
+                setInviteError(t('settings.team.inviteError'));
+                return;
+            }
+
             setInviteSuccess(true);
             setInviteEmail('');
 
-            let otpFailed = false;
-            const otp = await sendTeamInviteOtp(email, inviteRole, accountId);
-            if (!otp.ok) {
-                otpFailed = true;
-                setInviteError(
-                    otp.timedOut
-                        ? t('settings.team.inviteOtpTimeout')
-                        : t('settings.team.inviteOtpWarning'),
-                );
+            if (!resend.ok) {
+                setInviteError(t('settings.team.inviteOtpWarning'));
+            } else if (!otp.ok) {
+                setInviteError(t('settings.team.inviteResendOnly'));
             }
 
             setTimeout(() => {
                 setInviteSuccess(false);
-                if (!otpFailed) setShowInviteForm(false);
-            }, 5000);
+                if (resend.ok) setShowInviteForm(false);
+            }, 6000);
         } catch (err) {
             console.error('Error inviting member:', err);
             setInviteError(t('settings.team.inviteError'));

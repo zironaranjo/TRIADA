@@ -70,4 +70,24 @@ export class EmailsController {
       portalUrl,
     });
   }
+
+  @Post('team-invite')
+  async sendTeamInvite(
+    @Body()
+    body: {
+      to: string;
+      role: string;
+      accountName?: string;
+      inviterName?: string;
+      loginUrl?: string;
+    },
+  ) {
+    const loginUrl = body.loginUrl || 'https://triadak.io/login';
+    return this.emailsService.sendTeamInvite(body.to, {
+      role: body.role,
+      accountName: body.accountName || 'Triadak',
+      inviterName: body.inviterName || 'Tu equipo',
+      loginUrl,
+    });
+  }
 }

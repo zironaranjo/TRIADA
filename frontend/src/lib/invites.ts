@@ -1,4 +1,5 @@
 import { supabase } from './supabase';
+import { api } from '../api/client';
 import type { UserRole } from '../contexts/AuthContext';
 import type { AccountMembership } from './tenant';
 
@@ -158,6 +159,29 @@ export async function revokePendingInvitesByEmail(
 }
 
 const OTP_TIMEOUT_MS = 18_000;
+
+/** Email de invitación vía Resend (api.triadak.io), más fiable que solo Supabase Auth. */
+export async function sendTeamInviteEmail(params: {
+    to: string;
+    role: UserRole;
+    accountName?: string | null;
+    inviterName?: string | null;
+}): Promise<{ ok: boolean; error?: string }> {
+    try {
+        const res = await api.post('/emails/team-invite', {
+            to: params.to.trim().toLowerCase(),
+            role: params.role,
+            accountName: params.accountName || 'Triadak',
+            inviterName: params.inviterName || 'Tu equipo',
+            loginUrl: `${window.location.origin}/login`,
+        });
+        if (res.data?.success) return { ok: true };
+        return { ok: false, error: res.data?.message || 'resend failed' };
+    } catch (e) {
+        const msg = e instanceof Error ? e.message : String(e);
+        return { ok: false, error: msg };
+    }
+}
 
 /**
  * Magic link de acceso; con timeout para no dejar el botón en "enviando" indefinidamente.
