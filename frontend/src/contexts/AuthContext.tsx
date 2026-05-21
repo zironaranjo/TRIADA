@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
 import type { User, Session } from '@supabase/supabase-js';
 import { supabase } from '../lib/supabase';
+import { ensureAccountMembership } from '../lib/tenant';
 
 export type UserRole = 'admin' | 'owner' | 'staff' | 'worker';
 
@@ -29,6 +30,8 @@ interface AuthContextType {
     session: Session | null;
     profile: Profile | null;
     subscription: UserSubscription | null;
+    accountId: string | null;
+    accountName: string | null;
     loading: boolean;
     isAdmin: boolean;
     isOwner: boolean;
@@ -59,35 +62,22 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     const [session, setSession] = useState<Session | null>(null);
     const [profile, setProfile] = useState<Profile | null>(null);
     const [subscription, setSubscription] = useState<UserSubscription | null>(null);
+    const [accountId, setAccountId] = useState<string | null>(null);
+    const [accountName, setAccountName] = useState<string | null>(null);
     const [loading, setLoading] = useState(true);
 
     /**
-     * Determine the correct role for a NEW user based on:
-     * 1. No admin exists in system → admin (first user)
-     * 2. Email matches owner table → owner
-     * 3. Otherwise → staff
-     *
-     * Only runs ONCE per user (on first login, tracked via localStorage).
+     * Rol por email (owner/staff) dentro del tenant actual.
+     * La cuenta/agencia la resuelve ensureAccountMembership (multi-tenant).
+     * Solo corre una vez por usuario (localStorage).
      */
     const determineRoleForNewUser = async (userId: string, email: string): Promise<UserRole | null> => {
-        // Check if we already assigned a role for this user
         const roleKey = `triadak_role_assigned_${userId}`;
         if (localStorage.getItem(roleKey)) {
-            return null; // Already assigned, don't change
+            return null;
         }
 
         try {
-            // Check if there's any admin in the system
-            const { count: adminCount } = await supabase
-                .from('profiles')
-                .select('id', { count: 'exact', head: true })
-                .eq('role', 'admin');
-
-            if (adminCount === 0) {
-                localStorage.setItem(roleKey, 'true');
-                return 'admin';
-            }
-
             // Check if email matches an owner record
             const { data: ownerMatch } = await supabase
                 .from('owner')
@@ -122,6 +112,14 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
     const fetchProfile = async (userId: string, userEmail?: string) => {
         try {
+            if (userEmail) {
+                const membership = await ensureAccountMembership(userId, userEmail);
+                if (membership?.account_id) {
+                    setAccountId(membership.account_id);
+                    setAccountName(membership.account_name ?? null);
+                }
+            }
+
             const { data, error } = await supabase
                 .from('profiles')
                 .select('*')
@@ -252,6 +250,8 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
                 } else {
                     setProfile(null);
                     setSubscription(null);
+                    setAccountId(null);
+                    setAccountName(null);
                 }
 
                 setLoading(false);
@@ -268,6 +268,8 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         }
         await supabase.auth.signOut();
         setProfile(null);
+        setAccountId(null);
+        setAccountName(null);
         window.location.href = '/login';
     };
 
@@ -282,6 +284,8 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         session,
         profile,
         subscription,
+        accountId,
+        accountName,
         loading,
         isAdmin,
         isOwner,
