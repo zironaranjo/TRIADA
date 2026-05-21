@@ -25,7 +25,9 @@ Cada **agencia** es una fila en `accounts`. Los usuarios se vinculan con `accoun
 
 ## Tablas con `account_id`
 
-`properties`, `owner`, `bookings`, `contacts`, `expenses`, `staff_members`, `staff_tasks`, `platform_connections`, `message_logs`, `contracts`, (+ `contact_notes`, `sync_logs` si existen).
+`properties`, `owner`, `bookings`, `contacts`, `expenses`, `staff_members`, `staff_tasks`, `message_logs`, `contracts`, (+ `contact_notes`, `sync_logs` si existen).
+
+`platform_connections` usa **`agency_account_id`** (no `account_id`) porque `account_id` TEXT ya guarda el ID de Airbnb/Booking.
 
 RLS: `account_id = current_account_id()` para usuarios `authenticated`.
 

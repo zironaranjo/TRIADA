@@ -45,7 +45,8 @@ ALTER TABLE contacts ADD COLUMN IF NOT EXISTS account_id UUID REFERENCES account
 ALTER TABLE expenses ADD COLUMN IF NOT EXISTS account_id UUID REFERENCES accounts(id);
 ALTER TABLE staff_members ADD COLUMN IF NOT EXISTS account_id UUID REFERENCES accounts(id);
 ALTER TABLE staff_tasks ADD COLUMN IF NOT EXISTS account_id UUID REFERENCES accounts(id);
-ALTER TABLE platform_connections ADD COLUMN IF NOT EXISTS account_id UUID REFERENCES accounts(id);
+-- platform_connections ya tiene account_id TEXT (ID externo OTA) → usar agency_account_id
+ALTER TABLE platform_connections ADD COLUMN IF NOT EXISTS agency_account_id UUID REFERENCES accounts(id);
 ALTER TABLE message_logs ADD COLUMN IF NOT EXISTS account_id UUID REFERENCES accounts(id);
 ALTER TABLE contracts ADD COLUMN IF NOT EXISTS account_id UUID REFERENCES accounts(id);
 
@@ -86,7 +87,7 @@ BEGIN
     UPDATE expenses SET account_id = v_account_id WHERE account_id IS NULL;
     UPDATE staff_members SET account_id = v_account_id WHERE account_id IS NULL;
     UPDATE staff_tasks SET account_id = v_account_id WHERE account_id IS NULL;
-    UPDATE platform_connections SET account_id = v_account_id WHERE account_id IS NULL;
+    UPDATE platform_connections SET agency_account_id = v_account_id WHERE agency_account_id IS NULL;
     UPDATE message_logs SET account_id = v_account_id WHERE account_id IS NULL;
     UPDATE contracts SET account_id = v_account_id WHERE account_id IS NULL;
 
@@ -148,7 +149,7 @@ DECLARE
   t TEXT;
   tables TEXT[] := ARRAY[
     'properties', 'owner', 'contacts', 'expenses',
-    'staff_members', 'staff_tasks', 'platform_connections',
+    'staff_members', 'staff_tasks',
     'message_logs', 'contracts'
   ];
 BEGIN
@@ -165,6 +166,34 @@ DROP TRIGGER IF EXISTS trg_bookings_account_id ON bookings;
 CREATE TRIGGER trg_bookings_account_id
   BEFORE INSERT OR UPDATE ON bookings
   FOR EACH ROW EXECUTE FUNCTION public.trg_bookings_set_account_id();
+
+CREATE OR REPLACE FUNCTION public.set_row_agency_account_id()
+RETURNS TRIGGER
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public
+AS $$
+DECLARE
+  v_account UUID;
+BEGIN
+  v_account := public.current_account_id();
+  IF v_account IS NULL THEN
+    RAISE EXCEPTION 'No account membership for user %', auth.uid();
+  END IF;
+  IF NEW.agency_account_id IS NULL THEN
+    NEW.agency_account_id := v_account;
+  ELSIF NEW.agency_account_id IS DISTINCT FROM v_account THEN
+    RAISE EXCEPTION 'agency_account_id does not match user tenant';
+  END IF;
+  RETURN NEW;
+END;
+$$;
+
+DROP TRIGGER IF EXISTS trg_platform_connections_account_id ON platform_connections;
+DROP TRIGGER IF EXISTS trg_platform_connections_agency_account_id ON platform_connections;
+CREATE TRIGGER trg_platform_connections_agency_account_id
+  BEFORE INSERT OR UPDATE ON platform_connections
+  FOR EACH ROW EXECUTE FUNCTION public.set_row_agency_account_id();
 
 -- ─── 6. RLS: accounts / members ─────────────────────────────────────────────
 DROP POLICY IF EXISTS "Users see own membership" ON account_members;
@@ -299,8 +328,8 @@ DROP POLICY IF EXISTS "Tenant manage sync_logs" ON sync_logs;
 CREATE POLICY "Tenant manage platform_connections"
   ON platform_connections FOR ALL
   TO authenticated
-  USING (account_id = public.current_account_id())
-  WITH CHECK (account_id = public.current_account_id());
+  USING (agency_account_id = public.current_account_id())
+  WITH CHECK (agency_account_id = public.current_account_id());
 
 CREATE POLICY "Tenant manage sync_logs"
   ON sync_logs FOR ALL
