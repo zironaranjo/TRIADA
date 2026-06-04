@@ -140,4 +140,20 @@ html {
   .kpi-tile {
     @apply rounded-xl border border-border bg-card p-4 sm:p-6;
   }
+
+  .shadow-bgt {
+    background: radial-gradient(
+      ellipse 90% 55% at 50% 0%,
+      rgba(148, 163, 184, 0.22),
+      transparent 72%
+    );
+  }
+
+  .shadow-bgb {
+    background: radial-gradient(
+      ellipse 90% 55% at 50% 100%,
+      rgba(100, 116, 139, 0.18),
+      transparent 72%
+    );
+  }
 }

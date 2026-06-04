@@ -9,6 +9,7 @@ import {
 } from '@/components/ui/digital-serenity-animated-landing-page';
 import { BentoGrid, type BentoItem } from '@/components/ui/bento-grid';
 import { FAQ as FAQTabs, type FAQData } from '@/components/ui/faq-tabs';
+import { IlluminatedHero } from '@/components/ui/illuminated-hero';
 import {
     Building2,
     CalendarDays,
@@ -242,16 +243,6 @@ function Hero() {
                     <span>{t('landing.hero.badge')}</span>
                 </motion.div>
 
-                {/* Mensaje de enganche */}
-                <motion.p
-                    initial={{ opacity: 0, y: 14 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.06, duration: 0.5 }}
-                    className="mx-auto mb-5 max-w-2xl text-base font-medium leading-snug text-white/90 sm:mb-6 sm:text-lg md:text-xl"
-                >
-                    {t('landing.hero.hook')}
-                </motion.p>
-
                 <motion.h1
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -337,6 +328,21 @@ function Hero() {
             {/* Bottom fade into next section */}
             <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-background to-transparent pointer-events-none z-10" />
         </section>
+    );
+}
+
+function HookIlluminatedSection() {
+    const { t } = useTranslation();
+    return (
+        <IlluminatedHero
+            id="enganche"
+            introLine1={t('landing.illuminated.intro1')}
+            highlightText={t('landing.illuminated.highlight')}
+            trailingLine1={t('landing.illuminated.trailing1')}
+            trailingLine2={t('landing.illuminated.trailing2')}
+            description={t('landing.illuminated.description')}
+            descriptionHighlight={t('landing.illuminated.descriptionHighlight')}
+        />
     );
 }
 
@@ -1025,6 +1031,7 @@ export default function LandingPage() {
         <div className="min-h-screen bg-[#0f172a] text-slate-100 overflow-x-hidden scroll-smooth">
             <Navbar />
             <Hero />
+            <HookIlluminatedSection />
             <EngagementSection />
             <DualCTA />
             <StatsBar />

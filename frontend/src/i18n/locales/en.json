@@ -678,6 +678,14 @@
       "rating": "5.0 from early users",
       "freePlan": "Free plan available forever"
     },
+    "illuminated": {
+      "intro1": "Managing chalets, apartments or villas?",
+      "highlight": "Triadak unifies it.",
+      "trailing1": "Bookings, guests and finances",
+      "trailing2": "in one dashboard.",
+      "description": "Leave spreadsheets and scattered chats behind. With Triadak you get operational clarity from day one.",
+      "descriptionHighlight": "operational clarity"
+    },
     "serenity": {
       "top": ["Less chaos.", "More control."],
       "main1": ["Centralize", "bookings,", "guests"],

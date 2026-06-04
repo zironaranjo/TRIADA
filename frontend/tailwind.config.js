@@ -73,6 +73,18 @@ export default {
                     from: { height: "var(--radix-accordion-content-height)" },
                     to: { height: 0 },
                 },
+                onloadopacity: {
+                    "24%": { opacity: "0" },
+                    "100%": { opacity: "1" },
+                },
+                onloadbgt: {
+                    "0%": { transform: "translateY(-70%) scale(1.2)", opacity: "0.3" },
+                    "100%": { transform: "translateY(-64%) scale(1.2)", opacity: "0.8" },
+                },
+                onloadbgb: {
+                    "0%": { transform: "translateY(70%) scale(1.2)", opacity: "0.3" },
+                    "100%": { transform: "translateY(64%) scale(1.2)", opacity: "0.8" },
+                },
             },
             animation: {
                 "accordion-down": "accordion-down 0.2s ease-out",

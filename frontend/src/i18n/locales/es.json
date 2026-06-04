@@ -678,6 +678,14 @@
       "rating": "5.0 de usuarios iniciales",
       "freePlan": "Plan gratuito disponible para siempre"
     },
+    "illuminated": {
+      "intro1": "¿Gestionas chalets, apartamentos o villas?",
+      "highlight": "Triadak lo unifica.",
+      "trailing1": "Reservas, huéspedes y finanzas",
+      "trailing2": "en un solo panel.",
+      "description": "Deja las hojas de cálculo y los chats dispersos. Con Triadak ganas claridad operativa desde el primer día.",
+      "descriptionHighlight": "claridad operativa"
+    },
     "serenity": {
       "top": ["Menos caos.", "Más control."],
       "main1": ["Centraliza", "reservas,", "huéspedes"],
