@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useRef } from 'react';
 import { cn } from '@/lib/utils';
 
 export interface SerenityWord {
@@ -18,6 +18,10 @@ const PAGE_STYLES = `
   @keyframes ds-word-appear {
     0% { opacity: 0; transform: translateY(20px); filter: blur(6px); }
     100% { opacity: 1; transform: translateY(0); filter: blur(0); }
+  }
+  @keyframes ds-grid-draw {
+    0% { stroke-dashoffset: 1000; opacity: 0; }
+    100% { stroke-dashoffset: 0; opacity: 0.2; }
   }
   @keyframes ds-underline-grow {
     to { width: 100%; }
@@ -42,6 +46,14 @@ const PAGE_STYLES = `
     animation: ds-underline-grow 2s ease-out forwards;
     animation-delay: 1.8s;
   }
+  .ds-grid-line {
+    stroke: rgba(148, 163, 184, 0.35);
+    stroke-width: 0.5;
+    opacity: 0;
+    stroke-dasharray: 6 6;
+    stroke-dashoffset: 1000;
+    animation: ds-grid-draw 2s ease-out forwards;
+  }
 `;
 
 function WordSpan({ text, delay }: SerenityWord) {
@@ -60,17 +72,6 @@ export function DigitalSerenity({
   className,
 }: DigitalSerenityProps) {
   const sectionRef = useRef<HTMLElement>(null);
-  const [scrolled, setScrolled] = useState(false);
-
-  const handleScroll = useCallback(() => {
-    if (!scrolled) setScrolled(true);
-  }, [scrolled]);
-
-  useEffect(() => {
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    handleScroll();
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, [handleScroll]);
 
   return (
     <>
@@ -84,6 +85,62 @@ export function DigitalSerenity({
         )}
         aria-label="Triadak value proposition"
       >
+        {/* Cuadrícula de fondo */}
+        <svg
+          className="pointer-events-none absolute inset-0 h-full w-full"
+          xmlns="http://www.w3.org/2000/svg"
+          aria-hidden
+        >
+          <defs>
+            <pattern
+              id="ds-grid"
+              width="56"
+              height="56"
+              patternUnits="userSpaceOnUse"
+            >
+              <path
+                d="M 56 0 L 0 0 0 56"
+                fill="none"
+                stroke="rgba(148, 163, 184, 0.14)"
+                strokeWidth="0.5"
+              />
+            </pattern>
+          </defs>
+          <rect width="100%" height="100%" fill="url(#ds-grid)" />
+          <line
+            x1="0"
+            y1="20%"
+            x2="100%"
+            y2="20%"
+            className="ds-grid-line"
+            style={{ animationDelay: '0.4s' }}
+          />
+          <line
+            x1="0"
+            y1="80%"
+            x2="100%"
+            y2="80%"
+            className="ds-grid-line"
+            style={{ animationDelay: '0.8s' }}
+          />
+          <line
+            x1="20%"
+            y1="0"
+            x2="20%"
+            y2="100%"
+            className="ds-grid-line"
+            style={{ animationDelay: '1.2s' }}
+          />
+          <line
+            x1="80%"
+            y1="0"
+            x2="80%"
+            y2="100%"
+            className="ds-grid-line"
+            style={{ animationDelay: '1.6s' }}
+          />
+        </svg>
+
         <div className="relative z-10 flex min-h-[70vh] flex-col items-center justify-between px-6 py-14 sm:px-10 md:px-16 md:py-20">
           <div className="text-center">
             <p className="text-xs font-medium uppercase tracking-[0.2em] text-slate-400 sm:text-sm">
