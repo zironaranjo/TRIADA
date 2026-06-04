@@ -7,9 +7,13 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "ui:add": "shadcn add",
+    "ui:21st": "shadcn add"
   },
   "dependencies": {
+    "@radix-ui/react-icons": "^1.3.2",
+    "@radix-ui/react-slot": "^1.2.4",
     "@supabase/supabase-js": "^2.95.1",
     "@types/jszip": "^3.4.0",
     "axios": "^1.13.4",
