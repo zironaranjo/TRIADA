@@ -49,6 +49,7 @@ export function SplitScrollAdventure({
     const containerRef = useRef<HTMLDivElement>(null);
     const currentPageRef = useRef(currentPage);
     currentPageRef.current = currentPage;
+    const touchStartX = useRef<number | null>(null);
 
     const navigateUp = useCallback(() => {
         goToPage((p) => Math.max(1, p - 1));
@@ -127,6 +128,16 @@ export function SplitScrollAdventure({
         <div
             ref={containerRef}
             className={cn('relative overflow-hidden bg-[#061020]', className)}
+            onTouchStart={isVertical ? (e) => { touchStartX.current = e.touches[0].clientX; } : undefined}
+            onTouchEnd={isVertical ? (e) => {
+                if (touchStartX.current === null || scrolling.current) return;
+                const delta = touchStartX.current - e.changedTouches[0].clientX;
+                if (Math.abs(delta) < 50) return;
+                scrolling.current = true;
+                if (delta > 0) navigateDown(); else navigateUp();
+                touchStartX.current = null;
+                window.setTimeout(() => { scrolling.current = false; }, animTimeMs);
+            } : undefined}
         >
             {pages.map((page, i) => {
                 const idx = i + 1;
@@ -236,10 +247,10 @@ export function SplitScrollAdventure({
                         </>
                     )}
 
-                    {/* ── Móvil (vertical): pill "Ver siguiente" + dots separados ── */}
+                    {/* ── Móvil (vertical): dots + hint de swipe ── */}
                     {isVertical && (
-                        <div className="absolute bottom-4 left-1/2 z-20 flex -translate-x-1/2 flex-col items-center gap-2.5">
-                            {/* Dots */}
+                        <div className="absolute bottom-4 left-1/2 z-20 flex -translate-x-1/2 flex-col items-center gap-2">
+                            {/* Dots clicables */}
                             <div className="flex items-center gap-2">
                                 {pages.map((_, i) => (
                                     <button
@@ -250,33 +261,19 @@ export function SplitScrollAdventure({
                                             'h-1.5 rounded-full transition-all duration-300',
                                             currentPage === i + 1
                                                 ? 'w-8 bg-white/80'
-                                                : 'w-1.5 bg-white/30 hover:bg-white/55',
+                                                : 'w-1.5 bg-white/30',
                                         )}
                                     />
                                 ))}
                             </div>
-
-                            {/* Pills navegación */}
-                            <div className="flex items-center gap-2">
-                                <button
-                                    onClick={navigateUp}
-                                    disabled={currentPage === 1}
-                                    className="flex items-center gap-1.5 rounded-full border border-white/20 bg-white/8 px-4 py-2 text-[11px] font-medium text-white/80 backdrop-blur-md transition-all active:scale-95 disabled:pointer-events-none disabled:opacity-0"
-                                >
-                                    <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M5 15l7-7 7 7" /></svg>
-                                    Anterior
-                                </button>
-
-                                <button
-                                    onClick={navigateDown}
-                                    disabled={currentPage === numOfPages}
-                                    className="relative flex items-center gap-2 rounded-full border border-white/30 bg-white/10 px-5 py-2.5 text-xs font-semibold text-white shadow-lg shadow-black/30 backdrop-blur-md transition-all active:scale-95 disabled:pointer-events-none disabled:opacity-0"
-                                >
-                                    <span className="absolute inset-0 rounded-full animate-ping bg-white/10 [animation-duration:2.5s]" />
-                                    <span className="relative">Siguiente</span>
-                                    <svg className="relative h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" /></svg>
-                                </button>
-                            </div>
+                            {/* Hint swipe — solo en primera página */}
+                            {currentPage === 1 && (
+                                <p className="flex items-center gap-1 text-[10px] text-white/35 select-none">
+                                    <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M7 16l-4-4m0 0l4-4m-4 4h18" /></svg>
+                                    desliza
+                                    <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
+                                </p>
+                            )}
                         </div>
                     )}
                 </>
