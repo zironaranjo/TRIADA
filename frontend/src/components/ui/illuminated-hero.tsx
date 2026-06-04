@@ -1,4 +1,4 @@
-import type { ComponentPropsWithoutRef } from 'react';
+import type { ComponentPropsWithoutRef, ReactNode } from 'react';
 import { cn } from '@/lib/utils';
 import { LpGridBackground } from '@/components/ui/lp-grid-background';
 
@@ -10,6 +10,7 @@ export interface IlluminatedHeroProps extends ComponentPropsWithoutRef<'section'
     trailingLine2?: string;
     description: string;
     descriptionHighlight?: string;
+    backgroundNode?: ReactNode;
     className?: string;
 }
 
@@ -21,6 +22,7 @@ export function IlluminatedHero({
     trailingLine2,
     description,
     descriptionHighlight,
+    backgroundNode,
     className,
     ...props
 }: IlluminatedHeroProps) {
@@ -35,6 +37,12 @@ export function IlluminatedHero({
             {...props}
         >
             <LpGridBackground patternId="lp-grid-illuminated" />
+
+            {backgroundNode && (
+                <div className="pointer-events-none absolute inset-0 z-0 flex items-center justify-center opacity-20">
+                    {backgroundNode}
+                </div>
+            )}
 
             <div className="bg pointer-events-none absolute h-full w-full max-w-[44em]">
                 <div className="shadow-bgt absolute size-full translate-y-[-70%] scale-[1.2] animate-[onloadbgt_1s_ease-in-out_forwards] rounded-[100em] opacity-60" />
