@@ -668,6 +668,7 @@
     },
     "hero": {
       "badge": "La forma moderna de gestionar alquileres vacacionales",
+      "hook": "¿Gestionas chalets, apartamentos o villas? Triadak pone orden en reservas, equipo y dinero — sin hojas de cálculo.",
       "title1": "Gestiona tus alquileres",
       "titleHighlight": "a toda velocidad",
       "subtitle": "Propiedades, reservas, huéspedes y finanzas — todo en una plataforma potente. Automatiza tu negocio de alquiler vacacional y enfócate en lo que importa.",
@@ -677,17 +678,24 @@
       "rating": "5.0 de usuarios iniciales",
       "freePlan": "Plan gratuito disponible para siempre"
     },
+    "serenity": {
+      "top": ["Menos caos.", "Más control."],
+      "main1": ["Centraliza", "reservas,", "huéspedes"],
+      "main2": ["y", "finanzas", "donde", "tu", "negocio", "gana", "claridad", "cada", "día."],
+      "bottom": ["Automatiza.", "Delega.", "Escala."]
+    },
     "features": {
       "badge": "Funciones",
       "title": "Todo lo que necesitas para gestionar tu negocio de alquiler",
       "subtitle": "De propiedades a pagos, Triadak cubre todo el flujo de trabajo del alquiler vacacional.",
+      "cta": "Explorar →",
       "items": {
-        "0": { "title": "Gestión de Propiedades", "description": "Añade propiedades ilimitadas con detalles, fotos, precios y disponibilidad. Todo en un solo lugar." },
-        "1": { "title": "Reservas Inteligentes", "description": "Gestiona reservas, check-ins, check-outs y disponibilidad del calendario. Nunca más dobles reservas." },
-        "2": { "title": "CRM de Huéspedes", "description": "Crea perfiles de huéspedes automáticamente. Rastrea preferencias, historial y comunicación en una vista." },
-        "3": { "title": "Motor Financiero", "description": "Rastrea ingresos, gastos y rentabilidad por propiedad. Vista financiera en tiempo real." },
-        "4": { "title": "Panel de Análisis", "description": "Tasas de ocupación, tendencias de ingresos y métricas de rendimiento de un vistazo. Decisiones basadas en datos." },
-        "5": { "title": "Seguro y Privado", "description": "Seguridad de nivel empresarial con aislamiento por filas. Tus datos son tuyos — siempre encriptados, siempre seguros." }
+        "0": { "title": "Gestión de Propiedades", "description": "Añade propiedades con detalles, fotos, precios y disponibilidad. Todo en un solo lugar.", "meta": "Multi-propiedad", "status": "Esencial", "tags": ["Propiedades", "Fotos", "Precios"] },
+        "1": { "title": "Reservas Inteligentes", "description": "Calendario, check-in/out y disponibilidad. Sin dobles reservas.", "meta": "Calendario", "status": "Activo", "tags": ["Reservas", "iCal"] },
+        "2": { "title": "CRM de Huéspedes", "description": "Perfiles automáticos, historial y comunicación en una sola vista.", "meta": "Contactos", "status": "Activo", "tags": ["CRM", "Huéspedes"] },
+        "3": { "title": "Motor Financiero", "description": "Ingresos, gastos y rentabilidad por propiedad en tiempo real.", "meta": "P&L", "status": "Activo", "tags": ["Finanzas", "Informes"] },
+        "4": { "title": "Panel de Análisis", "description": "Ocupación, ingresos y KPIs de rendimiento para decidir con datos.", "meta": "KPIs", "status": "Destacado", "tags": ["Analytics", "Ocupación"] },
+        "5": { "title": "Seguro y Privado", "description": "Aislamiento por agencia (RLS). Tus datos, encriptados y bajo tu control.", "meta": "RLS", "status": "Activo", "tags": ["Seguridad", "Multi-tenant"] }
       }
     },
     "howItWorks": {

@@ -668,6 +668,7 @@
     },
     "hero": {
       "badge": "La façon moderne de gérer les locations saisonnières",
+      "hook": "Vous gérez chalets, appartements ou villas ? Triadak réunit réservations, équipe et finances — sans tableurs.",
       "title1": "Gérez vos locations",
       "titleHighlight": "à toute vitesse",
       "subtitle": "Propriétés, réservations, invités et finances — tout dans une plateforme puissante. Automatisez votre activité de location et concentrez-vous sur l'essentiel.",
@@ -677,17 +678,24 @@
       "rating": "5.0 par les premiers utilisateurs",
       "freePlan": "Plan gratuit disponible pour toujours"
     },
+    "serenity": {
+      "top": ["Moins de chaos.", "Plus de contrôle."],
+      "main1": ["Centralisez", "réservations,", "invités"],
+      "main2": ["et", "finances", "là", "où", "votre", "activité", "gagne", "en", "clarté."],
+      "bottom": ["Automatisez.", "Déléguez.", "Grandissez."]
+    },
     "features": {
       "badge": "Fonctionnalités",
       "title": "Tout ce dont vous avez besoin pour gérer votre activité de location",
       "subtitle": "Des propriétés aux paiements, Triadak couvre l'intégralité du flux de travail de location saisonnière.",
+      "cta": "Explorer →",
       "items": {
-        "0": { "title": "Gestion immobilière", "description": "Ajoutez des propriétés illimitées avec détails, photos, tarifs et disponibilité. Tout au même endroit." },
-        "1": { "title": "Réservations intelligentes", "description": "Gérez les réservations, arrivées, départs et disponibilité du calendrier. Plus jamais de double réservation." },
-        "2": { "title": "CRM invités", "description": "Créez automatiquement les profils invités. Suivez préférences, historique et communication en une vue." },
-        "3": { "title": "Moteur financier", "description": "Suivez revenus, dépenses et rentabilité par propriété. Aperçu financier en temps réel." },
-        "4": { "title": "Tableau de bord analytique", "description": "Taux d'occupation, tendances de revenus et indicateurs de performance en un coup d'œil. Décisions basées sur les données." },
-        "5": { "title": "Sécurisé et privé", "description": "Sécurité niveau entreprise avec isolation par ligne. Vos données vous appartiennent — toujours chiffrées, toujours sûres." }
+        "0": { "title": "Gestion immobilière", "description": "Propriétés avec détails, photos, tarifs et disponibilité au même endroit.", "meta": "Multi-biens", "status": "Essentiel", "tags": ["Propriétés", "Photos", "Tarifs"] },
+        "1": { "title": "Réservations intelligentes", "description": "Calendrier, arrivées/départs et disponibilité. Sans double réservation.", "meta": "Calendrier", "status": "Actif", "tags": ["Réservations", "iCal"] },
+        "2": { "title": "CRM invités", "description": "Profils automatiques, historique et communication en une vue.", "meta": "Contacts", "status": "Actif", "tags": ["CRM", "Invités"] },
+        "3": { "title": "Moteur financier", "description": "Revenus, dépenses et rentabilité par bien en temps réel.", "meta": "P&L", "status": "Actif", "tags": ["Finance", "Rapports"] },
+        "4": { "title": "Tableau de bord analytique", "description": "Occupation, revenus et KPIs pour décider avec les données.", "meta": "KPIs", "status": "Vedette", "tags": ["Analytics", "Occupation"] },
+        "5": { "title": "Sécurisé et privé", "description": "Isolation par agence (RLS). Vos données, chiffrées et sous votre contrôle.", "meta": "RLS", "status": "Actif", "tags": ["Sécurité", "Multi-tenant"] }
       }
     },
     "howItWorks": {

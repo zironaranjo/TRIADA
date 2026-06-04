@@ -668,6 +668,7 @@
     },
     "hero": {
       "badge": "The modern way to manage vacation rentals",
+      "hook": "Managing chalets, apartments or villas? Triadak brings bookings, team and finances together — no spreadsheets.",
       "title1": "Manage your rentals",
       "titleHighlight": "at lightspeed",
       "subtitle": "Properties, bookings, guests, and finances — all in one powerful platform. Automate your vacation rental business and focus on what matters.",
@@ -677,17 +678,24 @@
       "rating": "5.0 from early users",
       "freePlan": "Free plan available forever"
     },
+    "serenity": {
+      "top": ["Less chaos.", "More control."],
+      "main1": ["Centralize", "bookings,", "guests"],
+      "main2": ["and", "finances", "where", "your", "business", "gains", "clarity", "every", "day."],
+      "bottom": ["Automate.", "Delegate.", "Scale."]
+    },
     "features": {
       "badge": "Features",
       "title": "Everything you need to run your rental business",
       "subtitle": "From properties to payments, Triadak covers the entire vacation rental workflow.",
+      "cta": "Explore →",
       "items": {
-        "0": { "title": "Property Management", "description": "Add unlimited properties with details, photos, pricing, and availability. Track everything in one place." },
-        "1": { "title": "Smart Bookings", "description": "Manage reservations, check-ins, check-outs, and calendar availability. Never double-book again." },
-        "2": { "title": "Guest CRM", "description": "Build guest profiles automatically. Track preferences, history, and communication in one view." },
-        "3": { "title": "Finance Engine", "description": "Track income, expenses, and profitability per property. Real-time financial overview." },
-        "4": { "title": "Analytics Dashboard", "description": "Occupancy rates, revenue trends, and performance metrics at a glance. Data-driven decisions." },
-        "5": { "title": "Secure & Private", "description": "Enterprise-grade security with row-level isolation. Your data is yours — always encrypted, always safe." }
+        "0": { "title": "Property Management", "description": "Add properties with details, photos, pricing and availability in one place.", "meta": "Multi-property", "status": "Core", "tags": ["Properties", "Photos", "Pricing"] },
+        "1": { "title": "Smart Bookings", "description": "Calendar, check-in/out and availability. No double bookings.", "meta": "Calendar", "status": "Active", "tags": ["Bookings", "iCal"] },
+        "2": { "title": "Guest CRM", "description": "Auto profiles, history and communication in a single view.", "meta": "Contacts", "status": "Active", "tags": ["CRM", "Guests"] },
+        "3": { "title": "Finance Engine", "description": "Income, expenses and per-property profit in real time.", "meta": "P&L", "status": "Active", "tags": ["Finance", "Reports"] },
+        "4": { "title": "Analytics Dashboard", "description": "Occupancy, revenue and KPIs to decide with data.", "meta": "KPIs", "status": "Featured", "tags": ["Analytics", "Occupancy"] },
+        "5": { "title": "Secure & Private", "description": "Agency isolation (RLS). Your data, encrypted and under your control.", "meta": "RLS", "status": "Active", "tags": ["Security", "Multi-tenant"] }
       }
     },
     "howItWorks": {

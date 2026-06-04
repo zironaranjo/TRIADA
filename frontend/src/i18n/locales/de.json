@@ -658,6 +658,7 @@
     },
     "hero": {
       "badge": "Die moderne Art, Ferienvermietungen zu verwalten",
+      "hook": "Chalets, Apartments oder Villen? Triadak bündelt Buchungen, Team und Finanzen — ohne Tabellen.",
       "title1": "Verwalten Sie Ihre Vermietungen",
       "titleHighlight": "im Eiltempo",
       "subtitle": "Immobilien, Buchungen, Gäste und Finanzen — alles in einer leistungsstarken Plattform. Automatisieren Sie Ihr Ferienvermietungsgeschäft und konzentrieren Sie sich auf das Wesentliche.",
@@ -667,17 +668,24 @@
       "rating": "5.0 von frühen Nutzern",
       "freePlan": "Kostenloser Plan für immer verfügbar"
     },
+    "serenity": {
+      "top": ["Weniger Chaos.", "Mehr Kontrolle."],
+      "main1": ["Buchungen,", "Gäste", "zentral"],
+      "main2": ["und", "Finanzen,", "wo", "Ihr", "Geschäft", "täglich", "Klarheit", "gewinnt."],
+      "bottom": ["Automatisieren.", "Delegieren.", "Skalieren."]
+    },
     "features": {
       "badge": "Funktionen",
       "title": "Alles was Sie brauchen, um Ihr Vermietungsgeschäft zu führen",
       "subtitle": "Von Immobilien bis Zahlungen — Triadak deckt den gesamten Ferienvermietungs-Workflow ab.",
+      "cta": "Entdecken →",
       "items": {
-        "0": { "title": "Immobilienverwaltung", "description": "Fügen Sie unbegrenzt Immobilien mit Details, Fotos, Preisen und Verfügbarkeit hinzu. Alles an einem Ort." },
-        "1": { "title": "Intelligente Buchungen", "description": "Verwalten Sie Reservierungen, Check-ins, Check-outs und Kalenderverfügbarkeit. Keine Doppelbuchungen mehr." },
-        "2": { "title": "Gäste-CRM", "description": "Erstellen Sie automatisch Gästeprofile. Verfolgen Sie Präferenzen, Historie und Kommunikation in einer Ansicht." },
-        "3": { "title": "Finanz-Engine", "description": "Verfolgen Sie Einnahmen, Ausgaben und Rentabilität pro Immobilie. Echtzeit-Finanzüberblick." },
-        "4": { "title": "Analytics-Dashboard", "description": "Belegungsraten, Umsatztrends und Leistungskennzahlen auf einen Blick. Datengetriebene Entscheidungen." },
-        "5": { "title": "Sicher & Privat", "description": "Sicherheit auf Unternehmensniveau mit zeilenweiser Isolation. Ihre Daten gehören Ihnen — immer verschlüsselt, immer sicher." }
+        "0": { "title": "Immobilienverwaltung", "description": "Immobilien mit Details, Fotos, Preisen und Verfügbarkeit an einem Ort.", "meta": "Multi-Objekt", "status": "Kern", "tags": ["Immobilien", "Fotos", "Preise"] },
+        "1": { "title": "Intelligente Buchungen", "description": "Kalender, Check-in/out und Verfügbarkeit. Keine Doppelbuchungen.", "meta": "Kalender", "status": "Aktiv", "tags": ["Buchungen", "iCal"] },
+        "2": { "title": "Gäste-CRM", "description": "Automatische Profile, Historie und Kommunikation in einer Ansicht.", "meta": "Kontakte", "status": "Aktiv", "tags": ["CRM", "Gäste"] },
+        "3": { "title": "Finanz-Engine", "description": "Einnahmen, Ausgaben und Marge pro Objekt in Echtzeit.", "meta": "P&L", "status": "Aktiv", "tags": ["Finanzen", "Berichte"] },
+        "4": { "title": "Analytics-Dashboard", "description": "Belegung, Umsatz und KPIs für datenbasierte Entscheidungen.", "meta": "KPIs", "status": "Highlight", "tags": ["Analytics", "Belegung"] },
+        "5": { "title": "Sicher & Privat", "description": "Agentur-Isolation (RLS). Ihre Daten, verschlüsselt und unter Ihrer Kontrolle.", "meta": "RLS", "status": "Aktiv", "tags": ["Sicherheit", "Multi-tenant"] }
       }
     },
     "howItWorks": {

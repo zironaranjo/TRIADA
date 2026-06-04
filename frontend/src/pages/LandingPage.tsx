@@ -4,6 +4,11 @@ import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
 import { CircularTestimonials } from '@/components/ui/circular-testimonials';
 import {
+    DigitalSerenity,
+    type SerenityWord,
+} from '@/components/ui/digital-serenity-animated-landing-page';
+import { BentoGrid, type BentoItem } from '@/components/ui/bento-grid';
+import {
     Building2,
     CalendarDays,
     Users,
@@ -29,6 +34,7 @@ import {
     RefreshCw,
     Home,
 } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 // ─── Animation Variants ───────────────────────────────
 const fadeUp = {
@@ -236,12 +242,21 @@ function Hero() {
                     <span>{t('landing.hero.badge')}</span>
                 </motion.div>
 
-                {/* Headline — todo blanco */}
+                {/* Mensaje de enganche */}
+                <motion.p
+                    initial={{ opacity: 0, y: 14 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.06, duration: 0.5 }}
+                    className="mx-auto mb-5 max-w-2xl text-base font-medium leading-snug text-white/90 sm:mb-6 sm:text-lg md:text-xl"
+                >
+                    {t('landing.hero.hook')}
+                </motion.p>
+
                 <motion.h1
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.1, duration: 0.55 }}
-                    className="text-4xl sm:text-6xl lg:text-7xl font-extrabold text-white leading-[1.1] tracking-tight drop-shadow-lg"
+                    className="text-4xl sm:text-6xl lg:text-7xl font-semibold text-white leading-[1.1] tracking-tight drop-shadow-lg"
                 >
                     {t('landing.hero.title1')}{' '}
                     <span className="text-white">
@@ -320,90 +335,109 @@ function Hero() {
             </div>
 
             {/* Bottom fade into next section */}
-            <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-[#0f172a] to-transparent pointer-events-none z-10" />
+            <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-background to-transparent pointer-events-none z-10" />
         </section>
     );
 }
 
-// ─── Features Section ─────────────────────────────────
-const features = [
-    {
-        icon: Building2,
-        title: 'Property Management',
-        description: 'Add unlimited properties with details, photos, pricing, and availability. Track everything in one place.',
-    },
-    {
-        icon: CalendarDays,
-        title: 'Smart Bookings',
-        description: 'Manage reservations, check-ins, check-outs, and calendar availability. Never double-book again.',
-    },
-    {
-        icon: Users,
-        title: 'Guest CRM',
-        description: 'Build guest profiles automatically. Track preferences, history, and communication in one view.',
-    },
-    {
-        icon: PiggyBank,
-        title: 'Finance Engine',
-        description: 'Track income, expenses, and profitability per property. Real-time financial overview.',
-    },
-    {
-        icon: BarChart3,
-        title: 'Analytics Dashboard',
-        description: 'Occupancy rates, revenue trends, and performance metrics at a glance. Data-driven decisions.',
-    },
-    {
-        icon: Shield,
-        title: 'Secure & Private',
-        description: 'Enterprise-grade security with row-level isolation. Your data is yours — always encrypted, always safe.',
-    },
+function buildSerenityWords(words: string[], startDelay: number): SerenityWord[] {
+    return words.map((text, i) => ({
+        text,
+        delay: startDelay + i * 130,
+    }));
+}
+
+function EngagementSection() {
+    const { t } = useTranslation();
+    const top = t('landing.serenity.top', { returnObjects: true }) as string[];
+    const main1 = t('landing.serenity.main1', { returnObjects: true }) as string[];
+    const main2 = t('landing.serenity.main2', { returnObjects: true }) as string[];
+    const bottom = t('landing.serenity.bottom', { returnObjects: true }) as string[];
+
+    return (
+        <DigitalSerenity
+            topLine={buildSerenityWords(top, 0)}
+            mainLine1={buildSerenityWords(main1, 500)}
+            mainLine2={buildSerenityWords(main2, 1100)}
+            bottomLine={buildSerenityWords(bottom, 2400)}
+        />
+    );
+}
+
+// ─── Features (Bento grid) ──────────────────────────────
+const FEATURE_ICONS = [
+    Building2,
+    CalendarDays,
+    Users,
+    PiggyBank,
+    BarChart3,
+    Shield,
+] as const;
+
+const FEATURE_ICON_COLORS = [
+    'text-primary',
+    'text-emerald-500',
+    'text-sky-500',
+    'text-amber-500',
+    'text-primary',
+    'text-muted-foreground',
+] as const;
+
+const FEATURE_BENTO_LAYOUT: { colSpan?: 1 | 2; hasPersistentHover?: boolean }[] = [
+    { colSpan: 2, hasPersistentHover: true },
+    {},
+    {},
+    {},
+    { colSpan: 2 },
+    {},
 ];
 
 function Features() {
     const { t } = useTranslation();
+
+    const bentoItems: BentoItem[] = FEATURE_ICONS.map((Icon, i) => {
+        const layout = FEATURE_BENTO_LAYOUT[i];
+        const tags = t(`landing.features.items.${i}.tags`, { returnObjects: true }) as string[];
+        return {
+            title: t(`landing.features.items.${i}.title`),
+            description: t(`landing.features.items.${i}.description`),
+            meta: t(`landing.features.items.${i}.meta`),
+            status: t(`landing.features.items.${i}.status`),
+            tags: Array.isArray(tags) ? tags : [],
+            cta: t('landing.features.cta'),
+            icon: <Icon className={cn('h-4 w-4', FEATURE_ICON_COLORS[i])} />,
+            colSpan: layout.colSpan,
+            hasPersistentHover: layout.hasPersistentHover,
+        };
+    });
+
     return (
-        <section id="features" className="py-14 sm:py-20 lg:py-32 relative">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                {/* Section Header */}
+        <section id="features" className="relative border-t border-border/40 py-14 sm:py-20 lg:py-32">
+            <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                 <motion.div
                     initial="hidden"
                     whileInView="visible"
                     viewport={{ once: true, margin: '-80px' }}
                     variants={fadeUp}
                     custom={0}
-                    className="text-center max-w-2xl mx-auto mb-10 sm:mb-16"
+                    className="mx-auto mb-10 max-w-2xl text-center sm:mb-14"
                 >
-                    <p className="text-xs sm:text-sm font-semibold text-indigo-400 uppercase tracking-wider mb-2 sm:mb-3">{t('landing.features.badge')}</p>
-                    <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-3 sm:mb-4 px-2">
+                    <p className="text-label mb-2 text-primary sm:mb-3">{t('landing.features.badge')}</p>
+                    <h2 className="text-display text-foreground mb-3 px-2 sm:mb-4">
                         {t('landing.features.title')}
                     </h2>
-                    <p className="text-slate-400 text-sm sm:text-lg px-2">
+                    <p className="text-subtitle px-2">
                         {t('landing.features.subtitle')}
                     </p>
                 </motion.div>
 
-                {/* Feature Cards */}
                 <motion.div
-                    initial="hidden"
-                    whileInView="visible"
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true, margin: '-50px' }}
-                    variants={stagger}
-                    className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8"
+                    transition={{ duration: 0.45 }}
                 >
-                    {features.map((f, i) => (
-                        <motion.div
-                            key={f.title}
-                            variants={fadeUp}
-                            custom={i}
-                            className="group p-5 sm:p-6 lg:p-8 rounded-xl sm:rounded-2xl border border-white/[0.06] bg-white/[0.03] hover:bg-white/[0.06] hover:border-white/[0.12] transition-all duration-300"
-                        >
-                            <div className="inline-flex items-center justify-center p-2.5 sm:p-3 rounded-xl border border-white/10 bg-white/5 mb-4 sm:mb-5 group-hover:border-indigo-500/30 group-hover:bg-indigo-500/10 transition-all duration-300">
-                                <f.icon className="h-5 w-5 sm:h-6 sm:w-6 text-slate-300 group-hover:text-indigo-300 transition-colors duration-300" />
-                            </div>
-                            <h3 className="text-base sm:text-lg font-semibold text-white mb-1.5 sm:mb-2">{t(`landing.features.items.${i}.title`)}</h3>
-                            <p className="text-slate-500 text-sm leading-relaxed">{t(`landing.features.items.${i}.description`)}</p>
-                        </motion.div>
-                    ))}
+                    <BentoGrid items={bentoItems} />
                 </motion.div>
             </div>
         </section>
@@ -1063,6 +1097,7 @@ export default function LandingPage() {
         <div className="min-h-screen bg-[#0f172a] text-slate-100 overflow-x-hidden scroll-smooth">
             <Navbar />
             <Hero />
+            <EngagementSection />
             <DualCTA />
             <StatsBar />
             <Features />
