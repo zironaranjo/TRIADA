@@ -29,7 +29,7 @@ import {
     MessageCircle,
     FileSignature,
     TrendingUp,
-    Trophy,
+    Layers,
     UserCog,
     RefreshCw,
     Home,
@@ -128,7 +128,7 @@ function Navbar() {
                         </select>
                         <Link
                             to="/explore"
-                            className="text-sm text-emerald-400 hover:text-emerald-300 transition-colors px-4 py-2 flex items-center gap-1.5"
+                            className="flex items-center gap-1.5 px-4 py-2 text-sm text-slate-300 transition-colors hover:text-white"
                         >
                             <Home className="h-3.5 w-3.5" />
                             Explorar alojamientos
@@ -173,7 +173,7 @@ function Navbar() {
                             <Link
                                 to="/explore"
                                 onClick={() => setOpen(false)}
-                                className="flex items-center gap-2 text-base text-emerald-400 hover:text-emerald-300 transition-colors py-3 px-2 rounded-lg hover:bg-white/5"
+                                className="flex items-center gap-2 rounded-lg px-2 py-3 text-base text-slate-300 transition-colors hover:bg-white/5 hover:text-white"
                             >
                                 <Home className="h-4 w-4" />
                                 Explorar alojamientos
@@ -238,7 +238,7 @@ function Hero() {
                     transition={{ duration: 0.5 }}
                     className="hidden sm:inline-flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/20 text-white/90 text-sm font-medium px-4 py-1.5 rounded-full mb-8"
                 >
-                    <Zap className="h-3.5 w-3.5 text-indigo-400 flex-shrink-0" />
+                    <Zap className="h-3.5 w-3.5 text-slate-300 flex-shrink-0" />
                     <span>{t('landing.hero.badge')}</span>
                 </motion.div>
 
@@ -305,14 +305,14 @@ function Hero() {
                 >
                     <Link
                         to="/explore"
-                        className="inline-flex items-center gap-2 text-sm text-white/50 hover:text-emerald-400 transition-colors group"
+                        className="group inline-flex items-center gap-2 text-sm text-white/50 transition-colors hover:text-white"
                     >
-                        <Home className="h-3.5 w-3.5 text-emerald-500/60 group-hover:text-emerald-400 transition-colors" />
+                        <Home className="h-3.5 w-3.5 text-slate-400 transition-colors group-hover:text-slate-200" />
                         <span>¿Buscas alojamiento?</span>
-                        <span className="text-emerald-500/80 group-hover:text-emerald-400 font-medium transition-colors">
+                        <span className="font-medium text-slate-300 transition-colors group-hover:text-white">
                             Explorar propiedades
                         </span>
-                        <ArrowRight className="h-3.5 w-3.5 text-emerald-500/60 group-hover:text-emerald-400 group-hover:translate-x-1 transition-all" />
+                        <ArrowRight className="h-3.5 w-3.5 text-slate-400 transition-all group-hover:translate-x-1 group-hover:text-slate-200" />
                     </Link>
                 </motion.div>
 
@@ -325,7 +325,7 @@ function Hero() {
                 >
                     <div className="flex items-center gap-1.5">
                         {[...Array(5)].map((_, i) => (
-                            <Star key={i} className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />
+                            <Star key={i} className="h-3.5 w-3.5 fill-slate-400 text-slate-400" />
                         ))}
                         <span className="ml-1 text-white/70">{t('landing.hero.rating')}</span>
                     </div>
@@ -375,11 +375,11 @@ const FEATURE_ICONS = [
 ] as const;
 
 const FEATURE_ICON_COLORS = [
-    'text-blue-400',
-    'text-emerald-400',
-    'text-sky-400',
-    'text-amber-400',
-    'text-indigo-400',
+    'text-slate-300',
+    'text-slate-300',
+    'text-slate-300',
+    'text-slate-300',
+    'text-slate-300',
     'text-slate-300',
 ] as const;
 
@@ -412,7 +412,7 @@ function Features() {
     });
 
     return (
-        <section id="features" className="relative border-t border-white/5 py-14 sm:py-20 lg:py-32">
+        <section id="features" className="relative border-t border-white/5 bg-[#0f172a] py-14 sm:py-20 lg:py-32">
             <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                 <motion.div
                     initial="hidden"
@@ -422,7 +422,7 @@ function Features() {
                     custom={0}
                     className="mx-auto mb-10 max-w-2xl text-center sm:mb-14"
                 >
-                    <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-indigo-400 sm:mb-3">
+                    <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-slate-400 sm:mb-3">
                         {t('landing.features.badge')}
                     </p>
                     <h2 className="mb-3 px-2 text-2xl font-bold text-white sm:mb-4 sm:text-3xl lg:text-4xl">
@@ -458,13 +458,13 @@ function DualCTA() {
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
                         transition={{ duration: 0.4 }}
-                        className="rounded-2xl border border-indigo-500/20 bg-gradient-to-br from-indigo-900/60 to-[#0f172a]/80 backdrop-blur-xl p-5 flex flex-col gap-3"
+                        className="flex flex-col gap-3 rounded-2xl border border-white/10 bg-white/[0.04] p-5 backdrop-blur-xl"
                     >
                         <div className="flex items-center gap-2">
-                            <div className="p-2 rounded-lg bg-indigo-500/15 border border-indigo-500/20">
-                                <Building2 className="h-4 w-4 text-indigo-400" />
+                            <div className="flex h-9 w-9 items-center justify-center rounded-lg border border-white/10 bg-white/[0.04]">
+                                <Building2 className="h-4 w-4 text-slate-300" strokeWidth={1.75} />
                             </div>
-                            <span className="text-xs font-semibold text-indigo-400 uppercase tracking-widest">Para gestores</span>
+                            <span className="text-xs font-semibold uppercase tracking-widest text-slate-400">Para gestores</span>
                         </div>
                         <h3 className="text-lg font-bold text-white leading-tight">Gestiona tus propiedades en un solo lugar</h3>
                         <Link to="/login" className="inline-flex items-center gap-2 self-start text-white/90 hover:text-white font-medium text-sm px-4 py-2 rounded-xl border border-white/25 hover:border-white/50 bg-white/8 hover:bg-white/15 transition-all group">
@@ -476,13 +476,13 @@ function DualCTA() {
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
                         transition={{ duration: 0.4, delay: 0.1 }}
-                        className="rounded-2xl border border-emerald-500/20 bg-gradient-to-br from-emerald-900/50 to-[#0f172a]/80 backdrop-blur-xl p-5 flex flex-col gap-3"
+                        className="flex flex-col gap-3 rounded-2xl border border-white/10 bg-white/[0.04] p-5 backdrop-blur-xl"
                     >
                         <div className="flex items-center gap-2">
-                            <div className="p-2 rounded-lg bg-emerald-500/15 border border-emerald-500/20">
-                                <Globe className="h-4 w-4 text-emerald-400" />
+                            <div className="flex h-9 w-9 items-center justify-center rounded-lg border border-white/10 bg-white/[0.04]">
+                                <Globe className="h-4 w-4 text-slate-300" strokeWidth={1.75} />
                             </div>
-                            <span className="text-xs font-semibold text-emerald-400 uppercase tracking-widest">Para viajeros</span>
+                            <span className="text-xs font-semibold uppercase tracking-widest text-slate-400">Para viajeros</span>
                         </div>
                         <h3 className="text-lg font-bold text-white leading-tight">Encuentra tu alojamiento perfecto</h3>
                         <Link to="/explore" className="inline-flex items-center gap-2 self-start text-white/90 hover:text-white font-medium text-sm px-4 py-2 rounded-xl border border-white/25 hover:border-white/50 bg-white/8 hover:bg-white/15 transition-all group">
@@ -500,15 +500,14 @@ function DualCTA() {
                     whileInView={{ opacity: 1, x: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.5 }}
-                    className="relative flex-1 flex flex-col items-center justify-center px-12 lg:px-20 py-16 bg-gradient-to-r from-indigo-950/80 to-[#0f172a]/60 border-r border-white/5 group hover:from-indigo-950/90 transition-all duration-500"
+                    className="relative flex flex-1 flex-col items-center justify-center border-r border-white/5 bg-[#0f172a] px-12 py-16 transition-colors duration-500 hover:bg-white/[0.02] lg:px-20"
                 >
-                    <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,_rgba(99,102,241,0.08)_0%,_transparent_60%)] pointer-events-none" />
-                    <div className="relative z-10 max-w-md text-center mx-auto">
-                        <div className="flex items-center justify-center gap-3 mb-5">
-                            <div className="p-2.5 rounded-xl bg-indigo-500/15 border border-indigo-500/20">
-                                <Building2 className="h-5 w-5 text-indigo-400" />
+                    <div className="relative z-10 mx-auto max-w-md text-center">
+                        <div className="mb-5 flex items-center justify-center gap-3">
+                            <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-white/[0.04]">
+                                <Building2 className="h-5 w-5 text-slate-300" strokeWidth={1.75} />
                             </div>
-                            <span className="text-xs font-semibold text-indigo-400 uppercase tracking-widest">Para gestores</span>
+                            <span className="text-xs font-semibold uppercase tracking-widest text-slate-400">Para gestores</span>
                         </div>
                         <h3 className="text-2xl lg:text-3xl font-bold text-white leading-tight mb-3">
                             Gestiona tus propiedades en un solo lugar
@@ -535,15 +534,14 @@ function DualCTA() {
                     whileInView={{ opacity: 1, x: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.5, delay: 0.1 }}
-                    className="relative flex-1 flex flex-col items-center justify-center px-12 lg:px-20 py-16 bg-gradient-to-l from-emerald-950/70 to-[#0f172a]/60 group hover:from-emerald-950/90 transition-all duration-500"
+                    className="relative flex flex-1 flex-col items-center justify-center bg-[#0f172a] px-12 py-16 transition-colors duration-500 hover:bg-white/[0.02] lg:px-20"
                 >
-                    <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_rgba(16,185,129,0.07)_0%,_transparent_60%)] pointer-events-none" />
-                    <div className="relative z-10 max-w-md text-center mx-auto">
-                        <div className="flex items-center justify-center gap-3 mb-5">
-                            <div className="p-2.5 rounded-xl bg-emerald-500/15 border border-emerald-500/20">
-                                <Globe className="h-5 w-5 text-emerald-400" />
+                    <div className="relative z-10 mx-auto max-w-md text-center">
+                        <div className="mb-5 flex items-center justify-center gap-3">
+                            <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-white/[0.04]">
+                                <Globe className="h-5 w-5 text-slate-300" strokeWidth={1.75} />
                             </div>
-                            <span className="text-xs font-semibold text-emerald-400 uppercase tracking-widest">Para viajeros</span>
+                            <span className="text-xs font-semibold uppercase tracking-widest text-slate-400">Para viajeros</span>
                         </div>
                         <h3 className="text-2xl lg:text-3xl font-bold text-white leading-tight mb-3">
                             Encuentra tu alojamiento perfecto
@@ -586,7 +584,7 @@ function StatsBar() {
                             viewport={{ once: true }}
                             transition={{ delay: i * 0.1, duration: 0.45 }}
                         >
-                            <p className="text-4xl sm:text-5xl font-extrabold bg-gradient-to-b from-white to-slate-400 bg-clip-text text-transparent tracking-tight">
+                            <p className="text-4xl font-semibold tracking-tight text-white sm:text-5xl">
                                 {s.value}
                             </p>
                             <p className="mt-2 text-xs sm:text-sm text-slate-500 leading-snug">{s.label}</p>
@@ -600,14 +598,14 @@ function StatsBar() {
 
 // ─── Replace Your Stack ────────────────────────────────
 const oldTools = [
-    { name: 'Channel Manager', icon: RefreshCw, color: 'text-rose-400' },
-    { name: 'Software de reservas', icon: CalendarDays, color: 'text-orange-400' },
-    { name: 'Contabilidad', icon: PiggyBank, color: 'text-amber-400' },
-    { name: 'CRM de huéspedes', icon: Users, color: 'text-yellow-400' },
-    { name: 'WhatsApp Business', icon: MessageCircle, color: 'text-green-400' },
-    { name: 'Portal de propietarios', icon: UserCog, color: 'text-cyan-400' },
-    { name: 'Contratos digitales', icon: FileSignature, color: 'text-blue-400' },
-    { name: 'Revenue management', icon: TrendingUp, color: 'text-violet-400' },
+    { name: 'Channel Manager', icon: RefreshCw },
+    { name: 'Software de reservas', icon: CalendarDays },
+    { name: 'Contabilidad', icon: PiggyBank },
+    { name: 'CRM de huéspedes', icon: Users },
+    { name: 'WhatsApp Business', icon: MessageCircle },
+    { name: 'Portal de propietarios', icon: UserCog },
+    { name: 'Contratos digitales', icon: FileSignature },
+    { name: 'Revenue management', icon: TrendingUp },
 ];
 
 const integrations = [
@@ -623,15 +621,9 @@ const integrations = [
 
 function ReplaceStack() {
     return (
-        <section className="py-16 sm:py-24 lg:py-32 relative overflow-hidden">
-            {/* Background glow */}
-            <div className="absolute inset-0 pointer-events-none">
-                <div className="absolute top-1/2 right-0 w-[400px] h-[400px] bg-indigo-500/8 rounded-full blur-[120px]" />
-                <div className="absolute bottom-0 left-1/4 w-[300px] h-[300px] bg-purple-500/6 rounded-full blur-[100px]" />
-            </div>
-
-            <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+        <section className="relative overflow-hidden bg-[#0f172a] py-16 sm:py-24 lg:py-32">
+            <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-20">
 
                     {/* Left — Replace tools */}
                     <motion.div
@@ -641,14 +633,12 @@ function ReplaceStack() {
                         variants={stagger}
                     >
                         <motion.div variants={fadeUp} custom={0}>
-                            <p className="text-xs sm:text-sm font-semibold text-indigo-400 uppercase tracking-wider mb-3">Por qué Triadak</p>
-                            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-4 leading-tight">
+                            <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-slate-400 sm:text-sm">Por qué Triadak</p>
+                            <h2 className="mb-4 text-2xl font-bold leading-tight text-white sm:text-3xl lg:text-4xl">
                                 Deja de pagar por{' '}
-                                <span className="line-through text-slate-500">8 herramientas</span>
+                                <span className="text-slate-500 line-through">8 herramientas</span>
                                 <br />
-                                <span className="bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">
-                                    Usa solo una.
-                                </span>
+                                <span className="text-white">Usa solo una.</span>
                             </h2>
                             <p className="text-slate-400 text-sm sm:text-base leading-relaxed mb-8">
                                 La mayoría de gestores usan entre 4 y 8 herramientas distintas. Triadak las reemplaza todas con una plataforma unificada, más barata y sin fricciones.
@@ -661,9 +651,11 @@ function ReplaceStack() {
                                     key={tool.name}
                                     className="flex items-center gap-2.5 px-3 py-2.5 rounded-lg border border-white/[0.06] bg-white/[0.03]"
                                 >
-                                    <tool.icon className={`h-4 w-4 flex-shrink-0 ${tool.color}`} />
-                                    <span className="text-xs sm:text-sm text-slate-400 truncate">{tool.name}</span>
-                                    <Check className="h-3.5 w-3.5 text-emerald-400 ml-auto flex-shrink-0" />
+                                    <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg border border-white/10 bg-white/[0.04]">
+                                        <tool.icon className="h-4 w-4 text-slate-300" strokeWidth={1.75} />
+                                    </div>
+                                    <span className="truncate text-xs text-slate-400 sm:text-sm">{tool.name}</span>
+                                    <Check className="ml-auto h-3.5 w-3.5 flex-shrink-0 text-slate-500" strokeWidth={2} />
                                 </div>
                             ))}
                         </motion.div>
@@ -688,13 +680,9 @@ function ReplaceStack() {
                         className="relative"
                     >
                         {/* Central Triadak node */}
-                        <div className="flex flex-col items-center mb-6">
-                            <div className="relative">
-                                <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl bg-gradient-to-br from-indigo-500/20 to-purple-500/20 border border-indigo-500/30 flex items-center justify-center shadow-xl shadow-indigo-500/10">
-                                    <Trophy className="h-9 w-9 sm:h-10 sm:w-10 text-indigo-400" />
-                                </div>
-                                {/* Pulse ring */}
-                                <div className="absolute inset-0 rounded-2xl border border-indigo-500/20 animate-ping opacity-30" />
+                        <div className="mb-6 flex flex-col items-center">
+                            <div className="flex h-20 w-20 items-center justify-center rounded-2xl border border-white/10 bg-white/[0.04] sm:h-24 sm:w-24">
+                                <Layers className="h-9 w-9 text-slate-200 sm:h-10 sm:w-10" strokeWidth={1.5} />
                             </div>
                             <p className="mt-3 text-sm font-semibold text-white">Triadak</p>
                             <p className="text-xs text-slate-500">Todo en uno</p>
@@ -709,10 +697,12 @@ function ReplaceStack() {
                                     whileInView={{ opacity: 1, y: 0 }}
                                     viewport={{ once: true }}
                                     transition={{ delay: i * 0.07, duration: 0.35 }}
-                                    className="flex flex-col items-center gap-2 group cursor-default"
+                                    className="group flex cursor-default flex-col items-center gap-2"
                                 >
-                                    <int.icon className="h-6 w-6 text-emerald-400/70 group-hover:text-emerald-400 transition-colors duration-200" />
-                                    <span className="text-xs text-slate-500 group-hover:text-slate-300 transition-colors duration-200">{int.name}</span>
+                                    <div className="flex h-11 w-11 items-center justify-center rounded-xl border border-white/10 bg-white/[0.03] transition-colors group-hover:border-white/20 group-hover:bg-white/[0.06]">
+                                        <int.icon className="h-5 w-5 text-slate-400 transition-colors group-hover:text-slate-200" strokeWidth={1.75} />
+                                    </div>
+                                    <span className="text-center text-xs text-slate-500 transition-colors group-hover:text-slate-300">{int.name}</span>
                                 </motion.div>
                             ))}
                         </div>
@@ -752,12 +742,8 @@ const steps = [
 function HowItWorks() {
     const { t } = useTranslation();
     return (
-        <section id="how-it-works" className="py-14 sm:py-20 lg:py-32 relative">
-            <div className="absolute inset-0 pointer-events-none">
-                <div className="absolute top-1/2 left-0 w-[250px] sm:w-[400px] h-[250px] sm:h-[400px] bg-purple-500/8 rounded-full blur-[80px] sm:blur-[120px]" />
-            </div>
-
-            <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <section id="how-it-works" className="relative bg-[#0f172a] py-14 sm:py-20 lg:py-32">
+            <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                 {/* Header */}
                 <motion.div
                     initial="hidden"
@@ -767,7 +753,7 @@ function HowItWorks() {
                     custom={0}
                     className="text-center max-w-2xl mx-auto mb-10 sm:mb-16"
                 >
-                    <p className="text-xs sm:text-sm font-semibold text-indigo-400 uppercase tracking-wider mb-2 sm:mb-3">{t('landing.howItWorks.badge')}</p>
+                    <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-slate-400 sm:mb-3 sm:text-sm">{t('landing.howItWorks.badge')}</p>
                     <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-3 sm:mb-4">
                         {t('landing.howItWorks.title')}
                     </h2>
@@ -792,8 +778,8 @@ function HowItWorks() {
                             className="text-center flex flex-col items-center"
                         >
                             <div className="inline-flex items-center justify-center mb-4 sm:mb-6">
-                                <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-xl sm:rounded-2xl bg-gradient-to-br from-indigo-500/20 to-purple-500/20 border border-indigo-500/20 flex items-center justify-center">
-                                    <step.icon className="h-6 w-6 sm:h-8 sm:w-8 text-indigo-400" />
+                                <div className="flex h-16 w-16 items-center justify-center rounded-xl border border-white/10 bg-white/[0.04] sm:h-20 sm:w-20 sm:rounded-2xl">
+                                    <step.icon className="h-6 w-6 text-slate-300 sm:h-8 sm:w-8" strokeWidth={1.75} />
                                 </div>
                             </div>
                             <h3 className="text-lg sm:text-xl font-semibold text-white mb-1.5 sm:mb-2">{t(`landing.howItWorks.step${i + 1}Title`)}</h3>
@@ -847,7 +833,7 @@ function Testimonials() {
                     custom={0}
                     className="mx-auto mb-12 max-w-2xl text-center sm:mb-16"
                 >
-                    <p className="text-label mb-2 text-primary sm:mb-3">{t('landing.testimonials.badge')}</p>
+                    <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-slate-400 sm:mb-3 sm:text-sm">{t('landing.testimonials.badge')}</p>
                     <h2 className="text-display text-white">
                         {t('landing.testimonials.title')}
                     </h2>
@@ -926,7 +912,7 @@ function FAQ() {
                     custom={0}
                     className="text-center mb-10 sm:mb-16"
                 >
-                    <p className="text-xs sm:text-sm font-semibold text-indigo-400 uppercase tracking-wider mb-2 sm:mb-3">{t('landing.faq.badge')}</p>
+                    <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-slate-400 sm:mb-3 sm:text-sm">{t('landing.faq.badge')}</p>
                     <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-3 sm:mb-4">
                         {t('landing.faq.title')}
                     </h2>
@@ -991,13 +977,8 @@ function CTASection() {
                     viewport={{ once: true, margin: '-80px' }}
                     variants={fadeUp}
                     custom={0}
-                    className="relative rounded-2xl sm:rounded-3xl border border-indigo-500/20 bg-gradient-to-br from-indigo-500/10 to-purple-500/10 p-6 sm:p-10 lg:p-16 text-center overflow-hidden"
+                    className="relative overflow-hidden rounded-2xl border border-white/10 bg-white/[0.03] p-6 text-center sm:rounded-3xl sm:p-10 lg:p-16"
                 >
-                    <div className="absolute inset-0 pointer-events-none">
-                        <div className="absolute top-0 left-1/3 w-[200px] sm:w-[300px] h-[200px] sm:h-[300px] bg-indigo-500/15 rounded-full blur-[80px] sm:blur-[100px]" />
-                        <div className="absolute bottom-0 right-1/3 w-[200px] sm:w-[300px] h-[200px] sm:h-[300px] bg-purple-500/15 rounded-full blur-[80px] sm:blur-[100px]" />
-                    </div>
-
                     <div className="relative z-10">
                         <h2 className="text-2xl sm:text-3xl lg:text-5xl font-bold text-white mb-3 sm:mb-4 leading-tight">
                             {t('landing.cta.title')}
@@ -1007,7 +988,7 @@ function CTASection() {
                         </p>
                         <Link
                             to="/login"
-                            className="inline-flex items-center justify-center gap-2 bg-primary text-white font-semibold px-6 sm:px-8 py-3.5 sm:py-4 rounded-xl text-sm sm:text-base hover:shadow-xl hover:shadow-indigo-500/25 transition-all group w-full sm:w-auto"
+                            className="group inline-flex w-full items-center justify-center gap-2 rounded-xl border border-white/20 bg-white/10 px-6 py-3.5 text-sm font-semibold text-white transition-all hover:border-white/30 hover:bg-white/15 sm:w-auto sm:px-8 sm:py-4 sm:text-base"
                         >
                             {t('landing.cta.button')}
                             <ArrowRight className="h-4 w-4 sm:h-5 sm:w-5 group-hover:translate-x-1 transition-transform" />
@@ -1058,16 +1039,16 @@ function Footer() {
                         <h4 className="text-sm font-semibold text-white mb-3 sm:mb-4">{t('landing.footer.whyTriadak')}</h4>
                         <ul className="grid grid-cols-2 sm:grid-cols-1 gap-2 sm:space-y-2.5 sm:gap-0">
                             <li className="flex items-center gap-2 text-sm text-slate-500">
-                                <Clock className="h-4 w-4 text-indigo-400 flex-shrink-0" /> {t('landing.footer.setup2min')}
+                                <Clock className="h-4 w-4 flex-shrink-0 text-slate-400" /> {t('landing.footer.setup2min')}
                             </li>
                             <li className="flex items-center gap-2 text-sm text-slate-500">
-                                <Shield className="h-4 w-4 text-indigo-400 flex-shrink-0" /> {t('landing.footer.security')}
+                                <Shield className="h-4 w-4 flex-shrink-0 text-slate-400" /> {t('landing.footer.security')}
                             </li>
                             <li className="flex items-center gap-2 text-sm text-slate-500">
-                                <Smartphone className="h-4 w-4 text-indigo-400 flex-shrink-0" /> {t('landing.footer.mobileFriendly')}
+                                <Smartphone className="h-4 w-4 flex-shrink-0 text-slate-400" /> {t('landing.footer.mobileFriendly')}
                             </li>
                             <li className="flex items-center gap-2 text-sm text-slate-500">
-                                <Globe className="h-4 w-4 text-indigo-400 flex-shrink-0" /> {t('landing.footer.worldwide')}
+                                <Globe className="h-4 w-4 flex-shrink-0 text-slate-400" /> {t('landing.footer.worldwide')}
                             </li>
                         </ul>
                     </div>
@@ -1083,7 +1064,7 @@ function Footer() {
                     </div>
                     <p className="text-xs sm:text-sm text-slate-700">
                         Developed by{' '}
-                        <a href="https://zirox.io" target="_blank" rel="noopener noreferrer" className="text-indigo-500/60 hover:text-indigo-400 transition-colors">
+                        <a href="https://zirox.io" target="_blank" rel="noopener noreferrer" className="text-slate-500 transition-colors hover:text-slate-300">
                             zirox.io
                         </a>
                     </p>

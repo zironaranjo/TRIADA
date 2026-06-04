@@ -54,36 +54,6 @@ export function BentoGrid({
                               ],
                     )}
                 >
-                    <div
-                        className={cn(
-                            'pointer-events-none absolute inset-0 transition-opacity duration-300',
-                            item.hasPersistentHover
-                                ? 'opacity-100'
-                                : 'opacity-0 group-hover:opacity-100',
-                        )}
-                    >
-                        <div
-                            className={cn(
-                                'absolute inset-0 bg-[length:4px_4px]',
-                                onDarkBackground
-                                    ? 'bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.06)_1px,transparent_1px)]'
-                                    : 'bg-[radial-gradient(circle_at_center,rgba(0,0,0,0.02)_1px,transparent_1px)] dark:bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.02)_1px,transparent_1px)]',
-                            )}
-                        />
-                    </div>
-
-                    <div
-                        className={cn(
-                            'pointer-events-none absolute inset-0 -z-10 rounded-xl bg-gradient-to-br from-transparent p-px transition-opacity duration-300',
-                            onDarkBackground
-                                ? 'via-white/15 to-transparent'
-                                : 'via-gray-100/50 to-transparent dark:via-white/10',
-                            item.hasPersistentHover
-                                ? 'opacity-100'
-                                : 'opacity-0 group-hover:opacity-100',
-                        )}
-                    />
-
                     <div className="relative flex flex-col space-y-3">
                         <div className="flex items-center justify-between gap-2">
                             <div
@@ -164,14 +134,7 @@ export function BentoGrid({
                                 <span />
                             )}
                             {item.cta ? (
-                                <span
-                                    className={cn(
-                                        'text-xs opacity-0 transition-opacity group-hover:opacity-100',
-                                        onDarkBackground
-                                            ? 'text-indigo-300'
-                                            : 'text-gray-500 dark:text-gray-400',
-                                    )}
-                                >
+                                <span className="text-xs text-slate-500 opacity-0 transition-opacity group-hover:opacity-100">
                                     {item.cta}
                                 </span>
                             ) : null}
