@@ -686,6 +686,26 @@
       "description": "Fini les tableurs et les chats éparpillés. Avec Triadak, gagnez en clarté opérationnelle dès le premier jour.",
       "descriptionHighlight": "clarté opérationnelle"
     },
+    "audience": {
+      "managers": {
+        "badge": "Pour gestionnaires",
+        "title": "Gérez vos biens en un seul endroit",
+        "description": "Réservations, comptabilité, propriétaires, messagerie — tout est intégré.",
+        "cta": "Commencer gratuitement"
+      },
+      "travelers": {
+        "badge": "Pour voyageurs",
+        "title": "Trouvez votre hébergement idéal",
+        "description": "Parcourez appartements et maisons rurales. Réservez en direct.",
+        "cta": "Voir les logements"
+      },
+      "stats": {
+        "0": { "value": "40+", "label": "Fonctionnalités incluses" },
+        "1": { "value": "6", "label": "Canaux connectés" },
+        "2": { "value": "4", "label": "Langues disponibles" },
+        "3": { "value": "100%", "label": "Dans le cloud — sans installation" }
+      }
+    },
     "serenity": {
       "top": ["Moins de chaos.", "Plus de contrôle."],
       "main1": ["Centralisez", "réservations,", "invités"],

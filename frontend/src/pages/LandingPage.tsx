@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import type { LucideIcon } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -30,6 +31,7 @@ import {
     UserCog,
     RefreshCw,
     Home,
+    MapPin,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -424,150 +426,104 @@ function Features() {
     );
 }
 
-// ─── Tourist / Host Dual CTA ──────────────────────────
-function DualCTA() {
+// ─── Audiencias + métricas (gestores / viajeros) ─────────
+const AUDIENCE_PANELS: {
+    key: 'managers' | 'travelers';
+    icon: LucideIcon;
+    to: string;
+}[] = [
+    { key: 'managers', icon: Building2, to: '/login' },
+    { key: 'travelers', icon: MapPin, to: '/explore' },
+];
+
+const STAT_KEYS = ['0', '1', '2', '3'] as const;
+
+function AudiencePanelCard({
+    panelKey,
+    icon: Icon,
+    to,
+    index,
+}: {
+    panelKey: 'managers' | 'travelers';
+    icon: LucideIcon;
+    to: string;
+    index: number;
+}) {
+    const { t } = useTranslation();
+    const base = `landing.audience.${panelKey}`;
+
     return (
-        <>
-            {/* Mobile: cards apiladas */}
-            <section className="md:hidden relative z-10 -mt-6 pb-6 px-4">
-                <div className="max-w-lg mx-auto flex flex-col gap-3">
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 0.4 }}
-                        className="flex flex-col gap-3 rounded-2xl border border-white/10 bg-white/[0.04] p-5 backdrop-blur-xl"
-                    >
-                        <div className="flex items-center gap-2">
-                            <div className="flex h-9 w-9 items-center justify-center rounded-lg border border-white/10 bg-white/[0.04]">
-                                <Building2 className="h-4 w-4 text-slate-300" strokeWidth={1.75} />
-                            </div>
-                            <span className="text-xs font-semibold uppercase tracking-widest text-slate-400">Para gestores</span>
-                        </div>
-                        <h3 className="text-lg font-bold text-white leading-tight">Gestiona tus propiedades en un solo lugar</h3>
-                        <Link to="/login" className="inline-flex items-center gap-2 self-start text-white/90 hover:text-white font-medium text-sm px-4 py-2 rounded-xl border border-white/25 hover:border-white/50 bg-white/8 hover:bg-white/15 transition-all group">
-                            Empezar gratis <ArrowRight className="h-3.5 w-3.5 group-hover:translate-x-1 transition-transform" />
-                        </Link>
-                    </motion.div>
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 0.4, delay: 0.1 }}
-                        className="flex flex-col gap-3 rounded-2xl border border-white/10 bg-white/[0.04] p-5 backdrop-blur-xl"
-                    >
-                        <div className="flex items-center gap-2">
-                            <div className="flex h-9 w-9 items-center justify-center rounded-lg border border-white/10 bg-white/[0.04]">
-                                <Globe className="h-4 w-4 text-slate-300" strokeWidth={1.75} />
-                            </div>
-                            <span className="text-xs font-semibold uppercase tracking-widest text-slate-400">Para viajeros</span>
-                        </div>
-                        <h3 className="text-lg font-bold text-white leading-tight">Encuentra tu alojamiento perfecto</h3>
-                        <Link to="/explore" className="inline-flex items-center gap-2 self-start text-white/90 hover:text-white font-medium text-sm px-4 py-2 rounded-xl border border-white/25 hover:border-white/50 bg-white/8 hover:bg-white/15 transition-all group">
-                            Ver alojamientos <ArrowRight className="h-3.5 w-3.5 group-hover:translate-x-1 transition-transform" />
-                        </Link>
-                    </motion.div>
-                </div>
-            </section>
-
-            {/* Desktop: split-screen full width */}
-            <section className="hidden md:flex relative z-10 w-full overflow-hidden" style={{ minHeight: '260px' }}>
-                {/* Mitad izquierda — Gestores */}
-                <motion.div
-                    initial={{ opacity: 0, x: -30 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.5 }}
-                    className="relative flex flex-1 flex-col items-center justify-center border-r border-white/5 bg-[#061020] px-12 py-16 transition-colors duration-500 hover:bg-white/[0.02] lg:px-20"
-                >
-                    <div className="relative z-10 mx-auto max-w-md text-center">
-                        <div className="mb-5 flex items-center justify-center gap-3">
-                            <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-white/[0.04]">
-                                <Building2 className="h-5 w-5 text-slate-300" strokeWidth={1.75} />
-                            </div>
-                            <span className="text-xs font-semibold uppercase tracking-widest text-slate-400">Para gestores</span>
-                        </div>
-                        <h3 className="text-2xl lg:text-3xl font-bold text-white leading-tight mb-3">
-                            Gestiona tus propiedades en un solo lugar
-                        </h3>
-                        <p className="text-sm text-slate-400 leading-relaxed mb-6">
-                            Reservas, contabilidad, propietarios, mensajería y más. Todo integrado.
-                        </p>
-                        <Link
-                            to="/login"
-                            className="inline-flex items-center gap-2 mx-auto text-white/90 hover:text-white font-medium text-sm px-6 py-3 rounded-xl border border-white/25 hover:border-white/50 backdrop-blur-sm bg-white/8 hover:bg-white/15 transition-all group/btn"
-                        >
-                            Empezar gratis
-                            <ArrowRight className="h-4 w-4 group-hover/btn:translate-x-1 transition-transform" />
-                        </Link>
-                    </div>
-                </motion.div>
-
-                {/* Divisor central */}
-                <div className="w-px bg-gradient-to-b from-transparent via-white/10 to-transparent flex-shrink-0" />
-
-                {/* Mitad derecha — Viajeros */}
-                <motion.div
-                    initial={{ opacity: 0, x: 30 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.5, delay: 0.1 }}
-                    className="relative flex flex-1 flex-col items-center justify-center bg-[#061020] px-12 py-16 transition-colors duration-500 hover:bg-white/[0.02] lg:px-20"
-                >
-                    <div className="relative z-10 mx-auto max-w-md text-center">
-                        <div className="mb-5 flex items-center justify-center gap-3">
-                            <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-white/[0.04]">
-                                <Globe className="h-5 w-5 text-slate-300" strokeWidth={1.75} />
-                            </div>
-                            <span className="text-xs font-semibold uppercase tracking-widest text-slate-400">Para viajeros</span>
-                        </div>
-                        <h3 className="text-2xl lg:text-3xl font-bold text-white leading-tight mb-3">
-                            Encuentra tu alojamiento perfecto
-                        </h3>
-                        <p className="text-sm text-slate-400 leading-relaxed mb-6">
-                            Explora apartamentos y casas rurales disponibles. Reserva directo sin intermediarios.
-                        </p>
-                        <Link
-                            to="/explore"
-                            className="inline-flex items-center gap-2 mx-auto text-white/90 hover:text-white font-medium text-sm px-6 py-3 rounded-xl border border-white/25 hover:border-white/50 backdrop-blur-sm bg-white/8 hover:bg-white/15 transition-all group/btn"
-                        >
-                            Ver alojamientos
-                            <ArrowRight className="h-4 w-4 group-hover/btn:translate-x-1 transition-transform" />
-                        </Link>
-                    </div>
-                </motion.div>
-            </section>
-        </>
+        <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-40px' }}
+            transition={{ duration: 0.45, delay: index * 0.08 }}
+            className="flex flex-col p-6 sm:p-8 lg:p-10 lg:text-center"
+        >
+            <div className="mb-5 flex h-11 w-11 items-center justify-center rounded-xl border border-white/10 bg-white/[0.04] lg:mx-auto">
+                <Icon className="h-5 w-5 text-slate-300" strokeWidth={1.75} />
+            </div>
+            <p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.2em] text-slate-500">
+                {t(`${base}.badge`)}
+            </p>
+            <h3 className="mb-3 text-xl font-semibold leading-snug tracking-tight text-white sm:text-2xl">
+                {t(`${base}.title`)}
+            </h3>
+            <p className="mb-6 max-w-sm text-sm leading-relaxed text-slate-400 lg:mx-auto">
+                {t(`${base}.description`)}
+            </p>
+            <Link
+                to={to}
+                className="group inline-flex w-fit items-center gap-2 rounded-lg border border-white/15 bg-white/[0.06] px-5 py-2.5 text-sm font-medium text-white transition-colors hover:border-white/25 hover:bg-white/[0.1] lg:mx-auto"
+            >
+                {t(`${base}.cta`)}
+                <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" strokeWidth={1.75} />
+            </Link>
+        </motion.div>
     );
 }
 
-// ─── Stats Bar ────────────────────────────────────────
-function StatsBar() {
-    const stats = [
-        { value: '40+', label: 'Funcionalidades incluidas' },
-        { value: '6', label: 'Canales conectados' },
-        { value: '4', label: 'Idiomas disponibles' },
-        { value: '100%', label: 'En la nube — sin instalar nada' },
-    ];
+function AudienceSection() {
+    const { t } = useTranslation();
 
     return (
-        <section className="py-12 sm:py-16 border-y border-white/[0.06] bg-white/[0.02]">
-            <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-10 text-center">
-                    {stats.map((s, i) => (
-                        <motion.div
-                            key={i}
-                            initial={{ opacity: 0, y: 16 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true }}
-                            transition={{ delay: i * 0.1, duration: 0.45 }}
-                        >
-                            <p className="text-4xl font-semibold tracking-tight text-white sm:text-5xl">
-                                {s.value}
-                            </p>
-                            <p className="mt-2 text-xs sm:text-sm text-slate-500 leading-snug">{s.label}</p>
-                        </motion.div>
-                    ))}
+        <section id="audience" className="relative border-t border-white/[0.06] bg-lp">
+            <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6 sm:py-14 lg:px-8">
+                <div className="overflow-hidden rounded-2xl border border-white/10 bg-white/[0.02]">
+                    <div className="grid md:grid-cols-2 md:divide-x md:divide-white/10">
+                        {AUDIENCE_PANELS.map((panel, i) => (
+                            <AudiencePanelCard
+                                key={panel.key}
+                                panelKey={panel.key}
+                                icon={panel.icon}
+                                to={panel.to}
+                                index={i}
+                            />
+                        ))}
+                    </div>
+
+                    <div className="grid grid-cols-2 border-t border-white/10 bg-white/[0.015] lg:grid-cols-4 lg:divide-x lg:divide-white/10">
+                        {STAT_KEYS.map((key, i) => (
+                            <motion.div
+                                key={key}
+                                initial={{ opacity: 0, y: 12 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                viewport={{ once: true }}
+                                transition={{ delay: 0.15 + i * 0.06, duration: 0.4 }}
+                                className={cn(
+                                    'px-4 py-8 text-center sm:px-6',
+                                    i < 2 && 'border-b border-white/10 lg:border-b-0',
+                                )}
+                            >
+                                <p className="text-3xl font-semibold tabular-nums tracking-tight text-white sm:text-4xl">
+                                    {t(`landing.audience.stats.${key}.value`)}
+                                </p>
+                                <p className="mx-auto mt-2 max-w-[12rem] text-[11px] font-medium uppercase leading-snug tracking-wider text-slate-500 sm:text-xs">
+                                    {t(`landing.audience.stats.${key}.label`)}
+                                </p>
+                            </motion.div>
+                        ))}
+                    </div>
                 </div>
             </div>
         </section>
@@ -1008,8 +964,7 @@ export default function LandingPage() {
             <Navbar />
             <Hero />
             <HookIlluminatedSection />
-            <DualCTA />
-            <StatsBar />
+            <AudienceSection />
             <Features />
             <ReplaceStack />
             <HowItWorks />

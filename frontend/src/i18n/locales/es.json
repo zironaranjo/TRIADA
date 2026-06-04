@@ -686,6 +686,26 @@
       "description": "Deja las hojas de cálculo y los chats dispersos. Con Triadak ganas claridad operativa desde el primer día.",
       "descriptionHighlight": "claridad operativa"
     },
+    "audience": {
+      "managers": {
+        "badge": "Para gestores",
+        "title": "Gestiona tus propiedades en un solo lugar",
+        "description": "Reservas, contabilidad, propietarios, mensajería y más. Todo integrado.",
+        "cta": "Empezar gratis"
+      },
+      "travelers": {
+        "badge": "Para viajeros",
+        "title": "Encuentra tu alojamiento perfecto",
+        "description": "Explora apartamentos y casas rurales. Reserva directo, sin intermediarios.",
+        "cta": "Ver alojamientos"
+      },
+      "stats": {
+        "0": { "value": "40+", "label": "Funcionalidades incluidas" },
+        "1": { "value": "6", "label": "Canales conectados" },
+        "2": { "value": "4", "label": "Idiomas disponibles" },
+        "3": { "value": "100%", "label": "En la nube — sin instalar nada" }
+      }
+    },
     "serenity": {
       "top": ["Menos caos.", "Más control."],
       "main1": ["Centraliza", "reservas,", "huéspedes"],

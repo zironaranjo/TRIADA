@@ -676,6 +676,26 @@
       "description": "Schluss mit Tabellen und verstreuten Chats. Mit Triadak gewinnen Sie vom ersten Tag an operative Klarheit.",
       "descriptionHighlight": "operative Klarheit"
     },
+    "audience": {
+      "managers": {
+        "badge": "Für Verwalter",
+        "title": "Verwalten Sie Objekte an einem Ort",
+        "description": "Buchungen, Buchhaltung, Eigentümer, Messaging — alles integriert.",
+        "cta": "Kostenlos starten"
+      },
+      "travelers": {
+        "badge": "Für Reisende",
+        "title": "Finden Sie die perfekte Unterkunft",
+        "description": "Entdecken Sie Apartments und Landhäuser. Direkt buchen.",
+        "cta": "Unterkünfte ansehen"
+      },
+      "stats": {
+        "0": { "value": "40+", "label": "Funktionen inklusive" },
+        "1": { "value": "6", "label": "Verbundene Kanäle" },
+        "2": { "value": "4", "label": "Verfügbare Sprachen" },
+        "3": { "value": "100%", "label": "In der Cloud — keine Installation" }
+      }
+    },
     "serenity": {
       "top": ["Weniger Chaos.", "Mehr Kontrolle."],
       "main1": ["Buchungen,", "Gäste", "zentral"],

@@ -686,6 +686,26 @@
       "description": "Leave spreadsheets and scattered chats behind. With Triadak you get operational clarity from day one.",
       "descriptionHighlight": "operational clarity"
     },
+    "audience": {
+      "managers": {
+        "badge": "For managers",
+        "title": "Manage your properties in one place",
+        "description": "Bookings, accounting, owners, messaging and more — all integrated.",
+        "cta": "Start for free"
+      },
+      "travelers": {
+        "badge": "For travelers",
+        "title": "Find your perfect stay",
+        "description": "Browse apartments and rural homes. Book direct, no middlemen.",
+        "cta": "Browse stays"
+      },
+      "stats": {
+        "0": { "value": "40+", "label": "Features included" },
+        "1": { "value": "6", "label": "Connected channels" },
+        "2": { "value": "4", "label": "Languages available" },
+        "3": { "value": "100%", "label": "Cloud-based — nothing to install" }
+      }
+    },
     "serenity": {
       "top": ["Less chaos.", "More control."],
       "main1": ["Centralize", "bookings,", "guests"],
