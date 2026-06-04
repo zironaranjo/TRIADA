@@ -18,7 +18,7 @@ html {
 
 @layer base {
   :root {
-    --background: 222.2 47.4% 7%;
+    --background: 221 52% 9%;
     --foreground: 210 20% 98%;
 
     --card: 217.2 32.6% 12%;
@@ -48,8 +48,8 @@ html {
 
     --radius: 0.625rem;
 
-    --surface-main: 222.2 47.4% 7%;
-    --surface-sidebar: 222.2 47.4% 5.5%;
+    --surface-main: 221 52% 9%;
+    --surface-sidebar: 221 48% 6%;
   }
 }
 
@@ -144,7 +144,7 @@ html {
   .shadow-bgt {
     background: radial-gradient(
       ellipse 90% 55% at 50% 0%,
-      rgba(148, 163, 184, 0.22),
+      rgba(96, 130, 200, 0.2),
       transparent 72%
     );
   }
@@ -152,8 +152,20 @@ html {
   .shadow-bgb {
     background: radial-gradient(
       ellipse 90% 55% at 50% 100%,
-      rgba(100, 116, 139, 0.18),
+      rgba(70, 100, 180, 0.16),
       transparent 72%
     );
+  }
+
+  .bg-lp {
+    background-color: #0c1838;
+  }
+
+  .bg-lp-deep {
+    background-color: #081428;
+  }
+
+  .bg-lp-darker {
+    background-color: #061020;
   }
 }

@@ -80,7 +80,7 @@ export function DigitalSerenity({
         ref={sectionRef}
         id="engagement"
         className={cn(
-          'relative min-h-[70vh] overflow-hidden border-b border-white/5 bg-[#0f172a] text-white',
+          'relative min-h-[70vh] overflow-hidden border-b border-white/5 bg-[#0c1838] text-white',
           className,
         )}
         aria-label="Triadak value proposition"
@@ -101,7 +101,7 @@ export function DigitalSerenity({
               <path
                 d="M 56 0 L 0 0 0 56"
                 fill="none"
-                stroke="rgba(148, 163, 184, 0.14)"
+                stroke="rgba(100, 140, 200, 0.16)"
                 strokeWidth="0.5"
               />
             </pattern>

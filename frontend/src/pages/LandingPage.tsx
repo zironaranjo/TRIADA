@@ -77,7 +77,7 @@ function Navbar() {
     ];
 
     return (
-        <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? 'bg-[#0f172a]/95 backdrop-blur-xl shadow-lg shadow-black/10' : 'bg-[#0f172a]/70 backdrop-blur-md'} border-b border-white/5`}>
+        <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? 'bg-[#0c1838]/95 backdrop-blur-xl shadow-lg shadow-black/10' : 'bg-[#0c1838]/70 backdrop-blur-md'} border-b border-white/5`}>
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 {/* Mobile navbar */}
                 <div className="flex md:hidden items-center justify-between">
@@ -158,7 +158,7 @@ function Navbar() {
                         animate={{ opacity: 1, height: 'auto' }}
                         exit={{ opacity: 0, height: 0 }}
                         transition={{ duration: 0.2 }}
-                        className="md:hidden bg-[#0f172a]/98 backdrop-blur-xl border-t border-white/5 overflow-hidden"
+                        className="md:hidden bg-[#0c1838]/98 backdrop-blur-xl border-t border-white/5 overflow-hidden"
                     >
                         <div className="px-4 py-3 space-y-1">
                             {links.map((l) => (
@@ -227,7 +227,7 @@ function Hero() {
                     className="w-full h-full object-cover object-center"
                 />
                 {/* Mobile overlay — ligero para ver bien la imagen */}
-                <div className="absolute inset-0 bg-gradient-to-b from-[#0f172a]/40 via-[#0f172a]/20 to-[#0f172a]/85 sm:from-[#0f172a]/50 sm:via-[#0f172a]/30 sm:to-[#0f172a]/90" />
+                <div className="absolute inset-0 bg-gradient-to-b from-[#0c1838]/40 via-[#0c1838]/20 to-[#0c1838]/85 sm:from-[#0c1838]/50 sm:via-[#0c1838]/30 sm:to-[#0c1838]/90" />
             </div>
 
             {/* Content */}
@@ -418,7 +418,7 @@ function Features() {
     });
 
     return (
-        <section id="features" className="relative border-t border-white/5 bg-[#0f172a] py-14 sm:py-20 lg:py-32">
+        <section id="features" className="relative border-t border-white/5 bg-[#0c1838] py-14 sm:py-20 lg:py-32">
             <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                 <motion.div
                     initial="hidden"
@@ -506,7 +506,7 @@ function DualCTA() {
                     whileInView={{ opacity: 1, x: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.5 }}
-                    className="relative flex flex-1 flex-col items-center justify-center border-r border-white/5 bg-[#0f172a] px-12 py-16 transition-colors duration-500 hover:bg-white/[0.02] lg:px-20"
+                    className="relative flex flex-1 flex-col items-center justify-center border-r border-white/5 bg-[#0c1838] px-12 py-16 transition-colors duration-500 hover:bg-white/[0.02] lg:px-20"
                 >
                     <div className="relative z-10 mx-auto max-w-md text-center">
                         <div className="mb-5 flex items-center justify-center gap-3">
@@ -540,7 +540,7 @@ function DualCTA() {
                     whileInView={{ opacity: 1, x: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.5, delay: 0.1 }}
-                    className="relative flex flex-1 flex-col items-center justify-center bg-[#0f172a] px-12 py-16 transition-colors duration-500 hover:bg-white/[0.02] lg:px-20"
+                    className="relative flex flex-1 flex-col items-center justify-center bg-[#0c1838] px-12 py-16 transition-colors duration-500 hover:bg-white/[0.02] lg:px-20"
                 >
                     <div className="relative z-10 mx-auto max-w-md text-center">
                         <div className="mb-5 flex items-center justify-center gap-3">
@@ -627,7 +627,7 @@ const integrations = [
 
 function ReplaceStack() {
     return (
-        <section className="relative overflow-hidden bg-[#0f172a] py-16 sm:py-24 lg:py-32">
+        <section className="relative overflow-hidden bg-[#0c1838] py-16 sm:py-24 lg:py-32">
             <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                 <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-20">
 
@@ -748,7 +748,7 @@ const steps = [
 function HowItWorks() {
     const { t } = useTranslation();
     return (
-        <section id="how-it-works" className="relative bg-[#0f172a] py-14 sm:py-20 lg:py-32">
+        <section id="how-it-works" className="relative bg-[#0c1838] py-14 sm:py-20 lg:py-32">
             <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                 {/* Header */}
                 <motion.div
@@ -955,7 +955,7 @@ function CTASection() {
 function Footer() {
     const { t } = useTranslation();
     return (
-        <footer className="border-t border-white/5 bg-[#0b1120]">
+        <footer className="border-t border-white/5 bg-[#061020]">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-12">
                 <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-8">
                     {/* Brand */}
@@ -1028,7 +1028,7 @@ function Footer() {
 // ─── Main Landing Page ────────────────────────────────
 export default function LandingPage() {
     return (
-        <div className="min-h-screen bg-[#0f172a] text-slate-100 overflow-x-hidden scroll-smooth">
+        <div className="min-h-screen bg-[#0c1838] text-slate-100 overflow-x-hidden scroll-smooth">
             <Navbar />
             <Hero />
             <HookIlluminatedSection />

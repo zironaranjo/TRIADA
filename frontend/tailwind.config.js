@@ -25,6 +25,11 @@ export default {
                 snug: '-0.011em',
             },
             colors: {
+                lp: {
+                    DEFAULT: '#0c1838',
+                    deep: '#081428',
+                    darker: '#061020',
+                },
                 border: "hsl(var(--border))",
                 input: "hsl(var(--input))",
                 ring: "hsl(var(--ring))",

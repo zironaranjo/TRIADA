@@ -26,7 +26,7 @@ export function IlluminatedHero({
     return (
         <section
             className={cn(
-                'relative flex w-full min-h-[min(100vh,52rem)] flex-wrap items-center justify-center overflow-hidden bg-[#0a0e1a] text-white',
+                'relative flex w-full min-h-[min(100vh,52rem)] flex-wrap items-center justify-center overflow-hidden bg-[#081428] text-white',
                 '[--factor:min(1000px,100vh)] [--size:min(var(--factor),100vw)] text-[calc(var(--size)*0.022)]',
                 className,
             )}
