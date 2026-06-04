@@ -8,6 +8,7 @@ import {
     type SerenityWord,
 } from '@/components/ui/digital-serenity-animated-landing-page';
 import { BentoGrid, type BentoItem } from '@/components/ui/bento-grid';
+import { FAQ as FAQTabs, type FAQData } from '@/components/ui/faq-tabs';
 import {
     Building2,
     CalendarDays,
@@ -18,7 +19,6 @@ import {
     Zap,
     ArrowRight,
     Check,
-    ChevronDown,
     Menu,
     X,
     Star,
@@ -869,99 +869,44 @@ function Testimonials() {
     );
 }
 
-// ─── FAQ ──────────────────────────────────────────────
-const faqs = [
-    {
-        q: 'Is Triadak really free to start?',
-        a: 'Yes! The Starter plan is completely free — forever. It includes 1 property, 10 bookings per month, and basic CRM. No credit card required.',
-    },
-    {
-        q: 'Can I upgrade or downgrade at any time?',
-        a: 'Absolutely. You can change your plan anytime from the Billing page. Upgrades are instant, and downgrades take effect at the end of your billing cycle.',
-    },
-    {
-        q: 'Is my data secure?',
-        a: 'Yes. We use Supabase with row-level security, meaning each user\'s data is completely isolated. All connections are encrypted with TLS.',
-    },
-    {
-        q: 'Do I need to install anything?',
-        a: 'No. Triadak is a web application that works on any browser — desktop, tablet, or mobile. There\'s nothing to install.',
-    },
-    {
-        q: 'Can I import data from spreadsheets?',
-        a: 'We\'re working on CSV import functionality. For now, you can quickly add properties and bookings through our intuitive interface.',
-    },
-    {
-        q: 'What payment methods do you accept?',
-        a: 'We accept all major credit and debit cards through Stripe. Enterprise plans can also pay via bank transfer.',
-    },
-];
+// ─── FAQ (tabs, 21st.dev) ───────────────────────────────
+const FAQ_CATEGORY_KEYS = ['general', 'plans', 'security', 'product'] as const;
+const FAQ_ITEMS_BY_CATEGORY: Record<(typeof FAQ_CATEGORY_KEYS)[number], string[]> = {
+    general: ['0', '3'],
+    plans: ['1', '5'],
+    security: ['2'],
+    product: ['4'],
+};
 
-function FAQ() {
+function LandingFAQ() {
     const { t } = useTranslation();
-    const [openIdx, setOpenIdx] = useState<number | null>(null);
+
+    const categories = FAQ_CATEGORY_KEYS.reduce(
+        (acc, key) => {
+            acc[key] = t(`landing.faq.categories.${key}`);
+            return acc;
+        },
+        {} as Record<string, string>,
+    );
+
+    const faqData = FAQ_CATEGORY_KEYS.reduce((acc, key) => {
+        acc[key] = FAQ_ITEMS_BY_CATEGORY[key].map((id) => ({
+            question: t(`landing.faq.items.${id}.question`),
+            answer: t(`landing.faq.items.${id}.answer`),
+        }));
+        return acc;
+    }, {} as FAQData);
 
     return (
-        <section id="faq" className="py-14 sm:py-20 lg:py-32 relative">
-            <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-                <motion.div
-                    initial="hidden"
-                    whileInView="visible"
-                    viewport={{ once: true, margin: '-80px' }}
-                    variants={fadeUp}
-                    custom={0}
-                    className="text-center mb-10 sm:mb-16"
-                >
-                    <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-slate-400 sm:mb-3 sm:text-sm">{t('landing.faq.badge')}</p>
-                    <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-3 sm:mb-4">
-                        {t('landing.faq.title')}
-                    </h2>
-                    <p className="text-slate-400 text-sm sm:text-lg px-2">{t('landing.faq.subtitle')}</p>
-                </motion.div>
-
-                <motion.div
-                    initial="hidden"
-                    whileInView="visible"
-                    viewport={{ once: true, margin: '-50px' }}
-                    variants={stagger}
-                    className="space-y-2 sm:space-y-3"
-                >
-                    {faqs.map((_, i) => (
-                        <motion.div
-                            key={i}
-                            variants={fadeUp}
-                            custom={i}
-                            className="border border-white/5 rounded-lg sm:rounded-xl overflow-hidden bg-[#1e293b]/50"
-                        >
-                            <button
-                                onClick={() => setOpenIdx(openIdx === i ? null : i)}
-                                className="flex items-center justify-between w-full px-4 sm:px-6 py-3.5 sm:py-4 text-left gap-3"
-                            >
-                                <span className="text-sm font-medium text-white">{t(`landing.faq.items.${i}.question`)}</span>
-                                <ChevronDown
-                                    className={`h-4 w-4 sm:h-5 sm:w-5 text-slate-400 flex-shrink-0 transition-transform duration-200 ${openIdx === i ? 'rotate-180' : ''}`}
-                                />
-                            </button>
-                            <AnimatePresence>
-                                {openIdx === i && (
-                                    <motion.div
-                                        initial={{ height: 0, opacity: 0 }}
-                                        animate={{ height: 'auto', opacity: 1 }}
-                                        exit={{ height: 0, opacity: 0 }}
-                                        transition={{ duration: 0.2 }}
-                                        className="overflow-hidden"
-                                    >
-                                        <div className="px-4 sm:px-6 pb-3.5 sm:pb-4">
-                                            <p className="text-sm text-slate-400 leading-relaxed">{t(`landing.faq.items.${i}.answer`)}</p>
-                                        </div>
-                                    </motion.div>
-                                )}
-                            </AnimatePresence>
-                        </motion.div>
-                    ))}
-                </motion.div>
-            </div>
-        </section>
+        <FAQTabs
+            id="faq"
+            title={t('landing.faq.title')}
+            subtitle={t('landing.faq.subtitle')}
+            categories={categories}
+            faqData={faqData}
+            onDarkBackground
+            className="py-14 sm:py-20 lg:py-32"
+        />
     );
 }
 
@@ -1087,7 +1032,7 @@ export default function LandingPage() {
             <ReplaceStack />
             <HowItWorks />
 <Testimonials />
-            <FAQ />
+            <LandingFAQ />
             <CTASection />
             <Footer />
         </div>

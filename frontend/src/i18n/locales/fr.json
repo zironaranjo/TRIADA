@@ -756,6 +756,12 @@
       "badge": "FAQ",
       "title": "Questions fréquentes",
       "subtitle": "Tout ce que vous devez savoir sur Triadak.",
+      "categories": {
+        "general": "Général",
+        "plans": "Plans et facturation",
+        "security": "Sécurité",
+        "product": "Produit"
+      },
       "items": {
         "0": { "question": "Triadak est-il vraiment gratuit pour commencer ?", "answer": "Oui ! Le plan Starter est entièrement gratuit — pour toujours. Il inclut 1 propriété, 10 réservations par mois et un CRM de base. Pas de carte bancaire requise." },
         "1": { "question": "Puis-je changer de plan à tout moment ?", "answer": "Absolument. Vous pouvez modifier votre plan à tout moment depuis la page Facturation. Les mises à niveau sont instantanées, les rétrogradations prennent effet à la fin de votre cycle de facturation." },

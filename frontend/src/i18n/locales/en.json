@@ -756,6 +756,12 @@
       "badge": "FAQ",
       "title": "Frequently asked questions",
       "subtitle": "Everything you need to know about Triadak.",
+      "categories": {
+        "general": "General",
+        "plans": "Plans & billing",
+        "security": "Security",
+        "product": "Product"
+      },
       "items": {
         "0": { "question": "Is Triadak really free to start?", "answer": "Yes! The Starter plan is completely free — forever. It includes 1 property, 10 bookings per month, and basic CRM. No credit card required." },
         "1": { "question": "Can I upgrade or downgrade at any time?", "answer": "Absolutely. You can change your plan anytime from the Billing page. Upgrades are instant, and downgrades take effect at the end of your billing cycle." },

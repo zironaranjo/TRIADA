@@ -746,6 +746,12 @@
       "badge": "FAQ",
       "title": "Häufig gestellte Fragen",
       "subtitle": "Alles, was Sie über Triadak wissen müssen.",
+      "categories": {
+        "general": "Allgemein",
+        "plans": "Pläne & Abrechnung",
+        "security": "Sicherheit",
+        "product": "Produkt"
+      },
       "items": {
         "0": { "question": "Ist Triadak wirklich kostenlos zum Start?", "answer": "Ja! Der Starter-Plan ist komplett kostenlos — für immer. Er beinhaltet 1 Immobilie, 10 Buchungen pro Monat und Basis-CRM. Keine Kreditkarte erforderlich." },
         "1": { "question": "Kann ich jederzeit upgraden oder downgraden?", "answer": "Absolut. Sie können Ihren Plan jederzeit auf der Abrechnungsseite ändern. Upgrades sind sofort wirksam, Downgrades am Ende Ihres Abrechnungszyklus." },
