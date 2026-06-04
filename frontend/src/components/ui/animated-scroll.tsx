@@ -195,24 +195,66 @@ export function SplitScrollAdventure({
             })}
 
             {showIndicators && numOfPages > 1 && (
-                <div
-                    className={cn(
-                        'pointer-events-none absolute left-1/2 z-20 flex -translate-x-1/2 gap-2',
-                        isVertical ? 'bottom-4' : 'bottom-6',
-                    )}
-                >
-                    {pages.map((_, i) => (
-                        <span
-                            key={i}
-                            className={cn(
-                                'h-1.5 rounded-full transition-all duration-300',
-                                currentPage === i + 1
-                                    ? 'w-8 bg-white/80'
-                                    : 'w-1.5 bg-white/25',
-                            )}
-                        />
-                    ))}
-                </div>
+                <>
+                    {/* Flechas de navegación */}
+                    <button
+                        onClick={navigateUp}
+                        disabled={currentPage === 1}
+                        aria-label="Anterior"
+                        className={cn(
+                            'absolute z-20 flex items-center justify-center rounded-full border border-white/20 bg-black/30 text-white backdrop-blur-sm transition-all hover:border-white/40 hover:bg-black/50 disabled:pointer-events-none disabled:opacity-0',
+                            isVertical
+                                ? 'left-1/2 top-4 -translate-x-1/2 h-8 w-8'
+                                : 'left-4 top-1/2 -translate-y-1/2 h-9 w-9',
+                        )}
+                    >
+                        {isVertical ? (
+                            <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M5 15l7-7 7 7" /></svg>
+                        ) : (
+                            <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" /></svg>
+                        )}
+                    </button>
+
+                    <button
+                        onClick={navigateDown}
+                        disabled={currentPage === numOfPages}
+                        aria-label="Siguiente"
+                        className={cn(
+                            'absolute z-20 flex items-center justify-center rounded-full border border-white/20 bg-black/30 text-white backdrop-blur-sm transition-all hover:border-white/40 hover:bg-black/50 disabled:pointer-events-none disabled:opacity-0',
+                            isVertical
+                                ? 'bottom-4 left-1/2 -translate-x-1/2 h-8 w-8'
+                                : 'right-4 top-1/2 -translate-y-1/2 h-9 w-9',
+                        )}
+                    >
+                        {isVertical ? (
+                            <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" /></svg>
+                        ) : (
+                            <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" /></svg>
+                        )}
+                    </button>
+
+                    {/* Indicadores de punto (clicables) */}
+                    <div
+                        className={cn(
+                            'absolute left-1/2 z-20 flex -translate-x-1/2 gap-2',
+                            isVertical ? 'bottom-4' : 'bottom-6',
+                        )}
+                    >
+                        {pages.map((_, i) => (
+                            <button
+                                key={i}
+                                onClick={() => goToPage(i + 1)}
+                                aria-label={`Ir a página ${i + 1}`}
+                                className={cn(
+                                    'h-1.5 rounded-full transition-all duration-300',
+                                    currentPage === i + 1
+                                        ? 'w-8 bg-white/80'
+                                        : 'w-1.5 bg-white/25 hover:bg-white/50',
+                                )}
+                            />
+                        ))}
+                    </div>
+                </>
             )}
         </div>
     );
