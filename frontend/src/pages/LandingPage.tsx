@@ -450,33 +450,39 @@ const STAT_KEYS = ['0', '1', '2', '3'] as const;
 function AudienceStatsRow({ className }: { className?: string }) {
     const { t } = useTranslation();
 
+    const stats = STAT_KEYS.map((key) => ({
+        value: t(`landing.audience.stats.${key}.value`),
+        label: t(`landing.audience.stats.${key}.label`),
+    }));
+
+    // Duplicamos para que el loop sea continuo sin saltos
+    const items = [...stats, ...stats, ...stats];
+
     return (
-        <div
-            className={cn(
-                'grid grid-cols-2 overflow-hidden rounded-xl border border-white/10 bg-white/[0.03] backdrop-blur-sm sm:rounded-2xl lg:grid-cols-4 lg:divide-x lg:divide-white/10',
-                className,
-            )}
-        >
-            {STAT_KEYS.map((key, i) => (
-                <motion.div
-                    key={key}
-                    initial={{ opacity: 0, y: 12 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: 0.15 + i * 0.06, duration: 0.4 }}
-                    className={cn(
-                        'px-3 py-6 text-center sm:px-5 sm:py-7 lg:py-8',
-                        i < 2 && 'border-b border-white/10 lg:border-b-0',
-                    )}
-                >
-                    <p className="bg-gradient-to-br from-white to-blue-300 bg-clip-text text-3xl font-bold tabular-nums tracking-tight text-transparent sm:text-4xl">
-                        {t(`landing.audience.stats.${key}.value`)}
-                    </p>
-                    <p className="mx-auto mt-2 max-w-[11rem] text-[10px] font-medium uppercase leading-snug tracking-wider text-slate-500 sm:text-[11px]">
-                        {t(`landing.audience.stats.${key}.label`)}
-                    </p>
-                </motion.div>
-            ))}
+        <div className={cn('relative overflow-hidden border-t border-white/[0.06] py-6 sm:py-7', className)}>
+            {/* Fade lateral */}
+            <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-16 bg-gradient-to-r from-[#061020] to-transparent sm:w-24" />
+            <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-16 bg-gradient-to-l from-[#061020] to-transparent sm:w-24" />
+
+            <div
+                className="flex w-max animate-[marquee_28s_linear_infinite] items-center gap-0"
+                style={{ willChange: 'transform' }}
+            >
+                {items.map((stat, i) => (
+                    <div key={i} className="flex items-center">
+                        <div className="flex flex-col items-center px-8 sm:px-12 lg:px-16">
+                            <span className="bg-gradient-to-br from-white to-blue-300 bg-clip-text text-2xl font-bold tabular-nums tracking-tight text-transparent sm:text-3xl">
+                                {stat.value}
+                            </span>
+                            <span className="mt-1 text-[9px] font-medium uppercase tracking-[0.18em] text-slate-500 sm:text-[10px]">
+                                {stat.label}
+                            </span>
+                        </div>
+                        {/* Separador */}
+                        <span className="h-6 w-px shrink-0 bg-white/10" />
+                    </div>
+                ))}
+            </div>
         </div>
     );
 }
