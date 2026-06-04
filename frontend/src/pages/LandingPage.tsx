@@ -435,123 +435,202 @@ const AUDIENCE_PANELS: {
     key: 'managers' | 'travelers';
     icon: LucideIcon;
     to: string;
+    image: string;
 }[] = [
-    { key: 'managers', icon: Building2, to: '/login' },
-    { key: 'travelers', icon: MapPin, to: '/explore' },
+    { key: 'managers', icon: Building2, to: '/login', image: '/cabin.webp' },
+    { key: 'travelers', icon: MapPin, to: '/explore', image: '/sala.jpg' },
 ];
 
 const STAT_KEYS = ['0', '1', '2', '3'] as const;
+
+type AudienceCardLayout = 'stacked' | 'side';
 
 function AudiencePanelCard({
     panelKey,
     icon: Icon,
     to,
+    image,
     index,
+    layout = 'stacked',
 }: {
     panelKey: 'managers' | 'travelers';
     icon: LucideIcon;
     to: string;
+    image: string;
     index: number;
+    layout?: AudienceCardLayout;
 }) {
     const { t } = useTranslation();
     const base = `landing.audience.${panelKey}`;
+    const isSide = layout === 'side';
 
     return (
-        <motion.div
+        <motion.article
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-40px' }}
             transition={{ duration: 0.45, delay: index * 0.08 }}
-            className="flex flex-col p-6 sm:p-8 lg:p-10 lg:text-center"
+            className={cn(
+                'flex flex-col overflow-hidden rounded-2xl border border-white/10 bg-white/[0.04] backdrop-blur-sm',
+                isSide && 'h-full text-left shadow-lg shadow-black/20',
+            )}
         >
-            <div className="mb-5 flex h-11 w-11 items-center justify-center rounded-xl border border-white/10 bg-white/[0.04] lg:mx-auto">
-                <Icon className="h-5 w-5 text-slate-300" strokeWidth={1.75} />
-            </div>
-            <p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.2em] text-slate-500">
-                {t(`${base}.badge`)}
-            </p>
-            <h3 className="mb-3 text-xl font-semibold leading-snug tracking-tight text-white sm:text-2xl">
-                {t(`${base}.title`)}
-            </h3>
-            <p className="mb-6 max-w-sm text-sm leading-relaxed text-slate-400 lg:mx-auto">
-                {t(`${base}.description`)}
-            </p>
-            <Link
-                to={to}
-                className="group inline-flex w-fit items-center gap-2 rounded-lg border border-white/15 bg-white/[0.06] px-5 py-2.5 text-sm font-medium text-white transition-colors hover:border-white/25 hover:bg-white/[0.1] lg:mx-auto"
+            <div
+                className={cn(
+                    'relative shrink-0 overflow-hidden',
+                    isSide ? 'h-44 xl:h-52' : 'h-36 sm:h-40',
+                )}
             >
-                {t(`${base}.cta`)}
-                <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" strokeWidth={1.75} />
-            </Link>
-        </motion.div>
+                <img
+                    src={image}
+                    alt={t(`${base}.imageAlt`)}
+                    className="h-full w-full object-cover transition-transform duration-700 hover:scale-[1.03]"
+                    loading="lazy"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#061020] via-[#061020]/45 to-[#061020]/15" />
+                <div className="absolute left-4 top-4 flex h-10 w-10 items-center justify-center rounded-xl border border-white/15 bg-black/35 backdrop-blur-sm">
+                    <Icon className="h-5 w-5 text-slate-200" strokeWidth={1.75} />
+                </div>
+            </div>
+
+            <div
+                className={cn(
+                    'flex flex-1 flex-col p-6 sm:p-8',
+                    !isSide && 'md:text-center',
+                )}
+            >
+                <p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.2em] text-slate-500">
+                    {t(`${base}.badge`)}
+                </p>
+                <h3 className="mb-3 text-xl font-semibold leading-snug tracking-tight text-white sm:text-2xl">
+                    {t(`${base}.title`)}
+                </h3>
+                <p
+                    className={cn(
+                        'mb-6 text-sm leading-relaxed text-slate-400',
+                        isSide ? 'max-w-none' : 'max-w-sm md:mx-auto',
+                    )}
+                >
+                    {t(`${base}.description`)}
+                </p>
+                <Link
+                    to={to}
+                    className={cn(
+                        'group mt-auto inline-flex w-fit items-center gap-2 rounded-lg border border-white/15 bg-white/[0.06] px-5 py-2.5 text-sm font-medium text-white transition-colors hover:border-white/25 hover:bg-white/[0.1]',
+                        !isSide && 'md:mx-auto',
+                    )}
+                >
+                    {t(`${base}.cta`)}
+                    <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" strokeWidth={1.75} />
+                </Link>
+            </div>
+        </motion.article>
     );
 }
 
-function AudienceSectionFallback() {
+function AudienceStatsRow({ className }: { className?: string }) {
+    const { t } = useTranslation();
+
     return (
-        <section id="audience" className="relative border-t border-white/[0.06] bg-lp">
-            <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6 sm:py-14 lg:px-8">
-                <div className="min-h-[20rem] overflow-hidden rounded-2xl border border-white/10 bg-white/[0.02]" />
-            </div>
-        </section>
+        <div
+            className={cn(
+                'grid grid-cols-2 overflow-hidden rounded-2xl border border-white/10 bg-white/[0.03] backdrop-blur-sm lg:grid-cols-4 lg:divide-x lg:divide-white/10',
+                className,
+            )}
+        >
+            {STAT_KEYS.map((key, i) => (
+                <motion.div
+                    key={key}
+                    initial={{ opacity: 0, y: 12 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: 0.15 + i * 0.06, duration: 0.4 }}
+                    className={cn(
+                        'px-4 py-8 text-center sm:px-6',
+                        i < 2 && 'border-b border-white/10 lg:border-b-0',
+                    )}
+                >
+                    <p className="text-3xl font-semibold tabular-nums tracking-tight text-white sm:text-4xl">
+                        {t(`landing.audience.stats.${key}.value`)}
+                    </p>
+                    <p className="mx-auto mt-2 max-w-[12rem] text-[11px] font-medium uppercase leading-snug tracking-wider text-slate-500 sm:text-xs">
+                        {t(`landing.audience.stats.${key}.label`)}
+                    </p>
+                </motion.div>
+            ))}
+        </div>
+    );
+}
+
+function AudienceSectionDesktopGlobe() {
+    return (
+        <div className="relative mx-auto flex h-[min(520px,52vh)] w-full max-w-[300px] items-center justify-center xl:max-w-[340px]">
+            <DotGlobeHero
+                layout="embedded"
+                rotationSpeed={0.0035}
+                globeRadius={0.92}
+                wireframeOpacity={0.22}
+                className="h-full w-full bg-transparent"
+                globeClassName="opacity-90"
+            />
+        </div>
     );
 }
 
 function AudienceSection() {
-    const { t } = useTranslation();
-
     return (
-        <Suspense fallback={<AudienceSectionFallback />}>
-            <DotGlobeHero
-                id="audience"
-                layout="section"
-                rotationSpeed={0.003}
-                globeRadius={1.05}
-                wireframeOpacity={0.16}
-                className="relative border-t border-white/[0.06] bg-lp"
-                globeClassName="opacity-50 sm:opacity-60"
-            >
-                <div className="pointer-events-none absolute inset-0 z-[1] bg-gradient-to-b from-[#061020]/30 via-[#061020]/75 to-[#061020]" />
-                <div className="relative z-10 mx-auto max-w-6xl px-4 py-10 sm:px-6 sm:py-14 lg:px-8">
-                    <div className="overflow-hidden rounded-2xl border border-white/10 bg-white/[0.04] backdrop-blur-sm">
-                        <div className="grid md:grid-cols-2 md:divide-x md:divide-white/10">
-                            {AUDIENCE_PANELS.map((panel, i) => (
-                                <AudiencePanelCard
-                                    key={panel.key}
-                                    panelKey={panel.key}
-                                    icon={panel.icon}
-                                    to={panel.to}
-                                    index={i}
-                                />
-                            ))}
-                        </div>
+        <section id="audience" className="relative border-t border-white/[0.06] bg-lp">
+            {/* Desktop / laptop: orbe al centro, cards a los lados */}
+            <div className="relative hidden lg:block">
+                <div className="mx-auto max-w-7xl px-8 py-16 xl:px-10 xl:py-20">
+                    <div className="grid grid-cols-[minmax(0,1fr)_minmax(220px,300px)_minmax(0,1fr)] items-center gap-8 xl:gap-10">
+                        <AudiencePanelCard
+                            panelKey="managers"
+                            icon={Building2}
+                            to="/login"
+                            image="/cabin.webp"
+                            index={0}
+                            layout="side"
+                        />
 
-                        <div className="grid grid-cols-2 border-t border-white/10 bg-white/[0.02] lg:grid-cols-4 lg:divide-x lg:divide-white/10">
-                            {STAT_KEYS.map((key, i) => (
-                                <motion.div
-                                    key={key}
-                                    initial={{ opacity: 0, y: 12 }}
-                                    whileInView={{ opacity: 1, y: 0 }}
-                                    viewport={{ once: true }}
-                                    transition={{ delay: 0.15 + i * 0.06, duration: 0.4 }}
-                                    className={cn(
-                                        'px-4 py-8 text-center sm:px-6',
-                                        i < 2 && 'border-b border-white/10 lg:border-b-0',
-                                    )}
-                                >
-                                    <p className="text-3xl font-semibold tabular-nums tracking-tight text-white sm:text-4xl">
-                                        {t(`landing.audience.stats.${key}.value`)}
-                                    </p>
-                                    <p className="mx-auto mt-2 max-w-[12rem] text-[11px] font-medium uppercase leading-snug tracking-wider text-slate-500 sm:text-xs">
-                                        {t(`landing.audience.stats.${key}.label`)}
-                                    </p>
-                                </motion.div>
-                            ))}
-                        </div>
+                        <Suspense fallback={<div className="mx-auto h-64 w-64 rounded-full border border-white/10 bg-white/[0.02]" />}>
+                            <AudienceSectionDesktopGlobe />
+                        </Suspense>
+
+                        <AudiencePanelCard
+                            panelKey="travelers"
+                            icon={MapPin}
+                            to="/explore"
+                            image="/sala.jpg"
+                            index={1}
+                            layout="side"
+                        />
                     </div>
+
+                    <AudienceStatsRow className="mt-12" />
                 </div>
-            </DotGlobeHero>
-        </Suspense>
+            </div>
+
+            {/* Móvil / tablet: apilado (sin orbe central) */}
+            <div className="lg:hidden">
+                <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6 sm:py-14">
+                    <div className="grid gap-5 md:grid-cols-2">
+                        {AUDIENCE_PANELS.map((panel, i) => (
+                            <AudiencePanelCard
+                                key={panel.key}
+                                panelKey={panel.key}
+                                icon={panel.icon}
+                                to={panel.to}
+                                image={panel.image}
+                                index={i}
+                                layout="stacked"
+                            />
+                        ))}
+                    </div>
+                    <AudienceStatsRow className="mt-8" />
+                </div>
+            </div>
+        </section>
     );
 }
 

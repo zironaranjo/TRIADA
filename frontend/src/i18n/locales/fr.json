@@ -691,13 +691,15 @@
         "badge": "Pour gestionnaires",
         "title": "Gérez vos biens en un seul endroit",
         "description": "Réservations, comptabilité, propriétaires, messagerie — tout est intégré.",
-        "cta": "Commencer gratuitement"
+        "cta": "Commencer gratuitement",
+        "imageAlt": "Chalet en montagne — gestion locative"
       },
       "travelers": {
         "badge": "Pour voyageurs",
         "title": "Trouvez votre hébergement idéal",
         "description": "Parcourez appartements et maisons rurales. Réservez en direct.",
-        "cta": "Voir les logements"
+        "cta": "Voir les logements",
+        "imageAlt": "Salon d'hébergement vacances pour voyageurs"
       },
       "stats": {
         "0": { "value": "40+", "label": "Fonctionnalités incluses" },

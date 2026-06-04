@@ -691,13 +691,15 @@
         "badge": "For managers",
         "title": "Manage your properties in one place",
         "description": "Bookings, accounting, owners, messaging and more — all integrated.",
-        "cta": "Start for free"
+        "cta": "Start for free",
+        "imageAlt": "Mountain chalet — vacation rental management"
       },
       "travelers": {
         "badge": "For travelers",
         "title": "Find your perfect stay",
         "description": "Browse apartments and rural homes. Book direct, no middlemen.",
-        "cta": "Browse stays"
+        "cta": "Browse stays",
+        "imageAlt": "Vacation rental living room for travelers"
       },
       "stats": {
         "0": { "value": "40+", "label": "Features included" },

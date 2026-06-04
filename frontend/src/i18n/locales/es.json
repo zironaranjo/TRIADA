@@ -691,13 +691,15 @@
         "badge": "Para gestores",
         "title": "Gestiona tus propiedades en un solo lugar",
         "description": "Reservas, contabilidad, propietarios, mensajería y más. Todo integrado.",
-        "cta": "Empezar gratis"
+        "cta": "Empezar gratis",
+        "imageAlt": "Chalet en montaña — gestión de propiedades vacacionales"
       },
       "travelers": {
         "badge": "Para viajeros",
         "title": "Encuentra tu alojamiento perfecto",
         "description": "Explora apartamentos y casas rurales. Reserva directo, sin intermediarios.",
-        "cta": "Ver alojamientos"
+        "cta": "Ver alojamientos",
+        "imageAlt": "Salón de alojamiento vacacional para viajeros"
       },
       "stats": {
         "0": { "value": "40+", "label": "Funcionalidades incluidas" },

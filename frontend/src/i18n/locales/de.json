@@ -681,13 +681,15 @@
         "badge": "Für Verwalter",
         "title": "Verwalten Sie Objekte an einem Ort",
         "description": "Buchungen, Buchhaltung, Eigentümer, Messaging — alles integriert.",
-        "cta": "Kostenlos starten"
+        "cta": "Kostenlos starten",
+        "imageAlt": "Berghütte — Verwaltung von Ferienimmobilien"
       },
       "travelers": {
         "badge": "Für Reisende",
         "title": "Finden Sie die perfekte Unterkunft",
         "description": "Entdecken Sie Apartments und Landhäuser. Direkt buchen.",
-        "cta": "Unterkünfte ansehen"
+        "cta": "Unterkünfte ansehen",
+        "imageAlt": "Wohnzimmer einer Ferienunterkunft für Reisende"
       },
       "stats": {
         "0": { "value": "40+", "label": "Funktionen inklusive" },

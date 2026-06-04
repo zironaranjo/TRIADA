@@ -40,7 +40,7 @@ function Globe({
     );
 }
 
-export type DotGlobeLayout = 'screen' | 'section';
+export type DotGlobeLayout = 'screen' | 'section' | 'embedded';
 
 export interface DotGlobeHeroProps extends React.HTMLAttributes<HTMLDivElement> {
     rotationSpeed?: number;
@@ -70,31 +70,38 @@ const DotGlobeHero = React.forwardRef<HTMLDivElement, DotGlobeHeroProps>(
         ref,
     ) => {
         const isSection = layout === 'section';
+        const isEmbedded = layout === 'embedded';
 
         return (
             <div
                 ref={ref}
                 className={cn(
                     'relative w-full overflow-hidden bg-background',
-                    isSection ? 'h-auto min-h-[28rem]' : 'h-screen',
+                    isEmbedded && 'h-full min-h-0',
+                    isSection && 'h-auto min-h-[28rem]',
+                    !isEmbedded && !isSection && 'h-screen',
                     className,
                 )}
                 {...props}
             >
-                <div
-                    className={cn(
-                        'relative z-10',
-                        isSection ? 'w-full' : 'flex h-full flex-col items-center justify-center',
-                        contentClassName,
-                    )}
-                >
-                    {children}
-                </div>
+                {children ? (
+                    <div
+                        className={cn(
+                            'relative z-10',
+                            isEmbedded && 'h-full w-full',
+                            isSection && 'w-full',
+                            !isEmbedded && !isSection && 'flex h-full flex-col items-center justify-center',
+                            contentClassName,
+                        )}
+                    >
+                        {children}
+                    </div>
+                ) : null}
 
                 <div
                     className={cn(
                         'pointer-events-none absolute inset-0 z-0',
-                        isSection && 'opacity-40',
+                        isSection && !isEmbedded && 'opacity-40',
                         globeClassName,
                     )}
                     aria-hidden
@@ -103,8 +110,8 @@ const DotGlobeHero = React.forwardRef<HTMLDivElement, DotGlobeHeroProps>(
                         <Canvas
                             dpr={[1, 1.5]}
                             camera={{
-                                position: [0, 0, isSection ? 2.8 : 3],
-                                fov: isSection ? 68 : 75,
+                                position: [0, 0, isEmbedded ? 2.6 : isSection ? 2.8 : 3],
+                                fov: isEmbedded ? 62 : isSection ? 68 : 75,
                             }}
                             gl={{ alpha: true, antialias: true }}
                             style={{ background: 'transparent' }}
