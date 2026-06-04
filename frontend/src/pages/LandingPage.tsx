@@ -352,7 +352,8 @@ function HookIlluminatedSection() {
                         layout="embedded"
                         rotationSpeed={0.002}
                         globeRadius={0.72}
-                        wireframeOpacity={0.18}
+                        wireframeColor="#38bdf8"
+                        wireframeOpacity={0.55}
                         className="h-[min(100vh,52rem)] w-full bg-transparent"
                         globeClassName="opacity-100"
                     />

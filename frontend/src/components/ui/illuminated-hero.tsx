@@ -39,7 +39,7 @@ export function IlluminatedHero({
             <LpGridBackground patternId="lp-grid-illuminated" />
 
             {backgroundNode && (
-                <div className="pointer-events-none absolute inset-0 z-0 flex items-center justify-center opacity-20">
+                <div className="pointer-events-none absolute inset-0 z-0 flex items-center justify-center opacity-40">
                     {backgroundNode}
                 </div>
             )}
