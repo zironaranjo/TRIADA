@@ -295,7 +295,7 @@ export default function Pricing() {
                                 {/* Popular Badge */}
                                 {isPopular && (
                                     <div className="absolute top-0 right-0">
-                                        <div className="bg-gradient-to-r from-indigo-500 to-purple-500 text-white text-xs font-bold px-4 py-1.5 rounded-bl-xl flex items-center gap-1">
+                                        <div className="bg-primary text-white text-xs font-bold px-4 py-1.5 rounded-bl-xl flex items-center gap-1">
                                             <Star className="h-3 w-3" /> MOST POPULAR
                                         </div>
                                     </div>
@@ -369,7 +369,7 @@ export default function Pricing() {
                                             isFree
                                                 ? 'bg-gradient-to-r from-emerald-500 to-green-500 text-white shadow-lg shadow-emerald-500/20 hover:shadow-emerald-500/40'
                                                 : isPopular
-                                                    ? 'bg-gradient-to-r from-indigo-500 to-purple-500 text-white shadow-lg shadow-indigo-500/20 hover:shadow-indigo-500/40'
+                                                    ? 'bg-primary text-white shadow-lg shadow-indigo-500/20 hover:shadow-indigo-500/40'
                                                     : 'bg-white/5 text-white border border-white/10 hover:bg-white/10'
                                         } disabled:opacity-50`}
                                     >

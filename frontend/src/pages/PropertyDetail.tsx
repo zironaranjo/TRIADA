@@ -342,7 +342,7 @@ export default function PropertyDetail() {
                                         {error && <p className="text-red-400 text-xs">{error}</p>}
 
                                         <button type="submit" disabled={sending || nights() < 1}
-                                            className="w-full bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-semibold py-3 rounded-xl text-sm hover:shadow-lg hover:shadow-indigo-500/20 transition-all disabled:opacity-50 disabled:cursor-not-allowed">
+                                            className="w-full bg-primary text-white font-semibold py-3 rounded-xl text-sm hover:shadow-lg hover:shadow-indigo-500/20 transition-all disabled:opacity-50 disabled:cursor-not-allowed">
                                             {sending ? 'Enviando...' : nights() < 1 ? 'Selecciona las fechas' : 'Solicitar reserva'}
                                         </button>
                                         <p className="text-center text-xs text-slate-500">Sin cobro hasta confirmación</p>

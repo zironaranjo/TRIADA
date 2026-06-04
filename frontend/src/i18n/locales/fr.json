@@ -705,9 +705,9 @@
       "badge": "Aimé par les hôtes",
       "title": "Ce que disent nos utilisateurs",
       "items": {
-        "0": { "quote": "Triadak a complètement transformé notre gestion de 8 propriétés. L'automatisation nous fait gagner des heures chaque semaine." },
-        "1": { "quote": "Le suivi financier à lui seul en vaut la peine. J'ai enfin une vision claire de la rentabilité par propriété." },
-        "2": { "quote": "Nous sommes passés des tableurs à Triadak et n'avons jamais regardé en arrière. Le CRM est incroyablement utile." }
+        "0": { "quote": "Triadak a complètement transformé notre gestion de 8 propriétés. L'automatisation nous fait gagner des heures chaque semaine.", "role": "Gestionnaire, Malaga" },
+        "1": { "quote": "Le suivi financier à lui seul en vaut la peine. J'ai enfin une vision claire de la rentabilité par propriété.", "role": "Propriétaire, Barcelone" },
+        "2": { "quote": "Nous sommes passés des tableurs à Triadak et n'avons jamais regardé en arrière. Le CRM est incroyablement utile.", "role": "Co-hôte, Lisbonne" }
       }
     },
     "pricing": {

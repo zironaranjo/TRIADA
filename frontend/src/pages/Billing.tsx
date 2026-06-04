@@ -260,7 +260,7 @@ export default function Billing() {
 
                             {/* Free plan upgrade banner */}
                             {isFreePlan && (
-                                <div className="bg-gradient-to-r from-indigo-500/10 to-purple-500/10 border border-indigo-500/20 rounded-xl p-4 flex items-center gap-4">
+                                <div className="bg-muted/50 border border-indigo-500/20 rounded-xl p-4 flex items-center gap-4">
                                     <Zap className="h-8 w-8 text-indigo-400 flex-shrink-0" />
                                     <div className="flex-1">
                                         <p className="text-sm font-medium text-white">Need more capacity?</p>
@@ -443,7 +443,7 @@ export default function Billing() {
                                 <button
                                     onClick={handleConnectOnboard}
                                     disabled={connectLoading}
-                                    className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-400 hover:to-purple-400 text-white rounded-xl text-sm font-semibold transition-all shadow-lg shadow-indigo-500/20"
+                                    className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-primary hover:bg-primary/90 text-white rounded-xl text-sm font-semibold transition-all shadow-lg shadow-indigo-500/20"
                                 >
                                     {connectLoading
                                         ? <Loader2 className="h-4 w-4 animate-spin" />

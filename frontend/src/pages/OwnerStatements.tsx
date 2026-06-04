@@ -327,7 +327,7 @@ export default function OwnerStatements() {
                                         className="w-full flex items-center justify-between p-4 sm:p-5 hover:bg-white/[0.02] transition-colors"
                                     >
                                         <div className="flex items-center gap-3 sm:gap-4">
-                                            <div className="h-10 w-10 sm:h-12 sm:w-12 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center flex-shrink-0 overflow-hidden">
+                                            <div className="h-10 w-10 sm:h-12 sm:w-12 rounded-xl bg-secondary ring-1 ring-border flex items-center justify-center flex-shrink-0 overflow-hidden">
                                                 {userAvatar ? (
                                                     <img src={userAvatar} alt="Avatar" className="h-full w-full object-cover" />
                                                 ) : (

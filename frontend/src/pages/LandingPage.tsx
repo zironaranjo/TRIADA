@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
+import { CircularTestimonials } from '@/components/ui/circular-testimonials';
 import {
     Building2,
     CalendarDays,
@@ -193,7 +194,7 @@ function Navbar() {
                                 <Link
                                     to="/login"
                                     onClick={() => setOpen(false)}
-                                    className="block text-base font-semibold bg-gradient-to-r from-indigo-500 to-purple-500 text-white px-5 py-3 rounded-xl text-center"
+                                    className="block text-base font-semibold bg-primary text-white px-5 py-3 rounded-xl text-center"
                                 >
                                     {t('landing.nav.startFree')}
                                 </Link>
@@ -770,86 +771,76 @@ function HowItWorks() {
 }
 
 
-// ─── Testimonials ─────────────────────────────────────
-const testimonials = [
+// ─── Testimonials (circular carousel — 21st.dev pattern) ───
+const TESTIMONIAL_META = [
     {
-        quote: 'Triadak completely transformed how we manage our 8 properties. The automation saves us hours every week.',
         name: 'Maria Rodriguez',
-        role: 'Property Manager, Malaga',
-        avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=80&q=80',
+        designationKey: '0',
+        src: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=1200&q=80',
     },
     {
-        quote: "The financial tracking alone is worth it. I finally have a clear picture of profitability per property.",
         name: 'James Mitchell',
-        role: 'Rental Owner, Barcelona',
-        avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=80&q=80',
+        designationKey: '1',
+        src: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=1200&q=80',
     },
     {
-        quote: 'We switched from spreadsheets to Triadak and never looked back. The CRM is incredibly useful.',
         name: 'Sofia Andersson',
-        role: 'Co-host, Lisbon',
-        avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=80&q=80',
+        designationKey: '2',
+        src: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=1200&q=80',
     },
-];
+] as const;
 
 function Testimonials() {
     const { t } = useTranslation();
-    return (
-        <section className="py-14 sm:py-20 lg:py-32 relative">
-            <div className="absolute inset-0 pointer-events-none">
-                <div className="absolute bottom-0 right-0 w-[300px] sm:w-[500px] h-[300px] sm:h-[500px] bg-indigo-500/8 rounded-full blur-[100px] sm:blur-[150px]" />
-            </div>
 
-            <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    const carouselItems = TESTIMONIAL_META.map((item) => ({
+        quote: t(`landing.testimonials.items.${item.designationKey}.quote`),
+        name: item.name,
+        designation: t(`landing.testimonials.items.${item.designationKey}.role`),
+        src: item.src,
+    }));
+
+    return (
+        <section className="relative border-t border-border/40 py-16 sm:py-24 lg:py-32">
+            <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                 <motion.div
                     initial="hidden"
                     whileInView="visible"
                     viewport={{ once: true, margin: '-80px' }}
                     variants={fadeUp}
                     custom={0}
-                    className="text-center max-w-2xl mx-auto mb-10 sm:mb-16"
+                    className="mx-auto mb-12 max-w-2xl text-center sm:mb-16"
                 >
-                    <p className="text-xs sm:text-sm font-semibold text-indigo-400 uppercase tracking-wider mb-2 sm:mb-3">{t('landing.testimonials.badge')}</p>
-                    <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-3 sm:mb-4">
+                    <p className="text-label mb-2 text-primary sm:mb-3">{t('landing.testimonials.badge')}</p>
+                    <h2 className="text-display text-white">
                         {t('landing.testimonials.title')}
                     </h2>
                 </motion.div>
 
-                {/* Mobile: vertical stack | Desktop: 3-col grid */}
                 <motion.div
-                    initial="hidden"
-                    whileInView="visible"
+                    initial={{ opacity: 0, y: 24 }}
+                    whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true, margin: '-50px' }}
-                    variants={stagger}
-                    className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 lg:gap-8"
+                    transition={{ duration: 0.5 }}
+                    className="mx-auto flex justify-center"
                 >
-                    {testimonials.map((testimonial, i) => (
-                        <motion.div
-                            key={testimonial.name}
-                            variants={fadeUp}
-                            custom={i}
-                            className="p-5 sm:p-6 lg:p-8 rounded-xl sm:rounded-2xl border border-white/5 bg-[#1e293b]/50"
-                        >
-                            {/* Stars */}
-                            <div className="flex gap-1 mb-3 sm:mb-4">
-                                {[...Array(5)].map((_, j) => (
-                                    <Star key={j} className="h-3.5 w-3.5 sm:h-4 sm:w-4 fill-amber-400 text-amber-400" />
-                                ))}
-                            </div>
-                            <p className="text-slate-300 text-sm leading-relaxed mb-4 sm:mb-6">"{t(`landing.testimonials.items.${i}.quote`)}"</p>
-                            <div className="flex items-center gap-3">
-                                <img
-                                    src={testimonial.avatar}
-                                    alt={testimonial.name}
-                                    className="w-10 h-10 sm:w-11 sm:h-11 rounded-full object-cover flex-shrink-0 ring-2 ring-white/10"
-                                />
-                                <div>
-                                    <p className="text-sm font-medium text-white">{testimonial.name}</p>
-                                    <p className="text-xs text-slate-500">{testimonial.role}</p>
-                                </div>
-                            </div>
-                        </motion.div>
-                    ))}
+                    <CircularTestimonials
+                        testimonials={carouselItems}
+                        autoplay
+                        colors={{
+                            name: '#f8fafc',
+                            designation: '#94a3b8',
+                            testimony: '#cbd5e1',
+                            arrowBackground: '#1e293b',
+                            arrowForeground: '#f1f5f9',
+                            arrowHoverBackground: 'hsl(214 32% 52%)',
+                        }}
+                        fontSizes={{
+                            name: 'clamp(1.25rem, 2.5vw, 1.75rem)',
+                            designation: 'clamp(0.875rem, 1.5vw, 1rem)',
+                            quote: 'clamp(1rem, 2vw, 1.125rem)',
+                        }}
+                    />
                 </motion.div>
             </div>
         </section>
@@ -980,7 +971,7 @@ function CTASection() {
                         </p>
                         <Link
                             to="/login"
-                            className="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-indigo-500 to-purple-500 text-white font-semibold px-6 sm:px-8 py-3.5 sm:py-4 rounded-xl text-sm sm:text-base hover:shadow-xl hover:shadow-indigo-500/25 transition-all group w-full sm:w-auto"
+                            className="inline-flex items-center justify-center gap-2 bg-primary text-white font-semibold px-6 sm:px-8 py-3.5 sm:py-4 rounded-xl text-sm sm:text-base hover:shadow-xl hover:shadow-indigo-500/25 transition-all group w-full sm:w-auto"
                         >
                             {t('landing.cta.button')}
                             <ArrowRight className="h-4 w-4 sm:h-5 sm:w-5 group-hover:translate-x-1 transition-transform" />

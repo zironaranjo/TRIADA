@@ -341,7 +341,7 @@ const ChannelManager = () => {
                     </button>
                     <button
                         onClick={() => setShowAddModal(true)}
-                        className="flex items-center gap-2 px-4 py-2 rounded-lg bg-gradient-to-r from-indigo-500 to-purple-600 text-white text-sm font-medium hover:from-indigo-600 hover:to-purple-700 transition-all shadow-lg shadow-indigo-500/25"
+                        className="flex items-center gap-2 px-4 py-2 rounded-lg bg-primary text-white text-sm font-medium hover:opacity-90 transition-all shadow-lg shadow-indigo-500/25"
                     >
                         <Plus className="h-4 w-4" />
                         {t('channels.addConnection')}
@@ -486,7 +486,7 @@ const ChannelManager = () => {
                         <p className="text-sm text-slate-400 mb-4">{t('channels.emptyDescription')}</p>
                         <button
                             onClick={() => setShowAddModal(true)}
-                            className="px-4 py-2 rounded-lg bg-gradient-to-r from-indigo-500 to-purple-600 text-white text-sm font-medium hover:from-indigo-600 hover:to-purple-700 transition-all"
+                            className="px-4 py-2 rounded-lg bg-primary text-white text-sm font-medium hover:opacity-90 transition-all"
                         >
                             <Plus className="inline h-4 w-4 mr-1" />
                             {t('channels.addFirstConnection')}
@@ -836,7 +836,7 @@ const ChannelManager = () => {
                                 <button
                                     onClick={handleCreate}
                                     disabled={creating || !newConn.propertyId}
-                                    className="px-4 py-2 rounded-lg bg-gradient-to-r from-indigo-500 to-purple-600 text-white text-sm font-medium hover:from-indigo-600 hover:to-purple-700 transition-all disabled:opacity-50"
+                                    className="px-4 py-2 rounded-lg bg-primary text-white text-sm font-medium hover:opacity-90 transition-all disabled:opacity-50"
                                 >
                                     {creating ? <RefreshCw className="inline h-4 w-4 animate-spin mr-1" /> : <Plus className="inline h-4 w-4 mr-1" />}
                                     {creating ? t('common.creating') : t('channels.createConnection')}

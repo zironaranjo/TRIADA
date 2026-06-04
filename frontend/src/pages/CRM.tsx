@@ -319,7 +319,7 @@ export default function CRM() {
                                     >
                                         {/* Contact Info */}
                                         <div className="col-span-4 flex items-center gap-3">
-                                            <div className="h-10 w-10 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white font-bold shadow-lg flex-shrink-0">
+                                            <div className="h-10 w-10 rounded-full bg-secondary ring-1 ring-border flex items-center justify-center text-white font-bold shadow-lg flex-shrink-0">
                                                 {contact.first_name?.[0]}{contact.last_name?.[0]}
                                             </div>
                                             <div className="min-w-0">
@@ -658,7 +658,7 @@ function ContactDetailPanel({ contact, isOpen, onClose, onUpdate, onDelete }:
                     <div className="p-6 border-b border-white/10 bg-[#0f172a]/50 sticky top-0 z-10">
                         <div className="flex items-center justify-between">
                             <div className="flex items-center gap-4">
-                                <div className="h-14 w-14 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white font-bold text-xl shadow-lg">
+                                <div className="h-14 w-14 rounded-full bg-secondary ring-1 ring-border flex items-center justify-center text-white font-bold text-xl shadow-lg">
                                     {contact.first_name?.[0]}{contact.last_name?.[0]}
                                 </div>
                                 <div>

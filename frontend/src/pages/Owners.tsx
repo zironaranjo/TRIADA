@@ -277,7 +277,7 @@ export default function Owners() {
                                     className="p-4 hover:bg-white/5 transition-colors flex items-center justify-between group cursor-pointer"
                                 >
                                     <div className="flex items-center gap-4">
-                                        <div className="h-10 w-10 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white font-bold shadow-lg overflow-hidden">
+                                        <div className="h-10 w-10 rounded-full bg-secondary ring-1 ring-border flex items-center justify-center text-white font-bold shadow-lg overflow-hidden">
                                             {owner.avatar_url ? (
                                                 <img src={owner.avatar_url} alt={owner.firstName} className="h-full w-full object-cover" />
                                             ) : (
@@ -347,10 +347,10 @@ export default function Owners() {
                             className="w-full max-w-lg bg-[#1e293b] rounded-2xl border border-white/10 shadow-2xl overflow-hidden max-h-[85vh] flex flex-col"
                         >
                             {/* Modal Header */}
-                            <div className="p-6 border-b border-white/10 bg-gradient-to-r from-indigo-500/10 to-purple-500/10">
+                            <div className="p-6 border-b border-white/10 bg-muted/50">
                                 <div className="flex items-center justify-between mb-4">
                                     <div className="flex items-center gap-4">
-                                        <div className="h-14 w-14 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white text-lg font-bold shadow-lg overflow-hidden ring-2 ring-white/10">
+                                        <div className="h-14 w-14 rounded-full bg-secondary ring-1 ring-border flex items-center justify-center text-white text-lg font-bold shadow-lg overflow-hidden ring-2 ring-white/10">
                                             {selectedOwner.avatar_url
                                                 ? <img src={selectedOwner.avatar_url} alt={selectedOwner.firstName} className="h-full w-full object-cover" />
                                                 : <>{selectedOwner.firstName[0]}{selectedOwner.lastName[0]}</>}
@@ -598,7 +598,7 @@ function CreateOwnerModal({ isOpen, onClose, onSuccess }: any) {
                         {/* Avatar Upload */}
                         <div className="flex items-center gap-4">
                             <div className="relative group">
-                                <div className="h-16 w-16 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white text-lg font-bold overflow-hidden ring-2 ring-white/10">
+                                <div className="h-16 w-16 rounded-full bg-secondary ring-1 ring-border flex items-center justify-center text-white text-lg font-bold overflow-hidden ring-2 ring-white/10">
                                     {avatarPreview
                                         ? <img src={avatarPreview} alt="Avatar" className="h-full w-full object-cover" />
                                         : initials}

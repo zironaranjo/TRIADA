@@ -180,7 +180,7 @@ export default function OwnerProfile() {
                         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                             <div className="flex items-center gap-4">
                                 <div className="relative group">
-                                    <div className="h-16 w-16 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white text-xl font-bold shadow-lg overflow-hidden ring-2 ring-white/10">
+                                    <div className="h-16 w-16 rounded-full bg-secondary ring-1 ring-border flex items-center justify-center text-white text-xl font-bold shadow-lg overflow-hidden ring-2 ring-white/10">
                                         {owner.avatar_url
                                             ? <img src={owner.avatar_url} alt={owner.firstName} className="h-full w-full object-cover" />
                                             : <>{owner.firstName[0]}{owner.lastName[0]}</>}

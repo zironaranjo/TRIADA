@@ -695,9 +695,9 @@
       "badge": "Von Gastgebern geliebt",
       "title": "Was unsere Nutzer sagen",
       "items": {
-        "0": { "quote": "Triadak hat unsere Verwaltung von 8 Immobilien komplett transformiert. Die Automatisierung spart uns jede Woche Stunden." },
-        "1": { "quote": "Die Finanzverfolgung allein ist es wert. Ich habe endlich ein klares Bild der Rentabilität pro Immobilie." },
-        "2": { "quote": "Wir sind von Tabellenkalkulationen zu Triadak gewechselt und haben nie zurückgeblickt. Das CRM ist unglaublich nützlich." }
+        "0": { "quote": "Triadak hat unsere Verwaltung von 8 Immobilien komplett transformiert. Die Automatisierung spart uns jede Woche Stunden.", "role": "Immobilienmanagerin, Malaga" },
+        "1": { "quote": "Die Finanzverfolgung allein ist es wert. Ich habe endlich ein klares Bild der Rentabilität pro Immobilie.", "role": "Vermieter, Barcelona" },
+        "2": { "quote": "Wir sind von Tabellenkalkulationen zu Triadak gewechselt und haben nie zurückgeblickt. Das CRM ist unglaublich nützlich.", "role": "Co-Host, Lissabon" }
       }
     },
     "pricing": {

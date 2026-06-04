@@ -6,6 +6,24 @@ export default {
     ],
     theme: {
         extend: {
+            fontFamily: {
+                sans: [
+                    'Inter',
+                    'ui-sans-serif',
+                    'system-ui',
+                    '-apple-system',
+                    'BlinkMacSystemFont',
+                    'Segoe UI',
+                    'sans-serif',
+                ],
+            },
+            fontSize: {
+                '2xs': ['0.6875rem', { lineHeight: '1rem' }],
+            },
+            letterSpacing: {
+                tight: '-0.02em',
+                snug: '-0.011em',
+            },
             colors: {
                 border: "hsl(var(--border))",
                 input: "hsl(var(--input))",

@@ -699,7 +699,7 @@ export default function FinanceDashboard() {
 
                 {/* ─── Profit & Loss Statement ───────────── */}
                 <GlassCard className="p-0 overflow-hidden">
-                    <div className="p-3 sm:p-4 border-b border-white/5 bg-gradient-to-r from-indigo-500/10 to-purple-500/10 flex items-center justify-between">
+                    <div className="p-3 sm:p-4 border-b border-white/5 bg-muted/50 flex items-center justify-between">
                         <h3 className="font-semibold text-white text-base sm:text-lg flex items-center gap-2">
                             <Receipt className="h-5 w-5 text-indigo-400" />
                             {t('finance.profitAndLoss')}

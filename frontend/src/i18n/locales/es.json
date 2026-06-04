@@ -705,9 +705,9 @@
       "badge": "Amado por anfitriones",
       "title": "Lo que dicen nuestros usuarios",
       "items": {
-        "0": { "quote": "Triadak transformó por completo cómo gestionamos nuestras 8 propiedades. La automatización nos ahorra horas cada semana." },
-        "1": { "quote": "Solo el seguimiento financiero ya vale la pena. Por fin tengo una visión clara de la rentabilidad por propiedad." },
-        "2": { "quote": "Pasamos de hojas de cálculo a Triadak y nunca miramos atrás. El CRM es increíblemente útil." }
+        "0": { "quote": "Triadak transformó por completo cómo gestionamos nuestras 8 propiedades. La automatización nos ahorra horas cada semana.", "role": "Gestora de propiedades, Málaga" },
+        "1": { "quote": "Solo el seguimiento financiero ya vale la pena. Por fin tengo una visión clara de la rentabilidad por propiedad.", "role": "Propietario, Barcelona" },
+        "2": { "quote": "Pasamos de hojas de cálculo a Triadak y nunca miramos atrás. El CRM es increíblemente útil.", "role": "Co-anfitriona, Lisboa" }
       }
     },
     "pricing": {

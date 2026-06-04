@@ -162,17 +162,17 @@ export default function TeamChat() {
     }
 
     return (
-        <div className="max-w-3xl mx-auto h-[calc(100vh-8rem)] flex flex-col">
+        <div className="mx-auto flex h-[calc(100vh-8rem)] max-w-3xl flex-col">
             <div className="mb-4">
-                <h1 className="text-2xl font-bold text-white flex items-center gap-2">
-                    <MessageSquare className="h-7 w-7 text-indigo-400" />
+                <h1 className="text-display flex items-center gap-2">
+                    <MessageSquare className="h-7 w-7 text-primary" />
                     {t('teamChat.title')}
                 </h1>
-                <p className="text-slate-400 text-sm mt-1">{t('teamChat.subtitle')}</p>
+                <p className="text-subtitle mt-1">{t('teamChat.subtitle')}</p>
             </div>
 
-            <div className="flex-1 flex flex-col bg-white/5 border border-white/10 rounded-2xl overflow-hidden min-h-0">
-                <div className="px-4 py-3 border-b border-white/10 flex items-center gap-2 text-xs text-slate-500">
+            <div className="surface-card flex min-h-0 flex-1 flex-col overflow-hidden">
+                <div className="flex items-center gap-2 border-b border-border px-4 py-3 text-xs text-muted-foreground">
                     <Users className="h-4 w-4" />
                     {Object.keys(profiles).length} {t('teamChat.membersOnline')}
                 </div>
@@ -218,8 +218,8 @@ export default function TeamChat() {
                                         <div
                                             className={`px-3.5 py-2.5 rounded-2xl text-sm ${
                                                 mine
-                                                    ? 'bg-indigo-600 text-white rounded-br-md'
-                                                    : 'bg-slate-800 text-slate-100 rounded-bl-md border border-slate-700'
+                                                    ? 'bg-primary text-primary-foreground rounded-br-md'
+                                                    : 'rounded-bl-md border border-border bg-muted text-foreground'
                                             }`}
                                         >
                                             {msg.body}
@@ -245,13 +245,13 @@ export default function TeamChat() {
                         onChange={e => setInput(e.target.value)}
                         onKeyDown={e => e.key === 'Enter' && !e.shiftKey && sendMessage()}
                         placeholder={t('teamChat.placeholder')}
-                        className="flex-1 bg-slate-900/80 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-white outline-none focus:ring-2 focus:ring-indigo-500/40"
+                        className="input-field flex-1"
                     />
                     <button
                         type="button"
                         onClick={sendMessage}
                         disabled={sending || !input.trim()}
-                        className="px-4 rounded-xl bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 text-white flex items-center justify-center"
+                        className="btn-primary h-10 w-10 shrink-0 p-0"
                     >
                         <Send className="h-5 w-5" />
                     </button>

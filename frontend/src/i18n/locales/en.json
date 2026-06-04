@@ -705,9 +705,9 @@
       "badge": "Loved by hosts",
       "title": "What our users say",
       "items": {
-        "0": { "quote": "Triadak completely transformed how we manage our 8 properties. The automation saves us hours every week." },
-        "1": { "quote": "The financial tracking alone is worth it. I finally have a clear picture of profitability per property." },
-        "2": { "quote": "We switched from spreadsheets to Triadak and never looked back. The CRM is incredibly useful." }
+        "0": { "quote": "Triadak completely transformed how we manage our 8 properties. The automation saves us hours every week.", "role": "Property Manager, Malaga" },
+        "1": { "quote": "The financial tracking alone is worth it. I finally have a clear picture of profitability per property.", "role": "Rental Owner, Barcelona" },
+        "2": { "quote": "We switched from spreadsheets to Triadak and never looked back. The CRM is incredibly useful.", "role": "Co-host, Lisbon" }
       }
     },
     "pricing": {

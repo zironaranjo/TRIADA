@@ -218,7 +218,7 @@ export default function Dashboard() {
                     <motion.h1
                         initial={{ opacity: 0, y: -20 }}
                         animate={{ opacity: 1, y: 0 }}
-                        className="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-white mb-1"
+                        className="text-display mb-1"
                     >
                         {t('dashboard.title')}
                     </motion.h1>
@@ -226,7 +226,7 @@ export default function Dashboard() {
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         transition={{ delay: 0.1 }}
-                        className="text-slate-400 text-sm sm:text-base"
+                        className="text-subtitle"
                     >
                         {t('dashboard.subtitle')}
                     </motion.p>
@@ -237,7 +237,7 @@ export default function Dashboard() {
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
-                        className="bg-gradient-to-r from-indigo-500/10 via-purple-500/10 to-pink-500/10 border border-indigo-500/20 rounded-2xl p-6 sm:p-8"
+                        className="surface-card-muted border-primary/20 p-6 sm:p-8"
                     >
                         <div className="flex flex-col sm:flex-row items-start gap-4 sm:gap-6">
                             <div className="p-3 sm:p-4 bg-indigo-500/20 rounded-2xl flex-shrink-0">
@@ -277,23 +277,23 @@ export default function Dashboard() {
                 {/* KPI Cards */}
                 <motion.div variants={container} initial="hidden" animate="show" className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
                     {[
-                        { title: t('dashboard.kpi.totalBookings'), value: bookings.length, icon: Calendar, color: 'text-blue-400', bg: 'from-blue-500/20 to-blue-600/5', border: 'border-blue-500/20' },
-                        { title: t('dashboard.kpi.activeProperties'), value: properties.filter(p => p.status === 'active').length, icon: Building2, color: 'text-emerald-400', bg: 'from-emerald-500/20 to-emerald-600/5', border: 'border-emerald-500/20' },
-                        { title: t('dashboard.kpi.crmContacts'), value: contacts.length, icon: Users, color: 'text-amber-400', bg: 'from-amber-500/20 to-amber-600/5', border: 'border-amber-500/20' },
-                        { title: t('dashboard.kpi.totalRevenue'), value: `€${totalRevenue.toLocaleString()}`, icon: DollarSign, color: 'text-purple-400', bg: 'from-purple-500/20 to-purple-600/5', border: 'border-purple-500/20' },
+                        { title: t('dashboard.kpi.totalBookings'), value: bookings.length, icon: Calendar, color: 'text-primary' },
+                        { title: t('dashboard.kpi.activeProperties'), value: properties.filter(p => p.status === 'active').length, icon: Building2, color: 'text-emerald-500' },
+                        { title: t('dashboard.kpi.crmContacts'), value: contacts.length, icon: Users, color: 'text-amber-500' },
+                        { title: t('dashboard.kpi.totalRevenue'), value: `€${totalRevenue.toLocaleString()}`, icon: DollarSign, color: 'text-foreground' },
                     ].map((kpi) => (
                         <motion.div
                             key={kpi.title}
                             variants={item}
-                            className={`rounded-xl bg-gradient-to-br ${kpi.bg} border ${kpi.border} p-4 sm:p-6`}
+                            className="kpi-tile"
                         >
                             <div className="flex items-center justify-between mb-3 sm:mb-4">
-                                <div className={`p-2 sm:p-3 bg-white/10 rounded-lg ${kpi.color}`}>
+                                <div className={`rounded-lg bg-muted p-2 sm:p-3 ${kpi.color}`}>
                                     <kpi.icon className="h-5 w-5 sm:h-6 sm:w-6" />
                                 </div>
                             </div>
-                            <h3 className="text-xl sm:text-3xl font-bold text-white mb-0.5">{kpi.value}</h3>
-                            <p className="text-xs sm:text-sm text-slate-400">{kpi.title}</p>
+                            <h3 className="text-xl sm:text-3xl font-semibold text-foreground mb-0.5">{kpi.value}</h3>
+                            <p className="text-xs sm:text-sm text-muted-foreground">{kpi.title}</p>
                         </motion.div>
                     ))}
                 </motion.div>

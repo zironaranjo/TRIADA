@@ -109,30 +109,31 @@ const Login = () => {
     };
 
     return (
-        <div className="min-h-screen bg-[#0f172a] flex relative overflow-hidden">
-            {/* Background Image with Overlay */}
-            <div className="absolute inset-0 z-0">
-                <img
-                    src="https://images.unsplash.com/photo-1542718610-a1d656d1884c?auto=format&fit=crop&q=80"
-                    alt="Background"
-                    className="w-full h-full object-cover opacity-40"
-                />
-                <div className="absolute inset-0 bg-gradient-to-b sm:bg-gradient-to-r from-gray-900 via-gray-900/95 to-gray-900/70 sm:to-transparent" />
+        <div className="min-h-screen flex bg-background">
+            <div className="hidden lg:flex lg:w-1/2 border-r border-border bg-card items-center justify-center p-12">
+                <div className="max-w-md">
+                    <img src="/logotriadak.png" alt="TRIADAK" className="h-32 w-auto mb-8 object-contain" />
+                    <h2 className="text-display mb-3">Gestión profesional de alquiler vacacional</h2>
+                    <p className="text-subtitle">
+                        Propiedades, reservas, finanzas y equipo en una sola plataforma.
+                    </p>
+                </div>
             </div>
 
-            {/* Login Content */}
-            <div className="relative z-10 w-full px-4 py-6 sm:p-8 flex flex-col justify-start sm:justify-center min-h-screen overflow-y-auto lg:w-1/2 lg:max-w-xl mx-auto sm:mx-0 sm:max-w-md">
+            <div className="flex w-full flex-col justify-center px-4 py-8 sm:px-8 lg:w-1/2 lg:max-w-lg lg:mx-auto min-h-screen">
                 <motion.div
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    className="bg-gray-800/50 backdrop-blur-xl p-5 sm:p-8 rounded-2xl sm:rounded-3xl border border-gray-700/50 shadow-2xl"
+                    initial={{ opacity: 0, y: 12 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="surface-card p-6 sm:p-8 shadow-sm"
                 >
-                    <div className="mb-6 sm:mb-10 text-center">
-                        <img src="/logotriadak.png" alt="TRIADAK Logo" className="h-28 sm:h-48 lg:h-64 w-auto mx-auto mb-4 sm:mb-6 transition-transform hover:scale-105 duration-500 object-contain drop-shadow-2xl" />
-                        <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-white mb-1 sm:mb-2 tracking-tight">
+                    <div className="mb-8 text-center lg:hidden">
+                        <img src="/logotriadak.png" alt="TRIADAK Logo" className="mx-auto mb-6 h-24 w-auto object-contain sm:h-32" />
+                    </div>
+                    <div className="mb-6 sm:mb-8 text-center lg:text-left">
+                        <h1 className="text-display mb-2">
                             {view === 'signup' ? 'Create your account' : view === 'forgot' ? 'Reset your password' : 'Welcome back'}
                         </h1>
-                        <p className="text-gray-400 text-sm sm:text-base">
+                        <p className="text-subtitle">
                             {view === 'signup'
                                 ? 'Start managing your properties today'
                                 : view === 'forgot'
@@ -157,7 +158,7 @@ const Login = () => {
                                                 onChange={(e) => setEmail(e.target.value)}
                                                 placeholder="you@example.com"
                                                 required
-                                                className="w-full bg-gray-900/50 border border-gray-700 text-white placeholder-gray-500 rounded-xl py-3 sm:py-3.5 pl-11 sm:pl-12 pr-4 text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                                                className="input-field pl-11 sm:pl-12 py-3 sm:py-3.5"
                                             />
                                         </div>
                                     </div>
@@ -172,7 +173,7 @@ const Login = () => {
                                     <button
                                         type="submit"
                                         disabled={loading}
-                                        className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 sm:py-3.5 px-4 sm:px-6 rounded-xl text-sm sm:text-base transition-all duration-200 shadow-lg shadow-blue-500/25 hover:shadow-xl hover:shadow-blue-500/30 transform hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                                        className="btn-primary w-full py-3 sm:py-3.5"
                                     >
                                         {loading ? 'Sending...' : 'Send Reset Link'}
                                     </button>
@@ -220,7 +221,7 @@ const Login = () => {
                                                 onChange={(e) => setEmail(e.target.value)}
                                                 placeholder="you@example.com"
                                                 required
-                                                className="w-full bg-gray-900/50 border border-gray-700 text-white placeholder-gray-500 rounded-xl py-3 sm:py-3.5 pl-11 sm:pl-12 pr-4 text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                                                className="input-field pl-11 sm:pl-12 py-3 sm:py-3.5"
                                             />
                                         </div>
                                     </div>
@@ -248,7 +249,7 @@ const Login = () => {
                                                 placeholder="••••••••"
                                                 required
                                                 minLength={6}
-                                                className="w-full bg-gray-900/50 border border-gray-700 text-white placeholder-gray-500 rounded-xl py-3 sm:py-3.5 pl-11 sm:pl-12 pr-12 text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                                                className="input-field pl-11 sm:pl-12 pr-12 py-3 sm:py-3.5"
                                             />
                                             <button
                                                 type="button"
@@ -270,7 +271,7 @@ const Login = () => {
                                     <button
                                         type="submit"
                                         disabled={loading}
-                                        className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 sm:py-3.5 px-4 sm:px-6 rounded-xl text-sm sm:text-base transition-all duration-200 shadow-lg shadow-blue-500/25 hover:shadow-xl hover:shadow-blue-500/30 transform hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                                        className="btn-primary w-full py-3 sm:py-3.5"
                                     >
                                         {loading ? 'Loading...' : view === 'signup' ? 'Sign up' : 'Sign in'}
                                     </button>
@@ -304,22 +305,6 @@ const Login = () => {
                 </div>
             </div>
 
-            {/* Right side slogan (visible on desktop) */}
-            <div className="hidden lg:flex flex-col justify-center p-16 relative z-10 w-1/2 text-right">
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.2 }}
-                >
-                    <h2 className="text-6xl font-extrabold text-white leading-tight mb-6 drop-shadow-lg">
-                        Manage properties<br />
-                        <span className="text-blue-500">at lightspeed.</span>
-                    </h2>
-                    <p className="text-xl text-gray-300 max-w-lg ml-auto drop-shadow-md">
-                        Automate bookings, finances, and guest experiences with the power of our advanced ERP.
-                    </p>
-                </motion.div>
-            </div>
         </div>
     );
 };

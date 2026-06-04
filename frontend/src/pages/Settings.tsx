@@ -541,7 +541,7 @@ export default function Settings() {
                                 </h3>
                                 <div className="flex items-center gap-6">
                                     <div className="relative">
-                                        <div className="h-20 w-20 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center overflow-hidden">
+                                        <div className="h-20 w-20 rounded-2xl bg-secondary ring-1 ring-border flex items-center justify-center overflow-hidden">
                                             {avatarUrl ? (
                                                 <img src={avatarUrl} alt="Avatar" className="h-full w-full object-cover" />
                                             ) : (

@@ -106,47 +106,43 @@ export default function ChatWidget() {
 
     return (
         <>
-            {/* Bubble button */}
             <button
                 onClick={() => setOpen(v => !v)}
-                className="fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 shadow-lg shadow-indigo-500/30 flex items-center justify-center transition-all duration-300 hover:scale-110 hover:shadow-indigo-500/50"
+                className="fixed bottom-6 right-6 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-md transition-colors hover:bg-primary/90"
                 aria-label="Abrir chat"
             >
                 {open
-                    ? <X className="h-6 w-6 text-white" />
-                    : <MessageSquare className="h-6 w-6 text-white" />
+                    ? <X className="h-6 w-6" />
+                    : <MessageSquare className="h-6 w-6" />
                 }
             </button>
 
-            {/* Chat panel */}
-            <div className={`fixed bottom-24 right-6 z-50 w-[360px] max-w-[calc(100vw-24px)] bg-[#0f172a] border border-white/10 rounded-2xl shadow-2xl shadow-black/50 flex flex-col transition-all duration-300 origin-bottom-right ${open ? 'scale-100 opacity-100 pointer-events-auto' : 'scale-95 opacity-0 pointer-events-none'}`}
+            <div className={`fixed bottom-24 right-6 z-50 flex w-[360px] max-w-[calc(100vw-24px)] flex-col rounded-xl border border-border bg-card shadow-lg transition-all duration-300 origin-bottom-right ${open ? 'scale-100 opacity-100 pointer-events-auto' : 'scale-95 opacity-0 pointer-events-none'}`}
                 style={{ height: 480 }}
             >
-                {/* Header */}
-                <div className="flex items-center gap-3 px-4 py-3 border-b border-white/5 bg-white/[0.02] rounded-t-2xl">
-                    <div className="w-8 h-8 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center flex-shrink-0">
-                        <Bot className="h-4 w-4 text-white" />
+                <div className="flex items-center gap-3 rounded-t-xl border-b border-border px-4 py-3">
+                    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-secondary">
+                        <Bot className="h-4 w-4 text-foreground" />
                     </div>
                     <div>
-                        <p className="text-sm font-semibold text-white">Asistente Triadak</p>
-                        <p className="text-xs text-emerald-400 flex items-center gap-1">
-                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 inline-block" />
+                        <p className="text-sm font-semibold text-foreground">Asistente Triadak</p>
+                        <p className="flex items-center gap-1 text-xs text-emerald-500">
+                            <span className="inline-block h-1.5 w-1.5 rounded-full bg-emerald-500" />
                             En línea
                         </p>
                     </div>
-                    <button onClick={() => setOpen(false)} className="ml-auto text-slate-500 hover:text-white transition-colors">
+                    <button onClick={() => setOpen(false)} className="ml-auto text-muted-foreground transition-colors hover:text-foreground">
                         <X className="h-4 w-4" />
                     </button>
                 </div>
 
-                {/* Messages */}
-                <div className="flex-1 overflow-y-auto px-4 py-3 flex flex-col gap-3">
+                <div className="flex flex-1 flex-col gap-3 overflow-y-auto px-4 py-3">
                     {msgs.map((msg, i) => (
                         <div key={i} className={`flex ${msg.from === 'user' ? 'justify-end' : 'justify-start'}`}>
-                            <div className={`max-w-[82%] px-3.5 py-2.5 rounded-2xl text-sm leading-relaxed ${
+                            <div className={`max-w-[82%] rounded-lg px-3.5 py-2.5 text-sm leading-relaxed ${
                                 msg.from === 'user'
-                                    ? 'bg-gradient-to-br from-indigo-500 to-purple-600 text-white rounded-br-sm'
-                                    : 'bg-white/5 border border-white/8 text-slate-200 rounded-bl-sm'
+                                    ? 'bg-primary text-primary-foreground'
+                                    : 'border border-border bg-muted text-foreground'
                             }`}>
                                 {msg.text}
                             </div>
@@ -154,9 +150,9 @@ export default function ChatWidget() {
                     ))}
                     {loading && (
                         <div className="flex justify-start">
-                            <div className="bg-white/5 border border-white/8 rounded-2xl rounded-bl-sm px-4 py-3 flex gap-1.5 items-center">
+                            <div className="flex items-center gap-1.5 rounded-lg border border-border bg-muted px-4 py-3">
                                 {[0, 0.2, 0.4].map((d, i) => (
-                                    <div key={i} className="w-1.5 h-1.5 rounded-full bg-indigo-400"
+                                    <div key={i} className="h-1.5 w-1.5 rounded-full bg-primary"
                                         style={{ animation: `bounce 1.2s ease-in-out ${d}s infinite` }} />
                                 ))}
                             </div>
@@ -165,8 +161,7 @@ export default function ChatWidget() {
                     <div ref={bottomRef} />
                 </div>
 
-                {/* Input */}
-                <div className="px-3 py-3 border-t border-white/5 flex gap-2">
+                <div className="flex gap-2 border-t border-border p-3">
                     <input
                         ref={inputRef}
                         type="text"
@@ -175,14 +170,14 @@ export default function ChatWidget() {
                         onKeyDown={e => e.key === 'Enter' && send(input)}
                         placeholder="Escribe tu mensaje..."
                         disabled={loading}
-                        className="flex-1 bg-white/5 border border-white/10 rounded-xl px-3.5 py-2.5 text-sm text-white placeholder-slate-500 outline-none focus:border-indigo-500/50 transition-colors disabled:opacity-50"
+                        className="input-field flex-1"
                     />
                     <button
                         onClick={() => send(input)}
                         disabled={loading || !input.trim()}
-                        className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center flex-shrink-0 disabled:opacity-40 hover:opacity-90 transition-opacity"
+                        className="btn-primary h-10 w-10 shrink-0 p-0"
                     >
-                        <Send className="h-4 w-4 text-white" />
+                        <Send className="h-4 w-4" />
                     </button>
                 </div>
             </div>

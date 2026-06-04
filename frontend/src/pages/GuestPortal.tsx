@@ -205,7 +205,7 @@ export default function GuestPortal() {
                     className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-5 mb-6"
                 >
                     <div className="flex items-center gap-3 mb-4">
-                        <div className="h-12 w-12 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center">
+                        <div className="h-12 w-12 rounded-full bg-secondary ring-1 ring-border flex items-center justify-center">
                             <User className="h-6 w-6 text-white" />
                         </div>
                         <div>

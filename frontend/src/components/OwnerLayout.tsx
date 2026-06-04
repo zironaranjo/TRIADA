@@ -101,7 +101,7 @@ const OwnerLayout = () => {
                             {active && (
                                 <motion.div
                                     layoutId="ownerActiveNav"
-                                    className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-emerald-500 to-teal-500 rounded-r-full"
+                                    className="absolute left-0 top-0 bottom-0 w-1 bg-emerald-600 rounded-r-full"
                                     initial={{ opacity: 0 }}
                                     animate={{ opacity: 1 }}
                                     exit={{ opacity: 0 }}
@@ -143,7 +143,7 @@ const OwnerLayout = () => {
             <div className="p-4 border-t border-white/5 bg-black/20">
                 <div className="rounded-xl bg-white/5 p-3">
                     <div className="flex items-center gap-3">
-                        <div className="h-8 w-8 rounded-full bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center flex-shrink-0 overflow-hidden">
+                        <div className="h-8 w-8 rounded-full bg-secondary ring-1 ring-border flex items-center justify-center flex-shrink-0 overflow-hidden">
                             {avatarUrl ? (
                                 <img src={avatarUrl} alt="Avatar" className="h-full w-full object-cover" />
                             ) : (
@@ -200,7 +200,7 @@ const OwnerLayout = () => {
                         <ArrowLeft className="h-3.5 w-3.5" />
                         {isAdmin ? 'Admin' : 'Dashboard'}
                     </Link>
-                    <div className="h-8 w-8 rounded-full bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center overflow-hidden">
+                    <div className="h-8 w-8 rounded-full bg-secondary ring-1 ring-border flex items-center justify-center overflow-hidden">
                         {avatarUrl ? (
                             <img src={avatarUrl} alt="Avatar" className="h-full w-full object-cover" />
                         ) : (
@@ -248,7 +248,7 @@ const OwnerLayout = () => {
             </aside>
 
             {/* Main Content Area */}
-            <main className="flex-1 overflow-y-auto bg-gradient-to-br from-[#0f172a] to-[#1e1b4b] relative pt-14 lg:pt-0">
+            <main className="flex-1 overflow-y-auto bg-background relative pt-14 lg:pt-0">
                 <div className="fixed top-0 left-0 w-full h-full overflow-hidden pointer-events-none z-0">
                     <div className="absolute top-[-10%] right-[-5%] w-[500px] h-[500px] bg-emerald-500/10 rounded-full blur-[120px]" />
                     <div className="absolute bottom-[-10%] left-[10%] w-[500px] h-[500px] bg-teal-500/10 rounded-full blur-[120px]" />
