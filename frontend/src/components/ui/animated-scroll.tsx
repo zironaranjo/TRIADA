@@ -49,6 +49,7 @@ export function SplitScrollAdventure({
     const containerRef = useRef<HTMLDivElement>(null);
     const currentPageRef = useRef(currentPage);
     currentPageRef.current = currentPage;
+    const touchStartY = useRef<number | null>(null);
 
     const navigateUp = useCallback(() => {
         goToPage((p) => Math.max(1, p - 1));
@@ -127,6 +128,16 @@ export function SplitScrollAdventure({
         <div
             ref={containerRef}
             className={cn('relative overflow-hidden bg-[#061020]', className)}
+            onTouchStart={isVertical ? (e) => { touchStartY.current = e.touches[0].clientY; } : undefined}
+            onTouchEnd={isVertical ? (e) => {
+                if (touchStartY.current === null || scrolling.current) return;
+                const delta = touchStartY.current - e.changedTouches[0].clientY;
+                if (Math.abs(delta) < 40) return;
+                scrolling.current = true;
+                if (delta > 0) navigateDown(); else navigateUp();
+                touchStartY.current = null;
+                window.setTimeout(() => { scrolling.current = false; }, animTimeMs);
+            } : undefined}
         >
             {pages.map((page, i) => {
                 const idx = i + 1;
