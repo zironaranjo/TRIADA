@@ -35,7 +35,7 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { SplitScrollAdventure } from '@/components/ui/animated-scroll';
-import type { SplitScrollPage } from '@/components/ui/animated-scroll';
+import type { SplitScrollAxis, SplitScrollPage } from '@/components/ui/animated-scroll';
 
 const DotGlobeHero = lazy(() =>
     import('@/components/ui/globe-hero').then((m) => ({ default: m.DotGlobeHero })),
@@ -433,102 +433,7 @@ function Features() {
 }
 
 // ─── Audiencias + métricas (gestores / viajeros) ─────────
-const AUDIENCE_PANELS: {
-    key: 'managers' | 'travelers';
-    icon: LucideIcon;
-    to: string;
-    image: string;
-}[] = [
-    { key: 'managers', icon: Building2, to: '/login', image: '/cabin.webp' },
-    { key: 'travelers', icon: MapPin, to: '/explore', image: '/sala.jpg' },
-];
-
 const STAT_KEYS = ['0', '1', '2', '3'] as const;
-
-type AudienceCardLayout = 'stacked' | 'side';
-
-function AudiencePanelCard({
-    panelKey,
-    icon: Icon,
-    to,
-    image,
-    index,
-    layout = 'stacked',
-}: {
-    panelKey: 'managers' | 'travelers';
-    icon: LucideIcon;
-    to: string;
-    image: string;
-    index: number;
-    layout?: AudienceCardLayout;
-}) {
-    const { t } = useTranslation();
-    const base = `landing.audience.${panelKey}`;
-    const isSide = layout === 'side';
-
-    return (
-        <motion.article
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '-40px' }}
-            transition={{ duration: 0.45, delay: index * 0.08 }}
-            className={cn(
-                'flex flex-col overflow-hidden rounded-2xl border border-white/10 bg-white/[0.04] backdrop-blur-sm',
-                isSide && 'h-full text-left shadow-lg shadow-black/20',
-            )}
-        >
-            <div
-                className={cn(
-                    'relative shrink-0 overflow-hidden',
-                    isSide ? 'h-44 xl:h-52' : 'h-36 sm:h-40',
-                )}
-            >
-                <img
-                    src={image}
-                    alt={t(`${base}.imageAlt`)}
-                    className="h-full w-full object-cover transition-transform duration-700 hover:scale-[1.03]"
-                    loading="lazy"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#061020] via-[#061020]/45 to-[#061020]/15" />
-                <div className="absolute left-4 top-4 flex h-10 w-10 items-center justify-center rounded-xl border border-white/15 bg-black/35 backdrop-blur-sm">
-                    <Icon className="h-5 w-5 text-slate-200" strokeWidth={1.75} />
-                </div>
-            </div>
-
-            <div
-                className={cn(
-                    'flex flex-1 flex-col p-6 sm:p-8',
-                    !isSide && 'md:text-center',
-                )}
-            >
-                <p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.2em] text-slate-500">
-                    {t(`${base}.badge`)}
-                </p>
-                <h3 className="mb-3 text-xl font-semibold leading-snug tracking-tight text-white sm:text-2xl">
-                    {t(`${base}.title`)}
-                </h3>
-                <p
-                    className={cn(
-                        'mb-6 text-sm leading-relaxed text-slate-400',
-                        isSide ? 'max-w-none' : 'max-w-sm md:mx-auto',
-                    )}
-                >
-                    {t(`${base}.description`)}
-                </p>
-                <Link
-                    to={to}
-                    className={cn(
-                        'group mt-auto inline-flex w-fit items-center gap-2 rounded-lg border border-white/15 bg-white/[0.06] px-5 py-2.5 text-sm font-medium text-white transition-colors hover:border-white/25 hover:bg-white/[0.1]',
-                        !isSide && 'md:mx-auto',
-                    )}
-                >
-                    {t(`${base}.cta`)}
-                    <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" strokeWidth={1.75} />
-                </Link>
-            </div>
-        </motion.article>
-    );
-}
 
 function AudienceStatsRow({ className }: { className?: string }) {
     const { t } = useTranslation();
@@ -536,7 +441,7 @@ function AudienceStatsRow({ className }: { className?: string }) {
     return (
         <div
             className={cn(
-                'grid grid-cols-2 overflow-hidden rounded-2xl border border-white/10 bg-white/[0.03] backdrop-blur-sm lg:grid-cols-4 lg:divide-x lg:divide-white/10',
+                'grid grid-cols-2 overflow-hidden rounded-xl border border-white/10 bg-white/[0.03] backdrop-blur-sm sm:rounded-2xl lg:grid-cols-4 lg:divide-x lg:divide-white/10',
                 className,
             )}
         >
@@ -548,14 +453,14 @@ function AudienceStatsRow({ className }: { className?: string }) {
                     viewport={{ once: true }}
                     transition={{ delay: 0.15 + i * 0.06, duration: 0.4 }}
                     className={cn(
-                        'px-4 py-8 text-center sm:px-6',
+                        'px-3 py-5 text-center sm:px-5 sm:py-6 lg:py-7',
                         i < 2 && 'border-b border-white/10 lg:border-b-0',
                     )}
                 >
-                    <p className="text-3xl font-semibold tabular-nums tracking-tight text-white sm:text-4xl">
+                    <p className="text-2xl font-semibold tabular-nums tracking-tight text-white sm:text-3xl">
                         {t(`landing.audience.stats.${key}.value`)}
                     </p>
-                    <p className="mx-auto mt-2 max-w-[12rem] text-[11px] font-medium uppercase leading-snug tracking-wider text-slate-500 sm:text-xs">
+                    <p className="mx-auto mt-1.5 max-w-[11rem] text-[10px] font-medium uppercase leading-snug tracking-wider text-slate-500 sm:text-[11px]">
                         {t(`landing.audience.stats.${key}.label`)}
                     </p>
                 </motion.div>
@@ -569,62 +474,114 @@ function AudienceGlobePanel({
     icon: Icon,
     to,
     showGlobe,
+    compact,
 }: {
     panelKey: 'managers' | 'travelers';
     icon: LucideIcon;
     to: string;
     showGlobe: boolean;
+    compact?: boolean;
 }) {
     const { t } = useTranslation();
     const base = `landing.audience.${panelKey}`;
 
     return (
-        <div className="relative flex h-full w-full flex-col items-center justify-center px-8 xl:px-16">
-            {showGlobe && (
-                <Suspense fallback={null}>
-                    <div className="absolute inset-0 opacity-75">
-                        <DotGlobeHero
-                            layout="embedded"
-                            rotationSpeed={0.0035}
-                            globeRadius={1}
-                            wireframeOpacity={0.22}
-                            className="h-full w-full bg-transparent"
-                            globeClassName="opacity-100"
-                        />
-                    </div>
-                </Suspense>
-            )}
-            <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-[#061020]/40 via-transparent to-[#061020]/50" />
-            <div className="relative z-10 mx-auto flex max-w-lg flex-col items-center text-center">
-                <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-xl border border-white/10 bg-white/[0.06] backdrop-blur-sm">
-                    <Icon className="h-6 w-6 text-slate-300" strokeWidth={1.75} />
+        <div className="relative flex h-full w-full flex-col bg-[#061020]">
+            {/* Zona del orbe — arriba, sin solapar el texto */}
+            <div
+                className={cn(
+                    'relative flex shrink-0 items-center justify-center',
+                    compact
+                        ? 'h-[38%] min-h-[100px] max-h-[140px]'
+                        : 'h-[42%] min-h-[120px] max-h-[200px] lg:max-h-[220px]',
+                )}
+            >
+                {showGlobe && (
+                    <Suspense fallback={null}>
+                        <div
+                            className={cn(
+                                'relative mx-auto aspect-square w-full opacity-80',
+                                compact ? 'max-w-[130px]' : 'max-w-[160px] lg:max-w-[200px]',
+                            )}
+                        >
+                            <DotGlobeHero
+                                layout="embedded"
+                                rotationSpeed={0.0035}
+                                globeRadius={0.72}
+                                wireframeOpacity={0.2}
+                                className="h-full w-full bg-transparent"
+                                globeClassName="opacity-100"
+                            />
+                        </div>
+                    </Suspense>
+                )}
+            </div>
+
+            {/* Copy + CTA — debajo del orbe */}
+            <div
+                className={cn(
+                    'relative z-10 flex flex-1 flex-col items-center justify-center border-t border-white/[0.06] bg-[#061020] text-center',
+                    compact ? 'gap-2 px-4 pb-4 pt-3' : 'gap-2.5 px-5 pb-5 pt-3 lg:px-8 lg:pb-6',
+                )}
+            >
+                <div
+                    className={cn(
+                        'flex items-center justify-center rounded-lg border border-white/10 bg-white/[0.05]',
+                        compact ? 'mb-0.5 h-8 w-8' : 'mb-1 h-9 w-9',
+                    )}
+                >
+                    <Icon
+                        className={cn('text-slate-300', compact ? 'h-3.5 w-3.5' : 'h-4 w-4')}
+                        strokeWidth={1.75}
+                    />
                 </div>
-                <p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.2em] text-slate-500">
+                <p
+                    className={cn(
+                        'font-semibold uppercase tracking-[0.18em] text-slate-500',
+                        compact ? 'text-[9px]' : 'text-[10px]',
+                    )}
+                >
                     {t(`${base}.badge`)}
                 </p>
-                <h3 className="mb-4 text-2xl font-semibold leading-snug tracking-tight text-white xl:text-3xl">
+                <h3
+                    className={cn(
+                        'font-semibold leading-snug tracking-tight text-white',
+                        compact ? 'max-w-[16rem] text-base' : 'max-w-sm text-lg lg:text-xl',
+                    )}
+                >
                     {t(`${base}.title`)}
                 </h3>
-                <p className="mb-8 text-sm leading-relaxed text-slate-400 sm:text-base">
+                <p
+                    className={cn(
+                        'leading-relaxed text-slate-400',
+                        compact ? 'max-w-[18rem] text-[11px] leading-snug' : 'max-w-xs text-xs lg:text-sm',
+                    )}
+                >
                     {t(`${base}.description`)}
                 </p>
                 <Link
                     to={to}
-                    className="pointer-events-auto group inline-flex items-center gap-2 rounded-lg border border-white/15 bg-white/[0.08] px-6 py-3 text-sm font-medium text-white backdrop-blur-sm transition-colors hover:border-white/25 hover:bg-white/[0.12]"
+                    className={cn(
+                        'group mt-1 inline-flex items-center gap-1.5 rounded-lg border border-white/15 bg-white/[0.08] font-medium text-white transition-colors hover:border-white/25 hover:bg-white/[0.12]',
+                        compact ? 'px-3.5 py-2 text-[11px]' : 'px-4 py-2 text-xs lg:text-sm',
+                    )}
                 >
                     {t(`${base}.cta`)}
-                    <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" strokeWidth={1.75} />
+                    <ArrowRight
+                        className={cn(
+                            'transition-transform group-hover:translate-x-0.5',
+                            compact ? 'h-3 w-3' : 'h-3.5 w-3.5',
+                        )}
+                        strokeWidth={1.75}
+                    />
                 </Link>
             </div>
         </div>
     );
 }
 
-function AudienceScrollDesktop() {
-    const { t } = useTranslation();
-    const [activePage, setActivePage] = useState(1);
-
-    const pages: SplitScrollPage[] = useMemo(
+function useAudienceScrollPages(activePage: number, compact: boolean): SplitScrollPage[] {
+    return useMemo(
         () => [
             {
                 leftBgImage: '/cabin.webp',
@@ -634,6 +591,7 @@ function AudienceScrollDesktop() {
                         icon={Building2}
                         to="/login"
                         showGlobe={activePage === 1}
+                        compact={compact}
                     />
                 ),
             },
@@ -644,24 +602,46 @@ function AudienceScrollDesktop() {
                         icon={MapPin}
                         to="/explore"
                         showGlobe={activePage === 2}
+                        compact={compact}
                     />
                 ),
                 rightBgImage: '/sala.jpg',
             },
         ],
-        [activePage],
+        [activePage, compact],
     );
+}
+
+function AudienceScrollBlock({
+    splitAxis,
+    heightClass,
+    compact,
+}: {
+    splitAxis: SplitScrollAxis;
+    heightClass: string;
+    compact: boolean;
+}) {
+    const { t } = useTranslation();
+    const [activePage, setActivePage] = useState(1);
+    const pages = useAudienceScrollPages(activePage, compact);
 
     return (
         <div className="relative">
             <SplitScrollAdventure
                 pages={pages}
-                className="h-screen min-h-[640px]"
+                className={heightClass}
+                splitAxis={splitAxis}
+                animTimeMs={800}
                 lockPageScroll
                 showIndicators
                 onPageChange={setActivePage}
             />
-            <p className="pointer-events-none absolute bottom-14 left-1/2 z-20 -translate-x-1/2 text-xs text-slate-500">
+            <p
+                className={cn(
+                    'pointer-events-none absolute left-1/2 z-20 -translate-x-1/2 text-slate-500',
+                    splitAxis === 'vertical' ? 'bottom-3 text-[10px]' : 'bottom-10 text-[11px]',
+                )}
+            >
                 {t('landing.audience.scrollHint')}
             </p>
         </div>
@@ -671,31 +651,27 @@ function AudienceScrollDesktop() {
 function AudienceSection() {
     return (
         <section id="audience" className="relative border-t border-white/[0.06] bg-lp">
-            {/* Desktop / laptop: scroll split — imagen | orbe + info */}
+            {/* Desktop: mitades izquierda / derecha */}
             <div className="relative hidden lg:block">
-                <AudienceScrollDesktop />
-                <div className="relative z-10 mx-auto max-w-7xl px-8 pb-14 pt-6 xl:px-10">
+                <AudienceScrollBlock
+                    splitAxis="horizontal"
+                    heightClass="h-[min(72vh,520px)] min-h-[420px]"
+                    compact={false}
+                />
+                <div className="relative z-10 mx-auto max-w-5xl px-6 pb-10 pt-5 xl:px-8">
                     <AudienceStatsRow />
                 </div>
             </div>
 
-            {/* Móvil / tablet: apilado (sin orbe central) */}
-            <div className="lg:hidden">
-                <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6 sm:py-14">
-                    <div className="grid gap-5 md:grid-cols-2">
-                        {AUDIENCE_PANELS.map((panel, i) => (
-                            <AudiencePanelCard
-                                key={panel.key}
-                                panelKey={panel.key}
-                                icon={panel.icon}
-                                to={panel.to}
-                                image={panel.image}
-                                index={i}
-                                layout="stacked"
-                            />
-                        ))}
-                    </div>
-                    <AudienceStatsRow className="mt-8" />
+            {/* Móvil / tablet: imagen arriba, orbe + info abajo */}
+            <div className="relative lg:hidden">
+                <AudienceScrollBlock
+                    splitAxis="vertical"
+                    heightClass="h-[min(78vh,580px)] min-h-[460px]"
+                    compact
+                />
+                <div className="relative z-10 mx-auto max-w-lg px-4 pb-8 pt-4">
+                    <AudienceStatsRow />
                 </div>
             </div>
         </section>

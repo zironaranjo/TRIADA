@@ -8,6 +8,8 @@ export interface SplitScrollPage {
     rightContent?: React.ReactNode;
 }
 
+export type SplitScrollAxis = 'horizontal' | 'vertical';
+
 export interface SplitScrollAdventureProps {
     pages: SplitScrollPage[];
     className?: string;
@@ -16,6 +18,8 @@ export interface SplitScrollAdventureProps {
     lockPageScroll?: boolean;
     showIndicators?: boolean;
     onPageChange?: (page: number) => void;
+    /** horizontal = mitades izq/der (desktop). vertical = arriba/abajo (móvil). */
+    splitAxis?: SplitScrollAxis;
 }
 
 export function SplitScrollAdventure({
@@ -25,7 +29,9 @@ export function SplitScrollAdventure({
     lockPageScroll = true,
     showIndicators = true,
     onPageChange,
+    splitAxis = 'horizontal',
 }: SplitScrollAdventureProps) {
+    const isVertical = splitAxis === 'vertical';
     const [currentPage, setCurrentPage] = useState(1);
 
     const goToPage = useCallback(
@@ -139,31 +145,47 @@ export function SplitScrollAdventure({
                         )}
                         aria-hidden={!isActive}
                     >
-                        {/* Mitad izquierda */}
+                        {/* Primera mitad (izq o arriba) */}
                         <div
-                            className="absolute left-0 top-0 h-full w-1/2 transition-transform ease-in-out"
+                            className={cn(
+                                'absolute transition-transform ease-in-out',
+                                isVertical
+                                    ? 'left-0 top-0 h-[45%] w-full'
+                                    : 'left-0 top-0 h-full w-1/2',
+                            )}
                             style={{
                                 transform: leftTrans,
                                 transitionDuration: `${animTimeMs}ms`,
                             }}
                         >
                             {page.leftBgImage ? (
-                                <ImageHalf url={page.leftBgImage} gradient="to-r" />
+                                <ImageHalf
+                                    url={page.leftBgImage}
+                                    gradient={isVertical ? 'to-b' : 'to-r'}
+                                />
                             ) : (
                                 <ContentHalf>{page.leftContent}</ContentHalf>
                             )}
                         </div>
 
-                        {/* Mitad derecha */}
+                        {/* Segunda mitad (der o abajo) */}
                         <div
-                            className="absolute left-1/2 top-0 h-full w-1/2 transition-transform ease-in-out"
+                            className={cn(
+                                'absolute transition-transform ease-in-out',
+                                isVertical
+                                    ? 'left-0 top-[45%] h-[55%] w-full'
+                                    : 'left-1/2 top-0 h-full w-1/2',
+                            )}
                             style={{
                                 transform: rightTrans,
                                 transitionDuration: `${animTimeMs}ms`,
                             }}
                         >
                             {page.rightBgImage ? (
-                                <ImageHalf url={page.rightBgImage} gradient="to-l" />
+                                <ImageHalf
+                                    url={page.rightBgImage}
+                                    gradient={isVertical ? 'to-t' : 'to-l'}
+                                />
                             ) : (
                                 <ContentHalf>{page.rightContent}</ContentHalf>
                             )}
@@ -173,7 +195,12 @@ export function SplitScrollAdventure({
             })}
 
             {showIndicators && numOfPages > 1 && (
-                <div className="pointer-events-none absolute bottom-8 left-1/2 z-20 flex -translate-x-1/2 gap-2">
+                <div
+                    className={cn(
+                        'pointer-events-none absolute left-1/2 z-20 flex -translate-x-1/2 gap-2',
+                        isVertical ? 'bottom-4' : 'bottom-6',
+                    )}
+                >
                     {pages.map((_, i) => (
                         <span
                             key={i}
@@ -191,22 +218,21 @@ export function SplitScrollAdventure({
     );
 }
 
-function ImageHalf({ url, gradient }: { url: string; gradient: 'to-r' | 'to-l' }) {
+function ImageHalf({ url, gradient }: { url: string; gradient: 'to-r' | 'to-l' | 'to-b' | 'to-t' }) {
+    const sideGradient = {
+        'to-r': 'bg-gradient-to-r from-[#061020]/85 via-[#061020]/35 to-transparent',
+        'to-l': 'bg-gradient-to-l from-[#061020]/85 via-[#061020]/35 to-transparent',
+        'to-b': 'bg-gradient-to-b from-transparent via-[#061020]/25 to-[#061020]/90',
+        'to-t': 'bg-gradient-to-t from-[#061020]/90 via-[#061020]/25 to-transparent',
+    }[gradient];
+
     return (
         <div className="relative h-full w-full">
             <div
                 className="absolute inset-0 bg-cover bg-center bg-no-repeat"
                 style={{ backgroundImage: `url(${url})` }}
             />
-            <div
-                className={cn(
-                    'absolute inset-0',
-                    gradient === 'to-r'
-                        ? 'bg-gradient-to-r from-[#061020]/85 via-[#061020]/35 to-transparent'
-                        : 'bg-gradient-to-l from-[#061020]/85 via-[#061020]/35 to-transparent',
-                )}
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-[#061020]/55 via-transparent to-[#061020]/15" />
+            <div className={cn('absolute inset-0', sideGradient)} />
         </div>
     );
 }
