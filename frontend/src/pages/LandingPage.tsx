@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, lazy, Suspense } from 'react';
 import type { LucideIcon } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -34,6 +34,10 @@ import {
     MapPin,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+
+const DotGlobeHero = lazy(() =>
+    import('@/components/ui/globe-hero').then((m) => ({ default: m.DotGlobeHero })),
+);
 
 // ─── Animation Variants ───────────────────────────────
 const fadeUp = {
@@ -483,50 +487,71 @@ function AudiencePanelCard({
     );
 }
 
+function AudienceSectionFallback() {
+    return (
+        <section id="audience" className="relative border-t border-white/[0.06] bg-lp">
+            <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6 sm:py-14 lg:px-8">
+                <div className="min-h-[20rem] overflow-hidden rounded-2xl border border-white/10 bg-white/[0.02]" />
+            </div>
+        </section>
+    );
+}
+
 function AudienceSection() {
     const { t } = useTranslation();
 
     return (
-        <section id="audience" className="relative border-t border-white/[0.06] bg-lp">
-            <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6 sm:py-14 lg:px-8">
-                <div className="overflow-hidden rounded-2xl border border-white/10 bg-white/[0.02]">
-                    <div className="grid md:grid-cols-2 md:divide-x md:divide-white/10">
-                        {AUDIENCE_PANELS.map((panel, i) => (
-                            <AudiencePanelCard
-                                key={panel.key}
-                                panelKey={panel.key}
-                                icon={panel.icon}
-                                to={panel.to}
-                                index={i}
-                            />
-                        ))}
-                    </div>
+        <Suspense fallback={<AudienceSectionFallback />}>
+            <DotGlobeHero
+                id="audience"
+                layout="section"
+                rotationSpeed={0.003}
+                globeRadius={1.05}
+                wireframeOpacity={0.16}
+                className="relative border-t border-white/[0.06] bg-lp"
+                globeClassName="opacity-50 sm:opacity-60"
+            >
+                <div className="pointer-events-none absolute inset-0 z-[1] bg-gradient-to-b from-[#061020]/30 via-[#061020]/75 to-[#061020]" />
+                <div className="relative z-10 mx-auto max-w-6xl px-4 py-10 sm:px-6 sm:py-14 lg:px-8">
+                    <div className="overflow-hidden rounded-2xl border border-white/10 bg-white/[0.04] backdrop-blur-sm">
+                        <div className="grid md:grid-cols-2 md:divide-x md:divide-white/10">
+                            {AUDIENCE_PANELS.map((panel, i) => (
+                                <AudiencePanelCard
+                                    key={panel.key}
+                                    panelKey={panel.key}
+                                    icon={panel.icon}
+                                    to={panel.to}
+                                    index={i}
+                                />
+                            ))}
+                        </div>
 
-                    <div className="grid grid-cols-2 border-t border-white/10 bg-white/[0.015] lg:grid-cols-4 lg:divide-x lg:divide-white/10">
-                        {STAT_KEYS.map((key, i) => (
-                            <motion.div
-                                key={key}
-                                initial={{ opacity: 0, y: 12 }}
-                                whileInView={{ opacity: 1, y: 0 }}
-                                viewport={{ once: true }}
-                                transition={{ delay: 0.15 + i * 0.06, duration: 0.4 }}
-                                className={cn(
-                                    'px-4 py-8 text-center sm:px-6',
-                                    i < 2 && 'border-b border-white/10 lg:border-b-0',
-                                )}
-                            >
-                                <p className="text-3xl font-semibold tabular-nums tracking-tight text-white sm:text-4xl">
-                                    {t(`landing.audience.stats.${key}.value`)}
-                                </p>
-                                <p className="mx-auto mt-2 max-w-[12rem] text-[11px] font-medium uppercase leading-snug tracking-wider text-slate-500 sm:text-xs">
-                                    {t(`landing.audience.stats.${key}.label`)}
-                                </p>
-                            </motion.div>
-                        ))}
+                        <div className="grid grid-cols-2 border-t border-white/10 bg-white/[0.02] lg:grid-cols-4 lg:divide-x lg:divide-white/10">
+                            {STAT_KEYS.map((key, i) => (
+                                <motion.div
+                                    key={key}
+                                    initial={{ opacity: 0, y: 12 }}
+                                    whileInView={{ opacity: 1, y: 0 }}
+                                    viewport={{ once: true }}
+                                    transition={{ delay: 0.15 + i * 0.06, duration: 0.4 }}
+                                    className={cn(
+                                        'px-4 py-8 text-center sm:px-6',
+                                        i < 2 && 'border-b border-white/10 lg:border-b-0',
+                                    )}
+                                >
+                                    <p className="text-3xl font-semibold tabular-nums tracking-tight text-white sm:text-4xl">
+                                        {t(`landing.audience.stats.${key}.value`)}
+                                    </p>
+                                    <p className="mx-auto mt-2 max-w-[12rem] text-[11px] font-medium uppercase leading-snug tracking-wider text-slate-500 sm:text-xs">
+                                        {t(`landing.audience.stats.${key}.label`)}
+                                    </p>
+                                </motion.div>
+                            ))}
+                        </div>
                     </div>
                 </div>
-            </div>
-        </section>
+            </DotGlobeHero>
+        </Suspense>
     );
 }
 
