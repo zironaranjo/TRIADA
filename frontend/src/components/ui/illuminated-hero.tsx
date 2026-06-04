@@ -1,5 +1,6 @@
 import type { ComponentPropsWithoutRef } from 'react';
 import { cn } from '@/lib/utils';
+import { LpGridBackground } from '@/components/ui/lp-grid-background';
 
 export interface IlluminatedHeroProps extends ComponentPropsWithoutRef<'section'> {
     introLine1: string;
@@ -26,13 +27,15 @@ export function IlluminatedHero({
     return (
         <section
             className={cn(
-                'relative flex w-full min-h-[min(100vh,52rem)] flex-wrap items-center justify-center overflow-hidden bg-[#081428] text-white',
+                'relative flex w-full min-h-[min(100vh,52rem)] flex-wrap items-center justify-center overflow-hidden border-b border-white/5 bg-lp text-white',
                 '[--factor:min(1000px,100vh)] [--size:min(var(--factor),100vw)] text-[calc(var(--size)*0.022)]',
                 className,
             )}
             aria-label={highlightText}
             {...props}
         >
+            <LpGridBackground patternId="lp-grid-illuminated" />
+
             <div className="bg pointer-events-none absolute h-full w-full max-w-[44em]">
                 <div className="shadow-bgt absolute size-full translate-y-[-70%] scale-[1.2] animate-[onloadbgt_1s_ease-in-out_forwards] rounded-[100em] opacity-60" />
                 <div className="shadow-bgb absolute size-full translate-y-[70%] scale-[1.2] animate-[onloadbgb_1s_ease-in-out_forwards] rounded-[100em] opacity-60" />

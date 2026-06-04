@@ -41,7 +41,7 @@ export function FAQ({
             className={cn(
                 'relative overflow-hidden px-4 py-12 sm:py-16',
                 onDarkBackground
-                    ? 'bg-[#0c1838] text-white'
+                    ? 'bg-lp text-white'
                     : 'bg-background text-foreground',
                 className,
             )}

@@ -26,9 +26,8 @@ export default {
             },
             colors: {
                 lp: {
-                    DEFAULT: '#0c1838',
-                    deep: '#081428',
-                    darker: '#061020',
+                    DEFAULT: '#061020',
+                    footer: '#061020',
                 },
                 border: "hsl(var(--border))",
                 input: "hsl(var(--input))",

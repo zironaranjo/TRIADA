@@ -18,7 +18,7 @@ html {
 
 @layer base {
   :root {
-    --background: 221 52% 9%;
+    --background: 221 48% 6%;
     --foreground: 210 20% 98%;
 
     --card: 217.2 32.6% 12%;
@@ -158,14 +158,30 @@ html {
   }
 
   .bg-lp {
-    background-color: #0c1838;
-  }
-
-  .bg-lp-deep {
-    background-color: #081428;
-  }
-
-  .bg-lp-darker {
     background-color: #061020;
+  }
+
+  .bg-lp-footer {
+    background-color: #061020;
+  }
+
+  .lp-grid-line {
+    stroke: rgba(100, 140, 200, 0.28);
+    stroke-width: 0.5;
+    opacity: 0;
+    stroke-dasharray: 6 6;
+    stroke-dashoffset: 1000;
+    animation: lp-grid-draw 2s ease-out forwards;
+  }
+
+  @keyframes lp-grid-draw {
+    0% {
+      stroke-dashoffset: 1000;
+      opacity: 0;
+    }
+    100% {
+      stroke-dashoffset: 0;
+      opacity: 0.18;
+    }
   }
 }
