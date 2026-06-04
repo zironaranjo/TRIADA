@@ -375,12 +375,12 @@ const FEATURE_ICONS = [
 ] as const;
 
 const FEATURE_ICON_COLORS = [
-    'text-primary',
-    'text-emerald-500',
-    'text-sky-500',
-    'text-amber-500',
-    'text-primary',
-    'text-muted-foreground',
+    'text-blue-400',
+    'text-emerald-400',
+    'text-sky-400',
+    'text-amber-400',
+    'text-indigo-400',
+    'text-slate-300',
 ] as const;
 
 const FEATURE_BENTO_LAYOUT: { colSpan?: 1 | 2; hasPersistentHover?: boolean }[] = [
@@ -412,7 +412,7 @@ function Features() {
     });
 
     return (
-        <section id="features" className="relative border-t border-border/40 py-14 sm:py-20 lg:py-32">
+        <section id="features" className="relative border-t border-white/5 py-14 sm:py-20 lg:py-32">
             <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                 <motion.div
                     initial="hidden"
@@ -422,11 +422,13 @@ function Features() {
                     custom={0}
                     className="mx-auto mb-10 max-w-2xl text-center sm:mb-14"
                 >
-                    <p className="text-label mb-2 text-primary sm:mb-3">{t('landing.features.badge')}</p>
-                    <h2 className="text-display text-foreground mb-3 px-2 sm:mb-4">
+                    <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-indigo-400 sm:mb-3">
+                        {t('landing.features.badge')}
+                    </p>
+                    <h2 className="mb-3 px-2 text-2xl font-bold text-white sm:mb-4 sm:text-3xl lg:text-4xl">
                         {t('landing.features.title')}
                     </h2>
-                    <p className="text-subtitle px-2">
+                    <p className="px-2 text-sm text-slate-400 sm:text-lg">
                         {t('landing.features.subtitle')}
                     </p>
                 </motion.div>
@@ -437,7 +439,7 @@ function Features() {
                     viewport={{ once: true, margin: '-50px' }}
                     transition={{ duration: 0.45 }}
                 >
-                    <BentoGrid items={bentoItems} />
+                    <BentoGrid items={bentoItems} onDarkBackground />
                 </motion.div>
             </div>
         </section>
