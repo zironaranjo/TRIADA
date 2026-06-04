@@ -5,6 +5,7 @@ import {
     FileText, Users, DollarSign, TrendingDown,
     ChevronDown, ChevronUp, Building2, Calendar,
     Download,
+    type LucideIcon,
 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { fetchOwnerRows } from '../lib/authSession';
@@ -483,7 +484,7 @@ export default function OwnerStatements() {
 }
 
 // ─── Summary Card ─────────────────────────────────────
-function SummaryCard({ label, value, icon: Icon, color }: { label: string; value: string; icon: React.ElementType; color: string }) {
+function SummaryCard({ label, value, icon: Icon, color }: { label: string; value: string; icon: LucideIcon; color: string }) {
     return (
         <div className="bg-white/5 border border-white/5 rounded-xl p-3 sm:p-4">
             <div className="flex items-center gap-2 mb-1.5">

@@ -9,6 +9,7 @@ import {
     ArrowLeft, Building, DollarSign, TrendingUp,
     Mail, Phone, Home, Edit3, Save, X,
     BarChart3, FileText, CreditCard, Camera,
+    type LucideIcon,
 } from 'lucide-react';
 
 interface Owner {
@@ -139,7 +140,7 @@ export default function OwnerProfile() {
     const monthRevenue = bookings.filter(b => b.start_date >= monthStart).reduce((s, b) => s + Number(b.total_price || 0), 0);
     const occupancyRate = properties.length > 0 ? Math.min(100, Math.round((bookings.length / (properties.length * 12)) * 100)) : 0;
 
-    const TABS: { id: TabId; labelKey: string; icon: React.ElementType }[] = [
+    const TABS: { id: TabId; labelKey: string; icon: LucideIcon }[] = [
         { id: 'properties', labelKey: 'owners.profileTabProperties', icon: Building },
         { id: 'statements', labelKey: 'owners.profileTabStatements', icon: FileText },
         { id: 'payments', labelKey: 'owners.profileTabPayments', icon: CreditCard },

@@ -5,6 +5,7 @@ import { supabasePublic as supabase } from '../lib/supabase';
 import {
     Search, MapPin, Users, BedDouble, Bath,
     Star, SlidersHorizontal, X, Home, Building2, TreePine, Waves,
+    type LucideIcon,
 } from 'lucide-react';
 
 interface Property {
@@ -23,7 +24,7 @@ interface Property {
     amenities: string[] | null;
 }
 
-const TYPE_ICONS: Record<string, React.ElementType> = {
+const TYPE_ICONS: Record<string, LucideIcon> = {
     apartment: Building2,
     house: Home,
     villa: Star,

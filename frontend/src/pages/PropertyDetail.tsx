@@ -6,6 +6,7 @@ import {
     MapPin, Users, BedDouble, Bath, Wifi, Car, Waves, Wind,
     UtensilsCrossed, WashingMachine, ArrowLeft, ChevronLeft, ChevronRight,
     Calendar, Check, Home, Building2, TreePine, Star, Share2,
+    type LucideIcon,
 } from 'lucide-react';
 
 interface Property {
@@ -27,7 +28,7 @@ interface Property {
     house_rules: string | null;
 }
 
-const AMENITY_ICONS: Record<string, React.ElementType> = {
+const AMENITY_ICONS: Record<string, LucideIcon> = {
     'WiFi': Wifi,
     'Piscina': Waves,
     'Aire acondicionado': Wind,

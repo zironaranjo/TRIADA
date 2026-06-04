@@ -11,6 +11,7 @@ import {
     CheckCircle2, Circle, Trash2, Edit3,
     DollarSign, Camera, Briefcase, Calendar, Home,
     Wrench, Bell, ChevronLeft, ChevronRight, AlertTriangle, Building2,
+    type LucideIcon,
 } from 'lucide-react';
 
 // ─── Types ────────────────────────────────────────────
@@ -255,7 +256,7 @@ export default function StaffOperations() {
     const completedTasks = tasks.filter(t => t.status === 'completed' || t.status === 'verified');
     const totalLabourCost = tasks.reduce((s, t) => s + Number(t.cost || 0), 0);
 
-    const TABS: { id: TabId; icon: React.ElementType; label: string }[] = [
+    const TABS: { id: TabId; icon: LucideIcon; label: string }[] = [
         { id: 'staff', icon: Users, label: t('staffOps.tabStaff') },
         { id: 'tasks', icon: ClipboardCheck, label: t('staffOps.tabTasks') },
         { id: 'payroll', icon: DollarSign, label: t('staffOps.tabPayroll') },

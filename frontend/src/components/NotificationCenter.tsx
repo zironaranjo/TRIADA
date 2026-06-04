@@ -5,6 +5,7 @@ import {
     Bell, X, CheckCheck, Trash2,
     Calendar, DollarSign, Info,
     LogIn, LogOut as LogOutIcon,
+    type LucideIcon,
 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
@@ -19,7 +20,7 @@ interface Notification {
     created_at: string;
 }
 
-const TYPE_CONFIG: Record<string, { icon: React.ElementType; color: string; bg: string }> = {
+const TYPE_CONFIG: Record<string, { icon: LucideIcon; color: string; bg: string }> = {
     booking_new: { icon: Calendar, color: 'text-blue-400', bg: 'bg-blue-500/10' },
     booking_updated: { icon: Calendar, color: 'text-amber-400', bg: 'bg-amber-500/10' },
     booking_cancelled: { icon: Calendar, color: 'text-red-400', bg: 'bg-red-500/10' },

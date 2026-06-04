@@ -5,6 +5,7 @@ import {
     User, Mail, Shield, Bell, Globe,
     Save, Camera, Check, AlertTriangle, Trash2,
     Users, Crown, UserCog, Eye, Send, Plus, X, Clock,
+    type LucideIcon,
 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
@@ -40,7 +41,7 @@ interface ProfileForm {
 
 type TabId = 'profile' | 'preferences' | 'notifications' | 'team' | 'danger';
 
-const TAB_ICONS: Record<TabId, React.ElementType> = { profile: User, preferences: Globe, notifications: Bell, team: Users, danger: AlertTriangle };
+const TAB_ICONS: Record<TabId, LucideIcon> = { profile: User, preferences: Globe, notifications: Bell, team: Users, danger: AlertTriangle };
 
 const TIMEZONES = [
     'Europe/Madrid', 'Europe/London', 'Europe/Berlin', 'Europe/Paris',
@@ -75,7 +76,7 @@ const CURRENCIES = [
 
 // ─── Main Settings Component ─────────────────────────
 // ─── Role config ──────────────────────────────────────
-const ROLE_CONFIG: Record<UserRole, { icon: React.ElementType; color: string; bg: string }> = {
+const ROLE_CONFIG: Record<UserRole, { icon: LucideIcon; color: string; bg: string }> = {
     admin:  { icon: Crown,   color: 'text-amber-400',   bg: 'bg-amber-500/20' },
     staff:  { icon: UserCog, color: 'text-blue-400',    bg: 'bg-blue-500/20' },
     owner:  { icon: Eye,     color: 'text-emerald-400', bg: 'bg-emerald-500/20' },
