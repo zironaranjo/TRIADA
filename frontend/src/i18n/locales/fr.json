@@ -687,6 +687,7 @@
       "descriptionHighlight": "clarté opérationnelle"
     },
     "audience": {
+      "scrollHint": "Faites défiler pour gestionnaires et voyageurs",
       "managers": {
         "badge": "Pour gestionnaires",
         "title": "Gérez vos biens en un seul endroit",

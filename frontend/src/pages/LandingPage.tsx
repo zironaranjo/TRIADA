@@ -1,4 +1,4 @@
-import { useState, useEffect, lazy, Suspense } from 'react';
+import { useState, useEffect, lazy, Suspense, useMemo } from 'react';
 import type { LucideIcon } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -34,6 +34,8 @@ import {
     MapPin,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { SplitScrollAdventure } from '@/components/ui/animated-scroll';
+import type { SplitScrollPage } from '@/components/ui/animated-scroll';
 
 const DotGlobeHero = lazy(() =>
     import('@/components/ui/globe-hero').then((m) => ({ default: m.DotGlobeHero })),
@@ -562,17 +564,106 @@ function AudienceStatsRow({ className }: { className?: string }) {
     );
 }
 
-function AudienceSectionDesktopGlobe() {
+function AudienceGlobePanel({
+    panelKey,
+    icon: Icon,
+    to,
+    showGlobe,
+}: {
+    panelKey: 'managers' | 'travelers';
+    icon: LucideIcon;
+    to: string;
+    showGlobe: boolean;
+}) {
+    const { t } = useTranslation();
+    const base = `landing.audience.${panelKey}`;
+
     return (
-        <div className="relative mx-auto flex h-[min(520px,52vh)] w-full max-w-[300px] items-center justify-center xl:max-w-[340px]">
-            <DotGlobeHero
-                layout="embedded"
-                rotationSpeed={0.0035}
-                globeRadius={0.92}
-                wireframeOpacity={0.22}
-                className="h-full w-full bg-transparent"
-                globeClassName="opacity-90"
+        <div className="relative flex h-full w-full flex-col items-center justify-center px-8 xl:px-16">
+            {showGlobe && (
+                <Suspense fallback={null}>
+                    <div className="absolute inset-0 opacity-75">
+                        <DotGlobeHero
+                            layout="embedded"
+                            rotationSpeed={0.0035}
+                            globeRadius={1}
+                            wireframeOpacity={0.22}
+                            className="h-full w-full bg-transparent"
+                            globeClassName="opacity-100"
+                        />
+                    </div>
+                </Suspense>
+            )}
+            <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-[#061020]/40 via-transparent to-[#061020]/50" />
+            <div className="relative z-10 mx-auto flex max-w-lg flex-col items-center text-center">
+                <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-xl border border-white/10 bg-white/[0.06] backdrop-blur-sm">
+                    <Icon className="h-6 w-6 text-slate-300" strokeWidth={1.75} />
+                </div>
+                <p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.2em] text-slate-500">
+                    {t(`${base}.badge`)}
+                </p>
+                <h3 className="mb-4 text-2xl font-semibold leading-snug tracking-tight text-white xl:text-3xl">
+                    {t(`${base}.title`)}
+                </h3>
+                <p className="mb-8 text-sm leading-relaxed text-slate-400 sm:text-base">
+                    {t(`${base}.description`)}
+                </p>
+                <Link
+                    to={to}
+                    className="pointer-events-auto group inline-flex items-center gap-2 rounded-lg border border-white/15 bg-white/[0.08] px-6 py-3 text-sm font-medium text-white backdrop-blur-sm transition-colors hover:border-white/25 hover:bg-white/[0.12]"
+                >
+                    {t(`${base}.cta`)}
+                    <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" strokeWidth={1.75} />
+                </Link>
+            </div>
+        </div>
+    );
+}
+
+function AudienceScrollDesktop() {
+    const { t } = useTranslation();
+    const [activePage, setActivePage] = useState(1);
+
+    const pages: SplitScrollPage[] = useMemo(
+        () => [
+            {
+                leftBgImage: '/cabin.webp',
+                rightContent: (
+                    <AudienceGlobePanel
+                        panelKey="managers"
+                        icon={Building2}
+                        to="/login"
+                        showGlobe={activePage === 1}
+                    />
+                ),
+            },
+            {
+                leftContent: (
+                    <AudienceGlobePanel
+                        panelKey="travelers"
+                        icon={MapPin}
+                        to="/explore"
+                        showGlobe={activePage === 2}
+                    />
+                ),
+                rightBgImage: '/sala.jpg',
+            },
+        ],
+        [activePage],
+    );
+
+    return (
+        <div className="relative">
+            <SplitScrollAdventure
+                pages={pages}
+                className="h-screen min-h-[640px]"
+                lockPageScroll
+                showIndicators
+                onPageChange={setActivePage}
             />
+            <p className="pointer-events-none absolute bottom-14 left-1/2 z-20 -translate-x-1/2 text-xs text-slate-500">
+                {t('landing.audience.scrollHint')}
+            </p>
         </div>
     );
 }
@@ -580,34 +671,11 @@ function AudienceSectionDesktopGlobe() {
 function AudienceSection() {
     return (
         <section id="audience" className="relative border-t border-white/[0.06] bg-lp">
-            {/* Desktop / laptop: orbe al centro, cards a los lados */}
+            {/* Desktop / laptop: scroll split — imagen | orbe + info */}
             <div className="relative hidden lg:block">
-                <div className="mx-auto max-w-7xl px-8 py-16 xl:px-10 xl:py-20">
-                    <div className="grid grid-cols-[minmax(0,1fr)_minmax(220px,300px)_minmax(0,1fr)] items-center gap-8 xl:gap-10">
-                        <AudiencePanelCard
-                            panelKey="managers"
-                            icon={Building2}
-                            to="/login"
-                            image="/cabin.webp"
-                            index={0}
-                            layout="side"
-                        />
-
-                        <Suspense fallback={<div className="mx-auto h-64 w-64 rounded-full border border-white/10 bg-white/[0.02]" />}>
-                            <AudienceSectionDesktopGlobe />
-                        </Suspense>
-
-                        <AudiencePanelCard
-                            panelKey="travelers"
-                            icon={MapPin}
-                            to="/explore"
-                            image="/sala.jpg"
-                            index={1}
-                            layout="side"
-                        />
-                    </div>
-
-                    <AudienceStatsRow className="mt-12" />
+                <AudienceScrollDesktop />
+                <div className="relative z-10 mx-auto max-w-7xl px-8 pb-14 pt-6 xl:px-10">
+                    <AudienceStatsRow />
                 </div>
             </div>
 

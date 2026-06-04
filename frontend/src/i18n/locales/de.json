@@ -677,6 +677,7 @@
       "descriptionHighlight": "operative Klarheit"
     },
     "audience": {
+      "scrollHint": "Scrollen für Verwalter und Reisende",
       "managers": {
         "badge": "Für Verwalter",
         "title": "Verwalten Sie Objekte an einem Ort",

@@ -687,6 +687,7 @@
       "descriptionHighlight": "claridad operativa"
     },
     "audience": {
+      "scrollHint": "Desplázate para ver gestores y viajeros",
       "managers": {
         "badge": "Para gestores",
         "title": "Gestiona tus propiedades en un solo lugar",

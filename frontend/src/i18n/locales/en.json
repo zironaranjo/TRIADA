@@ -687,6 +687,7 @@
       "descriptionHighlight": "operational clarity"
     },
     "audience": {
+      "scrollHint": "Scroll to explore managers and travelers",
       "managers": {
         "badge": "For managers",
         "title": "Manage your properties in one place",
