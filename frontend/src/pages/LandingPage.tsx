@@ -453,14 +453,14 @@ function AudienceStatsRow({ className }: { className?: string }) {
                     viewport={{ once: true }}
                     transition={{ delay: 0.15 + i * 0.06, duration: 0.4 }}
                     className={cn(
-                        'px-3 py-5 text-center sm:px-5 sm:py-6 lg:py-7',
+                        'px-3 py-6 text-center sm:px-5 sm:py-7 lg:py-8',
                         i < 2 && 'border-b border-white/10 lg:border-b-0',
                     )}
                 >
-                    <p className="text-2xl font-semibold tabular-nums tracking-tight text-white sm:text-3xl">
+                    <p className="bg-gradient-to-br from-white to-blue-300 bg-clip-text text-3xl font-bold tabular-nums tracking-tight text-transparent sm:text-4xl">
                         {t(`landing.audience.stats.${key}.value`)}
                     </p>
-                    <p className="mx-auto mt-1.5 max-w-[11rem] text-[10px] font-medium uppercase leading-snug tracking-wider text-slate-500 sm:text-[11px]">
+                    <p className="mx-auto mt-2 max-w-[11rem] text-[10px] font-medium uppercase leading-snug tracking-wider text-slate-500 sm:text-[11px]">
                         {t(`landing.audience.stats.${key}.label`)}
                     </p>
                 </motion.div>
@@ -486,8 +486,8 @@ function AudienceGlobePanel({
     const base = `landing.audience.${panelKey}`;
 
     return (
-        <div className="relative flex h-full w-full flex-col bg-[#061020]">
-            {/* Zona del orbe — arriba, sin solapar el texto */}
+        <div className="relative flex h-full w-full flex-col bg-[#060f1e]">
+            {/* Zona del orbe — arriba */}
             <div
                 className={cn(
                     'relative flex shrink-0 items-center justify-center',
@@ -496,11 +496,18 @@ function AudienceGlobePanel({
                         : 'h-[42%] min-h-[120px] max-h-[200px] lg:max-h-[220px]',
                 )}
             >
+                {/* Glow radial detrás del orbe */}
+                <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
+                    <div className={cn(
+                        'rounded-full bg-blue-500/20 blur-3xl',
+                        compact ? 'h-24 w-24' : 'h-40 w-40 lg:h-48 lg:w-48',
+                    )} />
+                </div>
                 {showGlobe && (
                     <Suspense fallback={null}>
                         <div
                             className={cn(
-                                'relative mx-auto aspect-square w-full opacity-80',
+                                'relative mx-auto aspect-square w-full',
                                 compact ? 'max-w-[130px]' : 'max-w-[160px] lg:max-w-[200px]',
                             )}
                         >
@@ -520,37 +527,45 @@ function AudienceGlobePanel({
             {/* Copy + CTA — debajo del orbe */}
             <div
                 className={cn(
-                    'relative z-10 flex flex-1 flex-col items-center justify-center border-t border-white/[0.06] bg-[#061020] text-center',
-                    compact ? 'gap-2 px-4 pb-4 pt-3' : 'gap-2.5 px-5 pb-5 pt-3 lg:px-8 lg:pb-6',
+                    'relative z-10 flex flex-1 flex-col items-center justify-center border-t border-white/[0.06] text-center',
+                    'bg-gradient-to-b from-[#060f1e] to-[#040c18]',
+                    compact ? 'gap-2.5 px-4 pb-5 pt-4' : 'gap-3 px-5 pb-6 pt-4 lg:px-8 lg:pb-7',
                 )}
             >
+                {/* Icono */}
                 <div
                     className={cn(
-                        'flex items-center justify-center rounded-lg border border-white/10 bg-white/[0.05]',
-                        compact ? 'mb-0.5 h-8 w-8' : 'mb-1 h-9 w-9',
+                        'flex items-center justify-center rounded-xl border border-blue-500/30 bg-blue-500/10',
+                        compact ? 'mb-0.5 h-8 w-8' : 'mb-1 h-10 w-10',
                     )}
                 >
                     <Icon
-                        className={cn('text-slate-300', compact ? 'h-3.5 w-3.5' : 'h-4 w-4')}
+                        className={cn('text-blue-400', compact ? 'h-3.5 w-3.5' : 'h-4.5 w-4.5')}
                         strokeWidth={1.75}
                     />
                 </div>
-                <p
+
+                {/* Badge */}
+                <span
                     className={cn(
-                        'font-semibold uppercase tracking-[0.18em] text-slate-500',
-                        compact ? 'text-[9px]' : 'text-[10px]',
+                        'inline-flex items-center rounded-full border border-blue-500/20 bg-blue-500/10 font-semibold uppercase tracking-[0.2em] text-blue-400',
+                        compact ? 'px-2.5 py-0.5 text-[8px]' : 'px-3 py-1 text-[9px]',
                     )}
                 >
                     {t(`${base}.badge`)}
-                </p>
+                </span>
+
+                {/* Título */}
                 <h3
                     className={cn(
-                        'font-semibold leading-snug tracking-tight text-white',
-                        compact ? 'max-w-[16rem] text-base' : 'max-w-sm text-lg lg:text-xl',
+                        'font-bold leading-snug tracking-tight text-white',
+                        compact ? 'max-w-[16rem] text-base' : 'max-w-sm text-xl lg:text-2xl',
                     )}
                 >
                     {t(`${base}.title`)}
                 </h3>
+
+                {/* Descripción */}
                 <p
                     className={cn(
                         'leading-relaxed text-slate-400',
@@ -559,10 +574,12 @@ function AudienceGlobePanel({
                 >
                     {t(`${base}.description`)}
                 </p>
+
+                {/* CTA */}
                 <Link
                     to={to}
                     className={cn(
-                        'group mt-1 inline-flex items-center gap-1.5 rounded-lg border border-white/15 bg-white/[0.08] font-medium text-white transition-colors hover:border-white/25 hover:bg-white/[0.12]',
+                        'group mt-1 inline-flex items-center gap-1.5 rounded-lg bg-blue-600 font-semibold text-white shadow-lg shadow-blue-900/40 transition-all hover:bg-blue-500 hover:shadow-blue-800/50',
                         compact ? 'px-3.5 py-2 text-[11px]' : 'px-4 py-2 text-xs lg:text-sm',
                     )}
                 >
@@ -572,7 +589,7 @@ function AudienceGlobePanel({
                             'transition-transform group-hover:translate-x-0.5',
                             compact ? 'h-3 w-3' : 'h-3.5 w-3.5',
                         )}
-                        strokeWidth={1.75}
+                        strokeWidth={2}
                     />
                 </Link>
             </div>
