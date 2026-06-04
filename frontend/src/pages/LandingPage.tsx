@@ -615,34 +615,34 @@ function AudienceScrollBlock({
     heightClass: string;
     compact: boolean;
 }) {
-    const { t } = useTranslation();
     const pages = useAudienceScrollPages(compact);
 
     return (
-        <div className="relative">
-            <SplitScrollAdventure
-                pages={pages}
-                className={heightClass}
-                splitAxis={splitAxis}
-                animTimeMs={800}
-                lockPageScroll
-                showIndicators
-            />
-            <p
-                className={cn(
-                    'pointer-events-none absolute left-1/2 z-20 -translate-x-1/2 text-slate-500',
-                    splitAxis === 'vertical' ? 'bottom-3 text-[10px]' : 'bottom-10 text-[11px]',
-                )}
-            >
-                {t('landing.audience.scrollHint')}
-            </p>
-        </div>
+        <SplitScrollAdventure
+            pages={pages}
+            className={heightClass}
+            splitAxis={splitAxis}
+            animTimeMs={800}
+            lockPageScroll
+            showIndicators
+        />
     );
 }
 
 function AudienceSection() {
+    const { t } = useTranslation();
     return (
         <section id="audience" className="relative border-t border-white/[0.06] bg-lp">
+            {/* Título de sección */}
+            <div className="relative z-10 mx-auto max-w-5xl px-6 pb-6 pt-10 text-center xl:px-8">
+                <p className="mb-2 text-[10px] font-semibold uppercase tracking-[0.2em] text-blue-400">
+                    {t('landing.audience.sectionBadge')}
+                </p>
+                <h2 className="text-2xl font-bold tracking-tight text-white sm:text-3xl">
+                    {t('landing.audience.sectionTitle')}
+                </h2>
+            </div>
+
             {/* Desktop: mitades izquierda / derecha */}
             <div className="relative hidden lg:block">
                 <AudienceScrollBlock
@@ -655,7 +655,7 @@ function AudienceSection() {
                 </div>
             </div>
 
-            {/* Móvil / tablet: imagen arriba, orbe + info abajo */}
+            {/* Móvil / tablet: imagen arriba, info abajo */}
             <div className="relative lg:hidden">
                 <AudienceScrollBlock
                     splitAxis="vertical"

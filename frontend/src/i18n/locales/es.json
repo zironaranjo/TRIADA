@@ -687,6 +687,8 @@
       "descriptionHighlight": "claridad operativa"
     },
     "audience": {
+      "sectionBadge": "¿Para quién es Triadak?",
+      "sectionTitle": "Gestores de propiedades y viajeros",
       "scrollHint": "Desplázate para ver gestores y viajeros",
       "managers": {
         "badge": "Para gestores",
