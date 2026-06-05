@@ -64,28 +64,37 @@ type StackDims = {
 };
 
 function useStackContainerDims(containerRef: React.RefObject<HTMLDivElement | null>): StackDims {
-    const [dims, setDims] = useState<StackDims>({ width: 280, height: 176, spread: 36, maxVisible: 5 });
+    const [dims, setDims] = useState<StackDims>({ width: 280, height: 176, spread: 32, maxVisible: 5 });
 
     useEffect(() => {
         const el = containerRef.current;
         if (!el) return;
 
-        const update = (width: number) => {
-            const cardW = Math.min(480, Math.max(220, Math.floor(width * 0.72)));
+        const update = () => {
+            const width = el.clientWidth || window.innerWidth;
+            const maxVisible = width < 480 ? 3 : width < 768 ? 5 : 7;
+            const maxOffset = Math.floor(maxVisible / 2);
+            const overlap = 0.5;
+            const spread = width < 480 ? 24 : width < 768 ? 32 : 40;
+
+            // Ajustar ancho de card para que el abanico quepa sin recortes laterales
+            const fanFactor = 1 + 2 * maxOffset * (1 - overlap);
+            const available = Math.min(width, window.innerWidth) * 0.98;
+            const cardW = Math.min(440, Math.max(200, Math.floor(available / fanFactor)));
             const cardH = Math.round(cardW * 0.58);
-            const spread = width < 360 ? 28 : width < 520 ? 36 : 44;
-            const maxVisible = width < 360 ? 3 : width < 640 ? 5 : 7;
+
             setDims({ width: cardW, height: cardH, spread, maxVisible });
         };
 
-        update(el.clientWidth);
+        update();
 
-        const ro = new ResizeObserver((entries) => {
-            const w = entries[0]?.contentRect.width ?? el.clientWidth;
-            update(w);
-        });
+        const ro = new ResizeObserver(update);
         ro.observe(el);
-        return () => ro.disconnect();
+        window.addEventListener('resize', update);
+        return () => {
+            ro.disconnect();
+            window.removeEventListener('resize', update);
+        };
     }, [containerRef]);
 
     return dims;
@@ -154,7 +163,7 @@ export function ReplaceStackSection() {
     return (
         <section
             id="replace-stack"
-            className="relative overflow-hidden border-t border-white/[0.06] bg-lp py-10 sm:py-14 lg:py-16"
+            className="relative overflow-visible border-t border-white/[0.06] bg-lp py-10 sm:py-14 lg:py-16"
         >
             <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
                 <motion.div
@@ -187,45 +196,48 @@ export function ReplaceStackSection() {
                         </p>
                     </motion.div>
                 </motion.div>
+            </div>
 
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true, margin: '-40px' }}
-                    transition={{ duration: 0.45 }}
-                    ref={stackContainerRef}
-                    className="relative isolate mx-auto w-full overflow-hidden"
-                >
-                    <CardStack
-                        items={stackItems}
-                        initialIndex={0}
-                        cardWidth={stackDims.width}
-                        cardHeight={stackDims.height}
-                        minStageHeight={stackDims.height + 72}
-                        maxVisible={stackDims.maxVisible}
-                        spreadDeg={stackDims.spread}
-                        overlap={0.5}
-                        depthPx={120}
-                        tiltXDeg={10}
-                        activeLiftPx={18}
-                        activeScale={1.02}
-                        inactiveScale={0.93}
-                        perspectivePx={1100}
-                        autoAdvance
-                        intervalMs={2800}
-                        pauseOnHover
-                        showDots
-                        loop
-                        renderCard={(item, { active }) => (
-                            <ToolStackCard
-                                item={item as CardStackItem & { iconIndex: number; tag: string }}
-                                icon={TOOL_ICONS[item.iconIndex as number] ?? RefreshCw}
-                                active={active}
-                            />
-                        )}
-                    />
-                </motion.div>
+            {/* CardStack a ancho completo — sin overflow-hidden para no recortar el abanico */}
+            <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: '-40px' }}
+                transition={{ duration: 0.45 }}
+                ref={stackContainerRef}
+                className="relative isolate mx-auto w-full max-w-[100vw] overflow-visible px-2 sm:px-4"
+            >
+                <CardStack
+                    items={stackItems}
+                    initialIndex={0}
+                    cardWidth={stackDims.width}
+                    cardHeight={stackDims.height}
+                    minStageHeight={stackDims.height + 72}
+                    maxVisible={stackDims.maxVisible}
+                    spreadDeg={stackDims.spread}
+                    overlap={0.5}
+                    depthPx={120}
+                    tiltXDeg={10}
+                    activeLiftPx={18}
+                    activeScale={1.02}
+                    inactiveScale={0.93}
+                    perspectivePx={1100}
+                    autoAdvance
+                    intervalMs={2800}
+                    pauseOnHover
+                    showDots
+                    loop
+                    renderCard={(item, { active }) => (
+                        <ToolStackCard
+                            item={item as CardStackItem & { iconIndex: number; tag: string }}
+                            icon={TOOL_ICONS[item.iconIndex as number] ?? RefreshCw}
+                            active={active}
+                        />
+                    )}
+                />
+            </motion.div>
 
+            <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
                 <p className="mt-2 text-center text-[10px] text-slate-600 sm:text-xs">
                     {t('landing.replaceStack.integrationsNote')}
                 </p>
