@@ -8,7 +8,7 @@ export interface SplitScrollPage {
     rightContent?: React.ReactNode;
 }
 
-export type SplitScrollAxis = 'horizontal' | 'vertical';
+export type SplitScrollAxis = 'horizontal' | 'vertical' | 'carousel';
 
 export interface SplitScrollAdventureProps {
     pages: SplitScrollPage[];
@@ -18,7 +18,7 @@ export interface SplitScrollAdventureProps {
     lockPageScroll?: boolean;
     showIndicators?: boolean;
     onPageChange?: (page: number) => void;
-    /** horizontal = mitades izq/der (desktop). vertical = arriba/abajo (móvil). */
+    /** horizontal = mitades izq/der (desktop). carousel = slide lateral con imagen fija arriba (móvil). */
     splitAxis?: SplitScrollAxis;
 }
 
@@ -32,6 +32,7 @@ export function SplitScrollAdventure({
     splitAxis = 'horizontal',
 }: SplitScrollAdventureProps) {
     const isVertical = splitAxis === 'vertical';
+    const isCarousel = splitAxis === 'carousel';
     const [currentPage, setCurrentPage] = useState(1);
 
     const goToPage = useCallback(
@@ -124,20 +125,92 @@ export function SplitScrollAdventure({
         return () => window.removeEventListener('keydown', onKeyDown);
     }, [animTimeMs, navigateDown, navigateUp]);
 
+    const handleTouchStart = (e: React.TouchEvent) => {
+        touchStartX.current = e.touches[0].clientX;
+    };
+
+    const handleTouchEnd = (e: React.TouchEvent) => {
+        if (touchStartX.current === null || scrolling.current) return;
+        const delta = touchStartX.current - e.changedTouches[0].clientX;
+        if (Math.abs(delta) < 50) return;
+        scrolling.current = true;
+        if (delta > 0) navigateDown();
+        else navigateUp();
+        touchStartX.current = null;
+        window.setTimeout(() => {
+            scrolling.current = false;
+        }, animTimeMs);
+    };
+
+    if (isCarousel) {
+        const slides = pages.map((page) => ({
+            image: page.leftBgImage ?? page.rightBgImage ?? null,
+            content: page.leftContent ?? page.rightContent,
+        }));
+
+        return (
+            <div
+                ref={containerRef}
+                className={cn('relative overflow-hidden bg-[#061020]', className)}
+                onTouchStart={handleTouchStart}
+                onTouchEnd={handleTouchEnd}
+            >
+                <div
+                    className="flex h-full ease-in-out transition-transform"
+                    style={{
+                        transform: `translateX(-${(currentPage - 1) * 100}%)`,
+                        transitionDuration: `${animTimeMs}ms`,
+                    }}
+                >
+                    {slides.map((slide, i) => (
+                        <div
+                            key={i}
+                            className="flex h-full w-full shrink-0 flex-col"
+                            aria-hidden={currentPage !== i + 1}
+                        >
+                            <div className="relative h-[45%] w-full shrink-0">
+                                {slide.image ? (
+                                    <ImageHalf url={slide.image} gradient="to-b" />
+                                ) : (
+                                    <div className="h-full w-full bg-[#061020]" />
+                                )}
+                            </div>
+                            <div className="relative h-[55%] w-full shrink-0 overflow-hidden">
+                                <ContentHalf>{slide.content}</ContentHalf>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+
+                {showIndicators && numOfPages > 1 && (
+                    <div className="absolute bottom-4 left-1/2 z-20 flex -translate-x-1/2 flex-col items-center gap-2">
+                        <div className="flex items-center gap-2">
+                            {pages.map((_, i) => (
+                                <button
+                                    key={i}
+                                    onClick={() => goToPage(i + 1)}
+                                    aria-label={`Ir a página ${i + 1}`}
+                                    className={cn(
+                                        'h-1.5 rounded-full transition-all duration-300',
+                                        currentPage === i + 1
+                                            ? 'w-8 bg-white/80'
+                                            : 'w-1.5 bg-white/30',
+                                    )}
+                                />
+                            ))}
+                        </div>
+                    </div>
+                )}
+            </div>
+        );
+    }
+
     return (
         <div
             ref={containerRef}
             className={cn('relative overflow-hidden bg-[#061020]', className)}
-            onTouchStart={isVertical ? (e) => { touchStartX.current = e.touches[0].clientX; } : undefined}
-            onTouchEnd={isVertical ? (e) => {
-                if (touchStartX.current === null || scrolling.current) return;
-                const delta = touchStartX.current - e.changedTouches[0].clientX;
-                if (Math.abs(delta) < 50) return;
-                scrolling.current = true;
-                if (delta > 0) navigateDown(); else navigateUp();
-                touchStartX.current = null;
-                window.setTimeout(() => { scrolling.current = false; }, animTimeMs);
-            } : undefined}
+            onTouchStart={isVertical ? handleTouchStart : undefined}
+            onTouchEnd={isVertical ? handleTouchEnd : undefined}
         >
             {pages.map((page, i) => {
                 const idx = i + 1;

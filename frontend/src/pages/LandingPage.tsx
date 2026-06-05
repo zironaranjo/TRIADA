@@ -656,10 +656,10 @@ function AudienceSection() {
                 </div>
             </div>
 
-            {/* Móvil / tablet: imagen arriba, info abajo */}
+            {/* Móvil / tablet: carrusel lateral — imagen siempre arriba, contenido abajo */}
             <div className="relative lg:hidden">
                 <AudienceScrollBlock
-                    splitAxis="vertical"
+                    splitAxis="carousel"
                     heightClass="h-[min(78vh,580px)] min-h-[460px]"
                     compact
                 />
