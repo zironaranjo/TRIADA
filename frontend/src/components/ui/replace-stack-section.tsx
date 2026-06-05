@@ -1,3 +1,4 @@
+import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
@@ -23,6 +24,7 @@ import {
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
+import { CardStack, type CardStackItem } from '@/components/ui/card-stack';
 import { cn } from '@/lib/utils';
 
 const TOOL_ICONS: LucideIcon[] = [
@@ -47,6 +49,18 @@ const INTEGRATION_ICONS: LucideIcon[] = [
     Smartphone,
 ];
 
+/** Imágenes temáticas (Unsplash + assets locales) por integración */
+const INTEGRATION_IMAGES = [
+    '/cabin.webp',
+    'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800&auto=format&fit=crop&q=70',
+    'https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=800&auto=format&fit=crop&q=70',
+    'https://images.unsplash.com/photo-1484154218962-a197022b5858?w=800&auto=format&fit=crop&q=70',
+    'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=800&auto=format&fit=crop&q=70',
+    'https://images.unsplash.com/photo-1521737711867-e3b97375f902?w=800&auto=format&fit=crop&q=70',
+    'https://images.unsplash.com/photo-1506784362847-ccbadf1f4e88?w=800&auto=format&fit=crop&q=70',
+    'https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=800&auto=format&fit=crop&q=70',
+];
+
 const fadeUp = {
     hidden: { opacity: 0, y: 20 },
     visible: (i: number) => ({
@@ -61,12 +75,106 @@ const listStagger = {
     visible: { transition: { staggerChildren: 0.06 } },
 };
 
+function useCardStackDimensions() {
+    const [dims, setDims] = useState({ width: 320, height: 220, spread: 36, maxVisible: 5 });
+
+    useEffect(() => {
+        const update = () => {
+            const w = window.innerWidth;
+            if (w < 640) {
+                setDims({
+                    width: Math.min(300, w - 56),
+                    height: 210,
+                    spread: 28,
+                    maxVisible: 3,
+                });
+            } else if (w < 1024) {
+                setDims({ width: 340, height: 230, spread: 34, maxVisible: 5 });
+            } else {
+                setDims({ width: 380, height: 250, spread: 40, maxVisible: 5 });
+            }
+        };
+        update();
+        window.addEventListener('resize', update);
+        return () => window.removeEventListener('resize', update);
+    }, []);
+
+    return dims;
+}
+
+function IntegrationStackCard({
+    item,
+    icon: Icon,
+    active,
+}: {
+    item: CardStackItem & { iconIndex: number };
+    icon: LucideIcon;
+    active: boolean;
+}) {
+    return (
+        <div className="relative h-full w-full bg-[#061020]">
+            <div className="absolute inset-0">
+                {item.imageSrc ? (
+                    <img
+                        src={item.imageSrc}
+                        alt={item.title}
+                        className={cn(
+                            'h-full w-full object-cover transition duration-500',
+                            active ? 'scale-100' : 'scale-105',
+                        )}
+                        draggable={false}
+                        loading="lazy"
+                    />
+                ) : null}
+            </div>
+            <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#061020] via-[#061020]/50 to-[#061020]/20" />
+            <div className="relative z-10 flex h-full flex-col justify-between p-4">
+                <div className="flex items-start justify-between gap-2">
+                    <span className="rounded-md border border-white/10 bg-black/35 px-2 py-0.5 text-[9px] font-semibold uppercase tracking-wider text-slate-300 backdrop-blur-sm sm:text-[10px]">
+                        {item.tag}
+                    </span>
+                    <div
+                        className={cn(
+                            'flex items-center justify-center rounded-lg border border-white/15 bg-black/40 backdrop-blur-sm',
+                            active ? 'h-9 w-9' : 'h-8 w-8',
+                        )}
+                    >
+                        <Icon className="h-4 w-4 text-slate-200" strokeWidth={1.75} />
+                    </div>
+                </div>
+                <div>
+                    <p className="truncate text-base font-semibold text-white sm:text-lg">{item.title}</p>
+                    {item.description ? (
+                        <p className="mt-1 line-clamp-2 text-[11px] leading-snug text-slate-300/90 sm:text-xs">
+                            {item.description}
+                        </p>
+                    ) : null}
+                </div>
+            </div>
+        </div>
+    );
+}
+
 export function ReplaceStackSection() {
     const { t } = useTranslation();
+    const stackDims = useCardStackDimensions();
     const tools = t('landing.replaceStack.tools', { returnObjects: true }) as string[];
     const integrations = t('landing.replaceStack.integrations', { returnObjects: true }) as string[];
     const toolList = Array.isArray(tools) ? tools : [];
     const integrationList = Array.isArray(integrations) ? integrations : [];
+
+    const stackItems = useMemo(
+        () =>
+            integrationList.map((name, i) => ({
+                id: name,
+                title: name,
+                description: t('landing.replaceStack.hubTagline'),
+                imageSrc: INTEGRATION_IMAGES[i] ?? INTEGRATION_IMAGES[0],
+                tag: t('landing.replaceStack.stackTag'),
+                iconIndex: i,
+            })),
+        [integrationList, t],
+    );
 
     return (
         <section
@@ -148,63 +256,54 @@ export function ReplaceStackSection() {
                         </motion.div>
                     </motion.div>
 
-                    {/* Columna hub + integraciones (Card shadcn) */}
+                    {/* Columna CardStack — integraciones en abanico 3D */}
                     <motion.div
                         initial={{ opacity: 0, y: 24 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true, margin: '-40px' }}
                         transition={{ duration: 0.5 }}
                     >
-                        <Card className="border-white/10 bg-white/[0.02] shadow-none backdrop-blur-sm">
-                            <CardContent className="p-4 sm:p-6 lg:p-8">
-                                <div className="mb-5 flex flex-col items-center sm:mb-6">
-                                    <div className="flex h-14 w-14 items-center justify-center rounded-xl border border-white/10 bg-white/[0.05] sm:h-16 sm:w-16 sm:rounded-2xl lg:h-[4.5rem] lg:w-[4.5rem]">
-                                        <Layers
-                                            className="h-7 w-7 text-slate-200 sm:h-8 sm:w-8"
-                                            strokeWidth={1.5}
-                                        />
+                        <Card className="overflow-visible border-white/10 bg-white/[0.02] shadow-none backdrop-blur-sm">
+                            <CardContent className="px-2 pb-4 pt-4 sm:px-4 sm:pb-5 sm:pt-5">
+                                <div className="mb-3 flex flex-col items-center text-center sm:mb-4">
+                                    <div className="mb-2 flex h-11 w-11 items-center justify-center rounded-xl border border-white/10 bg-white/[0.05] sm:h-12 sm:w-12">
+                                        <Layers className="h-5 w-5 text-slate-200 sm:h-6 sm:w-6" strokeWidth={1.5} />
                                     </div>
-                                    <p className="mt-2.5 text-sm font-semibold text-white sm:text-base">
-                                        {t('landing.replaceStack.hubName')}
-                                    </p>
-                                    <p className="text-[11px] text-slate-500 sm:text-xs">
-                                        {t('landing.replaceStack.hubTagline')}
+                                    <p className="text-sm font-semibold text-white">{t('landing.replaceStack.hubName')}</p>
+                                    <p className="text-[10px] text-slate-500 sm:text-[11px]">
+                                        {t('landing.replaceStack.stackSwipeHint')}
                                     </p>
                                 </div>
 
-                                <div className="grid grid-cols-3 gap-x-2 gap-y-4 sm:grid-cols-4 sm:gap-x-3 sm:gap-y-5">
-                                    {integrationList.map((name, i) => {
-                                        const Icon = INTEGRATION_ICONS[i] ?? Globe;
+                                <CardStack
+                                    items={stackItems}
+                                    cardWidth={stackDims.width}
+                                    cardHeight={stackDims.height}
+                                    maxVisible={stackDims.maxVisible}
+                                    spreadDeg={stackDims.spread}
+                                    overlap={0.52}
+                                    activeLiftPx={16}
+                                    activeScale={1.02}
+                                    inactiveScale={0.92}
+                                    autoAdvance
+                                    intervalMs={3200}
+                                    pauseOnHover
+                                    showDots
+                                    loop
+                                    renderCard={(item, { active }) => {
+                                        const Icon =
+                                            INTEGRATION_ICONS[item.iconIndex as number] ?? Globe;
                                         return (
-                                            <motion.div
-                                                key={name}
-                                                initial={{ opacity: 0, y: 8 }}
-                                                whileInView={{ opacity: 1, y: 0 }}
-                                                viewport={{ once: true }}
-                                                transition={{ delay: i * 0.04, duration: 0.3 }}
-                                                className="group flex flex-col items-center gap-1.5 sm:gap-2"
-                                            >
-                                                <div
-                                                    className={cn(
-                                                        'flex items-center justify-center rounded-lg border border-white/10 bg-white/[0.03] transition-colors',
-                                                        'h-9 w-9 sm:h-10 sm:w-10 lg:h-11 lg:w-11',
-                                                        'group-hover:border-white/20 group-hover:bg-white/[0.06]',
-                                                    )}
-                                                >
-                                                    <Icon
-                                                        className="h-4 w-4 text-slate-400 transition-colors group-hover:text-slate-200 sm:h-[1.125rem] sm:w-[1.125rem]"
-                                                        strokeWidth={1.75}
-                                                    />
-                                                </div>
-                                                <span className="max-w-[4.5rem] text-center text-[9px] leading-tight text-slate-500 transition-colors group-hover:text-slate-300 sm:max-w-none sm:text-[10px] lg:text-xs">
-                                                    {name}
-                                                </span>
-                                            </motion.div>
+                                            <IntegrationStackCard
+                                                item={item as CardStackItem & { iconIndex: number }}
+                                                icon={Icon}
+                                                active={active}
+                                            />
                                         );
-                                    })}
-                                </div>
+                                    }}
+                                />
 
-                                <p className="mt-4 text-center text-[10px] text-slate-600 sm:mt-5 sm:text-xs">
+                                <p className="mt-2 text-center text-[10px] text-slate-600 sm:text-xs">
                                     {t('landing.replaceStack.integrationsNote')}
                                 </p>
                             </CardContent>

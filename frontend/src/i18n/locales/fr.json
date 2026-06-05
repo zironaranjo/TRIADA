@@ -719,6 +719,8 @@
       "hubName": "Triadak",
       "hubTagline": "Tout en un",
       "integrationsNote": "Plus d'intégrations bientôt",
+      "stackTag": "Canal connecté",
+      "stackSwipeHint": "Glissez pour explorer",
       "tools": [
         "Channel Manager",
         "Logiciel de réservation",
