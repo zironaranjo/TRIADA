@@ -489,13 +489,11 @@ function AudienceGlobePanel({
     panelKey,
     icon: Icon,
     to,
-    showGlobe,
     compact,
 }: {
     panelKey: 'managers' | 'travelers';
     icon: LucideIcon;
     to: string;
-    showGlobe: boolean;
     compact?: boolean;
 }) {
     const { t } = useTranslation();
@@ -503,42 +501,10 @@ function AudienceGlobePanel({
 
     return (
         <div className="relative flex h-full w-full flex-col bg-[#061020]">
-            {/* Orbe 3D — zona superior, separado del texto */}
             <div
                 className={cn(
-                    'relative flex shrink-0 items-center justify-center overflow-hidden',
-                    compact
-                        ? 'h-[38%] min-h-[100px] max-h-[140px]'
-                        : 'h-[42%] min-h-[120px] max-h-[200px] lg:max-h-[220px]',
-                )}
-            >
-                {showGlobe && (
-                    <Suspense fallback={null}>
-                        <div
-                            className={cn(
-                                'relative mx-auto aspect-square w-full',
-                                compact ? 'max-w-[130px]' : 'max-w-[160px] lg:max-w-[200px]',
-                            )}
-                        >
-                            <DotGlobeHero
-                                layout="embedded"
-                                rotationSpeed={0.0035}
-                                globeRadius={0.72}
-                                wireframeColor="#38bdf8"
-                                wireframeOpacity={0.5}
-                                className="h-full w-full bg-transparent"
-                                globeClassName="opacity-100"
-                            />
-                        </div>
-                    </Suspense>
-                )}
-            </div>
-
-            {/* Copy + CTA — debajo del orbe */}
-            <div
-                className={cn(
-                    'relative z-10 flex flex-1 flex-col items-center justify-center border-t border-white/[0.06] bg-[#061020] text-center',
-                    compact ? 'gap-2.5 px-4 py-5' : 'gap-3 px-5 py-6 lg:px-8 lg:py-7',
+                    'relative z-10 flex flex-1 flex-col items-center justify-center bg-[#061020] text-center',
+                    compact ? 'gap-2.5 px-4 py-6' : 'gap-3 px-5 py-8 lg:px-8 lg:py-10',
                 )}
             >
                 <div
@@ -601,7 +567,7 @@ function AudienceGlobePanel({
     );
 }
 
-function useAudienceScrollPages(activePage: number, compact: boolean): SplitScrollPage[] {
+function useAudienceScrollPages(compact: boolean): SplitScrollPage[] {
     return useMemo(
         () => [
             {
@@ -611,7 +577,6 @@ function useAudienceScrollPages(activePage: number, compact: boolean): SplitScro
                         panelKey="managers"
                         icon={Building2}
                         to="/login"
-                        showGlobe={activePage === 1}
                         compact={compact}
                     />
                 ),
@@ -622,14 +587,13 @@ function useAudienceScrollPages(activePage: number, compact: boolean): SplitScro
                         panelKey="travelers"
                         icon={MapPin}
                         to="/explore"
-                        showGlobe={activePage === 2}
                         compact={compact}
                     />
                 ),
                 rightBgImage: '/sala.jpg',
             },
         ],
-        [activePage, compact],
+        [compact],
     );
 }
 
@@ -642,8 +606,7 @@ function AudienceScrollBlock({
     heightClass: string;
     compact: boolean;
 }) {
-    const [activePage, setActivePage] = useState(1);
-    const pages = useAudienceScrollPages(activePage, compact);
+    const pages = useAudienceScrollPages(compact);
 
     return (
         <SplitScrollAdventure
@@ -653,7 +616,6 @@ function AudienceScrollBlock({
             animTimeMs={800}
             lockPageScroll
             showIndicators
-            onPageChange={setActivePage}
         />
     );
 }
