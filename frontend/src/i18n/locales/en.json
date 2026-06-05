@@ -709,6 +709,37 @@
         "3": { "value": "100%", "label": "Cloud-based — nothing to install" }
       }
     },
+    "replaceStack": {
+      "badge": "Why Triadak",
+      "titleBefore": "Stop paying for",
+      "titleStrike": "8 tools",
+      "titleAfter": "Use just one.",
+      "description": "Most managers juggle 4–8 separate tools. Triadak replaces them with one unified, affordable platform.",
+      "cta": "Start free today",
+      "hubName": "Triadak",
+      "hubTagline": "All in one",
+      "integrationsNote": "More integrations coming soon",
+      "tools": [
+        "Channel Manager",
+        "Booking software",
+        "Accounting",
+        "Guest CRM",
+        "WhatsApp Business",
+        "Owner portal",
+        "Digital contracts",
+        "Revenue management"
+      ],
+      "integrations": [
+        "Airbnb",
+        "Booking.com",
+        "VRBO",
+        "Lodgify",
+        "Stripe",
+        "WhatsApp",
+        "iCal Sync",
+        "SMS"
+      ]
+    },
     "serenity": {
       "top": ["Less chaos.", "More control."],
       "main1": ["Centralize", "bookings,", "guests"],

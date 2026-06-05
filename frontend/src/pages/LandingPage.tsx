@@ -16,24 +16,17 @@ import {
     Shield,
     Zap,
     ArrowRight,
-    Check,
     Menu,
     X,
     Star,
     Globe,
     Clock,
     Smartphone,
-    CreditCard,
-    MessageCircle,
-    FileSignature,
-    TrendingUp,
-    Layers,
-    UserCog,
-    RefreshCw,
     Home,
     MapPin,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { ReplaceStackSection } from '@/components/ui/replace-stack-section';
 import { SplitScrollAdventure } from '@/components/ui/animated-scroll';
 import type { SplitScrollAxis, SplitScrollPage } from '@/components/ui/animated-scroll';
 
@@ -671,127 +664,6 @@ function AudienceSection() {
     );
 }
 
-// ─── Replace Your Stack ────────────────────────────────
-const oldTools = [
-    { name: 'Channel Manager', icon: RefreshCw },
-    { name: 'Software de reservas', icon: CalendarDays },
-    { name: 'Contabilidad', icon: PiggyBank },
-    { name: 'CRM de huéspedes', icon: Users },
-    { name: 'WhatsApp Business', icon: MessageCircle },
-    { name: 'Portal de propietarios', icon: UserCog },
-    { name: 'Contratos digitales', icon: FileSignature },
-    { name: 'Revenue management', icon: TrendingUp },
-];
-
-const integrations = [
-    { name: 'Airbnb', icon: Building2 },
-    { name: 'Booking.com', icon: Globe },
-    { name: 'VRBO', icon: Building2 },
-    { name: 'Lodgify', icon: Zap },
-    { name: 'Stripe', icon: CreditCard },
-    { name: 'WhatsApp', icon: MessageCircle },
-    { name: 'iCal Sync', icon: CalendarDays },
-    { name: 'SMS', icon: Smartphone },
-];
-
-function ReplaceStack() {
-    return (
-        <section className="relative overflow-hidden bg-[#061020] py-16 sm:py-24 lg:py-32">
-            <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-20">
-
-                    {/* Left — Replace tools */}
-                    <motion.div
-                        initial="hidden"
-                        whileInView="visible"
-                        viewport={{ once: true, margin: '-60px' }}
-                        variants={stagger}
-                    >
-                        <motion.div variants={fadeUp} custom={0}>
-                            <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-slate-400 sm:text-sm">Por qué Triadak</p>
-                            <h2 className="mb-4 text-2xl font-bold leading-tight text-white sm:text-3xl lg:text-4xl">
-                                Deja de pagar por{' '}
-                                <span className="text-slate-500 line-through">8 herramientas</span>
-                                <br />
-                                <span className="text-white">Usa solo una.</span>
-                            </h2>
-                            <p className="text-slate-400 text-sm sm:text-base leading-relaxed mb-8">
-                                La mayoría de gestores usan entre 4 y 8 herramientas distintas. Triadak las reemplaza todas con una plataforma unificada, más barata y sin fricciones.
-                            </p>
-                        </motion.div>
-
-                        <motion.div variants={fadeUp} custom={1} className="grid grid-cols-2 gap-2.5">
-                            {oldTools.map((tool) => (
-                                <div
-                                    key={tool.name}
-                                    className="flex items-center gap-2.5 px-3 py-2.5 rounded-lg border border-white/[0.06] bg-white/[0.03]"
-                                >
-                                    <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg border border-white/10 bg-white/[0.04]">
-                                        <tool.icon className="h-4 w-4 text-slate-300" strokeWidth={1.75} />
-                                    </div>
-                                    <span className="truncate text-xs text-slate-400 sm:text-sm">{tool.name}</span>
-                                    <Check className="ml-auto h-3.5 w-3.5 flex-shrink-0 text-slate-500" strokeWidth={2} />
-                                </div>
-                            ))}
-                        </motion.div>
-
-                        <motion.div variants={fadeUp} custom={2} className="mt-8">
-                            <Link
-                                to="/login"
-                                className="inline-flex items-center gap-2 text-sm font-semibold text-white bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 px-5 py-3 rounded-xl transition-all group"
-                            >
-                                Empieza gratis hoy
-                                <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
-                            </Link>
-                        </motion.div>
-                    </motion.div>
-
-                    {/* Right — Integrations hub */}
-                    <motion.div
-                        initial={{ opacity: 0, x: 30 }}
-                        whileInView={{ opacity: 1, x: 0 }}
-                        viewport={{ once: true, margin: '-60px' }}
-                        transition={{ duration: 0.6 }}
-                        className="relative"
-                    >
-                        {/* Central Triadak node */}
-                        <div className="mb-6 flex flex-col items-center">
-                            <div className="flex h-20 w-20 items-center justify-center rounded-2xl border border-white/10 bg-white/[0.04] sm:h-24 sm:w-24">
-                                <Layers className="h-9 w-9 text-slate-200 sm:h-10 sm:w-10" strokeWidth={1.5} />
-                            </div>
-                            <p className="mt-3 text-sm font-semibold text-white">Triadak</p>
-                            <p className="text-xs text-slate-500">Todo en uno</p>
-                        </div>
-
-                        {/* Integration icons */}
-                        <div className="grid grid-cols-4 gap-x-4 gap-y-6">
-                            {integrations.map((int, i) => (
-                                <motion.div
-                                    key={int.name}
-                                    initial={{ opacity: 0, y: 10 }}
-                                    whileInView={{ opacity: 1, y: 0 }}
-                                    viewport={{ once: true }}
-                                    transition={{ delay: i * 0.07, duration: 0.35 }}
-                                    className="group flex cursor-default flex-col items-center gap-2"
-                                >
-                                    <div className="flex h-11 w-11 items-center justify-center rounded-xl border border-white/10 bg-white/[0.03] transition-colors group-hover:border-white/20 group-hover:bg-white/[0.06]">
-                                        <int.icon className="h-5 w-5 text-slate-400 transition-colors group-hover:text-slate-200" strokeWidth={1.75} />
-                                    </div>
-                                    <span className="text-center text-xs text-slate-500 transition-colors group-hover:text-slate-300">{int.name}</span>
-                                </motion.div>
-                            ))}
-                        </div>
-
-                        <p className="text-center text-xs text-slate-700 mt-6">
-                            Más integraciones próximamente
-                        </p>
-                    </motion.div>
-                </div>
-            </div>
-        </section>
-    );
-}
-
 // ─── How It Works ─────────────────────────────────────
 const steps = [
     {
@@ -1107,7 +979,7 @@ export default function LandingPage() {
             <HookIlluminatedSection />
             <AudienceSection />
             <Features />
-            <ReplaceStack />
+            <ReplaceStackSection />
             <HowItWorks />
 <Testimonials />
             <LandingFAQ />

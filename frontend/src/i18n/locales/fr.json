@@ -709,6 +709,37 @@
         "3": { "value": "100%", "label": "Dans le cloud — sans installation" }
       }
     },
+    "replaceStack": {
+      "badge": "Pourquoi Triadak",
+      "titleBefore": "Arrêtez de payer",
+      "titleStrike": "8 outils",
+      "titleAfter": "Utilisez-en un seul.",
+      "description": "La plupart des gestionnaires utilisent 4 à 8 outils distincts. Triadak les remplace par une plateforme unifiée, plus abordable.",
+      "cta": "Commencer gratuitement",
+      "hubName": "Triadak",
+      "hubTagline": "Tout en un",
+      "integrationsNote": "Plus d'intégrations bientôt",
+      "tools": [
+        "Channel Manager",
+        "Logiciel de réservation",
+        "Comptabilité",
+        "CRM voyageurs",
+        "WhatsApp Business",
+        "Portail propriétaires",
+        "Contrats numériques",
+        "Revenue management"
+      ],
+      "integrations": [
+        "Airbnb",
+        "Booking.com",
+        "VRBO",
+        "Lodgify",
+        "Stripe",
+        "WhatsApp",
+        "Sync iCal",
+        "SMS"
+      ]
+    },
     "serenity": {
       "top": ["Moins de chaos.", "Plus de contrôle."],
       "main1": ["Centralisez", "réservations,", "invités"],
