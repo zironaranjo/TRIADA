@@ -341,15 +341,19 @@ function HookIlluminatedSection() {
             descriptionHighlight={t('landing.illuminated.descriptionHighlight')}
             backgroundNode={
                 <Suspense fallback={null}>
-                    <DotGlobeHero
-                        layout="embedded"
-                        rotationSpeed={0.002}
-                        globeRadius={0.72}
-                        wireframeColor="#38bdf8"
-                        wireframeOpacity={0.55}
-                        className="h-[min(100vh,52rem)] w-full bg-transparent"
-                        globeClassName="opacity-100"
-                    />
+                    <div className="flex h-full w-full items-center justify-center">
+                        <div className="aspect-square h-[min(88vw,36rem)] w-[min(88vw,36rem)] sm:h-[min(72vw,42rem)] sm:w-[min(72vw,42rem)]">
+                            <DotGlobeHero
+                                layout="embedded"
+                                rotationSpeed={0.002}
+                                globeRadius={0.78}
+                                wireframeColor="#38bdf8"
+                                wireframeOpacity={0.55}
+                                className="h-full w-full bg-transparent"
+                                globeClassName="opacity-100"
+                            />
+                        </div>
+                    </div>
                 </Suspense>
             }
         />
@@ -485,60 +489,88 @@ function AudienceGlobePanel({
     panelKey,
     icon: Icon,
     to,
+    showGlobe,
     compact,
 }: {
     panelKey: 'managers' | 'travelers';
     icon: LucideIcon;
     to: string;
+    showGlobe: boolean;
     compact?: boolean;
 }) {
     const { t } = useTranslation();
     const base = `landing.audience.${panelKey}`;
 
     return (
-        <div className="relative flex h-full w-full flex-col bg-[#060f1e]">
-            {/* Copy + CTA */}
+        <div className="relative flex h-full w-full flex-col bg-[#061020]">
+            {/* Orbe 3D — zona superior, separado del texto */}
             <div
                 className={cn(
-                    'relative z-10 flex h-full flex-col items-center justify-center text-center',
-                    'bg-gradient-to-b from-[#060f1e] to-[#040c18]',
-                    compact ? 'gap-2.5 px-4 py-6' : 'gap-3 px-5 py-8 lg:px-8',
+                    'relative flex shrink-0 items-center justify-center overflow-hidden',
+                    compact
+                        ? 'h-[38%] min-h-[100px] max-h-[140px]'
+                        : 'h-[42%] min-h-[120px] max-h-[200px] lg:max-h-[220px]',
                 )}
             >
-                {/* Icono */}
+                {showGlobe && (
+                    <Suspense fallback={null}>
+                        <div
+                            className={cn(
+                                'relative mx-auto aspect-square w-full',
+                                compact ? 'max-w-[130px]' : 'max-w-[160px] lg:max-w-[200px]',
+                            )}
+                        >
+                            <DotGlobeHero
+                                layout="embedded"
+                                rotationSpeed={0.0035}
+                                globeRadius={0.72}
+                                wireframeColor="#38bdf8"
+                                wireframeOpacity={0.5}
+                                className="h-full w-full bg-transparent"
+                                globeClassName="opacity-100"
+                            />
+                        </div>
+                    </Suspense>
+                )}
+            </div>
+
+            {/* Copy + CTA — debajo del orbe */}
+            <div
+                className={cn(
+                    'relative z-10 flex flex-1 flex-col items-center justify-center border-t border-white/[0.06] bg-[#061020] text-center',
+                    compact ? 'gap-2.5 px-4 py-5' : 'gap-3 px-5 py-6 lg:px-8 lg:py-7',
+                )}
+            >
                 <div
                     className={cn(
-                        'flex items-center justify-center rounded-xl border border-blue-500/30 bg-blue-500/10',
-                        compact ? 'mb-0.5 h-8 w-8' : 'mb-1 h-10 w-10',
+                        'flex items-center justify-center rounded-xl border border-white/10 bg-white/[0.05]',
+                        compact ? 'h-8 w-8' : 'h-10 w-10',
                     )}
                 >
                     <Icon
-                        className={cn('text-blue-400', compact ? 'h-3.5 w-3.5' : 'h-4.5 w-4.5')}
+                        className={cn('text-slate-300', compact ? 'h-3.5 w-3.5' : 'h-4 w-4')}
                         strokeWidth={1.75}
                     />
                 </div>
 
-                {/* Badge */}
                 <span
                     className={cn(
-                        'inline-flex items-center rounded-full border border-blue-500/20 bg-blue-500/10 font-semibold uppercase tracking-[0.2em] text-blue-400',
-                        compact ? 'px-2.5 py-0.5 text-[8px]' : 'px-3 py-1 text-[9px]',
+                        'font-semibold uppercase tracking-[0.18em] text-slate-500',
+                        compact ? 'text-[9px]' : 'text-[10px]',
                     )}
                 >
                     {t(`${base}.badge`)}
                 </span>
 
-                {/* Título */}
                 <h3
                     className={cn(
-                        'font-bold leading-snug tracking-tight text-white',
+                        'font-semibold leading-snug tracking-tight text-white',
                         compact ? 'max-w-[16rem] text-base' : 'max-w-sm text-xl lg:text-2xl',
                     )}
                 >
                     {t(`${base}.title`)}
                 </h3>
 
-                {/* Descripción */}
                 <p
                     className={cn(
                         'leading-relaxed text-slate-400',
@@ -548,12 +580,11 @@ function AudienceGlobePanel({
                     {t(`${base}.description`)}
                 </p>
 
-                {/* CTA */}
                 <Link
                     to={to}
                     className={cn(
-                        'group mt-1 inline-flex items-center gap-1.5 rounded-lg bg-blue-600 font-semibold text-white shadow-lg shadow-blue-900/40 transition-all hover:bg-blue-500 hover:shadow-blue-800/50',
-                        compact ? 'px-3.5 py-2 text-[11px]' : 'px-4 py-2 text-xs lg:text-sm',
+                        'group mt-1 inline-flex items-center gap-1.5 rounded-lg border border-white/15 bg-white/[0.08] font-medium text-white transition-colors hover:border-white/25 hover:bg-white/[0.12]',
+                        compact ? 'px-3.5 py-2 text-[11px]' : 'px-4 py-2.5 text-xs lg:text-sm',
                     )}
                 >
                     {t(`${base}.cta`)}
@@ -562,7 +593,7 @@ function AudienceGlobePanel({
                             'transition-transform group-hover:translate-x-0.5',
                             compact ? 'h-3 w-3' : 'h-3.5 w-3.5',
                         )}
-                        strokeWidth={2}
+                        strokeWidth={1.75}
                     />
                 </Link>
             </div>
@@ -570,7 +601,7 @@ function AudienceGlobePanel({
     );
 }
 
-function useAudienceScrollPages(compact: boolean): SplitScrollPage[] {
+function useAudienceScrollPages(activePage: number, compact: boolean): SplitScrollPage[] {
     return useMemo(
         () => [
             {
@@ -580,6 +611,7 @@ function useAudienceScrollPages(compact: boolean): SplitScrollPage[] {
                         panelKey="managers"
                         icon={Building2}
                         to="/login"
+                        showGlobe={activePage === 1}
                         compact={compact}
                     />
                 ),
@@ -590,13 +622,14 @@ function useAudienceScrollPages(compact: boolean): SplitScrollPage[] {
                         panelKey="travelers"
                         icon={MapPin}
                         to="/explore"
+                        showGlobe={activePage === 2}
                         compact={compact}
                     />
                 ),
                 rightBgImage: '/sala.jpg',
             },
         ],
-        [compact],
+        [activePage, compact],
     );
 }
 
@@ -609,7 +642,8 @@ function AudienceScrollBlock({
     heightClass: string;
     compact: boolean;
 }) {
-    const pages = useAudienceScrollPages(compact);
+    const [activePage, setActivePage] = useState(1);
+    const pages = useAudienceScrollPages(activePage, compact);
 
     return (
         <SplitScrollAdventure
@@ -619,6 +653,7 @@ function AudienceScrollBlock({
             animTimeMs={800}
             lockPageScroll
             showIndicators
+            onPageChange={setActivePage}
         />
     );
 }

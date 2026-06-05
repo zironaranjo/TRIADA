@@ -10,7 +10,9 @@ export interface IlluminatedHeroProps extends ComponentPropsWithoutRef<'section'
     trailingLine2?: string;
     description: string;
     descriptionHighlight?: string;
+    /** Orbe u otro fondo 3D — no se atenúa por defecto */
     backgroundNode?: ReactNode;
+    backgroundClassName?: string;
     className?: string;
 }
 
@@ -23,6 +25,7 @@ export function IlluminatedHero({
     description,
     descriptionHighlight,
     backgroundNode,
+    backgroundClassName,
     className,
     ...props
 }: IlluminatedHeroProps) {
@@ -38,11 +41,22 @@ export function IlluminatedHero({
         >
             <LpGridBackground patternId="lp-grid-illuminated" />
 
-            {backgroundNode && (
-                <div className="pointer-events-none absolute inset-0 z-0 flex items-center justify-center opacity-40">
+            {backgroundNode ? (
+                <div
+                    className={cn(
+                        'pointer-events-none absolute inset-0 z-[1] flex items-center justify-center',
+                        backgroundClassName,
+                    )}
+                >
                     {backgroundNode}
                 </div>
-            )}
+            ) : null}
+
+            {/* Velo muy suave solo en el centro para legibilidad del texto — el orbe sigue visible */}
+            <div
+                className="pointer-events-none absolute inset-0 z-[2] bg-[radial-gradient(ellipse_55%_45%_at_50%_42%,rgba(6,16,32,0.55)_0%,transparent_70%)]"
+                aria-hidden
+            />
 
             <div className="bg pointer-events-none absolute h-full w-full max-w-[44em]">
                 <div className="shadow-bgt absolute size-full translate-y-[-70%] scale-[1.2] animate-[onloadbgt_1s_ease-in-out_forwards] rounded-[100em] opacity-60" />
@@ -50,7 +64,7 @@ export function IlluminatedHero({
             </div>
 
             <div
-                className="relative z-10 px-4 text-center text-3xl font-semibold leading-tight sm:text-4xl md:text-5xl lg:text-6xl"
+                className="relative z-10 px-4 text-center text-2xl font-semibold leading-tight sm:text-4xl md:text-5xl lg:text-6xl"
                 aria-hidden="true"
             >
                 {introLine1}
@@ -86,7 +100,7 @@ export function IlluminatedHero({
                 ) : null}
             </div>
 
-            <p className="absolute top-0 bottom-0 z-10 m-auto h-fit max-w-[28em] translate-y-[10em] px-6 bg-gradient-to-t from-[#86868b] to-[#bdc2c9] bg-clip-text text-center text-sm font-semibold text-transparent sm:translate-y-[12em] sm:text-base">
+            <p className="absolute top-0 bottom-0 z-10 m-auto h-fit max-w-[28em] translate-y-[8em] px-6 bg-gradient-to-t from-[#86868b] to-[#bdc2c9] bg-clip-text text-center text-sm font-semibold text-transparent sm:translate-y-[10em] sm:text-base md:translate-y-[12em]">
                 {descriptionHighlight ? (
                     <>
                         {description.split(descriptionHighlight)[0]}
