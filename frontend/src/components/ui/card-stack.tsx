@@ -35,7 +35,6 @@ export type CardStackProps<T extends CardStackItem> = {
     pauseOnHover?: boolean;
     showDots?: boolean;
     className?: string;
-    /** Altura mínima del escenario (útil en contenedores estrechos) */
     minStageHeight?: number;
     onChangeIndex?: (index: number, item: T) => void;
     renderCard?: (item: T, state: { active: boolean }) => React.ReactNode;
@@ -128,22 +127,12 @@ export function CardStack<T extends CardStackItem>({
         );
 
         return () => window.clearInterval(id);
-    }, [
-        autoAdvance,
-        intervalMs,
-        hovering,
-        pauseOnHover,
-        reduceMotion,
-        len,
-        loop,
-        active,
-        next,
-    ]);
+    }, [autoAdvance, intervalMs, hovering, pauseOnHover, reduceMotion, len, loop, active, next]);
 
     if (!len) return null;
 
     const activeItem = items[active]!;
-    const stageHeight = minStageHeight ?? Math.max(280, cardHeight + 56);
+    const stageHeight = minStageHeight ?? Math.max(380, cardHeight + 80);
 
     return (
         <div
@@ -160,11 +149,11 @@ export function CardStack<T extends CardStackItem>({
                 aria-label="Carrusel de tarjetas"
             >
                 <div
-                    className="pointer-events-none absolute inset-x-0 top-4 mx-auto h-32 w-[70%] rounded-full bg-blue-500/10 blur-3xl"
+                    className="pointer-events-none absolute inset-x-0 top-6 mx-auto h-48 w-[70%] rounded-full bg-blue-500/10 blur-3xl dark:bg-white/5"
                     aria-hidden
                 />
                 <div
-                    className="pointer-events-none absolute inset-x-0 bottom-0 mx-auto h-28 w-[76%] rounded-full bg-black/40 blur-3xl"
+                    className="pointer-events-none absolute inset-x-0 bottom-0 mx-auto h-40 w-[76%] rounded-full bg-black/40 blur-3xl dark:bg-black/30"
                     aria-hidden
                 />
 
@@ -206,7 +195,7 @@ export function CardStack<T extends CardStackItem>({
                                 <motion.div
                                     key={item.id}
                                     className={cn(
-                                        'absolute bottom-0 overflow-hidden rounded-2xl border border-white/10 shadow-xl shadow-black/30',
+                                        'absolute bottom-0 overflow-hidden rounded-2xl border-4 border-black/10 shadow-xl dark:border-white/10',
                                         'will-change-transform select-none',
                                         isActive
                                             ? 'cursor-grab active:cursor-grabbing'
@@ -256,7 +245,7 @@ export function CardStack<T extends CardStackItem>({
                                         {renderCard ? (
                                             renderCard(item, { active: isActive })
                                         ) : (
-                                            <DefaultFanCard item={item} />
+                                            <DefaultFanCard item={item} active={isActive} />
                                         )}
                                     </div>
                                 </motion.div>
@@ -267,7 +256,7 @@ export function CardStack<T extends CardStackItem>({
             </div>
 
             {showDots ? (
-                <div className="relative z-10 mt-3 flex items-center justify-center gap-3 sm:mt-4">
+                <div className="mt-6 flex items-center justify-center gap-3">
                     <div className="flex items-center gap-2">
                         {items.map((it, idx) => {
                             const on = idx === active;
@@ -277,8 +266,8 @@ export function CardStack<T extends CardStackItem>({
                                     type="button"
                                     onClick={() => setActive(idx)}
                                     className={cn(
-                                        'h-1.5 rounded-full transition-all',
-                                        on ? 'w-6 bg-white/80' : 'w-1.5 bg-white/25 hover:bg-white/45',
+                                        'h-2 rounded-full transition-all',
+                                        on ? 'w-6 bg-white/80' : 'w-2 bg-white/30 hover:bg-white/50',
                                     )}
                                     aria-label={`Ir a ${it.title}`}
                                 />
@@ -302,34 +291,37 @@ export function CardStack<T extends CardStackItem>({
     );
 }
 
-function DefaultFanCard({ item }: { item: CardStackItem }) {
+function DefaultFanCard({ item, active }: { item: CardStackItem; active: boolean }) {
     return (
-        <div className="relative h-full w-full bg-[#0a1628]">
+        <div className="relative h-full w-full">
             <div className="absolute inset-0">
                 {item.imageSrc ? (
                     <img
                         src={item.imageSrc}
                         alt={item.title}
-                        className="h-full w-full object-cover"
+                        className={cn(
+                            'h-full w-full object-cover transition duration-500',
+                            active ? 'scale-100' : 'scale-105',
+                        )}
                         draggable={false}
                         loading="lazy"
                     />
                 ) : (
-                    <div className="flex h-full w-full items-center justify-center bg-white/[0.04] text-sm text-slate-500">
+                    <div className="flex h-full w-full items-center justify-center bg-secondary text-sm text-muted-foreground">
                         Sin imagen
                     </div>
                 )}
             </div>
-            <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#061020] via-[#061020]/40 to-transparent" />
-            <div className="relative z-10 flex h-full flex-col justify-end p-4 sm:p-5">
+            <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+            <div className="relative z-10 flex h-full flex-col justify-end p-5">
                 {item.tag ? (
                     <span className="mb-2 w-fit rounded-md border border-white/10 bg-black/30 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider text-slate-300 backdrop-blur-sm">
                         {item.tag}
                     </span>
                 ) : null}
-                <div className="truncate text-base font-semibold text-white sm:text-lg">{item.title}</div>
+                <div className="truncate text-lg font-semibold text-white">{item.title}</div>
                 {item.description ? (
-                    <div className="mt-1 line-clamp-2 text-xs text-slate-300/90 sm:text-sm">{item.description}</div>
+                    <div className="mt-1 line-clamp-2 text-sm text-white/80">{item.description}</div>
                 ) : null}
             </div>
         </div>
