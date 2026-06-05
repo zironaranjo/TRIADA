@@ -35,6 +35,8 @@ export type CardStackProps<T extends CardStackItem> = {
     pauseOnHover?: boolean;
     showDots?: boolean;
     className?: string;
+    /** Altura mínima del escenario (útil en contenedores estrechos) */
+    minStageHeight?: number;
     onChangeIndex?: (index: number, item: T) => void;
     renderCard?: (item: T, state: { active: boolean }) => React.ReactNode;
 };
@@ -73,6 +75,7 @@ export function CardStack<T extends CardStackItem>({
     pauseOnHover = true,
     showDots = true,
     className,
+    minStageHeight,
     onChangeIndex,
     renderCard,
 }: CardStackProps<T>) {
@@ -140,7 +143,7 @@ export function CardStack<T extends CardStackItem>({
     if (!len) return null;
 
     const activeItem = items[active]!;
-    const stageHeight = Math.max(280, cardHeight + 56);
+    const stageHeight = minStageHeight ?? Math.max(280, cardHeight + 56);
 
     return (
         <div
@@ -264,7 +267,7 @@ export function CardStack<T extends CardStackItem>({
             </div>
 
             {showDots ? (
-                <div className="mt-4 flex items-center justify-center gap-3 sm:mt-5">
+                <div className="relative z-10 mt-3 flex items-center justify-center gap-3 sm:mt-4">
                     <div className="flex items-center gap-2">
                         {items.map((it, idx) => {
                             const on = idx === active;
