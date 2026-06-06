@@ -3,6 +3,7 @@ import { cn } from '@/lib/utils';
 import { LpGridBackground } from '@/components/ui/lp-grid-background';
 
 export interface IlluminatedHeroProps extends ComponentPropsWithoutRef<'section'> {
+    sectionLabel?: string;
     introLine1: string;
     introLine2?: string;
     highlightText: string;
@@ -17,6 +18,7 @@ export interface IlluminatedHeroProps extends ComponentPropsWithoutRef<'section'
 }
 
 export function IlluminatedHero({
+    sectionLabel,
     introLine1,
     introLine2,
     highlightText,
@@ -29,14 +31,17 @@ export function IlluminatedHero({
     className,
     ...props
 }: IlluminatedHeroProps) {
+    const descriptionParts = descriptionHighlight
+        ? description.split(descriptionHighlight)
+        : null;
+
     return (
         <section
             className={cn(
-                'relative flex w-full min-h-[min(100vh,52rem)] flex-wrap items-center justify-center overflow-hidden border-b border-white/5 bg-lp text-white',
-                '[--factor:min(1000px,100vh)] [--size:min(var(--factor),100vw)] text-[calc(var(--size)*0.022)]',
+                'relative flex w-full min-h-[min(100vh,52rem)] flex-col items-center justify-center overflow-hidden border-b border-white/5 bg-lp text-white',
                 className,
             )}
-            aria-label={highlightText}
+            aria-labelledby="illuminated-headline"
             {...props}
         >
             <LpGridBackground patternId="lp-grid-illuminated" />
@@ -58,61 +63,63 @@ export function IlluminatedHero({
                 aria-hidden
             />
 
-            <div className="bg pointer-events-none absolute h-full w-full max-w-[44em]">
+            <div className="bg pointer-events-none absolute h-full w-full max-w-[44rem]">
                 <div className="shadow-bgt absolute size-full translate-y-[-70%] scale-[1.2] animate-[onloadbgt_1s_ease-in-out_forwards] rounded-[100em] opacity-60" />
                 <div className="shadow-bgb absolute size-full translate-y-[70%] scale-[1.2] animate-[onloadbgb_1s_ease-in-out_forwards] rounded-[100em] opacity-60" />
             </div>
 
-            <div
-                className="relative z-10 px-4 text-center text-2xl font-semibold leading-tight sm:text-4xl md:text-5xl lg:text-6xl"
-                aria-hidden="true"
-            >
-                {introLine1}
-                {introLine2 ? (
-                    <>
-                        <br />
-                        {introLine2}
-                    </>
+            <div className="relative z-10 mx-auto flex max-w-4xl flex-col items-center px-4 py-16 text-center sm:px-6 sm:py-20 lg:py-24">
+                {sectionLabel ? (
+                    <p className="mb-6 text-[10px] font-medium uppercase tracking-[0.35em] text-slate-500 sm:text-xs">
+                        {sectionLabel}
+                    </p>
                 ) : null}
-                <br />
-                <span
-                    className={cn(
-                        'relative inline-block',
-                        'before:absolute before:animate-[onloadopacity_1s_ease-out_forwards] before:opacity-0 before:content-[attr(data-text)]',
-                        'before:bg-[linear-gradient(0deg,#dfe5ee_0%,#fffaf6_50%)] before:bg-clip-text before:text-[#fffaf6]',
-                        '[filter:url(#glow-4)]',
-                    )}
-                    data-text={highlightText}
-                >
-                    {highlightText}
-                </span>
-                {trailingLine1 ? (
-                    <>
-                        <br />
-                        {trailingLine1}
-                    </>
-                ) : null}
-                {trailingLine2 ? (
-                    <>
-                        <br />
-                        {trailingLine2}
-                    </>
-                ) : null}
-            </div>
 
-            <p className="absolute top-0 bottom-0 z-10 m-auto h-fit max-w-[28em] translate-y-[8em] px-6 bg-gradient-to-t from-[#86868b] to-[#bdc2c9] bg-clip-text text-center text-sm font-semibold text-transparent sm:translate-y-[10em] sm:text-base md:translate-y-[12em]">
-                {descriptionHighlight ? (
-                    <>
-                        {description.split(descriptionHighlight)[0]}
-                        <span className="relative inline-block font-black text-[#e7dfd6]">
-                            {descriptionHighlight}
+                <h2
+                    id="illuminated-headline"
+                    className="text-[clamp(1.75rem,5vw,3.5rem)] font-bold leading-[1.05] tracking-[0.03em]"
+                >
+                    <span className="block text-slate-400">{introLine1}</span>
+                    {introLine2 ? (
+                        <span className="mt-1 block text-slate-400">{introLine2}</span>
+                    ) : null}
+
+                    <span
+                        className={cn(
+                            'relative my-3 inline-block text-[clamp(1.85rem,5.5vw,3.75rem)] font-bold tracking-[0.02em]',
+                            'before:absolute before:animate-[onloadopacity_1s_ease-out_forwards] before:opacity-0 before:content-[attr(data-text)]',
+                            'before:bg-[linear-gradient(0deg,#dfe5ee_0%,#fffaf6_50%)] before:bg-clip-text before:text-[#fffaf6]',
+                            '[filter:url(#glow-4)]',
+                        )}
+                        data-text={highlightText}
+                    >
+                        {highlightText}
+                    </span>
+
+                    {trailingLine1 ? (
+                        <span className="mt-2 block text-[clamp(1.15rem,3.2vw,2.25rem)] font-bold uppercase tracking-[0.05em] text-slate-500">
+                            {trailingLine1}
                         </span>
-                        {description.split(descriptionHighlight)[1] ?? ''}
-                    </>
-                ) : (
-                    description
-                )}
-            </p>
+                    ) : null}
+                    {trailingLine2 ? (
+                        <span className="block text-[clamp(1.15rem,3.2vw,2.25rem)] font-bold uppercase tracking-[0.05em] text-white">
+                            {trailingLine2}
+                        </span>
+                    ) : null}
+                </h2>
+
+                <p className="mt-10 max-w-2xl text-base leading-relaxed text-slate-400 sm:mt-12 sm:text-lg">
+                    {descriptionParts ? (
+                        <>
+                            {descriptionParts[0]}
+                            <span className="font-medium text-cyan-300/90">{descriptionHighlight}</span>
+                            {descriptionParts[1] ?? ''}
+                        </>
+                    ) : (
+                        description
+                    )}
+                </p>
+            </div>
 
             <svg
                 className="absolute -z-10 h-0 w-0"

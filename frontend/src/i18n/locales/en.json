@@ -682,6 +682,7 @@
       "exploreLink": "Explore properties"
     },
     "illuminated": {
+      "badge": "Your unified operation",
       "intro1": "Managing chalets, apartments or villas?",
       "highlight": "Triadak unifies it.",
       "trailing1": "Bookings, guests and finances",
@@ -690,6 +691,9 @@
       "descriptionHighlight": "operational clarity"
     },
     "audience": {
+      "sectionBadge": "Who is Triadak for?",
+      "sectionTitleMuted": "Property managers",
+      "sectionTitleBold": "and travelers",
       "scrollHint": "Scroll to explore managers and travelers",
       "managers": {
         "badge": "For managers",

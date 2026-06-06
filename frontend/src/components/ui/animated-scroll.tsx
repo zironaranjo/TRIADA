@@ -6,6 +6,10 @@ export interface SplitScrollPage {
     rightBgImage?: string | null;
     leftContent?: React.ReactNode;
     rightContent?: React.ReactNode;
+    /** Imagen a pantalla completa con contenido superpuesto */
+    fullBleedImage?: string | null;
+    overlayContent?: React.ReactNode;
+    overlayAlign?: 'left' | 'right';
 }
 
 export type SplitScrollAxis = 'horizontal' | 'vertical' | 'carousel';
@@ -144,6 +148,9 @@ export function SplitScrollAdventure({
 
     if (isCarousel) {
         const slides = pages.map((page) => ({
+            fullBleed: page.fullBleedImage ?? null,
+            overlayAlign: page.overlayAlign ?? 'right',
+            overlayContent: page.overlayContent,
             image: page.leftBgImage ?? page.rightBgImage ?? null,
             content: page.leftContent ?? page.rightContent,
         }));
@@ -165,19 +172,31 @@ export function SplitScrollAdventure({
                     {slides.map((slide, i) => (
                         <div
                             key={i}
-                            className="flex h-full w-full shrink-0 flex-col"
+                            className="relative h-full w-full shrink-0"
                             aria-hidden={currentPage !== i + 1}
                         >
-                            <div className="relative h-[45%] w-full shrink-0">
-                                {slide.image ? (
-                                    <ImageHalf url={slide.image} gradient="to-b" />
-                                ) : (
-                                    <div className="h-full w-full bg-[#061020]" />
-                                )}
-                            </div>
-                            <div className="relative h-[55%] w-full shrink-0 overflow-hidden">
-                                <ContentHalf>{slide.content}</ContentHalf>
-                            </div>
+                            {slide.fullBleed ? (
+                                <FullBleedSlide
+                                    url={slide.fullBleed}
+                                    align={slide.overlayAlign}
+                                    variant="mobile"
+                                >
+                                    {slide.overlayContent}
+                                </FullBleedSlide>
+                            ) : (
+                                <div className="flex h-full w-full flex-col">
+                                    <div className="relative h-[45%] w-full shrink-0">
+                                        {slide.image ? (
+                                            <ImageHalf url={slide.image} gradient="to-b" />
+                                        ) : (
+                                            <div className="h-full w-full bg-[#061020]" />
+                                        )}
+                                    </div>
+                                    <div className="relative h-[55%] w-full shrink-0 overflow-hidden">
+                                        <ContentHalf>{slide.content}</ContentHalf>
+                                    </div>
+                                </div>
+                            )}
                         </div>
                     ))}
                 </div>
@@ -219,6 +238,26 @@ export function SplitScrollAdventure({
                 const downOff = 'translateY(100%)';
                 const leftTrans = isActive ? 'translateY(0)' : downOff;
                 const rightTrans = isActive ? 'translateY(0)' : upOff;
+
+                if (page.fullBleedImage) {
+                    return (
+                        <div
+                            key={idx}
+                            className={cn(
+                                'absolute inset-0 transition-opacity duration-300',
+                                isActive ? 'z-10 opacity-100' : 'pointer-events-none z-0 opacity-0',
+                            )}
+                            aria-hidden={!isActive}
+                        >
+                            <FullBleedSlide
+                                url={page.fullBleedImage}
+                                align={page.overlayAlign ?? 'right'}
+                            >
+                                {page.overlayContent}
+                            </FullBleedSlide>
+                        </div>
+                    );
+                }
 
                 return (
                     <div
@@ -351,6 +390,56 @@ export function SplitScrollAdventure({
                     )}
                 </>
             )}
+        </div>
+    );
+}
+
+function FullBleedSlide({
+    url,
+    align,
+    variant = 'desktop',
+    children,
+}: {
+    url: string;
+    align: 'left' | 'right';
+    variant?: 'desktop' | 'mobile';
+    children?: React.ReactNode;
+}) {
+    const isRight = align === 'right';
+
+    return (
+        <div className="relative h-full w-full overflow-hidden">
+            <div
+                className="absolute inset-0 scale-105 bg-cover bg-center bg-no-repeat"
+                style={{ backgroundImage: `url(${url})` }}
+                aria-hidden
+            />
+            <div
+                className={cn(
+                    'absolute inset-0',
+                    variant === 'mobile'
+                        ? 'bg-gradient-to-t from-[#061020] via-[#061020]/88 to-[#061020]/25'
+                        : isRight
+                          ? 'bg-gradient-to-l from-[#061020] via-[#061020]/72 to-[#061020]/15'
+                          : 'bg-gradient-to-r from-[#061020] via-[#061020]/72 to-[#061020]/15',
+                )}
+                aria-hidden
+            />
+            <div
+                className={cn(
+                    'relative z-10 flex h-full w-full',
+                    variant === 'mobile'
+                        ? 'items-end px-5 pb-20 pt-28'
+                        : cn(
+                              'items-center px-8 py-12 lg:px-16 xl:px-20',
+                              isRight ? 'justify-end' : 'justify-start',
+                          ),
+                )}
+            >
+                <div className={cn('w-full', variant === 'mobile' ? 'max-w-lg' : 'max-w-xl lg:max-w-2xl')}>
+                    {children}
+                </div>
+            </div>
         </div>
     );
 }

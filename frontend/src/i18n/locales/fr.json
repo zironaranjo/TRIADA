@@ -682,6 +682,7 @@
       "exploreLink": "Explorer les biens"
     },
     "illuminated": {
+      "badge": "Votre opération unifiée",
       "intro1": "Vous gérez chalets, appartements ou villas ?",
       "highlight": "Triadak unifie tout.",
       "trailing1": "Réservations, invités et finances",
@@ -690,6 +691,9 @@
       "descriptionHighlight": "clarté opérationnelle"
     },
     "audience": {
+      "sectionBadge": "Pour qui est Triadak ?",
+      "sectionTitleMuted": "Gestionnaires immobiliers",
+      "sectionTitleBold": "et voyageurs",
       "scrollHint": "Faites défiler pour gestionnaires et voyageurs",
       "managers": {
         "badge": "Pour gestionnaires",

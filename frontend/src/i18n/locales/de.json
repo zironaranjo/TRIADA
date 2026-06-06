@@ -672,6 +672,7 @@
       "exploreLink": "Unterkünfte entdecken"
     },
     "illuminated": {
+      "badge": "Ihre vereinte Operation",
       "intro1": "Verwalten Sie Chalets, Apartments oder Villen?",
       "highlight": "Triadak vereint alles.",
       "trailing1": "Buchungen, Gäste und Finanzen",
@@ -680,6 +681,9 @@
       "descriptionHighlight": "operative Klarheit"
     },
     "audience": {
+      "sectionBadge": "Für wen ist Triadak?",
+      "sectionTitleMuted": "Immobilienverwalter",
+      "sectionTitleBold": "und Reisende",
       "scrollHint": "Scrollen für Verwalter und Reisende",
       "managers": {
         "badge": "Für Verwalter",

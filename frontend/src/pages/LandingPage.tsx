@@ -1,5 +1,4 @@
 import { useState, useEffect, lazy, Suspense, useMemo } from 'react';
-import type { LucideIcon } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -26,7 +25,6 @@ import {
     Clock,
     Smartphone,
     Home,
-    MapPin,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { ReplaceStackSection } from '@/components/ui/replace-stack-section';
@@ -351,6 +349,7 @@ function HookIlluminatedSection() {
     return (
         <IlluminatedHero
             id="enganche"
+            sectionLabel={t('landing.illuminated.badge')}
             introLine1={t('landing.illuminated.intro1')}
             highlightText={t('landing.illuminated.highlight')}
             trailingLine1={t('landing.illuminated.trailing1')}
@@ -458,84 +457,73 @@ function AudienceStatsRow({ className }: { className?: string }) {
     );
 }
 
-function AudienceGlobePanel({
+function AudienceEditorialPanel({
     panelKey,
-    icon: Icon,
     to,
     compact,
+    align = 'right',
 }: {
     panelKey: 'managers' | 'travelers';
-    icon: LucideIcon;
     to: string;
     compact?: boolean;
+    align?: 'left' | 'right';
 }) {
     const { t } = useTranslation();
     const base = `landing.audience.${panelKey}`;
 
     return (
-        <div className="relative flex h-full w-full flex-col bg-[#061020]">
-            <div
+        <div
+            className={cn(
+                'text-left',
+                align === 'right' ? 'lg:ml-auto' : 'lg:mr-auto',
+                compact ? 'max-w-md' : 'max-w-xl lg:max-w-2xl',
+            )}
+        >
+            <p
                 className={cn(
-                    'relative z-10 flex flex-1 flex-col items-center justify-center bg-[#061020] text-center',
-                    compact ? 'gap-2.5 px-4 py-6' : 'gap-3 px-5 py-8 lg:px-8 lg:py-10',
+                    'font-medium uppercase tracking-[0.35em] text-slate-400',
+                    compact ? 'mb-3 text-[9px]' : 'mb-5 text-[10px] sm:text-xs',
                 )}
             >
-                <div
-                    className={cn(
-                        'flex items-center justify-center rounded-xl border border-white/10 bg-white/[0.05]',
-                        compact ? 'h-8 w-8' : 'h-10 w-10',
-                    )}
-                >
-                    <Icon
-                        className={cn('text-slate-300', compact ? 'h-3.5 w-3.5' : 'h-4 w-4')}
-                        strokeWidth={1.75}
-                    />
-                </div>
+                {t(`${base}.badge`)}
+            </p>
 
-                <span
-                    className={cn(
-                        'font-semibold uppercase tracking-[0.18em] text-slate-500',
-                        compact ? 'text-[9px]' : 'text-[10px]',
-                    )}
-                >
-                    {t(`${base}.badge`)}
-                </span>
+            <h3
+                className={cn(
+                    'font-bold uppercase leading-[1.05] tracking-[0.03em] text-white',
+                    compact
+                        ? 'text-[clamp(1.35rem,5vw,1.75rem)]'
+                        : 'text-[clamp(1.5rem,3.5vw,2.75rem)]',
+                )}
+            >
+                {t(`${base}.title`)}
+            </h3>
 
-                <h3
-                    className={cn(
-                        'font-semibold leading-snug tracking-tight text-white',
-                        compact ? 'max-w-[16rem] text-base' : 'max-w-sm text-xl lg:text-2xl',
-                    )}
-                >
-                    {t(`${base}.title`)}
-                </h3>
+            <p
+                className={cn(
+                    'leading-relaxed text-slate-300',
+                    compact ? 'mt-3 text-sm' : 'mt-5 max-w-lg text-base sm:text-lg',
+                )}
+            >
+                {t(`${base}.description`)}
+            </p>
 
-                <p
+            <Link
+                to={to}
+                className={cn(
+                    'group inline-flex items-center gap-2 font-semibold uppercase tracking-[0.22em] text-white transition-colors hover:text-cyan-300',
+                    compact ? 'mt-6 text-[11px]' : 'mt-8 text-xs sm:mt-10 sm:text-sm',
+                )}
+            >
+                {t(`${base}.cta`)}
+                <ArrowRight
                     className={cn(
-                        'leading-relaxed text-slate-400',
-                        compact ? 'max-w-[18rem] text-[11px] leading-snug' : 'max-w-xs text-xs lg:text-sm',
+                        'transition-transform group-hover:translate-x-1.5',
+                        compact ? 'h-3.5 w-3.5' : 'h-4 w-4',
                     )}
-                >
-                    {t(`${base}.description`)}
-                </p>
-
-                <Link
-                    to={to}
-                    className={cn(
-                        'group mt-1 inline-flex items-center gap-1.5 rounded-lg border border-white/15 bg-white/[0.08] font-medium text-white transition-colors hover:border-white/25 hover:bg-white/[0.12]',
-                        compact ? 'px-3.5 py-2 text-[11px]' : 'px-4 py-2.5 text-xs lg:text-sm',
-                    )}
-                >
-                    {t(`${base}.cta`)}
-                    <ArrowRight
-                        className={cn(
-                            'transition-transform group-hover:translate-x-0.5',
-                            compact ? 'h-3 w-3' : 'h-3.5 w-3.5',
-                        )}
-                        strokeWidth={1.75}
-                    />
-                </Link>
-            </div>
+                    strokeWidth={1.75}
+                />
+            </Link>
         </div>
     );
 }
@@ -544,26 +532,28 @@ function useAudienceScrollPages(compact: boolean): SplitScrollPage[] {
     return useMemo(
         () => [
             {
-                leftBgImage: '/cabin.webp',
-                rightContent: (
-                    <AudienceGlobePanel
+                fullBleedImage: '/cabin.webp',
+                overlayAlign: 'right',
+                overlayContent: (
+                    <AudienceEditorialPanel
                         panelKey="managers"
-                        icon={Building2}
                         to="/login"
                         compact={compact}
+                        align="right"
                     />
                 ),
             },
             {
-                leftContent: (
-                    <AudienceGlobePanel
+                fullBleedImage: '/sala.jpg',
+                overlayAlign: 'left',
+                overlayContent: (
+                    <AudienceEditorialPanel
                         panelKey="travelers"
-                        icon={MapPin}
                         to="/explore"
                         compact={compact}
+                        align="left"
                     />
                 ),
-                rightBgImage: '/sala.jpg',
             },
         ],
         [compact],
@@ -597,33 +587,35 @@ function AudienceSection() {
     const { t } = useTranslation();
     return (
         <section id="audience" className="relative border-t border-white/[0.06] bg-lp">
-            {/* Título de sección */}
-            <div className="relative z-10 mx-auto max-w-5xl px-6 pb-6 pt-10 text-center xl:px-8">
-                <p className="mb-2 text-[10px] font-semibold uppercase tracking-[0.2em] text-blue-400">
+            <div className="relative z-10 mx-auto max-w-7xl px-4 pb-8 pt-16 sm:px-6 sm:pb-10 sm:pt-20 lg:px-8 lg:pt-24">
+                <p className="mb-6 text-[10px] font-medium uppercase tracking-[0.35em] text-slate-500 sm:text-xs">
                     {t('landing.audience.sectionBadge')}
                 </p>
-                <h2 className="text-2xl font-bold tracking-tight text-white sm:text-3xl">
-                    {t('landing.audience.sectionTitle')}
+                <h2 className="max-w-4xl text-[clamp(1.75rem,5vw,3.5rem)] font-bold uppercase leading-[1.02] tracking-[0.03em]">
+                    <span className="block text-slate-500">
+                        {t('landing.audience.sectionTitleMuted')}
+                    </span>
+                    <span className="block text-white">{t('landing.audience.sectionTitleBold')}</span>
                 </h2>
             </div>
 
-            {/* Desktop: mitades izquierda / derecha */}
+            {/* Desktop: imagen full-bleed con copy superpuesto */}
             <div className="relative hidden lg:block">
                 <AudienceScrollBlock
                     splitAxis="horizontal"
-                    heightClass="h-[min(72vh,520px)] min-h-[420px]"
+                    heightClass="h-[min(72vh,560px)] min-h-[480px]"
                     compact={false}
                 />
-                <div className="relative z-10 mx-auto max-w-5xl px-6 pb-10 pt-5 xl:px-8">
+                <div className="relative z-10 mx-auto max-w-7xl px-4 pb-10 pt-6 sm:px-6 lg:px-8">
                     <AudienceStatsRow />
                 </div>
             </div>
 
-            {/* Móvil / tablet: carrusel lateral — imagen siempre arriba, contenido abajo */}
+            {/* Móvil / tablet: carrusel con imagen extendida y copy en overlay inferior */}
             <div className="relative lg:hidden">
                 <AudienceScrollBlock
                     splitAxis="carousel"
-                    heightClass="h-[min(78vh,580px)] min-h-[460px]"
+                    heightClass="h-[min(85vh,640px)] min-h-[520px]"
                     compact
                 />
                 <div className="relative z-10 mx-auto max-w-lg px-4 pb-8 pt-4">
