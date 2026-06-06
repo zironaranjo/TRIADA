@@ -657,16 +657,19 @@
       "startFree": "Kostenlos starten"
     },
     "hero": {
-      "badge": "Die moderne Art, Ferienvermietungen zu verwalten",
+      "badge": "Ferienvermietung",
       "hook": "Chalets, Apartments oder Villen? Triadak bündelt Buchungen, Team und Finanzen — ohne Tabellen.",
       "title1": "Verwalten Sie Ihre Vermietungen",
       "titleHighlight": "im Eiltempo",
-      "subtitle": "Immobilien, Buchungen, Gäste und Finanzen — alles in einer leistungsstarken Plattform. Automatisieren Sie Ihr Ferienvermietungsgeschäft und konzentrieren Sie sich auf das Wesentliche.",
-      "cta": "Kostenlos starten — Keine Kreditkarte",
+      "subtitle": "Buchungen, Gäste und Finanzen in einem Panel.",
+      "tagline": "Kostenlos starten · Keine Kreditkarte",
+      "cta": "Kostenlos starten",
       "secondary": "Funktionen ansehen",
       "noCard": "Keine Kreditkarte erforderlich · 14 Tage kostenlos testen",
-      "rating": "5.0 von frühen Nutzern",
-      "freePlan": "Kostenloser Plan für immer verfügbar"
+      "rating": "5.0 frühe Nutzer",
+      "freePlan": "Starter-Plan für immer",
+      "explorePrompt": "Unterkunft gesucht?",
+      "exploreLink": "Unterkünfte entdecken"
     },
     "illuminated": {
       "intro1": "Verwalten Sie Chalets, Apartments oder Villen?",

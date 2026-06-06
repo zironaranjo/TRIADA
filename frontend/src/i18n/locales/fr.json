@@ -667,16 +667,19 @@
       "startFree": "Commencer Gratuitement"
     },
     "hero": {
-      "badge": "La façon moderne de gérer les locations saisonnières",
+      "badge": "Location vacances",
       "hook": "Vous gérez chalets, appartements ou villas ? Triadak réunit réservations, équipe et finances — sans tableurs.",
       "title1": "Gérez vos locations",
       "titleHighlight": "à toute vitesse",
-      "subtitle": "Propriétés, réservations, invités et finances — tout dans une plateforme puissante. Automatisez votre activité de location et concentrez-vous sur l'essentiel.",
-      "cta": "Commencer gratuitement — Sans carte bancaire",
-      "secondary": "Voir les fonctionnalités",
+      "subtitle": "Réservations, invités et finances dans un seul panel.",
+      "tagline": "Gratuit pour commencer · Sans carte",
+      "cta": "Commencer gratuitement",
+      "secondary": "Voir les fonctions",
       "noCard": "Pas de carte bancaire requise · 14 jours d'essai gratuit",
-      "rating": "5.0 par les premiers utilisateurs",
-      "freePlan": "Plan gratuit disponible pour toujours"
+      "rating": "5.0 premiers utilisateurs",
+      "freePlan": "Plan Starter pour toujours",
+      "explorePrompt": "Vous cherchez un logement ?",
+      "exploreLink": "Explorer les biens"
     },
     "illuminated": {
       "intro1": "Vous gérez chalets, appartements ou villas ?",

@@ -667,16 +667,19 @@
       "startFree": "Empezar Gratis"
     },
     "hero": {
-      "badge": "La forma moderna de gestionar alquileres vacacionales",
+      "badge": "Alquiler vacacional",
       "hook": "¿Gestionas chalets, apartamentos o villas? Triadak pone orden en reservas, equipo y dinero — sin hojas de cálculo.",
       "title1": "Gestiona tus alquileres",
       "titleHighlight": "a toda velocidad",
-      "subtitle": "Propiedades, reservas, huéspedes y finanzas — todo en una plataforma potente. Automatiza tu negocio de alquiler vacacional y enfócate en lo que importa.",
-      "cta": "Empezar gratis — Sin tarjeta de crédito",
-      "secondary": "Ver Funciones",
+      "subtitle": "Reservas, huéspedes y finanzas en un solo panel.",
+      "tagline": "Gratis para empezar · Sin tarjeta",
+      "cta": "Empezar gratis",
+      "secondary": "Ver funciones",
       "noCard": "Sin tarjeta de crédito · 14 días de prueba gratuita",
-      "rating": "5.0 de usuarios iniciales",
-      "freePlan": "Plan gratuito disponible para siempre"
+      "rating": "5.0 usuarios iniciales",
+      "freePlan": "Plan Starter para siempre",
+      "explorePrompt": "¿Buscas alojamiento?",
+      "exploreLink": "Explorar propiedades"
     },
     "illuminated": {
       "intro1": "¿Gestionas chalets, apartamentos o villas?",

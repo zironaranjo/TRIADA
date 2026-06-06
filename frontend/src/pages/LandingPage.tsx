@@ -8,11 +8,9 @@ import { EditorialFeaturesSection } from '@/components/ui/editorial-features-sec
 import { EditorialFeatureBlocks } from '@/components/ui/editorial-feature-blocks';
 import { EditorialCTA } from '@/components/ui/editorial-cta';
 import { PlatformEditorialSection } from '@/components/ui/platform-editorial-section';
-import { RotatingHeadlines } from '@/components/ui/rotating-headlines';
 import { SectionParallaxBridge } from '@/components/ui/scroll-parallax';
 import { FAQ as FAQTabs, type FAQData } from '@/components/ui/faq-tabs';
 import { IlluminatedHero } from '@/components/ui/illuminated-hero';
-import LustreText from '@/components/ui/lustretext';
 import {
     Building2,
     CalendarDays,
@@ -20,7 +18,6 @@ import {
     PiggyBank,
     BarChart3,
     Shield,
-    Zap,
     ArrowRight,
     Menu,
     X,
@@ -216,148 +213,135 @@ function Navbar() {
 // ─── Hero Section ─────────────────────────────────────
 function Hero() {
     const { t } = useTranslation();
-    const heroLines = t('landing.editorial.heroLines', { returnObjects: true }) as string[];
 
     return (
-        <section className="relative min-h-screen flex flex-col justify-center overflow-hidden">
+        <section className="relative flex min-h-screen flex-col justify-center overflow-hidden">
             {/* Background image */}
             <div className="absolute inset-0 z-0">
                 <img
                     src="/cabana-mobile.webp"
                     alt="Vacation rental property"
-                    className="w-full h-full object-cover object-center"
+                    className="h-full w-full object-cover object-center"
                 />
-                {/* Mobile overlay — ligero para ver bien la imagen */}
-                <div className="absolute inset-0 bg-gradient-to-b from-[#061020]/40 via-[#061020]/20 to-[#061020]/85 sm:from-[#061020]/50 sm:via-[#061020]/30 sm:to-[#061020]/90" />
+                <div className="absolute inset-0 bg-gradient-to-b from-[#061020]/75 via-[#061020]/45 to-[#061020]/95 sm:from-[#061020]/80 sm:via-[#061020]/50 sm:to-[#061020]" />
             </div>
 
-            {/* Content */}
-            <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-32 pb-20 sm:pt-40 sm:pb-28 text-center">
-                {/* Badge — oculto en móvil */}
-                <motion.div
-                    initial={{ opacity: 0, y: 16 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5 }}
-                    className="hidden sm:inline-flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/20 text-white/90 text-sm font-medium px-4 py-1.5 rounded-full mb-8"
-                >
-                    <Zap className="h-3.5 w-3.5 text-slate-300 flex-shrink-0" />
-                    <span>{t('landing.hero.badge')}</span>
-                </motion.div>
+            <div className="relative z-10 mx-auto w-full max-w-7xl px-4 pb-24 pt-28 sm:px-6 sm:pb-28 sm:pt-36 lg:px-8 lg:pt-40">
+                <div className="max-w-3xl">
+                    <motion.p
+                        initial={{ opacity: 0, y: 12 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.45 }}
+                        className="mb-5 text-[10px] font-medium uppercase tracking-[0.35em] text-slate-400 sm:mb-6 sm:text-xs"
+                    >
+                        {t('landing.hero.badge')}
+                    </motion.p>
 
-                {Array.isArray(heroLines) && heroLines.length > 0 && (
+                    <motion.h1
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.06, duration: 0.55 }}
+                        className="text-[clamp(2rem,6.5vw,4.25rem)] font-bold uppercase leading-[1.02] tracking-[0.03em]"
+                    >
+                        <span className="block text-slate-400">{t('landing.hero.title1')}</span>
+                        <span className="block text-white">{t('landing.hero.titleHighlight')}</span>
+                    </motion.h1>
+
+                    <motion.p
+                        initial={{ opacity: 0, y: 16 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.14, duration: 0.5 }}
+                        className="mt-6 max-w-xl text-base leading-relaxed text-slate-400 sm:mt-8 sm:text-lg"
+                    >
+                        {t('landing.hero.subtitle')}
+                    </motion.p>
+
+                    <motion.p
+                        initial={{ opacity: 0, y: 12 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.2, duration: 0.45 }}
+                        className="mt-4 text-sm font-medium tracking-[0.1em] text-cyan-300/90 sm:text-base"
+                    >
+                        {t('landing.hero.tagline')}
+                    </motion.p>
+
                     <motion.div
                         initial={{ opacity: 0, y: 16 }}
                         animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.08, duration: 0.5 }}
-                        className="mb-4 sm:mb-6"
+                        transition={{ delay: 0.28, duration: 0.5 }}
+                        className="mt-8 flex flex-col gap-4 sm:mt-10 sm:flex-row sm:items-center sm:gap-8"
                     >
-                        <RotatingHeadlines lines={heroLines} />
+                        <Link
+                            to="/login"
+                            className="group inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.22em] text-white transition-colors hover:text-cyan-300 sm:text-sm"
+                        >
+                            {t('landing.hero.cta')}
+                            <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1.5" />
+                        </Link>
+                        <span className="hidden h-4 w-px bg-white/15 sm:block" aria-hidden />
+                        <a
+                            href="#features"
+                            className="text-xs font-semibold uppercase tracking-[0.22em] text-slate-500 transition-colors hover:text-white sm:text-sm"
+                        >
+                            {t('landing.hero.secondary')}
+                        </a>
                     </motion.div>
-                )}
 
-                <motion.h1
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.1, duration: 0.55 }}
-                    className="text-4xl sm:text-6xl lg:text-7xl font-bold leading-[1.1] tracking-tight"
-                >
-                    <LustreText
-                        text={`${t('landing.hero.title1')} ${t('landing.hero.titleHighlight')}`}
-                        variant="hero"
-                        speed={4}
-                        className="drop-shadow-[0_2px_24px_rgba(0,0,0,0.45)]"
-                    />
-                </motion.h1>
-
-                {/* Subtitle */}
-                <motion.p
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.2, duration: 0.5 }}
-                    className="mt-5 sm:mt-6 text-base sm:text-lg lg:text-xl text-white/70 max-w-2xl mx-auto leading-relaxed px-2"
-                >
-                    {t('landing.hero.subtitle')}
-                </motion.p>
-
-                {/* CTA Buttons — ambos con el mismo estilo ghost */}
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.3, duration: 0.5 }}
-                    className="mt-8 sm:mt-10 flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 px-4"
-                >
-                    <Link
-                        to="/login"
-                        className="w-full sm:w-auto text-white/90 hover:text-white font-semibold px-7 sm:px-9 py-3.5 sm:py-4 rounded-xl border border-white/25 hover:border-white/50 backdrop-blur-sm bg-white/8 hover:bg-white/15 transition-all text-sm sm:text-base flex items-center justify-center gap-2 group"
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ delay: 0.38, duration: 0.45 }}
+                        className="mt-8 flex flex-wrap items-center gap-x-3 gap-y-2 text-[10px] font-medium uppercase tracking-[0.2em] text-slate-500 sm:mt-10 sm:text-xs"
                     >
-                        {t('landing.hero.cta')}
-                        <ArrowRight className="h-4 w-4 sm:h-5 sm:w-5 group-hover:translate-x-1 transition-transform" />
-                    </Link>
-                    <a
-                        href="#features"
-                        className="w-full sm:w-auto text-white/90 hover:text-white font-medium px-7 sm:px-9 py-3.5 sm:py-4 rounded-xl border border-white/25 hover:border-white/50 backdrop-blur-sm bg-white/8 hover:bg-white/15 transition-all text-sm sm:text-base text-center"
-                    >
-                        {t('landing.hero.secondary')}
-                    </a>
-                </motion.div>
+                        <div className="flex items-center gap-1.5">
+                            {[...Array(5)].map((_, i) => (
+                                <Star key={i} className="h-3 w-3 fill-slate-500 text-slate-500" />
+                            ))}
+                            <span>{t('landing.hero.rating')}</span>
+                        </div>
+                        <span className="text-slate-700">·</span>
+                        <span>{t('landing.hero.freePlan')}</span>
+                    </motion.div>
 
-                {/* Tourist explore banner */}
-                <motion.div
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.45, duration: 0.4 }}
-                    className="mt-5 sm:mt-6"
-                >
-                    <Link
-                        to="/explore"
-                        className="group inline-flex items-center gap-2 text-sm text-white/50 transition-colors hover:text-white"
+                    <motion.div
+                        initial={{ opacity: 0, y: 8 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.45, duration: 0.4 }}
+                        className="mt-6 sm:mt-8"
                     >
-                        <Home className="h-3.5 w-3.5 text-slate-400 transition-colors group-hover:text-slate-200" />
-                        <span>¿Buscas alojamiento?</span>
-                        <span className="font-medium text-slate-300 transition-colors group-hover:text-white">
-                            Explorar propiedades
-                        </span>
-                        <ArrowRight className="h-3.5 w-3.5 text-slate-400 transition-all group-hover:translate-x-1 group-hover:text-slate-200" />
-                    </Link>
-                </motion.div>
-
-                {/* Social proof */}
-                <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: 0.5 }}
-                    className="mt-10 sm:mt-14 flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-8 text-xs sm:text-sm text-white/50"
-                >
-                    <div className="flex items-center gap-1.5">
-                        {[...Array(5)].map((_, i) => (
-                            <Star key={i} className="h-3.5 w-3.5 fill-slate-400 text-slate-400" />
-                        ))}
-                        <span className="ml-1 text-white/70">{t('landing.hero.rating')}</span>
-                    </div>
-                    <span className="hidden sm:block text-white/20">|</span>
-                    <span className="text-white/70">{t('landing.hero.freePlan')}</span>
-                </motion.div>
+                        <Link
+                            to="/explore"
+                            className="group inline-flex items-center gap-2 text-[10px] font-medium uppercase tracking-[0.18em] text-slate-500 transition-colors hover:text-slate-300 sm:text-xs"
+                        >
+                            <Home className="h-3.5 w-3.5" strokeWidth={1.5} />
+                            <span>{t('landing.hero.explorePrompt')}</span>
+                            <span className="text-slate-400 group-hover:text-white">
+                                {t('landing.hero.exploreLink')}
+                            </span>
+                            <ArrowRight className="h-3 w-3 transition-transform group-hover:translate-x-0.5" />
+                        </Link>
+                    </motion.div>
+                </div>
             </div>
 
-            {/* Scroll hint — estilo editorial */}
+            {/* Scroll hint */}
             <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.8, duration: 0.5 }}
                 className="absolute bottom-8 left-1/2 z-20 flex -translate-x-1/2 flex-col items-center gap-2"
             >
-                <span className="text-[10px] font-semibold uppercase tracking-[0.35em] text-white/40">
+                <span className="text-[10px] font-semibold uppercase tracking-[0.35em] text-slate-500">
                     {t('landing.editorial.scrollHint')}
                 </span>
                 <motion.span
                     animate={{ y: [0, 6, 0] }}
                     transition={{ duration: 1.6, repeat: Infinity, ease: 'easeInOut' }}
-                    className="block h-8 w-px bg-gradient-to-b from-white/40 to-transparent"
+                    className="block h-8 w-px bg-gradient-to-b from-slate-500/50 to-transparent"
                 />
             </motion.div>
 
-            {/* Bottom fade into next section */}
-            <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-background to-transparent pointer-events-none z-10" />
+            <div className="pointer-events-none absolute bottom-0 left-0 right-0 z-10 h-24 bg-gradient-to-t from-[#061020] to-transparent" />
         </section>
     );
 }

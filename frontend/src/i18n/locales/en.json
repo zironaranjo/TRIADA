@@ -667,16 +667,19 @@
       "startFree": "Start Free"
     },
     "hero": {
-      "badge": "The modern way to manage vacation rentals",
+      "badge": "Vacation rentals",
       "hook": "Managing chalets, apartments or villas? Triadak brings bookings, team and finances together — no spreadsheets.",
       "title1": "Manage your rentals",
       "titleHighlight": "at lightspeed",
-      "subtitle": "Properties, bookings, guests, and finances — all in one powerful platform. Automate your vacation rental business and focus on what matters.",
-      "cta": "Start Free — No Credit Card",
-      "secondary": "See Features",
+      "subtitle": "Bookings, guests and finances in one panel.",
+      "tagline": "Free to start · No credit card",
+      "cta": "Start free",
+      "secondary": "See features",
       "noCard": "No credit card required · 14-day free trial",
-      "rating": "5.0 from early users",
-      "freePlan": "Free plan available forever"
+      "rating": "5.0 early users",
+      "freePlan": "Starter plan forever",
+      "explorePrompt": "Looking for a stay?",
+      "exploreLink": "Explore properties"
     },
     "illuminated": {
       "intro1": "Managing chalets, apartments or villas?",
