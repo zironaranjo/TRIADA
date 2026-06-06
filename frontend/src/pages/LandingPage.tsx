@@ -7,6 +7,7 @@ import { CircularTestimonials } from '@/components/ui/circular-testimonials';
 import { BentoGrid, type BentoItem } from '@/components/ui/bento-grid';
 import { FeaturesMobileCarousel } from '@/components/ui/features-mobile-carousel';
 import { StripedGrid } from '@/components/ui/striped-grid';
+import { HowItWorksParallax } from '@/components/ui/how-it-works-parallax';
 import { FAQ as FAQTabs, type FAQData } from '@/components/ui/faq-tabs';
 import { IlluminatedHero } from '@/components/ui/illuminated-hero';
 import LustreText from '@/components/ui/lustretext';
@@ -45,10 +46,6 @@ const fadeUp = {
         y: 0,
         transition: { delay: i * 0.08, duration: 0.45 },
     }),
-};
-
-const stagger = {
-    visible: { transition: { staggerChildren: 0.08 } },
 };
 
 // ─── Navbar ───────────────────────────────────────────
@@ -347,7 +344,7 @@ function HookIlluminatedSection() {
             backgroundNode={
                 <Suspense fallback={null}>
                     <div className="flex h-full w-full items-center justify-center">
-                        <div className="aspect-square h-[min(92vw,40rem)] w-[min(92vw,40rem)] sm:h-[min(78vw,46rem)] sm:w-[min(78vw,46rem)]">
+                        <div className="aspect-square h-[min(98vw,44rem)] w-[min(98vw,44rem)] sm:h-[min(78vw,46rem)] sm:w-[min(78vw,46rem)]">
                             <DotGlobeHero
                                 layout="embedded"
                                 rotationSpeed={0.002}
@@ -682,76 +679,32 @@ function AudienceSection() {
 }
 
 // ─── How It Works ─────────────────────────────────────
-const steps = [
-    {
-        num: '01',
-        title: 'Create your account',
-        description: 'Sign up in seconds with email or Google. Choose the Starter plan — it\'s free forever.',
-        icon: Globe,
-    },
-    {
-        num: '02',
-        title: 'Add your properties',
-        description: 'Enter property details, set pricing, and define availability. It takes less than 2 minutes per property.',
-        icon: Building2,
-    },
-    {
-        num: '03',
-        title: 'Start managing',
-        description: 'Receive bookings, manage guests, track finances, and grow your business — all from one dashboard.',
-        icon: BarChart3,
-    },
-];
-
 function HowItWorks() {
     const { t } = useTranslation();
     return (
-        <section id="how-it-works" className="relative bg-[#061020] py-14 sm:py-20 lg:py-32">
+        <section id="how-it-works" className="relative overflow-hidden bg-[#061020] pb-4 pt-14 sm:pb-6 sm:pt-20 lg:pt-24">
             <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                {/* Header */}
                 <motion.div
                     initial="hidden"
                     whileInView="visible"
                     viewport={{ once: true, margin: '-80px' }}
                     variants={fadeUp}
                     custom={0}
-                    className="text-center max-w-2xl mx-auto mb-10 sm:mb-16"
+                    className="mx-auto mb-8 max-w-2xl text-center sm:mb-12"
                 >
-                    <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-slate-400 sm:mb-3 sm:text-sm">{t('landing.howItWorks.badge')}</p>
-                    <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-3 sm:mb-4">
+                    <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-slate-400 sm:mb-3 sm:text-sm">
+                        {t('landing.howItWorks.badge')}
+                    </p>
+                    <h2 className="mb-3 text-2xl font-bold text-white sm:mb-4 sm:text-3xl lg:text-4xl">
                         {t('landing.howItWorks.title')}
                     </h2>
-                    <p className="text-slate-400 text-sm sm:text-lg px-2">
+                    <p className="px-2 text-sm text-slate-400 sm:text-lg">
                         {t('landing.howItWorks.subtitle')}
                     </p>
                 </motion.div>
-
-                {/* Steps */}
-                <motion.div
-                    initial="hidden"
-                    whileInView="visible"
-                    viewport={{ once: true, margin: '-50px' }}
-                    variants={stagger}
-                    className="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-12"
-                >
-                    {steps.map((step, i) => (
-                        <motion.div
-                            key={step.num}
-                            variants={fadeUp}
-                            custom={i}
-                            className="text-center flex flex-col items-center"
-                        >
-                            <div className="inline-flex items-center justify-center mb-4 sm:mb-6">
-                                <div className="flex h-16 w-16 items-center justify-center rounded-xl border border-white/10 bg-white/[0.04] sm:h-20 sm:w-20 sm:rounded-2xl">
-                                    <step.icon className="h-6 w-6 text-slate-300 sm:h-8 sm:w-8" strokeWidth={1.75} />
-                                </div>
-                            </div>
-                            <h3 className="text-lg sm:text-xl font-semibold text-white mb-1.5 sm:mb-2">{t(`landing.howItWorks.step${i + 1}Title`)}</h3>
-                            <p className="text-slate-400 text-sm leading-relaxed max-w-xs mx-auto">{t(`landing.howItWorks.step${i + 1}Desc`)}</p>
-                        </motion.div>
-                    ))}
-                </motion.div>
             </div>
+
+            <HowItWorksParallax />
         </section>
     );
 }
