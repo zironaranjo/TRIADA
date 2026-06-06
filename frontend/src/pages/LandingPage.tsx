@@ -247,13 +247,13 @@ function Hero() {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.1, duration: 0.55 }}
-                    className="text-4xl sm:text-6xl lg:text-7xl font-semibold leading-[1.1] tracking-tight drop-shadow-lg"
+                    className="text-4xl sm:text-6xl lg:text-7xl font-bold leading-[1.1] tracking-tight"
                 >
                     <LustreText
                         text={`${t('landing.hero.title1')} ${t('landing.hero.titleHighlight')}`}
-                        variant="dark"
-                        speed={5}
-                        className="font-semibold"
+                        variant="hero"
+                        speed={4}
+                        className="drop-shadow-[0_2px_24px_rgba(0,0,0,0.45)]"
                     />
                 </motion.h1>
 
