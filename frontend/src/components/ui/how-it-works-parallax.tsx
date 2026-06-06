@@ -12,19 +12,16 @@ const STEP_ACCENTS = [
     {
         card: 'border-sky-500/30 bg-gradient-to-br from-sky-950/40 via-[#061020] to-[#061020] ring-1 ring-inset ring-sky-400/20 shadow-[0_24px_60px_rgba(14,165,233,0.08)]',
         icon: 'border-sky-400/25 bg-sky-500/10 text-sky-200',
-        step: 'text-sky-400',
         glow: 'from-sky-500/15',
     },
     {
         card: 'border-violet-500/30 bg-gradient-to-br from-violet-950/35 via-[#061020] to-[#061020] ring-1 ring-inset ring-violet-400/20 shadow-[0_24px_60px_rgba(139,92,246,0.08)]',
         icon: 'border-violet-400/25 bg-violet-500/10 text-violet-200',
-        step: 'text-violet-400',
         glow: 'from-violet-500/15',
     },
     {
         card: 'border-cyan-500/30 bg-gradient-to-br from-cyan-950/35 via-[#061020] to-[#061020] ring-1 ring-inset ring-cyan-400/20 shadow-[0_24px_60px_rgba(34,211,238,0.08)]',
         icon: 'border-cyan-400/25 bg-cyan-500/10 text-cyan-200',
-        step: 'text-cyan-400',
         glow: 'from-cyan-500/15',
     },
 ] as const;
@@ -46,14 +43,6 @@ export function HowItWorksParallax() {
                                     accent.glow,
                                 )}
                             />
-                            <span
-                                className={cn(
-                                    'relative mb-4 text-xs font-bold uppercase tracking-[0.2em]',
-                                    accent.step,
-                                )}
-                            >
-                                {String(i + 1).padStart(2, '0')}
-                            </span>
                             <div
                                 className={cn(
                                     'relative mb-5 flex h-14 w-14 items-center justify-center rounded-xl border sm:h-16 sm:w-16',
@@ -65,7 +54,7 @@ export function HowItWorksParallax() {
                             <h3 className="relative mb-3 text-2xl font-bold text-white sm:text-3xl lg:text-4xl">
                                 {t(`landing.howItWorks.step${i + 1}Title`)}
                             </h3>
-                            <p className="relative max-w-xl text-sm leading-relaxed text-slate-400 sm:text-base lg:text-lg">
+                            <p className="relative max-w-xl text-sm leading-relaxed text-slate-400 sm:text-base lg:max-w-2xl lg:text-lg">
                                 {t(`landing.howItWorks.step${i + 1}Desc`)}
                             </p>
                         </CardContent>

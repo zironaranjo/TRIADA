@@ -29,7 +29,7 @@ export default function ParallaxCards({
                 {cards.map((card, index) => (
                     <div
                         key={index}
-                        className="sticky flex items-center justify-center px-4 py-8 sm:px-6"
+                        className="sticky mx-auto flex w-full max-w-3xl items-center justify-center px-4 py-8 sm:px-6 lg:max-w-7xl lg:px-8"
                         style={{
                             top: '5rem',
                             height: `calc(${slideVh}vh - 5rem)`,
@@ -38,7 +38,7 @@ export default function ParallaxCards({
                     >
                         <Card
                             className={cn(
-                                'flex h-[min(520px,72vh)] w-full max-w-3xl items-center justify-center overflow-hidden rounded-2xl border text-center shadow-none transition-transform duration-300',
+                                'flex h-[min(520px,72vh)] w-full items-center justify-center overflow-hidden rounded-2xl border text-center shadow-none transition-transform duration-300',
                                 card.className,
                             )}
                         >
