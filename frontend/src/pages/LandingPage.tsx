@@ -11,6 +11,7 @@ import { EditorialFeatureBlocks } from '@/components/ui/editorial-feature-blocks
 import { EditorialCTA } from '@/components/ui/editorial-cta';
 import { PlatformEditorialSection } from '@/components/ui/platform-editorial-section';
 import { RotatingHeadlines } from '@/components/ui/rotating-headlines';
+import { SectionParallaxBridge } from '@/components/ui/scroll-parallax';
 import { FAQ as FAQTabs, type FAQData } from '@/components/ui/faq-tabs';
 import { IlluminatedHero } from '@/components/ui/illuminated-hero';
 import LustreText from '@/components/ui/lustretext';
@@ -715,7 +716,7 @@ function AudienceSection() {
 function HowItWorks() {
     const { t } = useTranslation();
     return (
-        <section id="how-it-works" className="relative bg-[#061020] pb-4 pt-14 sm:pb-6 sm:pt-20 lg:pt-24">
+        <section id="how-it-works" className="relative overflow-x-clip bg-[#061020] pb-4 pt-14 sm:pb-6 sm:pt-20 lg:pt-24">
             <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                 <motion.div
                     initial="hidden"
@@ -723,15 +724,15 @@ function HowItWorks() {
                     viewport={{ once: true, margin: '-80px' }}
                     variants={fadeUp}
                     custom={0}
-                    className="mx-auto mb-8 max-w-2xl text-center sm:mb-12"
+                    className="mb-4 max-w-3xl sm:mb-8"
                 >
                     <p className="mb-4 text-[10px] font-medium uppercase tracking-[0.32em] text-slate-500 sm:text-xs">
                         {t('landing.editorial.featuresSectionLabel')}
                     </p>
-                    <h2 className="mb-3 text-2xl font-bold uppercase tracking-[0.04em] text-white sm:mb-4 sm:text-3xl lg:text-4xl">
+                    <h2 className="text-[clamp(1.75rem,4vw,3rem)] font-bold uppercase leading-[1.05] tracking-[0.03em] text-white">
                         {t('landing.howItWorks.title')}
                     </h2>
-                    <p className="px-2 text-sm text-slate-400 sm:text-lg">
+                    <p className="mt-4 max-w-xl text-sm leading-relaxed text-slate-400 sm:text-base lg:text-lg">
                         {t('landing.howItWorks.subtitle')}
                     </p>
                 </motion.div>
@@ -955,8 +956,11 @@ export default function LandingPage() {
             <AudienceSection />
             <Features />
             <ReplaceStackSection />
+            <SectionParallaxBridge />
             <PlatformEditorialSection />
+            <SectionParallaxBridge />
             <HowItWorks />
+            <SectionParallaxBridge />
 <Testimonials />
             <LandingFAQ />
             <CTASection />
