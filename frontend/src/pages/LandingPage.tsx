@@ -5,8 +5,10 @@ import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
 import { CircularTestimonials } from '@/components/ui/circular-testimonials';
 import { BentoGrid, type BentoItem } from '@/components/ui/bento-grid';
+import { FeaturesMobileCarousel } from '@/components/ui/features-mobile-carousel';
 import { FAQ as FAQTabs, type FAQData } from '@/components/ui/faq-tabs';
 import { IlluminatedHero } from '@/components/ui/illuminated-hero';
+import LustreText from '@/components/ui/lustretext';
 import {
     Building2,
     CalendarDays,
@@ -244,12 +246,14 @@ function Hero() {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.1, duration: 0.55 }}
-                    className="text-4xl sm:text-6xl lg:text-7xl font-semibold text-white leading-[1.1] tracking-tight drop-shadow-lg"
+                    className="text-4xl sm:text-6xl lg:text-7xl font-semibold leading-[1.1] tracking-tight drop-shadow-lg"
                 >
-                    {t('landing.hero.title1')}{' '}
-                    <span className="text-white">
-                        {t('landing.hero.titleHighlight')}
-                    </span>
+                    <LustreText
+                        text={`${t('landing.hero.title1')} ${t('landing.hero.titleHighlight')}`}
+                        variant="dark"
+                        speed={5}
+                        className="font-semibold"
+                    />
                 </motion.h1>
 
                 {/* Subtitle */}
@@ -342,11 +346,11 @@ function HookIlluminatedSection() {
             backgroundNode={
                 <Suspense fallback={null}>
                     <div className="flex h-full w-full items-center justify-center">
-                        <div className="aspect-square h-[min(88vw,36rem)] w-[min(88vw,36rem)] sm:h-[min(72vw,42rem)] sm:w-[min(72vw,42rem)]">
+                        <div className="aspect-square h-[min(92vw,40rem)] w-[min(92vw,40rem)] sm:h-[min(78vw,46rem)] sm:w-[min(78vw,46rem)]">
                             <DotGlobeHero
                                 layout="embedded"
                                 rotationSpeed={0.002}
-                                globeRadius={0.78}
+                                globeRadius={0.92}
                                 wireframeColor="#38bdf8"
                                 wireframeOpacity={0.55}
                                 className="h-full w-full bg-transparent"
@@ -435,7 +439,10 @@ function Features() {
                     viewport={{ once: true, margin: '-50px' }}
                     transition={{ duration: 0.45 }}
                 >
-                    <BentoGrid items={bentoItems} onDarkBackground />
+                    <FeaturesMobileCarousel items={bentoItems} />
+                    <div className="hidden md:block">
+                        <BentoGrid items={bentoItems} onDarkBackground />
+                    </div>
                 </motion.div>
             </div>
         </section>
