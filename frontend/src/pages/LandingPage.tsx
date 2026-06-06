@@ -1,4 +1,4 @@
-import { useState, useEffect, lazy, Suspense, useMemo, type ReactNode } from 'react';
+import { useState, useEffect, lazy, Suspense, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -21,6 +21,9 @@ import {
     Menu,
     X,
     Star,
+    Globe,
+    Clock,
+    Smartphone,
     Home,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -42,13 +45,13 @@ const fadeUp = {
     }),
 };
 
-// ─── Nav / Footer shared ──────────────────────────────
+// ─── Nav shared ───────────────────────────────────────
 const LANG_CODES = ['en', 'de', 'es', 'fr'] as const;
 
 const navLinkClass =
-    'text-[11px] font-semibold uppercase tracking-[0.2em] text-slate-400 transition-colors hover:text-white';
+    'text-xs font-semibold uppercase tracking-[0.2em] text-slate-400 transition-colors hover:text-white';
 const navCtaClass =
-    'group inline-flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.22em] text-white transition-colors hover:text-cyan-300';
+    'group inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.22em] text-white transition-colors hover:text-cyan-300';
 
 function LanguageSwitcher({ className }: { className?: string }) {
     const { i18n } = useTranslation();
@@ -81,15 +84,6 @@ function LanguageSwitcher({ className }: { className?: string }) {
     );
 }
 
-function FooterColumn({ title, children }: { title: string; children: ReactNode }) {
-    return (
-        <div>
-            <p className="mb-5 text-[10px] font-medium uppercase tracking-[0.35em] text-slate-500">{title}</p>
-            {children}
-        </div>
-    );
-}
-
 // ─── Navbar ───────────────────────────────────────────
 function Navbar() {
     const { t } = useTranslation();
@@ -102,9 +96,10 @@ function Navbar() {
         return () => window.removeEventListener('scroll', onScroll);
     }, []);
 
-    // Close mobile menu on resize to desktop
     useEffect(() => {
-        const onResize = () => { if (window.innerWidth >= 768) setOpen(false); };
+        const onResize = () => {
+            if (window.innerWidth >= 768) setOpen(false);
+        };
         window.addEventListener('resize', onResize);
         return () => window.removeEventListener('resize', onResize);
     }, []);
@@ -133,14 +128,16 @@ function Navbar() {
                     )}
                 >
                     <Link to="/" className="flex flex-shrink-0 items-center">
-                        <img
-                            src="/logotriadak.png"
-                            alt="Triadak"
-                            className={cn(
-                                'w-auto object-contain transition-all duration-300',
-                                scrolled ? 'h-12' : 'h-14',
-                            )}
-                        />
+                        <div className={cn('overflow-hidden transition-all duration-300', scrolled ? 'h-12' : 'h-16')}>
+                            <img
+                                src="/logotriadak.png"
+                                alt="Triadak"
+                                className={cn(
+                                    'w-auto object-contain transition-all duration-300',
+                                    scrolled ? '-my-10 h-32' : '-my-12 h-40',
+                                )}
+                            />
+                        </div>
                     </Link>
                     <button
                         type="button"
@@ -153,11 +150,11 @@ function Navbar() {
                     </button>
                 </div>
 
-                {/* Desktop */}
+                {/* Desktop — barra alta + logo grande */}
                 <div
                     className={cn(
                         'hidden items-center justify-between transition-all duration-300 md:flex',
-                        scrolled ? 'h-16' : 'h-20',
+                        scrolled ? 'h-28' : 'h-36',
                     )}
                 >
                     <Link to="/" className="flex flex-shrink-0 items-center">
@@ -166,7 +163,7 @@ function Navbar() {
                             alt="Triadak"
                             className={cn(
                                 'w-auto object-contain transition-all duration-300',
-                                scrolled ? 'h-12' : 'h-16',
+                                scrolled ? 'h-20' : 'h-48',
                             )}
                         />
                     </Link>
@@ -190,7 +187,7 @@ function Navbar() {
                         </Link>
                         <Link to="/login" className={navCtaClass}>
                             {t('landing.nav.startFree')}
-                            <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
+                            <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
                         </Link>
                     </div>
                 </div>
@@ -827,118 +824,115 @@ function CTASection() {
 // ─── Footer ───────────────────────────────────────────
 function Footer() {
     const { t } = useTranslation();
-
-    const footerLinkClass =
-        'text-sm text-slate-400 transition-colors hover:text-cyan-300/90';
-    const highlightKeys = ['setup2min', 'security', 'mobileFriendly', 'worldwide'] as const;
-
     return (
-        <footer className="relative border-t border-white/[0.06] bg-[#061020]">
+        <footer className="relative border-t border-white/[0.08] bg-lp-footer">
             <div
-                className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/12 to-transparent"
+                className="pointer-events-none absolute inset-0 bg-gradient-to-b from-transparent via-black/10 to-black/25"
                 aria-hidden
             />
-
-            <div className="relative z-10 mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 lg:py-20">
-                <div className="grid gap-12 lg:grid-cols-12 lg:gap-16">
-                    <div className="lg:col-span-5">
+            <div className="relative z-10 mx-auto max-w-7xl px-4 py-10 sm:px-6 sm:py-12 lg:px-8">
+                <div className="grid grid-cols-2 gap-8 sm:grid-cols-2 lg:grid-cols-4">
+                    <div className="col-span-2 lg:col-span-1">
                         <img
                             src="/logotriadak.png"
                             alt="Triadak"
-                            className="h-16 w-auto max-w-[220px] object-contain object-left sm:h-20 sm:max-w-[260px]"
+                            className="mb-3 h-24 w-auto object-contain sm:mb-4 sm:h-28"
                         />
-                        <p className="mt-6 max-w-sm text-sm leading-relaxed text-slate-400 sm:text-base">
-                            {t('landing.footer.description')}
+                        <p className="max-w-xs text-sm text-slate-500">{t('landing.footer.description')}</p>
+                    </div>
+
+                    <div>
+                        <h4 className="mb-3 text-sm font-semibold text-white sm:mb-4">
+                            {t('landing.footer.product')}
+                        </h4>
+                        <ul className="space-y-2 sm:space-y-2.5">
+                            <li>
+                                <a
+                                    href="#features"
+                                    className="text-sm text-slate-500 transition-colors hover:text-slate-300"
+                                >
+                                    {t('landing.nav.features')}
+                                </a>
+                            </li>
+                            <li>
+                                <a
+                                    href="#faq"
+                                    className="text-sm text-slate-500 transition-colors hover:text-slate-300"
+                                >
+                                    {t('landing.nav.faq')}
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div>
+                        <h4 className="mb-3 text-sm font-semibold text-white sm:mb-4">
+                            {t('landing.footer.company')}
+                        </h4>
+                        <ul className="space-y-2 sm:space-y-2.5">
+                            <li>
+                                <span className="text-sm text-slate-500">{t('landing.footer.about')}</span>
+                            </li>
+                            <li>
+                                <span className="text-sm text-slate-500">{t('landing.footer.blog')}</span>
+                            </li>
+                            <li>
+                                <span className="text-sm text-slate-500">{t('landing.footer.careers')}</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div className="col-span-2 sm:col-span-1">
+                        <h4 className="mb-3 text-sm font-semibold text-white sm:mb-4">
+                            {t('landing.footer.whyTriadak')}
+                        </h4>
+                        <ul className="grid grid-cols-2 gap-2 sm:grid-cols-1 sm:gap-0 sm:space-y-2.5">
+                            <li className="flex items-center gap-2 text-sm text-slate-500">
+                                <Clock className="h-4 w-4 flex-shrink-0 text-slate-400" />
+                                {t('landing.footer.setup2min')}
+                            </li>
+                            <li className="flex items-center gap-2 text-sm text-slate-500">
+                                <Shield className="h-4 w-4 flex-shrink-0 text-slate-400" />
+                                {t('landing.footer.security')}
+                            </li>
+                            <li className="flex items-center gap-2 text-sm text-slate-500">
+                                <Smartphone className="h-4 w-4 flex-shrink-0 text-slate-400" />
+                                {t('landing.footer.mobileFriendly')}
+                            </li>
+                            <li className="flex items-center gap-2 text-sm text-slate-500">
+                                <Globe className="h-4 w-4 flex-shrink-0 text-slate-400" />
+                                {t('landing.footer.worldwide')}
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div className="mt-8 flex flex-col items-center gap-3 border-t border-white/5 pt-6 sm:mt-12 sm:gap-4 sm:pt-8">
+                    <div className="flex w-full flex-col items-center justify-between gap-3 sm:flex-row sm:gap-4">
+                        <p className="text-xs text-slate-600">
+                            {t('landing.footer.copyright', { year: new Date().getFullYear() })}
                         </p>
-                        <Link to="/login" className={cn(navCtaClass, 'mt-8 sm:mt-10')}>
-                            {t('landing.nav.startFree')}
-                            <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
-                        </Link>
+                        <div className="flex items-center gap-6">
+                            <span className="cursor-pointer text-xs text-slate-600 transition-colors hover:text-slate-400">
+                                {t('landing.footer.privacy')}
+                            </span>
+                            <span className="cursor-pointer text-xs text-slate-600 transition-colors hover:text-slate-400">
+                                {t('landing.footer.terms')}
+                            </span>
+                        </div>
                     </div>
-
-                    <div className="grid grid-cols-2 gap-10 sm:grid-cols-3 lg:col-span-7 lg:gap-12">
-                        <FooterColumn title={t('landing.footer.product')}>
-                            <ul className="space-y-3">
-                                <li>
-                                    <a href="#features" className={footerLinkClass}>
-                                        {t('landing.nav.features')}
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#how-it-works" className={footerLinkClass}>
-                                        {t('landing.nav.howItWorks')}
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#replace-stack" className={footerLinkClass}>
-                                        {t('landing.footer.whyTriadak')}
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#faq" className={footerLinkClass}>
-                                        {t('landing.nav.faq')}
-                                    </a>
-                                </li>
-                            </ul>
-                        </FooterColumn>
-
-                        <FooterColumn title={t('landing.footer.company')}>
-                            <ul className="space-y-3">
-                                <li>
-                                    <span className="text-sm text-slate-500">{t('landing.footer.about')}</span>
-                                </li>
-                                <li>
-                                    <span className="text-sm text-slate-500">{t('landing.footer.blog')}</span>
-                                </li>
-                                <li>
-                                    <span className="text-sm text-slate-500">{t('landing.footer.careers')}</span>
-                                </li>
-                            </ul>
-                        </FooterColumn>
-
-                        <FooterColumn title={t('landing.footer.whyTriadak')}>
-                            <ul className="space-y-3">
-                                {highlightKeys.map((key) => (
-                                    <li
-                                        key={key}
-                                        className="flex gap-3 text-sm leading-relaxed text-slate-400"
-                                    >
-                                        <span className="mt-0.5 text-cyan-300/50" aria-hidden>
-                                            —
-                                        </span>
-                                        {t(`landing.footer.${key}`)}
-                                    </li>
-                                ))}
-                            </ul>
-                        </FooterColumn>
-                    </div>
-                </div>
-
-                <div className="mt-14 flex flex-col gap-4 border-t border-white/[0.06] pt-8 sm:mt-16 sm:flex-row sm:items-center sm:justify-between">
-                    <p className="text-[10px] font-medium uppercase tracking-[0.18em] text-slate-600 sm:text-[11px]">
-                        {t('landing.footer.copyright', { year: new Date().getFullYear() })}
+                    <p className="text-xs text-slate-700 sm:text-sm">
+                        {t('landing.footer.developedBy')}{' '}
+                        <a
+                            href="https://zirox.io"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-slate-500 transition-colors hover:text-slate-300"
+                        >
+                            zirox.io
+                        </a>
                     </p>
-                    <div className="flex flex-wrap items-center gap-6">
-                        <span className="cursor-pointer text-[10px] font-medium uppercase tracking-[0.18em] text-slate-600 transition-colors hover:text-slate-400 sm:text-[11px]">
-                            {t('landing.footer.privacy')}
-                        </span>
-                        <span className="cursor-pointer text-[10px] font-medium uppercase tracking-[0.18em] text-slate-600 transition-colors hover:text-slate-400 sm:text-[11px]">
-                            {t('landing.footer.terms')}
-                        </span>
-                    </div>
                 </div>
-
-                <p className="mt-6 text-[10px] uppercase tracking-[0.16em] text-slate-700">
-                    {t('landing.footer.developedBy')}{' '}
-                    <a
-                        href="https://zirox.io"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-slate-500 transition-colors hover:text-cyan-300/80"
-                    >
-                        zirox.io
-                    </a>
-                </p>
             </div>
         </footer>
     );
