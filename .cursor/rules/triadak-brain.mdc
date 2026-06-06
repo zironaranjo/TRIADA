@@ -221,6 +221,16 @@ SaaS platform for **vacation rental management** (triadak.io). Combines features
     - Website ID: `90a1d1ee-f60a-43c9-bc44-b45b31ec8663`
     - Tema: indigo. Mensaje de bienvenida automático en español
     - Logo de Triadak subido manualmente en panel de Crisp
+46. **Landing editorial abierta (referencia aprobada por usuario, jun 2026)** — Estilo preferido para secciones tipo `#platform` / editorial Haptikos:
+    - **Sin cards**: tipografía libre sobre `#061020`, sin bordes ni cajas redondeadas
+    - **Etiqueta** `01/ PLATAFORMA TRIADAK` en tracking amplio, color slate
+    - **Headline** split: parte muted (`CAPTURA LA`) + parte blanca bold (`VERDAD OPERATIVA`)
+    - **Tagline cian** debajo del párrafo descriptivo
+    - **Ghost index** grande (`01`) en background, parallax lento
+    - **Bloque WHERE → se convierte en**: columnas abiertas, divisor vertical + texto central, sin card
+    - **Parallax al scroll** (`scroll-parallax.tsx`: `useScroll`, `GhostIndex`, `ScrollReveal`, `SectionParallaxBridge`)
+    - Componentes: `platform-editorial-section.tsx`, `editorial-feature-blocks.tsx`, `editorial-cta.tsx`
+    - **Evitar**: volver a encerrar textos en cards/boxes en estas secciones
 41. **Rol Operativo (Worker Portal)** - Portal dedicado para limpiadores/mantenimiento en `/worker/*`:
     - Rol `worker` detectado automáticamente: email del usuario coincide con `staff_members.email`
     - Login redirige a `/worker/tasks` (igual que owners van a `/portal/dashboard`)

@@ -4,9 +4,7 @@ import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
 import { CircularTestimonials } from '@/components/ui/circular-testimonials';
-import { BentoGrid, type BentoItem } from '@/components/ui/bento-grid';
-import { FeaturesMobileCarousel } from '@/components/ui/features-mobile-carousel';
-import { StripedGrid } from '@/components/ui/striped-grid';
+import { EditorialFeaturesSection } from '@/components/ui/editorial-features-section';
 import { EditorialFeatureBlocks } from '@/components/ui/editorial-feature-blocks';
 import { EditorialCTA } from '@/components/ui/editorial-cta';
 import { PlatformEditorialSection } from '@/components/ui/platform-editorial-section';
@@ -415,20 +413,10 @@ const FEATURE_ICON_COLORS = [
     'text-slate-300',
 ] as const;
 
-const FEATURE_BENTO_LAYOUT: { colSpan?: 1 | 2; hasPersistentHover?: boolean }[] = [
-    { colSpan: 2, hasPersistentHover: true },
-    {},
-    {},
-    {},
-    { colSpan: 2 },
-    {},
-];
-
 function Features() {
     const { t } = useTranslation();
 
-    const bentoItems: BentoItem[] = FEATURE_ICONS.map((Icon, i) => {
-        const layout = FEATURE_BENTO_LAYOUT[i];
+    const featureItems = FEATURE_ICONS.map((Icon, i) => {
         const tags = t(`landing.features.items.${i}.tags`, { returnObjects: true }) as string[];
         return {
             title: t(`landing.features.items.${i}.title`),
@@ -436,61 +424,11 @@ function Features() {
             meta: t(`landing.features.items.${i}.meta`),
             status: t(`landing.features.items.${i}.status`),
             tags: Array.isArray(tags) ? tags : [],
-            cta: t('landing.features.cta'),
-            icon: <Icon className={cn('h-4 w-4', FEATURE_ICON_COLORS[i])} />,
-            colSpan: layout.colSpan,
-            hasPersistentHover: layout.hasPersistentHover,
+            icon: <Icon className={cn('h-5 w-5 sm:h-6 sm:w-6', FEATURE_ICON_COLORS[i])} strokeWidth={1.5} />,
         };
     });
 
-    return (
-        <section id="features" className="relative border-t border-white/5">
-            <StripedGrid
-                speed="3s"
-                backgroundColor="#061020"
-                stripeColor="56, 189, 248"
-                stripeWidth="1px"
-                stripeSpacing="10px"
-                opacity={0.12}
-                baseGridOpacity={0.08}
-                enableBaseGrid
-                className="relative w-full py-14 sm:py-20 lg:py-32"
-            >
-                <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                    <motion.div
-                        initial="hidden"
-                        whileInView="visible"
-                        viewport={{ once: true, margin: '-80px' }}
-                        variants={fadeUp}
-                        custom={0}
-                        className="mx-auto mb-10 max-w-2xl text-center sm:mb-14"
-                    >
-                        <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-slate-400 sm:mb-3">
-                            {t('landing.features.badge')}
-                        </p>
-                        <h2 className="mb-3 px-2 text-2xl font-bold text-white sm:mb-4 sm:text-3xl lg:text-4xl">
-                            {t('landing.features.title')}
-                        </h2>
-                        <p className="px-2 text-sm text-slate-400 sm:text-lg">
-                            {t('landing.features.subtitle')}
-                        </p>
-                    </motion.div>
-
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true, margin: '-50px' }}
-                        transition={{ duration: 0.45 }}
-                    >
-                        <FeaturesMobileCarousel items={bentoItems} />
-                        <div className="hidden md:block">
-                            <BentoGrid items={bentoItems} onDarkBackground />
-                        </div>
-                    </motion.div>
-                </div>
-            </StripedGrid>
-        </section>
-    );
+    return <EditorialFeaturesSection items={featureItems} />;
 }
 
 // ─── Audiencias + métricas (gestores / viajeros) ─────────
