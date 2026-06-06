@@ -532,7 +532,7 @@ function AudienceEditorialPanel({
 
             <h3
                 className={cn(
-                    'font-bold uppercase leading-[1.05] tracking-[0.03em] text-white',
+                    'font-bold uppercase tracking-[0.03em] text-white leading-[1.28]',
                     compact
                         ? 'text-[clamp(1.35rem,5vw,1.75rem)]'
                         : 'text-[clamp(1.5rem,3.5vw,2.75rem)]',
@@ -845,7 +845,7 @@ function Footer() {
                         <img
                             src="/logotriadak.png"
                             alt="Triadak"
-                            className="h-14 w-auto object-contain sm:h-16"
+                            className="h-16 w-auto max-w-[220px] object-contain object-left sm:h-20 sm:max-w-[260px]"
                         />
                         <p className="mt-6 max-w-sm text-sm leading-relaxed text-slate-400 sm:text-base">
                             {t('landing.footer.description')}
