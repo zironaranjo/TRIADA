@@ -88,13 +88,6 @@ function LanguageSwitcher({ className }: { className?: string }) {
 function Navbar() {
     const { t } = useTranslation();
     const [open, setOpen] = useState(false);
-    const [scrolled, setScrolled] = useState(false);
-
-    useEffect(() => {
-        const onScroll = () => setScrolled(window.scrollY > 20);
-        window.addEventListener('scroll', onScroll, { passive: true });
-        return () => window.removeEventListener('scroll', onScroll);
-    }, []);
 
     useEffect(() => {
         const onResize = () => {
@@ -111,31 +104,16 @@ function Navbar() {
     ];
 
     return (
-        <nav
-            className={cn(
-                'fixed left-0 right-0 top-0 z-50 border-b transition-all duration-300',
-                scrolled
-                    ? 'border-white/[0.08] bg-[#061020]/92 backdrop-blur-xl shadow-[0_8px_32px_rgba(0,0,0,0.35)]'
-                    : 'border-white/[0.05] bg-[#061020]/55 backdrop-blur-md',
-            )}
-        >
+        <nav className="fixed left-0 right-0 top-0 z-50 border-b border-white/[0.08] bg-[#061020]/92 shadow-[0_8px_32px_rgba(0,0,0,0.35)] backdrop-blur-xl">
             <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                 {/* Mobile */}
-                <div
-                    className={cn(
-                        'flex items-center justify-between transition-all duration-300 md:hidden',
-                        scrolled ? 'h-16' : 'h-[4.5rem]',
-                    )}
-                >
+                <div className="flex h-16 items-center justify-between md:hidden">
                     <Link to="/" className="flex flex-shrink-0 items-center">
-                        <div className={cn('overflow-hidden transition-all duration-300', scrolled ? 'h-12' : 'h-16')}>
+                        <div className="h-14 overflow-hidden">
                             <img
                                 src="/logotriadak.png"
                                 alt="Triadak"
-                                className={cn(
-                                    'w-auto object-contain transition-all duration-300',
-                                    scrolled ? '-my-10 h-32' : '-my-12 h-40',
-                                )}
+                                className="-my-12 h-40 w-auto object-contain"
                             />
                         </div>
                     </Link>
@@ -150,22 +128,16 @@ function Navbar() {
                     </button>
                 </div>
 
-                {/* Desktop — barra alta + logo grande */}
-                <div
-                    className={cn(
-                        'hidden items-center justify-between transition-all duration-300 md:flex',
-                        scrolled ? 'h-28' : 'h-36',
-                    )}
-                >
+                {/* Desktop */}
+                <div className="hidden h-28 items-center justify-between md:flex">
                     <Link to="/" className="flex flex-shrink-0 items-center">
-                        <img
-                            src="/logotriadak.png"
-                            alt="Triadak"
-                            className={cn(
-                                'w-auto object-contain transition-all duration-300',
-                                scrolled ? 'h-20' : 'h-48',
-                            )}
-                        />
+                        <div className="h-24 overflow-hidden">
+                            <img
+                                src="/logotriadak.png"
+                                alt="Triadak"
+                                className="-my-10 h-44 w-auto object-contain"
+                            />
+                        </div>
                     </Link>
 
                     <div className="flex items-center gap-10">
@@ -836,7 +808,7 @@ function Footer() {
                         <img
                             src="/logotriadak.png"
                             alt="Triadak"
-                            className="mb-3 h-24 w-auto object-contain sm:mb-4 sm:h-28"
+                            className="mb-3 h-32 w-auto max-w-[280px] object-contain object-left sm:mb-4 sm:h-36 sm:max-w-[320px]"
                         />
                         <p className="max-w-xs text-sm text-slate-500">{t('landing.footer.description')}</p>
                     </div>
