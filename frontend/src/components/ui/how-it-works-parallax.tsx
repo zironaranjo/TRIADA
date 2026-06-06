@@ -76,11 +76,6 @@ export function HowItWorksParallax() {
     );
 
     return (
-        <ParallaxCards
-            cards={cards}
-            slideVh={72}
-            slideMaxPx={540}
-            className="pb-8 sm:pb-12"
-        />
+        <ParallaxCards cards={cards} slideVh={100} className="pb-12 sm:pb-16" />
     );
 }

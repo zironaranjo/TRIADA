@@ -682,7 +682,7 @@ function AudienceSection() {
 function HowItWorks() {
     const { t } = useTranslation();
     return (
-        <section id="how-it-works" className="relative overflow-hidden bg-[#061020] pb-4 pt-14 sm:pb-6 sm:pt-20 lg:pt-24">
+        <section id="how-it-works" className="relative bg-[#061020] pb-4 pt-14 sm:pb-6 sm:pt-20 lg:pt-24">
             <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                 <motion.div
                     initial="hidden"
@@ -700,6 +700,9 @@ function HowItWorks() {
                     </h2>
                     <p className="px-2 text-sm text-slate-400 sm:text-lg">
                         {t('landing.howItWorks.subtitle')}
+                    </p>
+                    <p className="mt-3 text-[10px] text-slate-600 sm:text-xs">
+                        Desplázate para ver los 3 pasos →
                     </p>
                 </motion.div>
             </div>
@@ -943,7 +946,7 @@ function Footer() {
 // ─── Main Landing Page ────────────────────────────────
 export default function LandingPage() {
     return (
-        <div className="min-h-screen bg-[#061020] text-slate-100 overflow-x-hidden scroll-smooth">
+        <div className="min-h-screen bg-[#061020] text-slate-100 overflow-x-clip scroll-smooth">
             <Navbar />
             <Hero />
             <HookIlluminatedSection />
