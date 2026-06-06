@@ -15,8 +15,6 @@ import {
     UserCog,
     Users,
 } from 'lucide-react';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
 import { CardStack, type CardStackItem } from '@/components/ui/card-stack';
 import { cn } from '@/lib/utils';
 
@@ -34,9 +32,9 @@ const TOOL_ICONS: LucideIcon[] = [
 const TOOL_IMAGES = [
     '/cabin.webp',
     'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800&auto=format&fit=crop&q=70',
-    'https://images.unsplash.com/photo-1554224315-bb4a0b5a0b0b?w=800&auto=format&fit=crop&q=70',
+    'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=800&auto=format&fit=crop&q=70',
     'https://images.unsplash.com/photo-1521737711867-e3b97375f902?w=800&auto=format&fit=crop&q=70',
-    'https://images.unsplash.com/photo-1611746872915-a19607a5227e?w=800&auto=format&fit=crop&q=70',
+    'https://images.unsplash.com/photo-1577563908411-5077b6dc7624?w=800&auto=format&fit=crop&q=70',
     'https://images.unsplash.com/photo-1484154218962-a197022b5858?w=800&auto=format&fit=crop&q=70',
     'https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=800&auto=format&fit=crop&q=70',
     'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&auto=format&fit=crop&q=70',
@@ -129,10 +127,12 @@ function ToolStackCard({
                     <Icon className="h-5 w-5 text-slate-100" strokeWidth={1.75} />
                 </div>
                 <div className="space-y-1">
-                    <span className="inline-flex rounded-md border border-blue-500/20 bg-blue-500/10 px-2 py-0.5 text-[9px] font-semibold uppercase tracking-wider text-blue-300/90">
+                    <span className="inline-flex text-[9px] font-medium uppercase tracking-[0.28em] text-cyan-300/90 sm:text-[10px]">
                         {item.tag}
                     </span>
-                    <p className="text-base font-semibold leading-snug text-white sm:text-lg">{item.title}</p>
+                    <p className="text-base font-bold uppercase leading-snug tracking-[0.03em] text-white sm:text-lg">
+                        {item.title}
+                    </p>
                 </div>
                 <Check className="h-4 w-4 text-emerald-400/80" strokeWidth={2.25} />
             </div>
@@ -163,35 +163,33 @@ export function ReplaceStackSection() {
     return (
         <section
             id="replace-stack"
-            className="relative overflow-visible border-t border-white/[0.06] bg-lp py-10 sm:py-14 lg:py-16"
+            className="relative overflow-visible border-t border-white/[0.06] bg-lp py-16 sm:py-20 lg:py-24"
         >
-            <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+            <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                 <motion.div
                     initial="hidden"
                     whileInView="visible"
                     viewport={{ once: true, margin: '-40px' }}
                     variants={listStagger}
-                    className="mb-8 text-center lg:mb-10"
+                    className="mb-10 lg:mb-12"
                 >
                     <motion.div variants={fadeUp} custom={0}>
-                        <Badge
-                            variant="outline"
-                            className="mb-3 border-blue-500/25 bg-blue-500/10 px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-[0.16em] text-blue-300/90 sm:text-[11px]"
-                        >
+                        <p className="mb-6 text-[10px] font-medium uppercase tracking-[0.35em] text-slate-500 sm:text-xs">
                             {t('landing.replaceStack.badge')}
-                        </Badge>
-                        <h2 className="mb-3 text-xl font-bold leading-snug tracking-tight text-white sm:text-2xl lg:text-3xl">
-                            {t('landing.replaceStack.titleBefore')}{' '}
-                            <span className="text-blue-400/90 line-through decoration-blue-400/50">
-                                {t('landing.replaceStack.titleStrike')}
+                        </p>
+                        <h2 className="max-w-4xl text-[clamp(1.75rem,5vw,3.25rem)] font-bold uppercase leading-[1.05] tracking-[0.03em]">
+                            <span className="block text-slate-500">
+                                {t('landing.replaceStack.titleBefore')}{' '}
+                                <span className="line-through decoration-slate-600/80">
+                                    {t('landing.replaceStack.titleStrike')}
+                                </span>
                             </span>
-                            <br />
-                            <span className="text-white">{t('landing.replaceStack.titleAfter')}</span>
+                            <span className="block text-white">{t('landing.replaceStack.titleAfter')}</span>
                         </h2>
-                        <p className="mx-auto max-w-xl text-xs leading-relaxed text-slate-400 sm:text-sm">
+                        <p className="mt-6 max-w-2xl text-base leading-relaxed text-slate-400 sm:text-lg">
                             {t('landing.replaceStack.description')}
                         </p>
-                        <p className="mx-auto mt-3 max-w-md text-[10px] text-slate-500 sm:text-[11px]">
+                        <p className="mt-4 text-[10px] font-medium uppercase tracking-[0.2em] text-slate-600 sm:text-xs">
                             {t('landing.replaceStack.stackSwipeHint')}
                         </p>
                     </motion.div>
@@ -237,8 +235,8 @@ export function ReplaceStackSection() {
                 />
             </motion.div>
 
-            <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-                <p className="mt-2 text-center text-[10px] text-slate-600 sm:text-xs">
+            <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                <p className="mt-2 text-[10px] font-medium uppercase tracking-[0.18em] text-slate-600 sm:text-xs">
                     {t('landing.replaceStack.integrationsNote')}
                 </p>
 
@@ -248,19 +246,15 @@ export function ReplaceStackSection() {
                     viewport={{ once: true, margin: '-40px' }}
                     variants={fadeUp}
                     custom={1}
-                    className="mt-6 flex justify-center sm:mt-8"
+                    className="mt-8 sm:mt-10"
                 >
-                    <Button
-                        asChild
-                        variant="outline"
-                        size="sm"
-                        className="h-10 rounded-xl border-white/15 bg-white/[0.04] px-5 text-sm text-white hover:border-white/25 hover:bg-white/[0.08]"
+                    <Link
+                        to="/login"
+                        className="group inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.22em] text-white transition-colors hover:text-cyan-300 sm:text-sm"
                     >
-                        <Link to="/login" className="group">
-                            {t('landing.replaceStack.cta')}
-                            <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
-                        </Link>
-                    </Button>
+                        {t('landing.replaceStack.cta')}
+                        <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1.5" />
+                    </Link>
                 </motion.div>
             </div>
         </section>
