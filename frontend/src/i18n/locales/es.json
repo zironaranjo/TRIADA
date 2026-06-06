@@ -775,6 +775,66 @@
       "step3Title": "Empieza a gestionar",
       "step3Desc": "Recibe reservas, gestiona huéspedes, controla finanzas y haz crecer tu negocio — todo desde un panel."
     },
+    "editorial": {
+      "scrollHint": "Desplázate",
+      "heroLines": [
+        "Centraliza tus reservas",
+        "Conecta todos tus canales",
+        "Automatiza tu negocio"
+      ],
+      "sectionLabel": "01/ Plataforma Triadak",
+      "headlineMuted": "Captura la",
+      "headlineBold": "verdad operativa",
+      "description": "Antes de escalar tu cartera, necesitas datos fiables. Triadak centraliza reservas, huéspedes y finanzas en un solo sistema — la base para gestionar alquiler vacacional con claridad.",
+      "tagline": "Menos caos operativo. Más control real.",
+      "whereLabel": "Donde",
+      "whereTitle": "reservas dispersas",
+      "whereDetail": "Calendarios en Airbnb, Booking, Excel y WhatsApp sin sincronizar",
+      "becomesLabel": "se convierte en",
+      "becomesTitle": "Un panel Triadak unificado",
+      "becomesDetail": "Sincronización iCal, mensajería y finanzas en tiempo real",
+      "becomesTags": "gestión vacacional · channel manager · PMS",
+      "pillars": {
+        "0": { "label": "Sincroniza", "title": "6 canales en un calendario" },
+        "1": { "label": "Automatiza", "title": "WhatsApp y portal huésped" },
+        "2": { "label": "Controla", "title": "Finanzas y liquidaciones" }
+      },
+      "cta": "Explorar Triadak",
+      "featuresSectionLabel": "02/ Cómo funciona",
+      "testimonialsSectionLabel": "03/ Testimonios",
+      "features": {
+        "explore": "Empezar gratis",
+        "0": {
+          "index": "02.01/ Reservas",
+          "titleLine1": "Control",
+          "titleLine2": "total",
+          "description": "Calendario unificado, iCal bidireccional y reservas directas. Sin dobles reservas ni calendarios duplicados.",
+          "bullets": ["Sync Airbnb, Booking, VRBO y Lodgify", "Exportación iCal por propiedad", "Portal de reservas directas"]
+        },
+        "1": {
+          "index": "02.02/ Comunicación",
+          "titleLine1": "Huéspedes",
+          "titleLine2": "conectados",
+          "description": "WhatsApp, SMS y portal del huésped con instrucciones de check-in, WiFi y contratos digitales — todo desde Triadak.",
+          "bullets": ["6 plantillas WhatsApp automáticas", "Portal huésped con link único", "Contratos PDF con firma digital"]
+        },
+        "2": {
+          "index": "02.03/ Finanzas",
+          "titleLine1": "Rentabilidad",
+          "titleLine2": "clara",
+          "description": "P&L por propiedad, liquidaciones mensuales a propietarios y exportación PDF/CSV. Sabes exactamente cuánto ganas.",
+          "bullets": ["Motor financiero con gastos y reconciliación", "Liquidaciones automáticas a propietarios", "Benchmarking y revenue management"]
+        }
+      },
+      "ctaBlock": {
+        "leadWords": ["Supera", "los", "límites"],
+        "mainWords": ["¿Listo", "para", "el", "futuro?"],
+        "subWords": ["Gestiona", "Escala", "Automatiza"],
+        "description": "Transforma la forma en que capturas reservas, comunicas con huéspedes y liquidas a propietarios.",
+        "primary": "Empezar gratis",
+        "secondary": "Ver funciones"
+      }
+    },
     "testimonials": {
       "badge": "Amado por anfitriones",
       "title": "Lo que dicen nuestros usuarios",

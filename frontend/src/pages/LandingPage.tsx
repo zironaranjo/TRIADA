@@ -7,7 +7,10 @@ import { CircularTestimonials } from '@/components/ui/circular-testimonials';
 import { BentoGrid, type BentoItem } from '@/components/ui/bento-grid';
 import { FeaturesMobileCarousel } from '@/components/ui/features-mobile-carousel';
 import { StripedGrid } from '@/components/ui/striped-grid';
-import { HowItWorksParallax } from '@/components/ui/how-it-works-parallax';
+import { EditorialFeatureBlocks } from '@/components/ui/editorial-feature-blocks';
+import { EditorialCTA } from '@/components/ui/editorial-cta';
+import { PlatformEditorialSection } from '@/components/ui/platform-editorial-section';
+import { RotatingHeadlines } from '@/components/ui/rotating-headlines';
 import { FAQ as FAQTabs, type FAQData } from '@/components/ui/faq-tabs';
 import { IlluminatedHero } from '@/components/ui/illuminated-hero';
 import LustreText from '@/components/ui/lustretext';
@@ -214,6 +217,8 @@ function Navbar() {
 // ─── Hero Section ─────────────────────────────────────
 function Hero() {
     const { t } = useTranslation();
+    const heroLines = t('landing.editorial.heroLines', { returnObjects: true }) as string[];
+
     return (
         <section className="relative min-h-screen flex flex-col justify-center overflow-hidden">
             {/* Background image */}
@@ -239,6 +244,17 @@ function Hero() {
                     <Zap className="h-3.5 w-3.5 text-slate-300 flex-shrink-0" />
                     <span>{t('landing.hero.badge')}</span>
                 </motion.div>
+
+                {Array.isArray(heroLines) && heroLines.length > 0 && (
+                    <motion.div
+                        initial={{ opacity: 0, y: 16 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.08, duration: 0.5 }}
+                        className="mb-4 sm:mb-6"
+                    >
+                        <RotatingHeadlines lines={heroLines} />
+                    </motion.div>
+                )}
 
                 <motion.h1
                     initial={{ opacity: 0, y: 20 }}
@@ -323,6 +339,23 @@ function Hero() {
                     <span className="text-white/70">{t('landing.hero.freePlan')}</span>
                 </motion.div>
             </div>
+
+            {/* Scroll hint — estilo editorial */}
+            <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.8, duration: 0.5 }}
+                className="absolute bottom-8 left-1/2 z-20 flex -translate-x-1/2 flex-col items-center gap-2"
+            >
+                <span className="text-[10px] font-semibold uppercase tracking-[0.35em] text-white/40">
+                    {t('landing.editorial.scrollHint')}
+                </span>
+                <motion.span
+                    animate={{ y: [0, 6, 0] }}
+                    transition={{ duration: 1.6, repeat: Infinity, ease: 'easeInOut' }}
+                    className="block h-8 w-px bg-gradient-to-b from-white/40 to-transparent"
+                />
+            </motion.div>
 
             {/* Bottom fade into next section */}
             <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-background to-transparent pointer-events-none z-10" />
@@ -692,22 +725,19 @@ function HowItWorks() {
                     custom={0}
                     className="mx-auto mb-8 max-w-2xl text-center sm:mb-12"
                 >
-                    <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-slate-400 sm:mb-3 sm:text-sm">
-                        {t('landing.howItWorks.badge')}
+                    <p className="mb-4 text-[10px] font-medium uppercase tracking-[0.32em] text-slate-500 sm:text-xs">
+                        {t('landing.editorial.featuresSectionLabel')}
                     </p>
-                    <h2 className="mb-3 text-2xl font-bold text-white sm:mb-4 sm:text-3xl lg:text-4xl">
+                    <h2 className="mb-3 text-2xl font-bold uppercase tracking-[0.04em] text-white sm:mb-4 sm:text-3xl lg:text-4xl">
                         {t('landing.howItWorks.title')}
                     </h2>
                     <p className="px-2 text-sm text-slate-400 sm:text-lg">
                         {t('landing.howItWorks.subtitle')}
                     </p>
-                    <p className="mt-3 text-[10px] text-slate-600 sm:text-xs">
-                        Desplázate para ver los 3 pasos →
-                    </p>
                 </motion.div>
             </div>
 
-            <HowItWorksParallax />
+            <EditorialFeatureBlocks />
         </section>
     );
 }
@@ -753,8 +783,10 @@ function Testimonials() {
                     custom={0}
                     className="mx-auto mb-12 max-w-2xl text-center sm:mb-16"
                 >
-                    <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-slate-400 sm:mb-3 sm:text-sm">{t('landing.testimonials.badge')}</p>
-                    <h2 className="text-display text-white">
+                    <p className="mb-4 text-[10px] font-medium uppercase tracking-[0.32em] text-slate-500 sm:text-xs">
+                        {t('landing.editorial.testimonialsSectionLabel')}
+                    </p>
+                    <h2 className="text-display uppercase tracking-[0.03em] text-white">
                         {t('landing.testimonials.title')}
                     </h2>
                 </motion.div>
@@ -830,39 +862,9 @@ function LandingFAQ() {
     );
 }
 
-// ─── CTA Section ──────────────────────────────────────
+// ─── CTA Section (editorial) ─────────────────────────
 function CTASection() {
-    const { t } = useTranslation();
-    return (
-        <section className="py-14 sm:py-20 lg:py-32 relative">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <motion.div
-                    initial="hidden"
-                    whileInView="visible"
-                    viewport={{ once: true, margin: '-80px' }}
-                    variants={fadeUp}
-                    custom={0}
-                    className="relative overflow-hidden rounded-2xl border border-white/10 bg-white/[0.03] p-6 text-center sm:rounded-3xl sm:p-10 lg:p-16"
-                >
-                    <div className="relative z-10">
-                        <h2 className="text-2xl sm:text-3xl lg:text-5xl font-bold text-white mb-3 sm:mb-4 leading-tight">
-                            {t('landing.cta.title')}
-                        </h2>
-                        <p className="text-slate-400 text-sm sm:text-lg max-w-xl mx-auto mb-6 sm:mb-8 px-2">
-                            {t('landing.cta.subtitle')}
-                        </p>
-                        <Link
-                            to="/login"
-                            className="group inline-flex w-full items-center justify-center gap-2 rounded-xl border border-white/20 bg-white/10 px-6 py-3.5 text-sm font-semibold text-white transition-all hover:border-white/30 hover:bg-white/15 sm:w-auto sm:px-8 sm:py-4 sm:text-base"
-                        >
-                            {t('landing.cta.button')}
-                            <ArrowRight className="h-4 w-4 sm:h-5 sm:w-5 group-hover:translate-x-1 transition-transform" />
-                        </Link>
-                    </div>
-                </motion.div>
-            </div>
-        </section>
-    );
+    return <EditorialCTA />;
 }
 
 // ─── Footer ───────────────────────────────────────────
@@ -953,6 +955,7 @@ export default function LandingPage() {
             <AudienceSection />
             <Features />
             <ReplaceStackSection />
+            <PlatformEditorialSection />
             <HowItWorks />
 <Testimonials />
             <LandingFAQ />
