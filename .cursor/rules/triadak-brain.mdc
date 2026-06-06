@@ -221,7 +221,7 @@ SaaS platform for **vacation rental management** (triadak.io). Combines features
     - Website ID: `90a1d1ee-f60a-43c9-bc44-b45b31ec8663`
     - Tema: indigo. Mensaje de bienvenida automático en español
     - Logo de Triadak subido manualmente en panel de Crisp
-46. **Landing editorial abierta (referencia aprobada por usuario, jun 2026)** — Estilo preferido para secciones tipo `#platform` / editorial Haptikos. **Documentación completa:** `arquitectura-de-diseno/` (README + color, tipografía, layout, motion, anti-patrones, `patrones-aprobados/01-plataforma-triadak.md`). Resumen:
+46. **Landing editorial abierta (referencia aprobada por usuario, jun 2026)** — Estilo preferido para secciones tipo `#platform` / editorial Haptikos. Resumen:
     - **Sin cards**: tipografía libre sobre `#061020`, sin bordes ni cajas redondeadas
     - **Etiqueta** `01/ PLATAFORMA TRIADAK` en tracking amplio, color slate
     - **Headline** split: parte muted (`CAPTURA LA`) + parte blanca bold (`VERDAD OPERATIVA`)
@@ -230,7 +230,7 @@ SaaS platform for **vacation rental management** (triadak.io). Combines features
     - **Bloque WHERE → se convierte en**: columnas abiertas, divisor vertical + texto central, sin card
     - **Parallax al scroll** (`scroll-parallax.tsx`: `useScroll`, `GhostIndex`, `ScrollReveal`, `SectionParallaxBridge`)
     - Componentes: `platform-editorial-section.tsx`, `editorial-features-section.tsx`, `editorial-feature-blocks.tsx`, `editorial-cta.tsx`
-    - **Evitar**: volver a encerrar textos en cards/boxes en estas secciones — ver `arquitectura-de-diseno/06-anti-patrones/evitar.md`
+    - **Evitar**: volver a encerrar textos en cards/boxes en estas secciones; texto con color fijo (sin fade por scroll)
 41. **Rol Operativo (Worker Portal)** - Portal dedicado para limpiadores/mantenimiento en `/worker/*`:
     - Rol `worker` detectado automáticamente: email del usuario coincide con `staff_members.email`
     - Login redirige a `/worker/tasks` (igual que owners van a `/portal/dashboard`)

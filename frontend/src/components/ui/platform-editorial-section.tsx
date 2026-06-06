@@ -4,7 +4,6 @@ import { ArrowRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import {
     GhostIndex,
-    ParallaxFloat,
     ScrollReveal,
     useSectionScroll,
 } from '@/components/ui/scroll-parallax';
@@ -29,18 +28,16 @@ export function PlatformEditorialSection() {
             />
 
             <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                <ScrollReveal scrollYProgress={scrollYProgress} enter={[0.08, 0.32]}>
+                <ScrollReveal>
                     <p className="mb-6 text-[10px] font-medium uppercase tracking-[0.35em] text-slate-500 sm:text-xs">
                         {t('landing.editorial.sectionLabel')}
                     </p>
-                    <ParallaxFloat scrollYProgress={scrollYProgress} speed={0.2}>
-                        <h2 className="max-w-5xl text-[clamp(2rem,6vw,4.5rem)] font-bold uppercase leading-[1.02] tracking-[0.03em] text-white">
-                            <span className="block text-slate-500">
-                                {t('landing.editorial.headlineMuted')}
-                            </span>
-                            <span className="block">{t('landing.editorial.headlineBold')}</span>
-                        </h2>
-                    </ParallaxFloat>
+                    <h2 className="max-w-5xl text-[clamp(2rem,6vw,4.5rem)] font-bold uppercase leading-[1.02] tracking-[0.03em] text-white">
+                        <span className="block text-slate-500">
+                            {t('landing.editorial.headlineMuted')}
+                        </span>
+                        <span className="block">{t('landing.editorial.headlineBold')}</span>
+                    </h2>
                     <p className="mt-8 max-w-2xl text-base leading-relaxed text-slate-400 sm:text-lg lg:text-xl">
                         {t('landing.editorial.description')}
                     </p>
@@ -50,9 +47,9 @@ export function PlatformEditorialSection() {
                 </ScrollReveal>
 
                 {/* WHERE → becomes — sin card, tipografía abierta */}
-                <ScrollReveal scrollYProgress={scrollYProgress} enter={[0.22, 0.52]} className="mt-20 sm:mt-28">
+                <ScrollReveal className="mt-20 sm:mt-28">
                     <div className="relative grid gap-12 lg:grid-cols-[1fr_auto_1fr] lg:items-start lg:gap-16">
-                        <ParallaxFloat scrollYProgress={scrollYProgress} speed={0.15} className="lg:pt-4">
+                        <div className="lg:pt-4">
                             <p className="mb-4 text-[10px] font-semibold uppercase tracking-[0.32em] text-slate-500">
                                 {t('landing.editorial.whereLabel')}
                             </p>
@@ -62,7 +59,7 @@ export function PlatformEditorialSection() {
                             <p className="mt-5 max-w-md text-xs font-medium uppercase leading-relaxed tracking-[0.16em] text-slate-500 sm:text-sm">
                                 {t('landing.editorial.whereDetail')}
                             </p>
-                        </ParallaxFloat>
+                        </div>
 
                         <div className="flex flex-col items-center gap-4 lg:pt-8">
                             <span className="hidden h-24 w-px bg-gradient-to-b from-transparent via-white/20 to-transparent lg:block" />
@@ -72,7 +69,7 @@ export function PlatformEditorialSection() {
                             <span className="hidden h-24 w-px bg-gradient-to-b from-transparent via-white/20 to-transparent lg:block" />
                         </div>
 
-                        <ParallaxFloat scrollYProgress={scrollYProgress} speed={-0.12} className="lg:text-right">
+                        <div className="lg:text-right">
                             <p className="text-[clamp(1.25rem,3vw,2rem)] font-bold uppercase leading-tight tracking-[0.05em] text-cyan-200">
                                 {t('landing.editorial.becomesTitle')}
                             </p>
@@ -82,12 +79,12 @@ export function PlatformEditorialSection() {
                             <p className="mt-4 text-[10px] uppercase tracking-[0.28em] text-slate-600">
                                 {t('landing.editorial.becomesTags')}
                             </p>
-                        </ParallaxFloat>
+                        </div>
                     </div>
                 </ScrollReveal>
 
                 {/* Pilares — líneas, sin cajas */}
-                <ScrollReveal scrollYProgress={scrollYProgress} enter={[0.38, 0.68]} className="mt-20 sm:mt-28">
+                <ScrollReveal className="mt-20 sm:mt-28">
                     <div className="grid gap-0 sm:grid-cols-3">
                         {pillars.map((key, i) => (
                             <div
@@ -112,7 +109,7 @@ export function PlatformEditorialSection() {
                     </div>
                 </ScrollReveal>
 
-                <ScrollReveal scrollYProgress={scrollYProgress} enter={[0.55, 0.82]} className="mt-16 sm:mt-20">
+                <ScrollReveal className="mt-16 sm:mt-20">
                     <Link
                         to="/login"
                         className="group inline-flex items-center gap-3 text-xs font-semibold uppercase tracking-[0.22em] text-white/90 transition-colors hover:text-cyan-300 sm:text-sm"

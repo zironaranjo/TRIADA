@@ -291,16 +291,16 @@ function Hero() {
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         transition={{ delay: 0.38, duration: 0.45 }}
-                        className="mt-8 flex flex-wrap items-center gap-x-3 gap-y-2 text-[10px] font-medium uppercase tracking-[0.2em] text-slate-500 sm:mt-10 sm:text-xs"
+                        className="mt-8 flex flex-wrap items-center gap-x-3 gap-y-2 text-[10px] font-semibold uppercase tracking-[0.2em] text-slate-300 sm:mt-10 sm:text-xs"
                     >
                         <div className="flex items-center gap-1.5">
                             {[...Array(5)].map((_, i) => (
-                                <Star key={i} className="h-3 w-3 fill-slate-500 text-slate-500" />
+                                <Star key={i} className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />
                             ))}
-                            <span>{t('landing.hero.rating')}</span>
+                            <span className="text-slate-200">{t('landing.hero.rating')}</span>
                         </div>
-                        <span className="text-slate-700">·</span>
-                        <span>{t('landing.hero.freePlan')}</span>
+                        <span className="text-slate-600">·</span>
+                        <span className="text-slate-200">{t('landing.hero.freePlan')}</span>
                     </motion.div>
 
                     <motion.div
@@ -311,14 +311,14 @@ function Hero() {
                     >
                         <Link
                             to="/explore"
-                            className="group inline-flex items-center gap-2 text-[10px] font-medium uppercase tracking-[0.18em] text-slate-500 transition-colors hover:text-slate-300 sm:text-xs"
+                            className="group inline-flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-300 transition-colors hover:text-white sm:text-xs"
                         >
-                            <Home className="h-3.5 w-3.5" strokeWidth={1.5} />
+                            <Home className="h-3.5 w-3.5 text-slate-300" strokeWidth={1.5} />
                             <span>{t('landing.hero.explorePrompt')}</span>
-                            <span className="text-slate-400 group-hover:text-white">
+                            <span className="text-slate-100 group-hover:text-white">
                                 {t('landing.hero.exploreLink')}
                             </span>
-                            <ArrowRight className="h-3 w-3 transition-transform group-hover:translate-x-0.5" />
+                            <ArrowRight className="h-3 w-3 text-slate-300 transition-transform group-hover:translate-x-0.5 group-hover:text-white" />
                         </Link>
                     </motion.div>
                 </div>

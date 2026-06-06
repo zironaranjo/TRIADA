@@ -7,7 +7,6 @@ import { StripedGrid } from '@/components/ui/striped-grid';
 import { cn } from '@/lib/utils';
 import {
     GhostIndex,
-    ParallaxFloat,
     ScrollReveal,
     useSectionScroll,
 } from '@/components/ui/scroll-parallax';
@@ -42,8 +41,6 @@ function FeatureRow({
         target: ref,
         offset: ['start end', 'end start'],
     });
-    const contentY = useTransform(scrollYProgress, [0, 1], [24, -24]);
-    const opacity = useTransform(scrollYProgress, [0.12, 0.35, 0.75], [0.35, 1, 1]);
     const lineWidth = useTransform(scrollYProgress, [0.2, 0.5], ['0%', '100%']);
 
     const words = item.title.trim().split(/\s+/);
@@ -55,7 +52,7 @@ function FeatureRow({
             ref={ref}
             className="grid gap-6 py-10 sm:grid-cols-12 sm:gap-10 sm:py-14 lg:py-16"
         >
-            <motion.div style={{ opacity }} className="sm:col-span-4 lg:col-span-5">
+            <div className="sm:col-span-4 lg:col-span-5">
                 <p
                     className={cn(
                         'mb-4 text-[10px] font-medium uppercase tracking-[0.32em]',
@@ -78,9 +75,9 @@ function FeatureRow({
                     style={{ width: lineWidth }}
                     className="mt-6 h-px max-w-[8rem] bg-gradient-to-r from-cyan-400/50 to-transparent"
                 />
-            </motion.div>
+            </div>
 
-            <motion.div style={{ y: contentY, opacity }} className="sm:col-span-8 lg:col-span-7">
+            <div className="sm:col-span-8 lg:col-span-7">
                 <p className="max-w-xl text-sm leading-relaxed text-slate-400 sm:text-base lg:max-w-2xl lg:text-lg lg:leading-relaxed">
                     {item.description}
                 </p>
@@ -89,7 +86,7 @@ function FeatureRow({
                         {item.tags.join(' · ')}
                     </p>
                 )}
-            </motion.div>
+            </div>
         </div>
     );
 }
@@ -122,23 +119,19 @@ export function EditorialFeaturesSection({ items }: { items: EditorialFeatureIte
                 />
 
                 <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                    <ScrollReveal scrollYProgress={scrollYProgress} enter={[0.06, 0.28]}>
+                    <ScrollReveal>
                         <p className="mb-5 text-[10px] font-medium uppercase tracking-[0.35em] text-slate-500 sm:text-xs">
                             {t('landing.features.badge')}
                         </p>
-                        <ParallaxFloat scrollYProgress={scrollYProgress} speed={0.15}>
-                            <h2 className="max-w-4xl text-[clamp(1.75rem,5vw,3.5rem)] font-bold uppercase leading-[1.04] tracking-[0.03em] text-white">
-                                {t('landing.features.title')}
-                            </h2>
-                        </ParallaxFloat>
+                        <h2 className="max-w-4xl text-[clamp(1.75rem,5vw,3.5rem)] font-bold uppercase leading-[1.04] tracking-[0.03em] text-white">
+                            {t('landing.features.title')}
+                        </h2>
                         <p className="mt-6 max-w-2xl text-sm leading-relaxed text-slate-400 sm:text-base lg:text-lg">
                             {t('landing.features.subtitle')}
                         </p>
                     </ScrollReveal>
 
                     <ScrollReveal
-                        scrollYProgress={scrollYProgress}
-                        enter={[0.18, 0.45]}
                         className="mt-12 divide-y divide-white/[0.06] sm:mt-16 lg:mt-20"
                     >
                         {items.map((item, index) => (
@@ -146,7 +139,7 @@ export function EditorialFeaturesSection({ items }: { items: EditorialFeatureIte
                         ))}
                     </ScrollReveal>
 
-                    <ScrollReveal scrollYProgress={scrollYProgress} enter={[0.5, 0.78]} className="mt-10 sm:mt-14">
+                    <ScrollReveal className="mt-10 sm:mt-14">
                         <a
                             href="#how-it-works"
                             className="group inline-flex items-center gap-3 text-xs font-semibold uppercase tracking-[0.22em] text-white/80 transition-colors hover:text-cyan-300 sm:text-sm"

@@ -23,7 +23,7 @@ interface ParallaxFloatProps {
     children?: ReactNode;
 }
 
-/** Desplaza contenido a distinta velocidad que el scroll de la sección. */
+/** Desplaza contenido a distinta velocidad — sin cambiar opacidad del texto. */
 export function ParallaxFloat({
     scrollYProgress,
     speed = 0.35,
@@ -31,38 +31,22 @@ export function ParallaxFloat({
     children,
 }: ParallaxFloatProps) {
     const y = useTransform(scrollYProgress, [0, 1], [speed * 120, speed * -120]);
-    const opacity = useTransform(scrollYProgress, [0, 0.15, 0.85, 1], [0.4, 1, 1, 0.4]);
 
     return (
-        <motion.div style={{ y, opacity }} className={className}>
+        <motion.div style={{ y }} className={className}>
             {children}
         </motion.div>
     );
 }
 
 interface ScrollRevealProps {
-    scrollYProgress: MotionValue<number>;
-    /** Rango del progreso donde el contenido entra (0–1). */
-    enter?: [number, number];
     className?: string;
     children?: ReactNode;
 }
 
-export function ScrollReveal({
-    scrollYProgress,
-    enter = [0.12, 0.42],
-    className,
-    children,
-}: ScrollRevealProps) {
-    const opacity = useTransform(scrollYProgress, enter, [0, 1]);
-    const y = useTransform(scrollYProgress, enter, [48, 0]);
-    const scale = useTransform(scrollYProgress, enter, [0.97, 1]);
-
-    return (
-        <motion.div style={{ opacity, y, scale }} className={className}>
-            {children}
-        </motion.div>
-    );
+/** Contenedor estático: el copy mantiene color fijo al hacer scroll (sin fade por progreso). */
+export function ScrollReveal({ className, children }: ScrollRevealProps) {
+    return <div className={className}>{children}</div>;
 }
 
 interface SectionParallaxBridgeProps {

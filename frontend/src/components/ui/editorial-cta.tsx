@@ -4,7 +4,6 @@ import { motion, useTransform } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 import {
     GhostIndex,
-    ParallaxFloat,
     ScrollReveal,
     useSectionScroll,
 } from '@/components/ui/scroll-parallax';
@@ -35,7 +34,7 @@ export function EditorialCTA() {
             />
 
             <div className="relative mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-                <ScrollReveal scrollYProgress={scrollYProgress} enter={[0.1, 0.38]}>
+                <ScrollReveal>
                     <div className="mb-8 flex flex-wrap items-baseline justify-center gap-x-3 gap-y-2">
                         {Array.isArray(leadWords) &&
                             leadWords.map((word) => (
@@ -49,9 +48,8 @@ export function EditorialCTA() {
                     </div>
                 </ScrollReveal>
 
-                <ParallaxFloat scrollYProgress={scrollYProgress} speed={0.18}>
-                    <ScrollReveal scrollYProgress={scrollYProgress} enter={[0.18, 0.48]}>
-                        <div className="mb-6 flex flex-wrap items-baseline justify-center gap-x-3 gap-y-1">
+                <ScrollReveal>
+                    <div className="mb-6 flex flex-wrap items-baseline justify-center gap-x-3 gap-y-1">
                             {Array.isArray(mainWords) &&
                                 mainWords.map((word) => (
                                     <span
@@ -63,16 +61,15 @@ export function EditorialCTA() {
                                 ))}
                         </div>
                     </ScrollReveal>
-                </ParallaxFloat>
 
-                <ScrollReveal scrollYProgress={scrollYProgress} enter={[0.28, 0.55]}>
+                <ScrollReveal>
                     <p className="mx-auto mb-12 max-w-2xl text-center text-base leading-relaxed text-slate-400 sm:text-lg">
                         {t('landing.editorial.ctaBlock.description')}
                     </p>
                 </ScrollReveal>
 
                 {Array.isArray(subWords) && subWords.length > 0 && (
-                    <ScrollReveal scrollYProgress={scrollYProgress} enter={[0.35, 0.62]}>
+                    <ScrollReveal>
                         <div className="mb-14 flex flex-wrap items-center justify-center gap-x-4 gap-y-2">
                             {subWords.map((word) => (
                                 <span
@@ -86,7 +83,7 @@ export function EditorialCTA() {
                     </ScrollReveal>
                 )}
 
-                <ScrollReveal scrollYProgress={scrollYProgress} enter={[0.42, 0.72]}>
+                <ScrollReveal>
                     <div className="flex flex-col items-center justify-center gap-4 sm:flex-row sm:gap-8">
                         <Link
                             to="/login"

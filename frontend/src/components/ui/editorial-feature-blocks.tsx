@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { GhostIndex, ParallaxFloat } from '@/components/ui/scroll-parallax';
+import { GhostIndex } from '@/components/ui/scroll-parallax';
 
 const BLOCK_KEYS = ['0', '1', '2'] as const;
 
@@ -27,9 +27,6 @@ function FeatureBlock({ blockKey, index }: { blockKey: (typeof BLOCK_KEYS)[numbe
         returnObjects: true,
     }) as string[];
 
-    const contentY = useTransform(scrollYProgress, [0, 1], [60, -60]);
-    const titleOpacity = useTransform(scrollYProgress, [0.1, 0.35, 0.75, 0.95], [0.5, 1, 1, 0.6]);
-    const descOpacity = useTransform(scrollYProgress, [0.15, 0.4, 0.8], [0, 1, 1]);
     const lineWidth = useTransform(scrollYProgress, [0.2, 0.45], ['0%', '100%']);
 
     return (
@@ -48,10 +45,7 @@ function FeatureBlock({ blockKey, index }: { blockKey: (typeof BLOCK_KEYS)[numbe
 
             <div className="relative mx-auto grid max-w-7xl gap-10 px-4 sm:px-6 lg:grid-cols-12 lg:gap-16 lg:px-8">
                 {/* Título sticky en desktop */}
-                <motion.div
-                    style={{ opacity: titleOpacity }}
-                    className="lg:sticky lg:top-28 lg:col-span-5 lg:self-start"
-                >
+                <div className="lg:sticky lg:top-28 lg:col-span-5 lg:self-start">
                     <p
                         className={cn(
                             'mb-5 text-[10px] font-medium uppercase tracking-[0.32em] sm:text-xs',
@@ -72,32 +66,25 @@ function FeatureBlock({ blockKey, index }: { blockKey: (typeof BLOCK_KEYS)[numbe
                         style={{ width: lineWidth }}
                         className={cn('mt-8 h-px max-w-xs bg-gradient-to-r to-transparent', accent.line)}
                     />
-                </motion.div>
+                </div>
 
-                {/* Contenido libre — parallax vertical */}
-                <motion.div style={{ y: contentY, opacity: descOpacity }} className="lg:col-span-7 lg:pt-6">
-                    <ParallaxFloat scrollYProgress={scrollYProgress} speed={-0.1}>
-                        <p className="max-w-xl text-base leading-relaxed text-slate-400 sm:text-lg lg:max-w-2xl lg:text-xl lg:leading-relaxed">
-                            {t(`landing.editorial.features.${blockKey}.description`)}
-                        </p>
-                    </ParallaxFloat>
+                <div className="lg:col-span-7 lg:pt-6">
+                    <p className="max-w-xl text-base leading-relaxed text-slate-400 sm:text-lg lg:max-w-2xl lg:text-xl lg:leading-relaxed">
+                        {t(`landing.editorial.features.${blockKey}.description`)}
+                    </p>
 
                     {Array.isArray(bullets) && bullets.length > 0 && (
                         <ul className="mt-10 space-y-4 sm:mt-12">
                             {bullets.map((item, i) => (
-                                <motion.li
+                                <li
                                     key={item}
-                                    initial={{ opacity: 0, x: -12 }}
-                                    whileInView={{ opacity: 1, x: 0 }}
-                                    viewport={{ once: true, margin: '-40px' }}
-                                    transition={{ delay: i * 0.08, duration: 0.45 }}
                                     className="flex items-baseline gap-4 border-b border-white/[0.05] pb-4 text-sm text-slate-300 sm:text-base"
                                 >
                                     <span className="shrink-0 text-[10px] font-medium tabular-nums text-slate-600">
                                         {String(i + 1).padStart(2, '0')}
                                     </span>
                                     {item}
-                                </motion.li>
+                                </li>
                             ))}
                         </ul>
                     )}
@@ -109,7 +96,7 @@ function FeatureBlock({ blockKey, index }: { blockKey: (typeof BLOCK_KEYS)[numbe
                         {t('landing.editorial.features.explore')}
                         <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
                     </Link>
-                </motion.div>
+                </div>
             </div>
         </article>
     );
