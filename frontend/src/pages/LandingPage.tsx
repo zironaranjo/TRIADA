@@ -10,6 +10,7 @@ import { PlatformEditorialSection } from '@/components/ui/platform-editorial-sec
 import { SectionParallaxBridge } from '@/components/ui/scroll-parallax';
 import { FAQ as FAQTabs, type FAQData } from '@/components/ui/faq-tabs';
 import { IlluminatedHero } from '@/components/ui/illuminated-hero';
+import { PropertyScrollHero } from '@/components/ui/property-scroll-hero';
 import {
     Building2,
     CalendarDays,
@@ -915,7 +916,7 @@ export default function LandingPage() {
     return (
         <div className="min-h-screen bg-[#061020] text-slate-100 overflow-x-clip scroll-smooth">
             <Navbar />
-            <Hero />
+            <PropertyScrollHero />
             <HookIlluminatedSection />
             <AudienceSection />
             <Features />
