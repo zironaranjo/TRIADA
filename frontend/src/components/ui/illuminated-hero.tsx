@@ -115,7 +115,7 @@ export function IlluminatedHero({
 
                 <div className="mt-1 h-px w-12 bg-white/10" aria-hidden />
 
-                <p className="mt-8 max-w-xl text-base leading-relaxed text-slate-400 sm:text-lg">
+                <p className="mt-8 max-w-xl text-[clamp(1.05rem,2vw,1.35rem)] font-light leading-relaxed text-slate-400" style={{ fontFamily: "'Cormorant Garamond', Georgia, serif" }}>
                     {descriptionParts ? (
                         <>
                             {descriptionParts[0]}
