@@ -77,7 +77,8 @@ export function IlluminatedHero({
 
                 <h2
                     id="illuminated-headline"
-                    className="text-[clamp(1.75rem,5vw,3.5rem)] font-bold leading-[1.12] tracking-[0.03em]"
+                    className="text-[clamp(2rem,5.5vw,4rem)] font-light leading-[1.1] tracking-[0.01em]"
+                    style={{ fontFamily: "'Cormorant Garamond', Georgia, serif" }}
                 >
                     <span className="block text-slate-400">{introLine1}</span>
                     {introLine2 ? (
@@ -86,7 +87,7 @@ export function IlluminatedHero({
 
                     <span
                         className={cn(
-                            'relative my-4 inline-block text-[clamp(1.85rem,5.5vw,3.75rem)] font-bold tracking-[0.02em]',
+                            'relative my-4 inline-block text-[clamp(2.1rem,6vw,4.25rem)] font-light tracking-[0.01em]',
                             'before:absolute before:animate-[onloadopacity_1s_ease-out_forwards] before:opacity-0 before:content-[attr(data-text)]',
                             'before:bg-[linear-gradient(0deg,#dfe5ee_0%,#fffaf6_50%)] before:bg-clip-text before:text-[#fffaf6]',
                             '[filter:url(#glow-4)]',
@@ -97,14 +98,14 @@ export function IlluminatedHero({
                     </span>
 
                     {(trailingLine1 || trailingLine2) && (
-                        <span className="mt-5 block space-y-1">
+                        <span className="mt-4 block space-y-1">
                             {trailingLine1 ? (
-                                <span className="block text-[clamp(1rem,2.8vw,1.9rem)] font-bold uppercase tracking-[0.06em] text-slate-500">
+                                <span className="block text-[clamp(0.95rem,2.5vw,1.65rem)] font-light tracking-[0.25em] text-white/40 uppercase">
                                     {trailingLine1}
                                 </span>
                             ) : null}
                             {trailingLine2 ? (
-                                <span className="block text-[clamp(1rem,2.8vw,1.9rem)] font-bold uppercase tracking-[0.06em] text-white">
+                                <span className="block text-[clamp(0.95rem,2.5vw,1.65rem)] font-light tracking-[0.25em] text-white/80 uppercase">
                                     {trailingLine2}
                                 </span>
                             ) : null}
