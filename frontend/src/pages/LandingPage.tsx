@@ -21,11 +21,9 @@ import {
     ArrowRight,
     Menu,
     X,
-    Star,
     Globe,
     Clock,
     Smartphone,
-    Home,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { ReplaceStackSection } from '@/components/ui/replace-stack-section';
@@ -220,95 +218,6 @@ function Navbar() {
     );
 }
 
-// ─── Hero Section ─────────────────────────────────────
-function Hero() {
-    const { t } = useTranslation();
-
-    return (
-        <section className="relative flex min-h-screen flex-col justify-center overflow-hidden">
-            <div className="absolute inset-0 z-0">
-                <img
-                    src="/cabana-mobile.webp"
-                    alt="Vacation rental property"
-                    className="h-full w-full object-cover object-center"
-                />
-                <div className="absolute inset-0 bg-gradient-to-b from-[#061020]/75 via-[#061020]/45 to-[#061020]/95 sm:from-[#061020]/80 sm:via-[#061020]/50 sm:to-[#061020]" />
-            </div>
-
-            <div className="relative z-10 mx-auto w-full max-w-7xl px-4 pb-24 pt-28 sm:px-6 sm:pb-28 sm:pt-36 lg:px-8 lg:pt-40">
-                <div className="max-w-3xl">
-                    <p className="mb-5 text-[10px] font-medium uppercase tracking-[0.35em] text-slate-400 sm:mb-6 sm:text-xs">
-                        {t('landing.hero.badge')}
-                    </p>
-
-                    <h1 className="text-[clamp(2rem,6.5vw,4.25rem)] font-bold uppercase leading-[1.02] tracking-[0.03em]">
-                        <span className="block text-slate-400">{t('landing.hero.title1')}</span>
-                        <span className="block text-white">{t('landing.hero.titleHighlight')}</span>
-                    </h1>
-
-                    <p className="mt-6 max-w-xl text-base leading-relaxed text-slate-400 sm:mt-8 sm:text-lg">
-                        {t('landing.hero.subtitle')}
-                    </p>
-
-                    <p className="mt-4 text-sm font-medium tracking-[0.1em] text-cyan-300/90 sm:text-base">
-                        {t('landing.hero.tagline')}
-                    </p>
-
-                    <div className="mt-8 flex flex-col gap-4 sm:mt-10 sm:flex-row sm:items-center sm:gap-8">
-                        <Link
-                            to="/login"
-                            className="group inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.22em] text-white transition-colors hover:text-cyan-300 sm:text-sm"
-                        >
-                            {t('landing.hero.cta')}
-                            <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1.5" />
-                        </Link>
-                        <span className="hidden h-4 w-px bg-white/15 sm:block" aria-hidden />
-                        <a
-                            href="#features"
-                            className="text-xs font-semibold uppercase tracking-[0.22em] text-slate-500 transition-colors hover:text-white sm:text-sm"
-                        >
-                            {t('landing.hero.secondary')}
-                        </a>
-                    </div>
-
-                    <div className="mt-8 flex flex-wrap items-center gap-x-3 gap-y-2 text-[10px] font-semibold uppercase tracking-[0.2em] text-slate-300 sm:mt-10 sm:text-xs">
-                        <div className="flex items-center gap-1.5">
-                            {[...Array(5)].map((_, i) => (
-                                <Star key={i} className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />
-                            ))}
-                            <span className="text-slate-200">{t('landing.hero.rating')}</span>
-                        </div>
-                        <span className="text-slate-600">·</span>
-                        <span className="text-slate-200">{t('landing.hero.freePlan')}</span>
-                    </div>
-
-                    <div className="mt-6 sm:mt-8">
-                        <Link
-                            to="/explore"
-                            className="group inline-flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-300 transition-colors hover:text-white sm:text-xs"
-                        >
-                            <Home className="h-3.5 w-3.5 text-slate-300" strokeWidth={1.5} />
-                            <span>{t('landing.hero.explorePrompt')}</span>
-                            <span className="text-slate-100 group-hover:text-white">
-                                {t('landing.hero.exploreLink')}
-                            </span>
-                            <ArrowRight className="h-3 w-3 text-slate-300 transition-transform group-hover:translate-x-0.5 group-hover:text-white" />
-                        </Link>
-                    </div>
-                </div>
-            </div>
-
-            <div className="absolute bottom-8 left-1/2 z-20 flex -translate-x-1/2 flex-col items-center gap-2">
-                <span className="text-[10px] font-semibold uppercase tracking-[0.35em] text-slate-500">
-                    {t('landing.editorial.scrollHint')}
-                </span>
-                <span className="block h-8 w-px bg-gradient-to-b from-slate-500/50 to-transparent" />
-            </div>
-
-            <div className="pointer-events-none absolute bottom-0 left-0 right-0 z-10 h-24 bg-gradient-to-t from-[#061020] to-transparent" />
-        </section>
-    );
-}
 
 function HookIlluminatedSection() {
     const { t } = useTranslation();
@@ -871,7 +780,6 @@ export default function LandingPage() {
         <div className="min-h-screen bg-[#061020] text-slate-100 overflow-x-clip scroll-smooth">
             <Navbar />
             <PropertyScrollHero />
-            <Hero />
             <HookIlluminatedSection />
             <AudienceSection />
             <Features />
