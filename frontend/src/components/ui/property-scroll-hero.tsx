@@ -1,14 +1,12 @@
 import { useRef, useState, useEffect } from 'react';
 import { motion, useScroll, useTransform, type MotionValue } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, Star, Home } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 const SLIDES = [
   {
     src: '/cabana-mobile.webp',
-    label: 'YOUR PORTFOLIO',
-    title: 'All Your\nProperties',
-    sub: 'Cabins, villas, apartments — one platform',
     align: 'left' as const,
   },
   {
@@ -43,35 +41,113 @@ interface SlideProps {
   scrollYProgress: MotionValue<number>;
 }
 
+// ─── First slide: full hero content with i18n ─────────
+function HeroSlide({ scrollYProgress }: { scrollYProgress: MotionValue<number> }) {
+  const { t } = useTranslation();
+  const step = 1 / TOTAL;
+  const overlap = step * 0.18;
+  const fadeOutStart = step - overlap;
+
+  const opacity = useTransform(scrollYProgress, [0, fadeOutStart, step], [1, 1, 0]);
+  const scale = useTransform(scrollYProgress, [0, step], [1.0, 1.07]);
+  const textY = useTransform(scrollYProgress, [0, step], ['0%', '-8%']);
+  const textOpacity = useTransform(scrollYProgress, [0, step * 0.62, step * 0.82], [1, 1, 0]);
+
+  return (
+    <motion.div style={{ opacity }} className="absolute inset-0">
+      <motion.div style={{ scale }} className="absolute inset-0 origin-center">
+        <img src="/cabana-mobile.webp" alt="Triadak" className="h-full w-full object-cover" />
+      </motion.div>
+
+      <div className="absolute inset-0 bg-gradient-to-t from-[#061020]/95 via-[#061020]/45 to-[#061020]/15" />
+      <div className="absolute inset-0 bg-gradient-to-r from-[#061020]/65 via-[#061020]/15 to-transparent" />
+
+      <motion.div
+        style={{ y: textY, opacity: textOpacity }}
+        className="absolute inset-0 flex flex-col justify-center pl-10 pb-6 pt-24 md:pl-20 md:pt-28"
+      >
+        <p className="mb-4 text-[10px] tracking-[0.38em] text-white/45 uppercase sm:text-[11px]">
+          {t('landing.hero.badge')}
+        </p>
+
+        <h1 className="text-[clamp(2rem,6vw,4.75rem)] font-bold uppercase leading-[1.02] tracking-[0.025em]">
+          <span className="block text-slate-400">{t('landing.hero.title1')}</span>
+          <span className="block text-white">{t('landing.hero.titleHighlight')}</span>
+        </h1>
+
+        <p className="mt-5 max-w-xs text-sm leading-relaxed text-slate-300/90 sm:max-w-sm md:max-w-md md:text-base">
+          {t('landing.hero.subtitle')}
+        </p>
+
+        <p className="mt-2.5 text-xs font-medium tracking-[0.12em] text-cyan-300/90 sm:text-sm">
+          {t('landing.hero.tagline')}
+        </p>
+
+        <div className="mt-8 flex items-center gap-5 sm:gap-7">
+          <Link
+            to="/login"
+            className="group inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.22em] text-white transition-colors hover:text-cyan-300 sm:text-sm"
+          >
+            {t('landing.hero.cta')}
+            <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1.5" />
+          </Link>
+          <span className="h-4 w-px bg-white/15" aria-hidden />
+          <a
+            href="#features"
+            className="text-xs font-semibold uppercase tracking-[0.22em] text-slate-500 transition-colors hover:text-white sm:text-sm"
+          >
+            {t('landing.hero.secondary')}
+          </a>
+        </div>
+
+        <div className="mt-6 flex flex-wrap items-center gap-x-3 gap-y-2 text-[10px] font-semibold uppercase tracking-[0.18em]">
+          <div className="flex items-center gap-1.5">
+            {[...Array(5)].map((_, i) => (
+              <Star key={i} className="h-3 w-3 fill-amber-400 text-amber-400" />
+            ))}
+            <span className="text-slate-200">{t('landing.hero.rating')}</span>
+          </div>
+          <span className="text-slate-600">·</span>
+          <span className="text-slate-200">{t('landing.hero.freePlan')}</span>
+        </div>
+
+        <div className="mt-4">
+          <Link
+            to="/explore"
+            className="group inline-flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-500 transition-colors hover:text-white sm:text-xs"
+          >
+            <Home className="h-3 w-3 shrink-0" strokeWidth={1.5} />
+            <span>{t('landing.hero.explorePrompt')}</span>
+            <span className="text-slate-300 group-hover:text-white">{t('landing.hero.exploreLink')}</span>
+            <ArrowRight className="h-2.5 w-2.5 transition-transform group-hover:translate-x-0.5" />
+          </Link>
+        </div>
+      </motion.div>
+    </motion.div>
+  );
+}
+
+// ─── Slides 1-3: cinematic minimal format ─────────────
 function Slide({ slide, index, scrollYProgress }: SlideProps) {
   const step = 1 / TOTAL;
   const start = index * step;
   const end = (index + 1) * step;
   const overlap = step * 0.18;
 
-  const isFirst = index === 0;
   const isLast = index === TOTAL - 1;
-
-  const fadeInStart = isFirst ? 0 : start - overlap;
-  const fadeInEnd = isFirst ? 0 : start;
+  const fadeInStart = start - overlap;
+  const fadeInEnd = start;
   const fadeOutStart = end - overlap;
 
   const opacity = useTransform(
     scrollYProgress,
-    isFirst
-      ? [0, fadeOutStart, end]
-      : isLast
-        ? [fadeInStart, fadeInEnd, 1]
-        : [fadeInStart, fadeInEnd, fadeOutStart, end],
-    isFirst
-      ? [1, 1, 0]
-      : isLast
-        ? [0, 1, 1]
-        : [0, 1, 1, 0],
+    isLast
+      ? [fadeInStart, fadeInEnd, 1]
+      : [fadeInStart, fadeInEnd, fadeOutStart, end],
+    isLast ? [0, 1, 1] : [0, 1, 1, 0],
   );
 
   const scale = useTransform(scrollYProgress, [start, end], [1.0, 1.07]);
-
   const textY = useTransform(scrollYProgress, [start, end], ['0%', '-10%']);
   const textOpacity = useTransform(
     scrollYProgress,
@@ -87,15 +163,15 @@ function Slide({ slide, index, scrollYProgress }: SlideProps) {
     center: 'items-center text-center px-6',
   }[slide.align];
 
+  const s = slide as { label?: string; title?: string; sub?: string; src: string; align: string; cta?: boolean };
+
   return (
     <motion.div style={{ opacity }} className="absolute inset-0">
       <motion.div style={{ scale }} className="absolute inset-0 origin-center">
-        <img src={slide.src} alt={slide.label} className="h-full w-full object-cover" />
+        <img src={s.src} alt={s.label ?? ''} className="h-full w-full object-cover" />
       </motion.div>
 
-      {/* Gradiente inferior */}
       <div className="absolute inset-0 bg-gradient-to-t from-[#061020]/90 via-[#061020]/30 to-transparent" />
-      {/* Gradiente lateral */}
       <div className="absolute inset-0 bg-gradient-to-r from-[#061020]/40 to-transparent" />
 
       <motion.div
@@ -103,19 +179,19 @@ function Slide({ slide, index, scrollYProgress }: SlideProps) {
         className={`absolute bottom-0 left-0 right-0 flex flex-col justify-end pb-20 md:pb-28 ${alignClass}`}
       >
         <p className="mb-3 text-[10px] tracking-[0.35em] text-white/50 uppercase">
-          {slide.label}
+          {s.label}
         </p>
         <h2
           className="text-[clamp(3rem,8vw,6.5rem)] font-light leading-[1.05] text-white"
           style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", whiteSpace: 'pre-line' }}
         >
-          {slide.title}
+          {s.title}
         </h2>
         <p className="mt-4 text-xs tracking-[0.25em] text-white/60 uppercase md:text-sm">
-          {slide.sub}
+          {s.sub}
         </p>
 
-        {'cta' in slide && slide.cta && (
+        {s.cta && (
           <div className="mt-8 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
             <Link
               to="/login"
@@ -200,8 +276,9 @@ function PropertyScrollHeroInner() {
 
       <div ref={containerRef} style={{ height: `${TOTAL * 110}vh` }} className="relative bg-[#061020]">
         <div className="sticky top-0 h-screen w-full overflow-hidden">
-          {SLIDES.map((slide, i) => (
-            <Slide key={i} slide={slide} index={i} scrollYProgress={scrollYProgress} />
+          <HeroSlide scrollYProgress={scrollYProgress} />
+          {SLIDES.slice(1).map((slide, i) => (
+            <Slide key={i + 1} slide={slide} index={i + 1} scrollYProgress={scrollYProgress} />
           ))}
           <ScrollCue scrollYProgress={scrollYProgress} />
         </div>

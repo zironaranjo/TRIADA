@@ -57,9 +57,9 @@ export function IlluminatedHero({
                 </div>
             ) : null}
 
-            {/* Velo muy suave solo en el centro para legibilidad del texto — el orbe sigue visible */}
+            {/* Velo central para legibilidad del texto — el orbe sigue visible en los bordes */}
             <div
-                className="pointer-events-none absolute inset-0 z-[2] bg-[radial-gradient(ellipse_55%_45%_at_50%_42%,rgba(6,16,32,0.55)_0%,transparent_70%)]"
+                className="pointer-events-none absolute inset-0 z-[2] bg-[radial-gradient(ellipse_80%_70%_at_50%_45%,rgba(6,16,32,0.82)_0%,rgba(6,16,32,0.35)_55%,transparent_80%)]"
                 aria-hidden
             />
 
@@ -68,16 +68,16 @@ export function IlluminatedHero({
                 <div className="shadow-bgb absolute size-full translate-y-[70%] scale-[1.2] animate-[onloadbgb_1s_ease-in-out_forwards] rounded-[100em] opacity-60" />
             </div>
 
-            <div className="relative z-10 mx-auto flex max-w-4xl flex-col items-center px-4 py-16 text-center sm:px-6 sm:py-20 lg:py-24">
+            <div className="relative z-10 mx-auto flex max-w-4xl flex-col items-center px-6 py-20 text-center sm:px-8 sm:py-24 lg:py-28">
                 {sectionLabel ? (
-                    <p className="mb-6 text-[10px] font-medium uppercase tracking-[0.35em] text-slate-500 sm:text-xs">
+                    <p className="mb-8 text-[10px] font-medium uppercase tracking-[0.38em] text-slate-500 sm:text-xs">
                         {sectionLabel}
                     </p>
                 ) : null}
 
                 <h2
                     id="illuminated-headline"
-                    className="text-[clamp(1.75rem,5vw,3.5rem)] font-bold leading-[1.05] tracking-[0.03em]"
+                    className="text-[clamp(1.75rem,5vw,3.5rem)] font-bold leading-[1.12] tracking-[0.03em]"
                 >
                     <span className="block text-slate-400">{introLine1}</span>
                     {introLine2 ? (
@@ -86,7 +86,7 @@ export function IlluminatedHero({
 
                     <span
                         className={cn(
-                            'relative my-3 inline-block text-[clamp(1.85rem,5.5vw,3.75rem)] font-bold tracking-[0.02em]',
+                            'relative my-4 inline-block text-[clamp(1.85rem,5.5vw,3.75rem)] font-bold tracking-[0.02em]',
                             'before:absolute before:animate-[onloadopacity_1s_ease-out_forwards] before:opacity-0 before:content-[attr(data-text)]',
                             'before:bg-[linear-gradient(0deg,#dfe5ee_0%,#fffaf6_50%)] before:bg-clip-text before:text-[#fffaf6]',
                             '[filter:url(#glow-4)]',
@@ -96,19 +96,25 @@ export function IlluminatedHero({
                         {highlightText}
                     </span>
 
-                    {trailingLine1 ? (
-                        <span className="mt-2 block text-[clamp(1.15rem,3.2vw,2.25rem)] font-bold uppercase tracking-[0.05em] text-slate-500">
-                            {trailingLine1}
+                    {(trailingLine1 || trailingLine2) && (
+                        <span className="mt-5 block space-y-1">
+                            {trailingLine1 ? (
+                                <span className="block text-[clamp(1rem,2.8vw,1.9rem)] font-bold uppercase tracking-[0.06em] text-slate-500">
+                                    {trailingLine1}
+                                </span>
+                            ) : null}
+                            {trailingLine2 ? (
+                                <span className="block text-[clamp(1rem,2.8vw,1.9rem)] font-bold uppercase tracking-[0.06em] text-white">
+                                    {trailingLine2}
+                                </span>
+                            ) : null}
                         </span>
-                    ) : null}
-                    {trailingLine2 ? (
-                        <span className="block text-[clamp(1.15rem,3.2vw,2.25rem)] font-bold uppercase tracking-[0.05em] text-white">
-                            {trailingLine2}
-                        </span>
-                    ) : null}
+                    )}
                 </h2>
 
-                <p className="mt-10 max-w-2xl text-base leading-relaxed text-slate-400 sm:mt-12 sm:text-lg">
+                <div className="mt-1 h-px w-12 bg-white/10" aria-hidden />
+
+                <p className="mt-8 max-w-xl text-base leading-relaxed text-slate-400 sm:text-lg">
                     {descriptionParts ? (
                         <>
                             {descriptionParts[0]}
