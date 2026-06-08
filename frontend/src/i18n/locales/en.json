@@ -32,13 +32,27 @@
       "december": "December"
     },
     "monthsShort": {
-      "jan": "Jan", "feb": "Feb", "mar": "Mar", "apr": "Apr",
-      "may": "May", "jun": "Jun", "jul": "Jul", "aug": "Aug",
-      "sep": "Sep", "oct": "Oct", "nov": "Nov", "dec": "Dec"
+      "jan": "Jan",
+      "feb": "Feb",
+      "mar": "Mar",
+      "apr": "Apr",
+      "may": "May",
+      "jun": "Jun",
+      "jul": "Jul",
+      "aug": "Aug",
+      "sep": "Sep",
+      "oct": "Oct",
+      "nov": "Nov",
+      "dec": "Dec"
     },
     "days": {
-      "sun": "Sun", "mon": "Mon", "tue": "Tue", "wed": "Wed",
-      "thu": "Thu", "fri": "Fri", "sat": "Sat"
+      "sun": "Sun",
+      "mon": "Mon",
+      "tue": "Tue",
+      "wed": "Wed",
+      "thu": "Thu",
+      "fri": "Fri",
+      "sat": "Sat"
     },
     "status": {
       "active": "Active",
@@ -55,11 +69,15 @@
       "refunded": "Refunded"
     },
     "daysShort": {
-      "sun": "S", "mon": "M", "tue": "T", "wed": "W",
-      "thu": "T", "fri": "F", "sat": "S"
+      "sun": "S",
+      "mon": "M",
+      "tue": "T",
+      "wed": "W",
+      "thu": "T",
+      "fri": "F",
+      "sat": "S"
     }
   },
-
   "layout": {
     "tagline": "Vacational Renting",
     "mainMenu": "Main Menu",
@@ -88,7 +106,6 @@
     },
     "signOut": "Sign Out"
   },
-
   "ownerPortal": {
     "title": "Owner Portal",
     "role": "Owner",
@@ -145,7 +162,6 @@
       "noExpenses": "No expenses this period"
     }
   },
-
   "dashboard": {
     "loading": "Loading Dashboard...",
     "title": "Dashboard",
@@ -177,7 +193,6 @@
     "noUpcoming": "No upcoming bookings",
     "unknown": "Unknown"
   },
-
   "properties": {
     "title": "Properties",
     "subtitle": "Manage your portfolio of villas and apartments.",
@@ -225,7 +240,6 @@
     "alertUploadError": "Error uploading image: {{message}}",
     "alertGenericError": "Error: {{message}}"
   },
-
   "bookings": {
     "title": "Bookings",
     "subtitle": "Manage reservations and calendar.",
@@ -289,7 +303,6 @@
     "guestLink": "Share this link with your guest",
     "guestLinkHint": "The guest can view check-in instructions, WiFi, house rules, and more — no login required."
   },
-
   "owners": {
     "title": "Owners",
     "subtitle": "Manage relationships and payouts.",
@@ -335,7 +348,6 @@
     "paymentHistory": "Payment History",
     "noPayments": "No payments recorded"
   },
-
   "ownerStatements": {
     "title": "Owner Statements",
     "subtitle": "Monthly settlement reports for property owners",
@@ -364,7 +376,6 @@
     "emptyTitle": "No statements for this period",
     "emptyDescription": "Create owners and assign properties to see statements here"
   },
-
   "finance": {
     "title": "Finance Engine",
     "subtitle": "Financial analytics from your bookings & expenses",
@@ -461,7 +472,6 @@
       "other": "Other"
     }
   },
-
   "crm": {
     "title": "CRM",
     "subtitle": "Manage contacts, guests, owners & interactions.",
@@ -522,7 +532,6 @@
     "alertCreateError": "Error: {{message}}",
     "alertUpdateError": "Error: {{message}}"
   },
-
   "settings": {
     "title": "Settings",
     "subtitle": "Manage your profile, preferences, and notifications",
@@ -656,7 +665,6 @@
       "fr": "Français"
     }
   },
-
   "landing": {
     "nav": {
       "features": "Features",
@@ -710,10 +718,22 @@
         "imageAlt": "Vacation rental living room for travelers"
       },
       "stats": {
-        "0": { "value": "40+", "label": "Features included" },
-        "1": { "value": "6", "label": "Connected channels" },
-        "2": { "value": "4", "label": "Languages available" },
-        "3": { "value": "100%", "label": "Cloud-based — nothing to install" }
+        "0": {
+          "value": "40+",
+          "label": "Features included"
+        },
+        "1": {
+          "value": "6",
+          "label": "Connected channels"
+        },
+        "2": {
+          "value": "4",
+          "label": "Languages available"
+        },
+        "3": {
+          "value": "100%",
+          "label": "Cloud-based — nothing to install"
+        }
       }
     },
     "replaceStack": {
@@ -750,10 +770,31 @@
       ]
     },
     "serenity": {
-      "top": ["Less chaos.", "More control."],
-      "main1": ["Centralize", "bookings,", "guests"],
-      "main2": ["and", "finances", "where", "your", "business", "gains", "clarity", "every", "day."],
-      "bottom": ["Automate.", "Delegate.", "Scale."]
+      "top": [
+        "Less chaos.",
+        "More control."
+      ],
+      "main1": [
+        "Centralize",
+        "bookings,",
+        "guests"
+      ],
+      "main2": [
+        "and",
+        "finances",
+        "where",
+        "your",
+        "business",
+        "gains",
+        "clarity",
+        "every",
+        "day."
+      ],
+      "bottom": [
+        "Automate.",
+        "Delegate.",
+        "Scale."
+      ]
     },
     "features": {
       "badge": "Features",
@@ -761,12 +802,67 @@
       "subtitle": "From properties to payments, Triadak covers the entire vacation rental workflow.",
       "cta": "Explore →",
       "items": {
-        "0": { "title": "Property Management", "description": "Add properties with details, photos, pricing and availability in one place.", "meta": "Multi-property", "status": "Core", "tags": ["Properties", "Photos", "Pricing"] },
-        "1": { "title": "Smart Bookings", "description": "Calendar, check-in/out and availability. No double bookings.", "meta": "Calendar", "status": "Active", "tags": ["Bookings", "iCal"] },
-        "2": { "title": "Guest CRM", "description": "Auto profiles, history and communication in a single view.", "meta": "Contacts", "status": "Active", "tags": ["CRM", "Guests"] },
-        "3": { "title": "Finance Engine", "description": "Income, expenses and per-property profit in real time.", "meta": "P&L", "status": "Active", "tags": ["Finance", "Reports"] },
-        "4": { "title": "Analytics Dashboard", "description": "Occupancy, revenue and KPIs to decide with data.", "meta": "KPIs", "status": "Featured", "tags": ["Analytics", "Occupancy"] },
-        "5": { "title": "Secure & Private", "description": "Agency isolation (RLS). Your data, encrypted and under your control.", "meta": "RLS", "status": "Active", "tags": ["Security", "Multi-tenant"] }
+        "0": {
+          "title": "Property Management",
+          "description": "Add properties with details, photos, pricing and availability in one place.",
+          "meta": "Multi-property",
+          "status": "Core",
+          "tags": [
+            "Properties",
+            "Photos",
+            "Pricing"
+          ]
+        },
+        "1": {
+          "title": "Smart Bookings",
+          "description": "Calendar, check-in/out and availability. No double bookings.",
+          "meta": "Calendar",
+          "status": "Active",
+          "tags": [
+            "Bookings",
+            "iCal"
+          ]
+        },
+        "2": {
+          "title": "Guest CRM",
+          "description": "Auto profiles, history and communication in a single view.",
+          "meta": "Contacts",
+          "status": "Active",
+          "tags": [
+            "CRM",
+            "Guests"
+          ]
+        },
+        "3": {
+          "title": "Finance Engine",
+          "description": "Income, expenses and per-property profit in real time.",
+          "meta": "P&L",
+          "status": "Active",
+          "tags": [
+            "Finance",
+            "Reports"
+          ]
+        },
+        "4": {
+          "title": "Analytics Dashboard",
+          "description": "Occupancy, revenue and KPIs to decide with data.",
+          "meta": "KPIs",
+          "status": "Featured",
+          "tags": [
+            "Analytics",
+            "Occupancy"
+          ]
+        },
+        "5": {
+          "title": "Secure & Private",
+          "description": "Agency isolation (RLS). Your data, encrypted and under your control.",
+          "meta": "RLS",
+          "status": "Active",
+          "tags": [
+            "Security",
+            "Multi-tenant"
+          ]
+        }
       }
     },
     "howItWorks": {
@@ -800,41 +896,76 @@
       "becomesDetail": "iCal sync, messaging and finances in real time",
       "becomesTags": "vacation rental · channel manager · PMS",
       "pillars": {
-        "0": { "label": "Sync", "title": "6 channels in one calendar" },
-        "1": { "label": "Automate", "title": "WhatsApp and guest portal" },
-        "2": { "label": "Control", "title": "Finance and owner settlements" }
+        "0": {
+          "label": "Sync",
+          "title": "6 channels in one calendar"
+        },
+        "1": {
+          "label": "Automate",
+          "title": "WhatsApp and guest portal"
+        },
+        "2": {
+          "label": "Control",
+          "title": "Finance and owner settlements"
+        }
       },
       "cta": "Explore Triadak",
       "featuresSectionLabel": "02/ How it works",
       "testimonialsSectionLabel": "03/ Testimonials",
       "features": {
-        "explore": "Start free",
         "0": {
           "index": "02.01/ Bookings",
           "titleLine1": "Total",
           "titleLine2": "control",
           "description": "Unified calendar, bidirectional iCal and direct bookings. No double bookings or duplicate calendars.",
-          "bullets": ["Sync Airbnb, Booking, VRBO and Lodgify", "iCal export per property", "Direct booking portal"]
+          "bullets": [
+            "Sync Airbnb, Booking, VRBO and Lodgify",
+            "iCal export per property",
+            "Direct booking portal"
+          ]
         },
         "1": {
           "index": "02.02/ Communication",
           "titleLine1": "Guests",
           "titleLine2": "connected",
           "description": "WhatsApp, SMS and guest portal with check-in instructions, WiFi and digital contracts — all from Triadak.",
-          "bullets": ["6 automated WhatsApp templates", "Guest portal with unique link", "PDF contracts with digital signature"]
+          "bullets": [
+            "6 automated WhatsApp templates",
+            "Guest portal with unique link",
+            "PDF contracts with digital signature"
+          ]
         },
         "2": {
           "index": "02.03/ Finance",
           "titleLine1": "Clear",
           "titleLine2": "profitability",
           "description": "P&L per property, monthly owner settlements and PDF/CSV export. Know exactly what you earn.",
-          "bullets": ["Finance engine with expenses and reconciliation", "Automated owner settlements", "Benchmarking and revenue management"]
-        }
+          "bullets": [
+            "Finance engine with expenses and reconciliation",
+            "Automated owner settlements",
+            "Benchmarking and revenue management"
+          ]
+        },
+        "explore": "Start free"
       },
       "ctaBlock": {
-        "leadWords": ["Push", "the", "boundaries"],
-        "mainWords": ["Ready", "to", "experience", "the", "future?"],
-        "subWords": ["Manage", "Scale", "Automate"],
+        "leadWords": [
+          "Push",
+          "the",
+          "boundaries"
+        ],
+        "mainWords": [
+          "Ready",
+          "to",
+          "experience",
+          "the",
+          "future?"
+        ],
+        "subWords": [
+          "Manage",
+          "Scale",
+          "Automate"
+        ],
         "description": "Transform how you capture bookings, communicate with guests and settle with owners.",
         "primary": "Start free",
         "secondary": "See features"
@@ -844,9 +975,18 @@
       "badge": "Loved by hosts",
       "title": "What our users say",
       "items": {
-        "0": { "quote": "Triadak completely transformed how we manage our 8 properties. The automation saves us hours every week.", "role": "Property Manager, Malaga" },
-        "1": { "quote": "The financial tracking alone is worth it. I finally have a clear picture of profitability per property.", "role": "Rental Owner, Barcelona" },
-        "2": { "quote": "We switched from spreadsheets to Triadak and never looked back. The CRM is incredibly useful.", "role": "Co-host, Lisbon" }
+        "0": {
+          "quote": "Triadak completely transformed how we manage our 8 properties. The automation saves us hours every week.",
+          "role": "Property Manager, Malaga"
+        },
+        "1": {
+          "quote": "The financial tracking alone is worth it. I finally have a clear picture of profitability per property.",
+          "role": "Rental Owner, Barcelona"
+        },
+        "2": {
+          "quote": "We switched from spreadsheets to Triadak and never looked back. The CRM is incredibly useful.",
+          "role": "Co-host, Lisbon"
+        }
       }
     },
     "pricing": {
@@ -877,10 +1017,34 @@
         "enterprise": "Contact Sales"
       },
       "features": {
-        "starter": { "0": "1 property", "1": "10 bookings/month", "2": "Basic CRM (20 contacts)", "3": "Calendar view", "4": "Basic dashboard" },
-        "basic": { "0": "Up to 5 properties", "1": "50 bookings/month", "2": "Full CRM (100 contacts)", "3": "Financial dashboard", "4": "Email notifications" },
-        "pro": { "0": "Up to 20 properties", "1": "Unlimited bookings", "2": "Advanced CRM", "3": "Payment links (Stripe)", "4": "Owner portal" },
-        "enterprise": { "0": "Unlimited everything", "1": "Full API access", "2": "Dedicated support", "3": "Custom onboarding", "4": "Priority features" }
+        "starter": {
+          "0": "1 property",
+          "1": "10 bookings/month",
+          "2": "Basic CRM (20 contacts)",
+          "3": "Calendar view",
+          "4": "Basic dashboard"
+        },
+        "basic": {
+          "0": "Up to 5 properties",
+          "1": "50 bookings/month",
+          "2": "Full CRM (100 contacts)",
+          "3": "Financial dashboard",
+          "4": "Email notifications"
+        },
+        "pro": {
+          "0": "Up to 20 properties",
+          "1": "Unlimited bookings",
+          "2": "Advanced CRM",
+          "3": "Payment links (Stripe)",
+          "4": "Owner portal"
+        },
+        "enterprise": {
+          "0": "Unlimited everything",
+          "1": "Full API access",
+          "2": "Dedicated support",
+          "3": "Custom onboarding",
+          "4": "Priority features"
+        }
       }
     },
     "faq": {
@@ -894,12 +1058,30 @@
         "product": "Product"
       },
       "items": {
-        "0": { "question": "Is Triadak really free to start?", "answer": "Yes! The Starter plan is completely free — forever. It includes 1 property, 10 bookings per month, and basic CRM. No credit card required." },
-        "1": { "question": "Can I upgrade or downgrade at any time?", "answer": "Absolutely. You can change your plan anytime from the Billing page. Upgrades are instant, and downgrades take effect at the end of your billing cycle." },
-        "2": { "question": "Is my data secure?", "answer": "Yes. We use Supabase with row-level security, meaning each user's data is completely isolated. All connections are encrypted with TLS." },
-        "3": { "question": "Do I need to install anything?", "answer": "No. Triadak is a web application that works on any browser — desktop, tablet, or mobile. There's nothing to install." },
-        "4": { "question": "Can I import data from spreadsheets?", "answer": "We're working on CSV import functionality. For now, you can quickly add properties and bookings through our intuitive interface." },
-        "5": { "question": "What payment methods do you accept?", "answer": "We accept all major credit and debit cards through Stripe. Enterprise plans can also pay via bank transfer." }
+        "0": {
+          "question": "Is Triadak really free to start?",
+          "answer": "Yes! The Starter plan is completely free — forever. It includes 1 property, 10 bookings per month, and basic CRM. No credit card required."
+        },
+        "1": {
+          "question": "Can I upgrade or downgrade at any time?",
+          "answer": "Absolutely. You can change your plan anytime from the Billing page. Upgrades are instant, and downgrades take effect at the end of your billing cycle."
+        },
+        "2": {
+          "question": "Is my data secure?",
+          "answer": "Yes. We use Supabase with row-level security, meaning each user's data is completely isolated. All connections are encrypted with TLS."
+        },
+        "3": {
+          "question": "Do I need to install anything?",
+          "answer": "No. Triadak is a web application that works on any browser — desktop, tablet, or mobile. There's nothing to install."
+        },
+        "4": {
+          "question": "Can I import data from spreadsheets?",
+          "answer": "We're working on CSV import functionality. For now, you can quickly add properties and bookings through our intuitive interface."
+        },
+        "5": {
+          "question": "What payment methods do you accept?",
+          "answer": "We accept all major credit and debit cards through Stripe. Enterprise plans can also pay via bank transfer."
+        }
       }
     },
     "cta": {
@@ -924,9 +1106,34 @@
       "privacy": "Privacy Policy",
       "terms": "Terms of Service",
       "developedBy": "Developed by"
+    },
+    "scrollSlides": {
+      "slides": [
+        {
+          "label": "YOUR PORTFOLIO",
+          "title": "All Your\nProperties",
+          "sub": "Cabins, villas, apartments — one platform"
+        },
+        {
+          "label": "EVERY PROPERTY",
+          "title": "Managed\nSeamlessly",
+          "sub": "From bookings to maintenance, fully automated"
+        },
+        {
+          "label": "EVERY DETAIL",
+          "title": "Nothing\nSlips Through",
+          "sub": "Billing, guest CRM, and operations in sync"
+        },
+        {
+          "label": "TRIADAK",
+          "title": "Start Managing\nSmarter",
+          "sub": "Join property managers who already made the switch",
+          "cta1": "Start Free",
+          "cta2": "See Demo"
+        }
+      ]
     }
   },
-
   "staffOps": {
     "title": "Staff Operations",
     "subtitle": "Manage your operational team, tasks, and payroll",
@@ -1016,12 +1223,10 @@
     "detailRating": "Avg Rating",
     "detailMemberSince": "Member Since"
   },
-
   "pricing": {
     "perTransaction": "per booking transaction",
     "trialActivated": "14-day free trial activated! Redirecting to dashboard..."
   },
-
   "occupancy": {
     "title": "Occupancy Dashboard",
     "subtitle": "Visual overview of property occupancy and booking distribution",
@@ -1039,7 +1244,6 @@
     "nights": "nights",
     "bookingsLabel": "bookings"
   },
-
   "channels": {
     "title": "Channel Manager",
     "subtitle": "Connect and sync your properties across all booking platforms",
@@ -1095,7 +1299,6 @@
     "vrboDesc": "Sync calendars via iCal from VRBO/HomeAway",
     "lodgifyDesc": "Full API integration with Lodgify channel manager"
   },
-
   "billing": {
     "commissionRate": "Commission Rate",
     "perBookingTransaction": "per booking transaction",
@@ -1117,7 +1320,6 @@
     "history": "Billing History",
     "noInvoices": "No invoices yet. They will appear here after your first payment."
   },
-
   "messaging": {
     "title": "Messaging",
     "subtitle": "Send WhatsApp and SMS messages to guests automatically or manually",

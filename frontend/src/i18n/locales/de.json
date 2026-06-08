@@ -32,13 +32,27 @@
       "december": "Dezember"
     },
     "monthsShort": {
-      "jan": "Jan", "feb": "Feb", "mar": "Mär", "apr": "Apr",
-      "may": "Mai", "jun": "Jun", "jul": "Jul", "aug": "Aug",
-      "sep": "Sep", "oct": "Okt", "nov": "Nov", "dec": "Dez"
+      "jan": "Jan",
+      "feb": "Feb",
+      "mar": "Mär",
+      "apr": "Apr",
+      "may": "Mai",
+      "jun": "Jun",
+      "jul": "Jul",
+      "aug": "Aug",
+      "sep": "Sep",
+      "oct": "Okt",
+      "nov": "Nov",
+      "dec": "Dez"
     },
     "days": {
-      "sun": "So", "mon": "Mo", "tue": "Di", "wed": "Mi",
-      "thu": "Do", "fri": "Fr", "sat": "Sa"
+      "sun": "So",
+      "mon": "Mo",
+      "tue": "Di",
+      "wed": "Mi",
+      "thu": "Do",
+      "fri": "Fr",
+      "sat": "Sa"
     },
     "status": {
       "active": "Aktiv",
@@ -55,11 +69,15 @@
       "refunded": "Erstattet"
     },
     "daysShort": {
-      "sun": "S", "mon": "M", "tue": "D", "wed": "M",
-      "thu": "D", "fri": "F", "sat": "S"
+      "sun": "S",
+      "mon": "M",
+      "tue": "D",
+      "wed": "M",
+      "thu": "D",
+      "fri": "F",
+      "sat": "S"
     }
   },
-
   "layout": {
     "tagline": "Ferienvermietung",
     "mainMenu": "Hauptmenü",
@@ -88,7 +106,6 @@
     },
     "signOut": "Abmelden"
   },
-
   "ownerPortal": {
     "title": "Eigentümerportal",
     "role": "Eigentümer",
@@ -145,7 +162,6 @@
       "noExpenses": "Keine Ausgaben in diesem Zeitraum"
     }
   },
-
   "dashboard": {
     "loading": "Dashboard wird geladen...",
     "title": "Dashboard",
@@ -177,7 +193,6 @@
     "noUpcoming": "Keine kommenden Buchungen",
     "unknown": "Unbekannt"
   },
-
   "properties": {
     "title": "Objekte",
     "subtitle": "Verwalten Sie Ihr Portfolio an Villen und Wohnungen.",
@@ -221,7 +236,6 @@
     "alertUploadError": "Fehler beim Hochladen: {{message}}",
     "alertGenericError": "Fehler: {{message}}"
   },
-
   "bookings": {
     "title": "Buchungen",
     "subtitle": "Reservierungen und Kalender verwalten.",
@@ -285,7 +299,6 @@
     "guestLink": "Teilen Sie diesen Link mit Ihrem Gast",
     "guestLinkHint": "Der Gast kann Check-in-Anweisungen, WLAN, Hausregeln und mehr sehen — keine Anmeldung erforderlich."
   },
-
   "owners": {
     "title": "Eigentümer",
     "subtitle": "Beziehungen und Auszahlungen verwalten.",
@@ -331,7 +344,6 @@
     "paymentHistory": "Zahlungsverlauf",
     "noPayments": "Keine Zahlungen erfasst"
   },
-
   "ownerStatements": {
     "title": "Abrechnungen",
     "subtitle": "Monatliche Abrechnungsberichte für Eigentümer",
@@ -360,7 +372,6 @@
     "emptyTitle": "Keine Abrechnungen für diesen Zeitraum",
     "emptyDescription": "Erstellen Sie Eigentümer und weisen Sie Objekte zu, um Abrechnungen zu sehen"
   },
-
   "finance": {
     "title": "Finanzen",
     "subtitle": "Finanzanalysen aus Ihren Buchungen & Ausgaben",
@@ -457,7 +468,6 @@
       "other": "Sonstiges"
     }
   },
-
   "crm": {
     "title": "CRM",
     "subtitle": "Kontakte, Gäste, Eigentümer & Interaktionen verwalten.",
@@ -518,7 +528,6 @@
     "alertCreateError": "Fehler: {{message}}",
     "alertUpdateError": "Fehler: {{message}}"
   },
-
   "settings": {
     "title": "Einstellungen",
     "subtitle": "Profil, Einstellungen und Benachrichtigungen verwalten",
@@ -646,7 +655,6 @@
       "fr": "Français"
     }
   },
-
   "landing": {
     "nav": {
       "features": "Funktionen",
@@ -700,10 +708,22 @@
         "imageAlt": "Wohnzimmer einer Ferienunterkunft für Reisende"
       },
       "stats": {
-        "0": { "value": "40+", "label": "Funktionen inklusive" },
-        "1": { "value": "6", "label": "Verbundene Kanäle" },
-        "2": { "value": "4", "label": "Verfügbare Sprachen" },
-        "3": { "value": "100%", "label": "In der Cloud — keine Installation" }
+        "0": {
+          "value": "40+",
+          "label": "Funktionen inklusive"
+        },
+        "1": {
+          "value": "6",
+          "label": "Verbundene Kanäle"
+        },
+        "2": {
+          "value": "4",
+          "label": "Verfügbare Sprachen"
+        },
+        "3": {
+          "value": "100%",
+          "label": "In der Cloud — keine Installation"
+        }
       }
     },
     "replaceStack": {
@@ -740,10 +760,30 @@
       ]
     },
     "serenity": {
-      "top": ["Weniger Chaos.", "Mehr Kontrolle."],
-      "main1": ["Buchungen,", "Gäste", "zentral"],
-      "main2": ["und", "Finanzen,", "wo", "Ihr", "Geschäft", "täglich", "Klarheit", "gewinnt."],
-      "bottom": ["Automatisieren.", "Delegieren.", "Skalieren."]
+      "top": [
+        "Weniger Chaos.",
+        "Mehr Kontrolle."
+      ],
+      "main1": [
+        "Buchungen,",
+        "Gäste",
+        "zentral"
+      ],
+      "main2": [
+        "und",
+        "Finanzen,",
+        "wo",
+        "Ihr",
+        "Geschäft",
+        "täglich",
+        "Klarheit",
+        "gewinnt."
+      ],
+      "bottom": [
+        "Automatisieren.",
+        "Delegieren.",
+        "Skalieren."
+      ]
     },
     "features": {
       "badge": "Funktionen",
@@ -751,12 +791,67 @@
       "subtitle": "Von Immobilien bis Zahlungen — Triadak deckt den gesamten Ferienvermietungs-Workflow ab.",
       "cta": "Entdecken →",
       "items": {
-        "0": { "title": "Immobilienverwaltung", "description": "Immobilien mit Details, Fotos, Preisen und Verfügbarkeit an einem Ort.", "meta": "Multi-Objekt", "status": "Kern", "tags": ["Immobilien", "Fotos", "Preise"] },
-        "1": { "title": "Intelligente Buchungen", "description": "Kalender, Check-in/out und Verfügbarkeit. Keine Doppelbuchungen.", "meta": "Kalender", "status": "Aktiv", "tags": ["Buchungen", "iCal"] },
-        "2": { "title": "Gäste-CRM", "description": "Automatische Profile, Historie und Kommunikation in einer Ansicht.", "meta": "Kontakte", "status": "Aktiv", "tags": ["CRM", "Gäste"] },
-        "3": { "title": "Finanz-Engine", "description": "Einnahmen, Ausgaben und Marge pro Objekt in Echtzeit.", "meta": "P&L", "status": "Aktiv", "tags": ["Finanzen", "Berichte"] },
-        "4": { "title": "Analytics-Dashboard", "description": "Belegung, Umsatz und KPIs für datenbasierte Entscheidungen.", "meta": "KPIs", "status": "Highlight", "tags": ["Analytics", "Belegung"] },
-        "5": { "title": "Sicher & Privat", "description": "Agentur-Isolation (RLS). Ihre Daten, verschlüsselt und unter Ihrer Kontrolle.", "meta": "RLS", "status": "Aktiv", "tags": ["Sicherheit", "Multi-tenant"] }
+        "0": {
+          "title": "Immobilienverwaltung",
+          "description": "Immobilien mit Details, Fotos, Preisen und Verfügbarkeit an einem Ort.",
+          "meta": "Multi-Objekt",
+          "status": "Kern",
+          "tags": [
+            "Immobilien",
+            "Fotos",
+            "Preise"
+          ]
+        },
+        "1": {
+          "title": "Intelligente Buchungen",
+          "description": "Kalender, Check-in/out und Verfügbarkeit. Keine Doppelbuchungen.",
+          "meta": "Kalender",
+          "status": "Aktiv",
+          "tags": [
+            "Buchungen",
+            "iCal"
+          ]
+        },
+        "2": {
+          "title": "Gäste-CRM",
+          "description": "Automatische Profile, Historie und Kommunikation in einer Ansicht.",
+          "meta": "Kontakte",
+          "status": "Aktiv",
+          "tags": [
+            "CRM",
+            "Gäste"
+          ]
+        },
+        "3": {
+          "title": "Finanz-Engine",
+          "description": "Einnahmen, Ausgaben und Marge pro Objekt in Echtzeit.",
+          "meta": "P&L",
+          "status": "Aktiv",
+          "tags": [
+            "Finanzen",
+            "Berichte"
+          ]
+        },
+        "4": {
+          "title": "Analytics-Dashboard",
+          "description": "Belegung, Umsatz und KPIs für datenbasierte Entscheidungen.",
+          "meta": "KPIs",
+          "status": "Highlight",
+          "tags": [
+            "Analytics",
+            "Belegung"
+          ]
+        },
+        "5": {
+          "title": "Sicher & Privat",
+          "description": "Agentur-Isolation (RLS). Ihre Daten, verschlüsselt und unter Ihrer Kontrolle.",
+          "meta": "RLS",
+          "status": "Aktiv",
+          "tags": [
+            "Sicherheit",
+            "Multi-tenant"
+          ]
+        }
       }
     },
     "howItWorks": {
@@ -790,41 +885,74 @@
       "becomesDetail": "iCal-Sync, Messaging und Finanzen in Echtzeit",
       "becomesTags": "Ferienvermietung · Channel Manager · PMS",
       "pillars": {
-        "0": { "label": "Sync", "title": "6 Kanäle in einem Kalender" },
-        "1": { "label": "Automatisieren", "title": "WhatsApp und Gästeportal" },
-        "2": { "label": "Kontrollieren", "title": "Finanzen und Abrechnungen" }
+        "0": {
+          "label": "Sync",
+          "title": "6 Kanäle in einem Kalender"
+        },
+        "1": {
+          "label": "Automatisieren",
+          "title": "WhatsApp und Gästeportal"
+        },
+        "2": {
+          "label": "Kontrollieren",
+          "title": "Finanzen und Abrechnungen"
+        }
       },
       "cta": "Triadak entdecken",
       "featuresSectionLabel": "02/ So funktioniert's",
       "testimonialsSectionLabel": "03/ Testimonials",
       "features": {
-        "explore": "Kostenlos starten",
         "0": {
           "index": "02.01/ Buchungen",
           "titleLine1": "Volle",
           "titleLine2": "Kontrolle",
           "description": "Einheitlicher Kalender, bidirektionales iCal und Direktbuchungen. Keine Doppelbuchungen.",
-          "bullets": ["Sync Airbnb, Booking, VRBO und Lodgify", "iCal-Export pro Objekt", "Direktes Buchungsportal"]
+          "bullets": [
+            "Sync Airbnb, Booking, VRBO und Lodgify",
+            "iCal-Export pro Objekt",
+            "Direktes Buchungsportal"
+          ]
         },
         "1": {
           "index": "02.02/ Kommunikation",
           "titleLine1": "Gäste",
           "titleLine2": "verbunden",
           "description": "WhatsApp, SMS und Gästeportal mit Check-in, WiFi und digitalen Verträgen — alles in Triadak.",
-          "bullets": ["6 automatische WhatsApp-Vorlagen", "Gästeportal mit eindeutigem Link", "PDF-Verträge mit digitaler Signatur"]
+          "bullets": [
+            "6 automatische WhatsApp-Vorlagen",
+            "Gästeportal mit eindeutigem Link",
+            "PDF-Verträge mit digitaler Signatur"
+          ]
         },
         "2": {
           "index": "02.03/ Finanzen",
           "titleLine1": "Klare",
           "titleLine2": "Rentabilität",
           "description": "P&L pro Objekt, monatliche Eigentümerabrechnungen und PDF/CSV-Export.",
-          "bullets": ["Finanzmotor mit Ausgaben und Abgleich", "Automatische Eigentümerabrechnungen", "Benchmarking und Revenue Management"]
-        }
+          "bullets": [
+            "Finanzmotor mit Ausgaben und Abgleich",
+            "Automatische Eigentümerabrechnungen",
+            "Benchmarking und Revenue Management"
+          ]
+        },
+        "explore": "Kostenlos starten"
       },
       "ctaBlock": {
-        "leadWords": ["Grenzen", "verschieben"],
-        "mainWords": ["Bereit", "für", "die", "Zukunft?"],
-        "subWords": ["Verwalten", "Skalieren", "Automatisieren"],
+        "leadWords": [
+          "Grenzen",
+          "verschieben"
+        ],
+        "mainWords": [
+          "Bereit",
+          "für",
+          "die",
+          "Zukunft?"
+        ],
+        "subWords": [
+          "Verwalten",
+          "Skalieren",
+          "Automatisieren"
+        ],
         "description": "Verändern Sie, wie Sie Buchungen erfassen, Gäste erreichen und Eigentümer abrechnen.",
         "primary": "Kostenlos starten",
         "secondary": "Funktionen ansehen"
@@ -834,9 +962,18 @@
       "badge": "Von Gastgebern geliebt",
       "title": "Was unsere Nutzer sagen",
       "items": {
-        "0": { "quote": "Triadak hat unsere Verwaltung von 8 Immobilien komplett transformiert. Die Automatisierung spart uns jede Woche Stunden.", "role": "Immobilienmanagerin, Malaga" },
-        "1": { "quote": "Die Finanzverfolgung allein ist es wert. Ich habe endlich ein klares Bild der Rentabilität pro Immobilie.", "role": "Vermieter, Barcelona" },
-        "2": { "quote": "Wir sind von Tabellenkalkulationen zu Triadak gewechselt und haben nie zurückgeblickt. Das CRM ist unglaublich nützlich.", "role": "Co-Host, Lissabon" }
+        "0": {
+          "quote": "Triadak hat unsere Verwaltung von 8 Immobilien komplett transformiert. Die Automatisierung spart uns jede Woche Stunden.",
+          "role": "Immobilienmanagerin, Malaga"
+        },
+        "1": {
+          "quote": "Die Finanzverfolgung allein ist es wert. Ich habe endlich ein klares Bild der Rentabilität pro Immobilie.",
+          "role": "Vermieter, Barcelona"
+        },
+        "2": {
+          "quote": "Wir sind von Tabellenkalkulationen zu Triadak gewechselt und haben nie zurückgeblickt. Das CRM ist unglaublich nützlich.",
+          "role": "Co-Host, Lissabon"
+        }
       }
     },
     "pricing": {
@@ -867,10 +1004,34 @@
         "enterprise": "Vertrieb kontaktieren"
       },
       "features": {
-        "starter": { "0": "1 Immobilie", "1": "10 Buchungen/Monat", "2": "Basis-CRM (20 Kontakte)", "3": "Kalenderansicht", "4": "Basis-Dashboard" },
-        "basic": { "0": "Bis zu 5 Immobilien", "1": "50 Buchungen/Monat", "2": "Vollständiges CRM (100 Kontakte)", "3": "Finanz-Dashboard", "4": "E-Mail-Benachrichtigungen" },
-        "pro": { "0": "Bis zu 20 Immobilien", "1": "Unbegrenzte Buchungen", "2": "Erweitertes CRM", "3": "Zahlungslinks (Stripe)", "4": "Eigentümer-Portal" },
-        "enterprise": { "0": "Alles unbegrenzt", "1": "Vollständiger API-Zugang", "2": "Dedizierter Support", "3": "Individuelle Einarbeitung", "4": "Prioritäts-Funktionen" }
+        "starter": {
+          "0": "1 Immobilie",
+          "1": "10 Buchungen/Monat",
+          "2": "Basis-CRM (20 Kontakte)",
+          "3": "Kalenderansicht",
+          "4": "Basis-Dashboard"
+        },
+        "basic": {
+          "0": "Bis zu 5 Immobilien",
+          "1": "50 Buchungen/Monat",
+          "2": "Vollständiges CRM (100 Kontakte)",
+          "3": "Finanz-Dashboard",
+          "4": "E-Mail-Benachrichtigungen"
+        },
+        "pro": {
+          "0": "Bis zu 20 Immobilien",
+          "1": "Unbegrenzte Buchungen",
+          "2": "Erweitertes CRM",
+          "3": "Zahlungslinks (Stripe)",
+          "4": "Eigentümer-Portal"
+        },
+        "enterprise": {
+          "0": "Alles unbegrenzt",
+          "1": "Vollständiger API-Zugang",
+          "2": "Dedizierter Support",
+          "3": "Individuelle Einarbeitung",
+          "4": "Prioritäts-Funktionen"
+        }
       }
     },
     "faq": {
@@ -884,12 +1045,30 @@
         "product": "Produkt"
       },
       "items": {
-        "0": { "question": "Ist Triadak wirklich kostenlos zum Start?", "answer": "Ja! Der Starter-Plan ist komplett kostenlos — für immer. Er beinhaltet 1 Immobilie, 10 Buchungen pro Monat und Basis-CRM. Keine Kreditkarte erforderlich." },
-        "1": { "question": "Kann ich jederzeit upgraden oder downgraden?", "answer": "Absolut. Sie können Ihren Plan jederzeit auf der Abrechnungsseite ändern. Upgrades sind sofort wirksam, Downgrades am Ende Ihres Abrechnungszyklus." },
-        "2": { "question": "Sind meine Daten sicher?", "answer": "Ja. Wir nutzen Supabase mit Row-Level-Security, sodass die Daten jedes Nutzers vollständig isoliert sind. Alle Verbindungen sind mit TLS verschlüsselt." },
-        "3": { "question": "Muss ich etwas installieren?", "answer": "Nein. Triadak ist eine Webanwendung, die in jedem Browser funktioniert — Desktop, Tablet oder Mobil. Es gibt nichts zu installieren." },
-        "4": { "question": "Kann ich Daten aus Tabellenkalkulationen importieren?", "answer": "Wir arbeiten an CSV-Import-Funktionalität. Vorerst können Sie schnell Immobilien und Buchungen über unsere intuitive Oberfläche hinzufügen." },
-        "5": { "question": "Welche Zahlungsmethoden akzeptieren Sie?", "answer": "Wir akzeptieren alle gängigen Kredit- und Debitkarten über Stripe. Enterprise-Pläne können auch per Banküberweisung zahlen." }
+        "0": {
+          "question": "Ist Triadak wirklich kostenlos zum Start?",
+          "answer": "Ja! Der Starter-Plan ist komplett kostenlos — für immer. Er beinhaltet 1 Immobilie, 10 Buchungen pro Monat und Basis-CRM. Keine Kreditkarte erforderlich."
+        },
+        "1": {
+          "question": "Kann ich jederzeit upgraden oder downgraden?",
+          "answer": "Absolut. Sie können Ihren Plan jederzeit auf der Abrechnungsseite ändern. Upgrades sind sofort wirksam, Downgrades am Ende Ihres Abrechnungszyklus."
+        },
+        "2": {
+          "question": "Sind meine Daten sicher?",
+          "answer": "Ja. Wir nutzen Supabase mit Row-Level-Security, sodass die Daten jedes Nutzers vollständig isoliert sind. Alle Verbindungen sind mit TLS verschlüsselt."
+        },
+        "3": {
+          "question": "Muss ich etwas installieren?",
+          "answer": "Nein. Triadak ist eine Webanwendung, die in jedem Browser funktioniert — Desktop, Tablet oder Mobil. Es gibt nichts zu installieren."
+        },
+        "4": {
+          "question": "Kann ich Daten aus Tabellenkalkulationen importieren?",
+          "answer": "Wir arbeiten an CSV-Import-Funktionalität. Vorerst können Sie schnell Immobilien und Buchungen über unsere intuitive Oberfläche hinzufügen."
+        },
+        "5": {
+          "question": "Welche Zahlungsmethoden akzeptieren Sie?",
+          "answer": "Wir akzeptieren alle gängigen Kredit- und Debitkarten über Stripe. Enterprise-Pläne können auch per Banküberweisung zahlen."
+        }
       }
     },
     "cta": {
@@ -914,9 +1093,34 @@
       "privacy": "Datenschutz",
       "terms": "Nutzungsbedingungen",
       "developedBy": "Entwickelt von"
+    },
+    "scrollSlides": {
+      "slides": [
+        {
+          "label": "IHR PORTFOLIO",
+          "title": "Alle Ihre\nImmobilien",
+          "sub": "Hütten, Villen, Wohnungen — eine Plattform"
+        },
+        {
+          "label": "JEDE IMMOBILIE",
+          "title": "Nahtlos\nVerwaltet",
+          "sub": "Von Buchungen bis Wartung, vollständig automatisiert"
+        },
+        {
+          "label": "JEDES DETAIL",
+          "title": "Nichts\nEntgeht Uns",
+          "sub": "Abrechnung, Gäste-CRM und Betrieb synchronisiert"
+        },
+        {
+          "label": "TRIADAK",
+          "title": "Jetzt Klüger\nVerwalten",
+          "sub": "Schließen Sie sich Vermietern an, die den Wechsel vollzogen haben",
+          "cta1": "Kostenlos starten",
+          "cta2": "Demo ansehen"
+        }
+      ]
     }
   },
-
   "staffOps": {
     "title": "Betriebspersonal",
     "subtitle": "Verwalten Sie Ihr Betriebsteam, Aufgaben und Gehaltsabrechnungen",
@@ -938,20 +1142,61 @@
     "addFirstTask": "Erstellen Sie Ihre erste Aufgabe",
     "confirmDeleteMember": "Dieses Teammitglied löschen?",
     "confirmDeleteTask": "Diese Aufgabe löschen?",
-    "status": { "active": "Aktiv", "inactive": "Inaktiv" },
-    "contract": { "full_time": "Vollzeit", "part_time": "Teilzeit", "freelance": "Freiberuflich" },
-    "taskType": { "cleaning": "Reinigung", "maintenance": "Wartung", "inspection": "Inspektion", "laundry": "Wäsche", "other": "Sonstiges" },
-    "taskStatus": { "pending": "Ausstehend", "in_progress": "In Arbeit", "completed": "Abgeschlossen", "verified": "Verifiziert", "cancelled": "Storniert" },
-    "fieldName": "Vollständiger Name", "fieldEmail": "E-Mail", "fieldPhone": "Telefon", "fieldAddress": "Adresse",
-    "fieldDocId": "Ausweis-Nr.", "fieldContract": "Vertragsart", "fieldSalary": "Gehalt", "fieldSalaryType": "Zahlungsart",
-    "fieldStartDate": "Startdatum", "fieldEndDate": "Enddatum", "fieldAssignTo": "Zuweisen an", "fieldProperty": "Objekt",
-    "fieldTaskType": "Aufgabentyp", "fieldDate": "Datum", "fieldCost": "Kosten", "noProperty": "Kein Objekt",
-    "salaryMonthly": "Monatlich", "salaryPerService": "Pro Service",
-    "checklist": "Checkliste", "addChecklistItem": "Element hinzufügen",
-    "checklistBedrooms": "Schlafzimmer reinigen", "checklistBathrooms": "Badezimmer reinigen",
-    "checklistKitchen": "Küche reinigen", "checklistLinens": "Bettwäsche wechseln", "checklistTrash": "Müll entsorgen",
-    "payrollSummary": "Gehaltsübersicht", "payrollName": "Mitarbeiter", "payrollContract": "Vertrag",
-    "payrollBase": "Grundgehalt", "payrollTasks": "Aufgabenkosten", "payrollTotal": "Gesamt", "payrollGrandTotal": "Gesamtsumme",
+    "status": {
+      "active": "Aktiv",
+      "inactive": "Inaktiv"
+    },
+    "contract": {
+      "full_time": "Vollzeit",
+      "part_time": "Teilzeit",
+      "freelance": "Freiberuflich"
+    },
+    "taskType": {
+      "cleaning": "Reinigung",
+      "maintenance": "Wartung",
+      "inspection": "Inspektion",
+      "laundry": "Wäsche",
+      "other": "Sonstiges"
+    },
+    "taskStatus": {
+      "pending": "Ausstehend",
+      "in_progress": "In Arbeit",
+      "completed": "Abgeschlossen",
+      "verified": "Verifiziert",
+      "cancelled": "Storniert"
+    },
+    "fieldName": "Vollständiger Name",
+    "fieldEmail": "E-Mail",
+    "fieldPhone": "Telefon",
+    "fieldAddress": "Adresse",
+    "fieldDocId": "Ausweis-Nr.",
+    "fieldContract": "Vertragsart",
+    "fieldSalary": "Gehalt",
+    "fieldSalaryType": "Zahlungsart",
+    "fieldStartDate": "Startdatum",
+    "fieldEndDate": "Enddatum",
+    "fieldAssignTo": "Zuweisen an",
+    "fieldProperty": "Objekt",
+    "fieldTaskType": "Aufgabentyp",
+    "fieldDate": "Datum",
+    "fieldCost": "Kosten",
+    "noProperty": "Kein Objekt",
+    "salaryMonthly": "Monatlich",
+    "salaryPerService": "Pro Service",
+    "checklist": "Checkliste",
+    "addChecklistItem": "Element hinzufügen",
+    "checklistBedrooms": "Schlafzimmer reinigen",
+    "checklistBathrooms": "Badezimmer reinigen",
+    "checklistKitchen": "Küche reinigen",
+    "checklistLinens": "Bettwäsche wechseln",
+    "checklistTrash": "Müll entsorgen",
+    "payrollSummary": "Gehaltsübersicht",
+    "payrollName": "Mitarbeiter",
+    "payrollContract": "Vertrag",
+    "payrollBase": "Grundgehalt",
+    "payrollTasks": "Aufgabenkosten",
+    "payrollTotal": "Gesamt",
+    "payrollGrandTotal": "Gesamtsumme",
     "avatarUpload": "Profilfoto",
     "avatarHint": "Klicken zum Hochladen (max 2MB)",
     "detailPersonal": "Persönliche Informationen",
@@ -965,12 +1210,10 @@
     "detailRating": "Durchschn. Bewertung",
     "detailMemberSince": "Mitglied seit"
   },
-
   "pricing": {
     "perTransaction": "pro Buchungstransaktion",
     "trialActivated": "14-Tage-Testversion aktiviert! Weiterleitung zum Dashboard..."
   },
-
   "occupancy": {
     "title": "Auslastungs-Dashboard",
     "subtitle": "Visuelle Übersicht der Objektauslastung und Buchungsverteilung",
@@ -988,7 +1231,6 @@
     "nights": "Nächte",
     "bookingsLabel": "Buchungen"
   },
-
   "channels": {
     "title": "Channel Manager",
     "subtitle": "Verbinden und synchronisieren Sie Ihre Objekte auf allen Buchungsplattformen",
@@ -1044,7 +1286,6 @@
     "vrboDesc": "Kalender über iCal von VRBO/HomeAway synchronisieren",
     "lodgifyDesc": "Vollständige API-Integration mit Lodgify Channel Manager"
   },
-
   "billing": {
     "commissionRate": "Provisionssatz",
     "perBookingTransaction": "pro Buchungstransaktion",
@@ -1066,7 +1307,6 @@
     "history": "Rechnungsverlauf",
     "noInvoices": "Noch keine Rechnungen. Sie erscheinen hier nach Ihrer ersten Zahlung."
   },
-
   "messaging": {
     "title": "Nachrichten",
     "subtitle": "Senden Sie WhatsApp- und SMS-Nachrichten automatisch oder manuell an Gäste",
