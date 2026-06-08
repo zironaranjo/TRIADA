@@ -37,7 +37,8 @@ function HeroSlide({ scrollYProgress }: { scrollYProgress: MotionValue<number> }
         style={{ y: textY, opacity: textOpacity }}
         className="absolute inset-0 flex flex-col justify-center pl-10 pb-6 pt-24 md:pl-20 md:pt-28"
       >
-        <p className="mb-4 text-[10px] tracking-[0.38em] text-white/45 uppercase sm:text-[11px]">
+        {/* Badge — oculto en móvil */}
+        <p className="mb-4 hidden text-[10px] tracking-[0.38em] text-white/45 uppercase sm:block sm:text-[11px]">
           {t('landing.hero.badge')}
         </p>
 
@@ -46,11 +47,13 @@ function HeroSlide({ scrollYProgress }: { scrollYProgress: MotionValue<number> }
           <span className="block text-white">{t('landing.hero.titleHighlight')}</span>
         </h1>
 
-        <p className="mt-5 max-w-xs text-sm leading-relaxed text-slate-300/90 sm:max-w-sm md:max-w-md md:text-base">
+        {/* Subtitle — oculto en móvil */}
+        <p className="mt-5 hidden max-w-xs text-sm leading-relaxed text-slate-300/90 sm:block sm:max-w-sm md:max-w-md md:text-base">
           {t('landing.hero.subtitle')}
         </p>
 
-        <p className="mt-2.5 text-xs font-medium tracking-[0.12em] text-cyan-300/90 sm:text-sm">
+        {/* Tagline — oculto en móvil */}
+        <p className="mt-2.5 hidden text-xs font-medium tracking-[0.12em] text-cyan-300/90 sm:block sm:text-sm">
           {t('landing.hero.tagline')}
         </p>
 
@@ -62,16 +65,18 @@ function HeroSlide({ scrollYProgress }: { scrollYProgress: MotionValue<number> }
             {t('landing.hero.cta')}
             <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1.5" />
           </Link>
-          <span className="h-4 w-px bg-white/15" aria-hidden />
+          {/* Separador + link secundario — ocultos en móvil */}
+          <span className="hidden h-4 w-px bg-white/15 sm:block" aria-hidden />
           <a
             href="#features"
-            className="text-xs font-semibold uppercase tracking-[0.22em] text-slate-500 transition-colors hover:text-white sm:text-sm"
+            className="hidden text-xs font-semibold uppercase tracking-[0.22em] text-slate-500 transition-colors hover:text-white sm:block sm:text-sm"
           >
             {t('landing.hero.secondary')}
           </a>
         </div>
 
-        <div className="mt-6 flex flex-wrap items-center gap-x-3 gap-y-2 text-[10px] font-semibold uppercase tracking-[0.18em]">
+        {/* Stars + freePlan — ocultos en móvil */}
+        <div className="mt-6 hidden flex-wrap items-center gap-x-3 gap-y-2 text-[10px] font-semibold uppercase tracking-[0.18em] sm:flex">
           <div className="flex items-center gap-1.5">
             {[...Array(5)].map((_, i) => (
               <Star key={i} className="h-3 w-3 fill-amber-400 text-amber-400" />
@@ -82,7 +87,8 @@ function HeroSlide({ scrollYProgress }: { scrollYProgress: MotionValue<number> }
           <span className="text-slate-200">{t('landing.hero.freePlan')}</span>
         </div>
 
-        <div className="mt-4">
+        {/* Explore link — oculto en móvil */}
+        <div className="mt-4 hidden sm:block">
           <Link
             to="/explore"
             className="group inline-flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-500 transition-colors hover:text-white sm:text-xs"
