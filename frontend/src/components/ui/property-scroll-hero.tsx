@@ -35,25 +35,28 @@ function HeroSlide({ scrollYProgress }: { scrollYProgress: MotionValue<number> }
 
       <motion.div
         style={{ y: textY, opacity: textOpacity }}
-        className="absolute inset-0 flex flex-col justify-center pl-10 pb-6 pt-24 md:pl-20 md:pt-28"
+        className="absolute bottom-0 left-0 right-0 flex flex-col justify-end pb-20 pl-10 md:pb-28 md:pl-20"
       >
         {/* Badge — oculto en móvil */}
-        <p className="mb-4 hidden text-[10px] tracking-[0.38em] text-white/45 uppercase sm:block sm:text-[11px]">
+        <p className="mb-3 hidden text-[10px] tracking-[0.35em] text-white/50 uppercase sm:block">
           {t('landing.hero.badge')}
         </p>
 
-        <h1 className="text-[clamp(2rem,6vw,4.75rem)] font-bold uppercase leading-[1.02] tracking-[0.025em]">
-          <span className="block text-slate-400">{t('landing.hero.title1')}</span>
+        <h1
+          className="text-[clamp(3rem,8vw,6.5rem)] font-light leading-[1.05] text-white"
+          style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", whiteSpace: 'pre-line' }}
+        >
+          <span className="block text-white/50">{t('landing.hero.title1')}</span>
           <span className="block text-white">{t('landing.hero.titleHighlight')}</span>
         </h1>
 
         {/* Subtitle — oculto en móvil */}
-        <p className="mt-5 hidden max-w-xs text-sm leading-relaxed text-slate-300/90 sm:block sm:max-w-sm md:max-w-md md:text-base">
+        <p className="mt-4 hidden text-xs tracking-[0.25em] text-white/60 uppercase sm:block md:text-sm">
           {t('landing.hero.subtitle')}
         </p>
 
         {/* Tagline — oculto en móvil */}
-        <p className="mt-2.5 hidden text-xs font-medium tracking-[0.12em] text-cyan-300/90 sm:block sm:text-sm">
+        <p className="mt-2 hidden text-[10px] font-medium tracking-[0.18em] text-cyan-300/80 uppercase sm:block">
           {t('landing.hero.tagline')}
         </p>
 
